@@ -1,0 +1,20 @@
+{
+  "name": "shumaiml",
+  "version": "0.0.3",
+  "module": "shumai.ts",
+  "type": "module",
+  "scripts": {
+    "postinstall": "bash scripts/install.sh"
+  },
+  "files": [
+    "shumai.ts",
+    "src/*/**.ts",
+    "install.sh",
+    "src/cpp/*",
+    "CMakeLists.txt",
+    "scripts/install.sh"
+  ],
+  "devDependencies": {
+    "bun-types": "^0.1.0"
+  }
+}
