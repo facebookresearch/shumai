@@ -3,6 +3,7 @@ build
 release
 debug
 *.so
+*.dylib
 
 # Package
 bun.lockb
