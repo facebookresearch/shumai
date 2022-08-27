@@ -3,31 +3,34 @@ import { FFIType } from "bun:ffi";
 import { arrayArg } from "../ffi/ffi_bind_utils";
 import { fl } from "../ffi/ffi_flashlight";
 import { TensorInterface } from "./tensor_interface";
-
 export const gen_tensor_op_shim = (wrapFunc: Function) => {
   return {
     reshape(shape: number[]) {
-      const t = wrapFunc(fl._reshape.native, this, ...arrayArg(shape, FFIType.i64));
+      const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64);
+      const t = wrapFunc(fl._reshape.native, this, shape_ptr, shape_len);
       t.op = "reshape";
       t.grad_fn = null;
       return t;
     },
 
     transpose(axes: number[]) {
-      const t = wrapFunc(fl._transpose.native, this, ...arrayArg(axes, FFIType.i64));
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._transpose.native, this, axes_ptr, axes_len);
       t.op = "transpose";
       t.grad_fn = null;
       return t;
     },
 
     tile(shape: number[]) {
-      const t = wrapFunc(fl._tile.native, this, ...arrayArg(shape, FFIType.i64));
+      const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64);
+      const t = wrapFunc(fl._tile.native, this, shape_ptr, shape_len);
       t.op = "tile";
       t.grad_fn = null;
       return t;
     },
 
     nonzero() {
+  
       const t = wrapFunc(fl._nonzero.native, this);
       t.op = "nonzero";
       t.grad_fn = null;
@@ -35,6 +38,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     negative() {
+  
       const t = wrapFunc(fl._negative.native, this);
       t.op = "negative";
       t.grad_fn = null;
@@ -42,6 +46,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     logicalNot() {
+  
       const t = wrapFunc(fl._logicalNot.native, this);
       t.op = "logicalNot";
       t.grad_fn = null;
@@ -49,6 +54,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     exp() {
+  
       const t = wrapFunc(fl._exp.native, this);
       t.op = "exp";
       t.grad_fn = null;
@@ -56,6 +62,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     log() {
+  
       const t = wrapFunc(fl._log.native, this);
       t.op = "log";
       t.grad_fn = null;
@@ -63,6 +70,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     log1p() {
+  
       const t = wrapFunc(fl._log1p.native, this);
       t.op = "log1p";
       t.grad_fn = null;
@@ -70,6 +78,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     sin() {
+  
       const t = wrapFunc(fl._sin.native, this);
       t.op = "sin";
       t.grad_fn = null;
@@ -77,6 +86,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     cos() {
+  
       const t = wrapFunc(fl._cos.native, this);
       t.op = "cos";
       t.grad_fn = null;
@@ -84,6 +94,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     sqrt() {
+  
       const t = wrapFunc(fl._sqrt.native, this);
       t.op = "sqrt";
       t.grad_fn = null;
@@ -91,6 +102,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     tanh() {
+  
       const t = wrapFunc(fl._tanh.native, this);
       t.op = "tanh";
       t.grad_fn = null;
@@ -98,6 +110,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     floor() {
+  
       const t = wrapFunc(fl._floor.native, this);
       t.op = "floor";
       t.grad_fn = null;
@@ -105,6 +118,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     ceil() {
+  
       const t = wrapFunc(fl._ceil.native, this);
       t.op = "ceil";
       t.grad_fn = null;
@@ -112,6 +126,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     rint() {
+  
       const t = wrapFunc(fl._rint.native, this);
       t.op = "rint";
       t.grad_fn = null;
@@ -119,6 +134,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     absolute() {
+  
       const t = wrapFunc(fl._absolute.native, this);
       t.op = "absolute";
       t.grad_fn = null;
@@ -126,6 +142,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     abs() {
+  
       const t = wrapFunc(fl._abs.native, this);
       t.op = "abs";
       t.grad_fn = null;
@@ -133,6 +150,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     sigmoid() {
+  
       const t = wrapFunc(fl._sigmoid.native, this);
       t.op = "sigmoid";
       t.grad_fn = null;
@@ -140,6 +158,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     erf() {
+  
       const t = wrapFunc(fl._erf.native, this);
       t.op = "erf";
       t.grad_fn = null;
@@ -147,13 +166,15 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     flip(dim: number) {
-      const t = wrapFunc(fl._flip.native, this, dim);
+  
+      const t = wrapFunc(fl._flip.native, this, (dim <= 0 ? 0 : dim >= 0xffffffff ? 0xffffffff : +dim || 0));
       t.op = "flip";
       t.grad_fn = null;
       return t;
     },
 
     clip(low: TensorInterface, high: TensorInterface) {
+  
       const t = wrapFunc(fl._clip.native, this, low, high);
       t.op = "clip";
       t.grad_fn = null;
@@ -161,13 +182,15 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     roll(shift: number, axis: number) {
-      const t = wrapFunc(fl._roll.native, this, shift, axis);
+  
+      const t = wrapFunc(fl._roll.native, this, (shift | 0), (axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0));
       t.op = "roll";
       t.grad_fn = null;
       return t;
     },
 
     isnan() {
+  
       const t = wrapFunc(fl._isnan.native, this);
       t.op = "isnan";
       t.grad_fn = null;
@@ -175,6 +198,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     isinf() {
+  
       const t = wrapFunc(fl._isinf.native, this);
       t.op = "isinf";
       t.grad_fn = null;
@@ -182,6 +206,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     sign() {
+  
       const t = wrapFunc(fl._sign.native, this);
       t.op = "sign";
       t.grad_fn = null;
@@ -189,6 +214,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     tril() {
+  
       const t = wrapFunc(fl._tril.native, this);
       t.op = "tril";
       t.grad_fn = null;
@@ -196,6 +222,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     triu() {
+  
       const t = wrapFunc(fl._triu.native, this);
       t.op = "triu";
       t.grad_fn = null;
@@ -203,6 +230,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     where(x: TensorInterface, y: TensorInterface) {
+  
       const t = wrapFunc(fl._where.native, this, x, y);
       t.op = "where";
       t.grad_fn = null;
@@ -210,13 +238,15 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     sort(dim: number) {
-      const t = wrapFunc(fl._sort.native, this, dim);
+  
+      const t = wrapFunc(fl._sort.native, this, (dim <= 0 ? 0 : dim >= 0xffffffff ? 0xffffffff : +dim || 0));
       t.op = "sort";
       t.grad_fn = null;
       return t;
     },
 
     add(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._add.native, this, tensor);
       t.op = "add";
       t.grad_fn =   (grad) => {
@@ -227,6 +257,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     sub(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._sub.native, this, tensor);
       t.op = "sub";
       t.grad_fn =   (grad) => {
@@ -240,6 +271,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     mul(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._mul.native, this, tensor);
       t.op = "mul";
       t.grad_fn =   (grad) => {
@@ -250,6 +282,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     div(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._div.native, this, tensor);
       t.op = "div";
       t.grad_fn =   (grad) => {
@@ -268,6 +301,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     eq(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._eq.native, this, tensor);
       t.op = "eq";
       t.grad_fn = null;
@@ -275,6 +309,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     neq(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._neq.native, this, tensor);
       t.op = "neq";
       t.grad_fn = null;
@@ -282,6 +317,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     lessThan(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._lessThan.native, this, tensor);
       t.op = "lessThan";
       t.grad_fn = null;
@@ -289,6 +325,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     lessThanEqual(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._lessThanEqual.native, this, tensor);
       t.op = "lessThanEqual";
       t.grad_fn = null;
@@ -296,6 +333,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     greaterThan(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._greaterThan.native, this, tensor);
       t.op = "greaterThan";
       t.grad_fn = null;
@@ -303,6 +341,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     greaterThanEqual(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._greaterThanEqual.native, this, tensor);
       t.op = "greaterThanEqual";
       t.grad_fn = null;
@@ -310,6 +349,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     logicalOr(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._logicalOr.native, this, tensor);
       t.op = "logicalOr";
       t.grad_fn = null;
@@ -317,6 +357,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     logicalAnd(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._logicalAnd.native, this, tensor);
       t.op = "logicalAnd";
       t.grad_fn = null;
@@ -324,6 +365,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     mod(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._mod.native, this, tensor);
       t.op = "mod";
       t.grad_fn = null;
@@ -331,6 +373,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     bitwiseAnd(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._bitwiseAnd.native, this, tensor);
       t.op = "bitwiseAnd";
       t.grad_fn = null;
@@ -338,6 +381,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     bitwiseOr(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._bitwiseOr.native, this, tensor);
       t.op = "bitwiseOr";
       t.grad_fn = null;
@@ -345,6 +389,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     bitwiseXor(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._bitwiseXor.native, this, tensor);
       t.op = "bitwiseXor";
       t.grad_fn = null;
@@ -352,6 +397,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     lShift(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._lShift.native, this, tensor);
       t.op = "lShift";
       t.grad_fn = null;
@@ -359,6 +405,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     rShift(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._rShift.native, this, tensor);
       t.op = "rShift";
       t.grad_fn = null;
@@ -366,6 +413,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     minimum(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._minimum.native, this, tensor);
       t.op = "minimum";
       t.grad_fn = null;
@@ -373,6 +421,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     maximum(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._maximum.native, this, tensor);
       t.op = "maximum";
       t.grad_fn =   (grad) => {
@@ -386,6 +435,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     power(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._power.native, this, tensor);
       t.op = "power";
       t.grad_fn = null;
@@ -393,6 +443,7 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     matmul(tensor: TensorInterface) {
+  
       const t = wrapFunc(fl._matmul.native, this, tensor);
       t.op = "matmul";
       t.grad_fn =   (grad) => {
@@ -409,35 +460,40 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     amin(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._amin.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._amin.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "amin";
       t.grad_fn = null;
       return t;
     },
 
     amax(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._amax.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._amax.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "amax";
       t.grad_fn = null;
       return t;
     },
 
     argmin(axis: number, keep_dims: boolean = false) {
-      const t = wrapFunc(fl._argmin.native, this, axis, keep_dims);
+  
+      const t = wrapFunc(fl._argmin.native, this, (axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0), (!!keep_dims));
       t.op = "argmin";
       t.grad_fn = null;
       return t;
     },
 
     argmax(axis: number, keep_dims: boolean = false) {
-      const t = wrapFunc(fl._argmax.native, this, axis, keep_dims);
+  
+      const t = wrapFunc(fl._argmax.native, this, (axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0), (!!keep_dims));
       t.op = "argmax";
       t.grad_fn = null;
       return t;
     },
 
     sum(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._sum.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._sum.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "sum";
       t.grad_fn =   (grad) => {
         return grad.grad_in.tile(grad.in[0].shape);
@@ -447,14 +503,16 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     cumsum(axis: number) {
-      const t = wrapFunc(fl._cumsum.native, this, axis);
+  
+      const t = wrapFunc(fl._cumsum.native, this, (axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0));
       t.op = "cumsum";
       t.grad_fn = null;
       return t;
     },
 
     mean(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._mean.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._mean.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "mean";
       t.grad_fn =   (grad) => {
         const T = grad.in[0].constructor;
@@ -466,49 +524,56 @@ export const gen_tensor_op_shim = (wrapFunc: Function) => {
     },
 
     median(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._median.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._median.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "median";
       t.grad_fn = null;
       return t;
     },
 
     _var(axes: number[] = [], bias: boolean = false, keep_dims: boolean = false) {
-      const t = wrapFunc(fl._var.native, this, ...arrayArg(axes, FFIType.i32), bias, keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._var.native, this, axes_ptr, axes_len, (!!bias), (!!keep_dims));
       t.op = "var";
       t.grad_fn = null;
       return t;
     },
 
     std(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._std.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._std.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "std";
       t.grad_fn = null;
       return t;
     },
 
     norm(axes: number[] = [], p: number = 2, keep_dims: boolean = false) {
-      const t = wrapFunc(fl._norm.native, this, ...arrayArg(axes, FFIType.i32), p, keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._norm.native, this, axes_ptr, axes_len, (p + 0.00000000000001 - 0.00000000000001), (!!keep_dims));
       t.op = "norm";
       t.grad_fn = null;
       return t;
     },
 
     countNonzero(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._countNonzero.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._countNonzero.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "countNonzero";
       t.grad_fn = null;
       return t;
     },
 
     any(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._any.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._any.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "any";
       t.grad_fn = null;
       return t;
     },
 
     all(axes: number[] = [], keep_dims: boolean = false) {
-      const t = wrapFunc(fl._all.native, this, ...arrayArg(axes, FFIType.i32), keep_dims);
+      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64);
+      const t = wrapFunc(fl._all.native, this, axes_ptr, axes_len, (!!keep_dims));
       t.op = "all";
       t.grad_fn = null;
       return t;

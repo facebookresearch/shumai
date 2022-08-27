@@ -1,7 +1,7 @@
 import {
   Tensor,
   rand
-} from "shumaiml";
+} from "../shumai";
 
 function bench(description, f, iters = 1000) {
   const hist = new Float32Array(iters);
