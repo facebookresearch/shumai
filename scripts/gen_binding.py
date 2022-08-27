@@ -74,6 +74,15 @@ grad_impls = {
 """,
 }
 
+coercion_rules = {
+    "bool": "(!!{x})",
+    "float": "Math.fround({x})",
+    "double": "({x} + 0.00000000000001 - 0.00000000000001)",
+    "int": "({x} | 0)",
+    "uint32_t": "({x} <= 0 ? 0 : {x} >= 0xffffffff ? 0xffffffff : +{x} || 0)",
+    "int64_t": "({x}.constructor === BigInt ? {x} : BigInt({x} || 0))",
+}
+
 op_list = [
     ("rand", ["Shape"], "Tensor"),
     ("randn", ["Shape"], "Tensor"),
@@ -272,6 +281,7 @@ for op, args, ret in op_list:
     c_sig = []
     ffi_sig = []
     js_sig = []
+    js_impl = []
     js_args = []
     c_impl = []
     c_op_args = []
@@ -310,27 +320,31 @@ for op, args, ret in op_list:
             if not n:
                 n = "shape"
             c_sig.append(f"void *{n}_ptr")
-            c_sig.append(f"int {n}_len")
+            c_sig.append(f"int64_t {n}_len")
             c_impl.append(f"auto {n} = arrayArg<long long>({n}_ptr, {n}_len);")
             c_op_args.append(f"fl::Shape({n})")
             ffi_sig.append("FFIType.ptr")
-            ffi_sig.append("FFIType.i32")
-            js_args.append(f"...arrayArg({n}, FFIType.i64)")
+            ffi_sig.append("FFIType.i64")
+            js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n}, FFIType.i64);")
+            js_args.append(f"{n}_ptr")
+            js_args.append(f"{n}_len")
         elif t == "Axes":
             if not n:
                 n = "axes"
             c_sig.append(f"void *{n}_ptr")
-            c_sig.append(f"int {n}_len")
+            c_sig.append(f"int64_t {n}_len")
             c_impl.append(f"auto {n} = arrayArg<int>({n}_ptr, {n}_len);")
             c_op_args.append(f"{n}")
             ffi_sig.append("FFIType.ptr")
-            ffi_sig.append("FFIType.i32")
-            js_args.append(f"...arrayArg({n}, FFIType.i32)")
+            ffi_sig.append("FFIType.i64")
+            js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n}, FFIType.i64);")
+            js_args.append(f"{n}_ptr")
+            js_args.append(f"{n}_len")
         else:
             c_sig.append(f"{t} {n}")
             c_op_args.append(f"{n}")
             ffi_sig.append(f"FFIType.{to_ffi[t]}")
-            js_args.append(n)
+            js_args.append(coercion_rules[t].format(x=n))
         js_arg_type = (
             to_ts[t]
             if t != "Tensor"
@@ -360,9 +374,11 @@ for op, args, ret in op_list:
     returns: {ffi_ret}
   }},"""
 
+    js_impl_full = "\n".join(js_impl)
     js = f"""
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
-  const t = {'wrapFLTensor' if not methods_only else 'wrapFunc'}(fl._{op}, {', '.join((['this'] if methods_only else []) + js_args)});
+  {js_impl_full}
+  const t = {'wrapFLTensor' if not methods_only else 'wrapFunc'}(fl._{op}.native, {', '.join((['this'] if methods_only else []) + js_args)});
   t.op = "{op}";
   t.grad_fn = {grad_impls[op] if op in grad_impls else 'null'};
   return t;
@@ -396,9 +412,7 @@ if sys.argv[1] == "ffi":
     full_ffi = f"""\
 /* GENERATED CODE (gen_binding.py) */
 import {{ FFIType }} from 'bun:ffi';
-
 let ffi_tensor_ops = {{\n{full_ffi}\n}};
-
 export {{ ffi_tensor_ops }};"""
 
     print(full_ffi)
@@ -413,7 +427,6 @@ import {{ FFIType }} from "bun:ffi";
 import {{ arrayArg }} from "../ffi/ffi_bind_utils";
 import {{ fl }} from "../ffi/ffi_flashlight";
 import {{ TensorInterface }} from "./tensor_interface";
-
 export const gen_tensor_op_shim = (wrapFunc: Function) => {{
   return {{{full_js}
   }};
@@ -437,6 +450,5 @@ if sys.argv[1] in ["js_ops_interface", "js_ops_types"]:
 interface TensorOpsInterface {{
 {full_js_types}
 }}
-
 export {{ TensorOpsInterface }};"""
     print(full_js_types)

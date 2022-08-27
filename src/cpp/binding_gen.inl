@@ -1,19 +1,19 @@
 
-void* _rand(void *shape_ptr, int shape_len) {
+void* _rand(void *shape_ptr, int64_t shape_len) {
   auto shape = arrayArg<long long>(shape_ptr, shape_len);
   auto* t = new fl::Tensor(fl::rand(fl::Shape(shape)));
   g_bytes_used += t->bytes();
   return t;
 }
 
-void* _randn(void *shape_ptr, int shape_len) {
+void* _randn(void *shape_ptr, int64_t shape_len) {
   auto shape = arrayArg<long long>(shape_ptr, shape_len);
   auto* t = new fl::Tensor(fl::randn(fl::Shape(shape)));
   g_bytes_used += t->bytes();
   return t;
 }
 
-void* _full(void *shape_ptr, int shape_len, float val) {
+void* _full(void *shape_ptr, int64_t shape_len, float val) {
   auto shape = arrayArg<long long>(shape_ptr, shape_len);
   auto* t = new fl::Tensor(fl::full(fl::Shape(shape), val));
   g_bytes_used += t->bytes();
@@ -32,7 +32,7 @@ void* _arange(float start, float end, float step) {
   return t;
 }
 
-void* _iota(void *dims_ptr, int dims_len, void *tileDims_ptr, int tileDims_len) {
+void* _iota(void *dims_ptr, int64_t dims_len, void *tileDims_ptr, int64_t tileDims_len) {
   auto dims = arrayArg<long long>(dims_ptr, dims_len);
   auto tileDims = arrayArg<long long>(tileDims_ptr, tileDims_len);
   auto* t = new fl::Tensor(fl::iota(fl::Shape(dims), fl::Shape(tileDims)));
@@ -40,7 +40,7 @@ void* _iota(void *dims_ptr, int dims_len, void *tileDims_ptr, int tileDims_len) 
   return t;
 }
 
-void* _reshape(void *tensor, void *shape_ptr, int shape_len) {
+void* _reshape(void *tensor, void *shape_ptr, int64_t shape_len) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto shape = arrayArg<long long>(shape_ptr, shape_len);
   auto* t = new fl::Tensor(fl::reshape(*tensor_ptr, fl::Shape(shape)));
@@ -48,7 +48,7 @@ void* _reshape(void *tensor, void *shape_ptr, int shape_len) {
   return t;
 }
 
-void* _transpose(void *tensor, void *axes_ptr, int axes_len) {
+void* _transpose(void *tensor, void *axes_ptr, int64_t axes_len) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<long long>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::transpose(*tensor_ptr, fl::Shape(axes)));
@@ -56,7 +56,7 @@ void* _transpose(void *tensor, void *axes_ptr, int axes_len) {
   return t;
 }
 
-void* _tile(void *tensor, void *shape_ptr, int shape_len) {
+void* _tile(void *tensor, void *shape_ptr, int64_t shape_len) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto shape = arrayArg<long long>(shape_ptr, shape_len);
   auto* t = new fl::Tensor(fl::tile(*tensor_ptr, fl::Shape(shape)));
@@ -433,7 +433,7 @@ void* _matmul(void *tensor, void *other) {
   return t;
 }
 
-void* _amin(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _amin(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::amin(*tensor_ptr, axes, keep_dims));
@@ -441,7 +441,7 @@ void* _amin(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
   return t;
 }
 
-void* _amax(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _amax(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::amax(*tensor_ptr, axes, keep_dims));
@@ -463,7 +463,7 @@ void* _argmax(void *tensor, uint32_t axis, bool keep_dims) {
   return t;
 }
 
-void* _sum(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _sum(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::sum(*tensor_ptr, axes, keep_dims));
@@ -478,7 +478,7 @@ void* _cumsum(void *tensor, uint32_t axis) {
   return t;
 }
 
-void* _mean(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _mean(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::mean(*tensor_ptr, axes, keep_dims));
@@ -486,7 +486,7 @@ void* _mean(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
   return t;
 }
 
-void* _median(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _median(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::median(*tensor_ptr, axes, keep_dims));
@@ -494,7 +494,7 @@ void* _median(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
   return t;
 }
 
-void* _var(void *tensor, void *axes_ptr, int axes_len, bool bias, bool keep_dims) {
+void* _var(void *tensor, void *axes_ptr, int64_t axes_len, bool bias, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::var(*tensor_ptr, axes, bias, keep_dims));
@@ -502,7 +502,7 @@ void* _var(void *tensor, void *axes_ptr, int axes_len, bool bias, bool keep_dims
   return t;
 }
 
-void* _std(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _std(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::std(*tensor_ptr, axes, keep_dims));
@@ -510,7 +510,7 @@ void* _std(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
   return t;
 }
 
-void* _norm(void *tensor, void *axes_ptr, int axes_len, double p, bool keep_dims) {
+void* _norm(void *tensor, void *axes_ptr, int64_t axes_len, double p, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::norm(*tensor_ptr, axes, p, keep_dims));
@@ -518,7 +518,7 @@ void* _norm(void *tensor, void *axes_ptr, int axes_len, double p, bool keep_dims
   return t;
 }
 
-void* _countNonzero(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _countNonzero(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::countNonzero(*tensor_ptr, axes, keep_dims));
@@ -526,7 +526,7 @@ void* _countNonzero(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) 
   return t;
 }
 
-void* _any(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _any(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::any(*tensor_ptr, axes, keep_dims));
@@ -534,7 +534,7 @@ void* _any(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
   return t;
 }
 
-void* _all(void *tensor, void *axes_ptr, int axes_len, bool keep_dims) {
+void* _all(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes = arrayArg<int>(axes_ptr, axes_len);
   auto* t = new fl::Tensor(fl::all(*tensor_ptr, axes, keep_dims));

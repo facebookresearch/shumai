@@ -4,7 +4,7 @@ import {
 
 interface TensorInterface {
   new(...args: any[]): TensorInterface;
-  ptr: ptr;
+  ptr: typeof ptr;
   ndim: Number
   shape: BigInt64Array;
   toString: Function;

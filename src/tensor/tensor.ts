@@ -1,7 +1,6 @@
 import {
   ptr,
   toArrayBuffer,
-  toBuffer,
   FFIType,
   ArrayBuffer
 } from "bun:ffi";
@@ -24,7 +23,7 @@ import {
   gen_tensor_op_shim
 } from "./tensor_ops_shim_gen";
 
-fl.init();
+fl.init.native();
 
 export function wrapFLTensor(closure: Function, ...args): Tensor {
   const ptr_args = args.map(x => {
@@ -140,7 +139,7 @@ function backward(base_t: Tensor, jacobian: Tensor) {
 }
 
 class Tensor {
-  underlying: Buffer;
+  underlying: ArrayBuffer;
   deps: Array < Tensor > = [];
   requires_grad: boolean = false;
   grad: Tensor = null;
@@ -148,8 +147,8 @@ class Tensor {
   op: string = "constant";
 
   _injest_ptr(_ptr) {
-    const numel = Number(fl.elements(_ptr));
-    this.underlying = toBuffer(_ptr, 0, numel * 4, fl.genTensorDestroyer());
+    const numel = Number(fl.elements.native(_ptr));
+    this.underlying = toArrayBuffer(_ptr, 0, numel * 4, fl.genTensorDestroyer.native());
   }
 
   backward(jacobian) {
@@ -164,13 +163,13 @@ class Tensor {
       return;
     }
     if (obj.constructor === Float32Array) {
-      this._injest_ptr(fl.tensorFromBuffer(obj.length, ptr(obj)));
+      this._injest_ptr(fl.tensorFromBuffer.native(obj.length, ptr(obj)));
       return;
     }
     if (obj.constructor === Number) {
       obj = [obj];
     }
-    this._injest_ptr(fl.createTensor(...arrayArg(obj, FFIType.i64)));
+    this._injest_ptr(fl.createTensor.native(...arrayArg(obj, FFIType.i64)));
     return;
   }
 
@@ -180,7 +179,7 @@ class Tensor {
   }
 
   get ndim() {
-    return Number(fl.ndim(this.ptr));
+    return Number(fl.ndim.native(this.ptr));
   }
 
   get shape() {
@@ -188,7 +187,7 @@ class Tensor {
     if (out.length === 0) {
       return out;
     }
-    const err = fl.shape(this.ptr, ptr(out), out.length);
+    const err = fl.shape.native(this.ptr, ptr(out), out.length);
     if (err != 0) {
       throw "couldn't determine shape";
     }
@@ -214,33 +213,33 @@ class Tensor {
   }
 
   asContiguousTensor() {
-    return wrapFLTensor(fl.asContiguousTensor, this.ptr);
+    return wrapFLTensor(fl.asContiguousTensor.native, this.ptr);
   }
 
   copy() {
-    return wrapFLTensor(fl.copy, this.ptr);
+    return wrapFLTensor(fl.copy.native, this.ptr);
   }
 
   detach() {
     const tmp_req_grad = this.requires_grad;
     this.requires_grad = false;
-    const t = wrapFLTensor(fl.copy, this.ptr);
+    const t = wrapFLTensor(fl.copy.native, this.ptr);
     this.requires_grad = tmp_req_grad;
     return t;
   }
 
   get elements() {
-    return Number(fl.elements(this.ptr));
+    return Number(fl.elements.native(this.ptr));
   }
 
   toFloat32Array() {
     const contig = this.asContiguousTensor();
     const elems = contig.elements;
-    return new Float32Array(toArrayBuffer(fl.buffer(contig.ptr), 0, elems * 4));
+    return new Float32Array(toArrayBuffer(fl.buffer.native(contig.ptr), 0, elems * 4));
   }
 
   toFloat32() {
-    return fl.scalar(this.ptr);
+    return fl.scalar.native(this.ptr);
   }
 };
 
@@ -258,7 +257,7 @@ function tensor(obj) {
 }
 
 function bytesUsed() {
-  return fl.bytesUsed();
+  return fl.bytesUsed.native();
 }
 
 export {

@@ -73,7 +73,4 @@ interface TensorOpsInterface {
   any: Function;
   all: Function;
 }
-
-export {
-  TensorOpsInterface
-};
+export { TensorOpsInterface };

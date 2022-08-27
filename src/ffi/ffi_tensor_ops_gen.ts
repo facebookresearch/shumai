@@ -1,19 +1,16 @@
 /* GENERATED CODE (gen_binding.py) */
-import {
-  FFIType
-} from 'bun:ffi';
-
+import { FFIType } from 'bun:ffi';
 let ffi_tensor_ops = {
   _rand: {
-    args: [FFIType.ptr, FFIType.i32],
+    args: [FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   _randn: {
-    args: [FFIType.ptr, FFIType.i32],
+    args: [FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   _full: {
-    args: [FFIType.ptr, FFIType.i32, FFIType.f32],
+    args: [FFIType.ptr, FFIType.i64, FFIType.f32],
     returns: FFIType.ptr
   },
   _identity: {
@@ -25,19 +22,19 @@ let ffi_tensor_ops = {
     returns: FFIType.ptr
   },
   _iota: {
-    args: [FFIType.ptr, FFIType.i32, FFIType.ptr, FFIType.i32],
+    args: [FFIType.ptr, FFIType.i64, FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   _reshape: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   _transpose: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   _tile: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   _nonzero: {
@@ -237,11 +234,11 @@ let ffi_tensor_ops = {
     returns: FFIType.ptr
   },
   _amin: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
   _amax: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
   _argmin: {
@@ -253,7 +250,7 @@ let ffi_tensor_ops = {
     returns: FFIType.ptr
   },
   _sum: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
   _cumsum: {
@@ -261,39 +258,36 @@ let ffi_tensor_ops = {
     returns: FFIType.ptr
   },
   _mean: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
   _median: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
   _var: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool, FFIType.bool],
     returns: FFIType.ptr
   },
   _std: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
   _norm: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.f64, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.f64, FFIType.bool],
     returns: FFIType.ptr
   },
   _countNonzero: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
   _any: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
   _all: {
-    args: [FFIType.ptr, FFIType.ptr, FFIType.i32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   },
 };
-
-export {
-  ffi_tensor_ops
-};
+export { ffi_tensor_ops };
