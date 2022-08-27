@@ -362,7 +362,7 @@ for op, args, ret in op_list:
 
     js = f"""
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
-  const t = {'wrapFLTensor' if not methods_only else 'wrapFunc'}(fl._{op}, {', '.join((['this'] if methods_only else []) + js_args)});
+  const t = {'wrapFLTensor' if not methods_only else 'wrapFunc'}(fl._{op}.native, {', '.join((['this'] if methods_only else []) + js_args)});
   t.op = "{op}";
   t.grad_fn = {grad_impls[op] if op in grad_impls else 'null'};
   return t;

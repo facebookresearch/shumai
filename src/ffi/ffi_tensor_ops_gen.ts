@@ -1,7 +1,5 @@
 /* GENERATED CODE (gen_binding.py) */
-import {
-  FFIType
-} from 'bun:ffi';
+import { FFIType } from 'bun:ffi';
 
 let ffi_tensor_ops = {
   _rand: {
@@ -294,6 +292,4 @@ let ffi_tensor_ops = {
   },
 };
 
-export {
-  ffi_tensor_ops
-};
+export { ffi_tensor_ops };
