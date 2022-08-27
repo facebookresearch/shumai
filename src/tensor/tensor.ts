@@ -1,7 +1,8 @@
 import {
   ptr,
   toArrayBuffer,
-  FFIType
+  FFIType,
+  ArrayBuffer
 } from "bun:ffi";
 import {
   fl
