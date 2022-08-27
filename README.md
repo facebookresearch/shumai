@@ -1,19 +1,100 @@
-### shumai: fast ML in JS with bun + flashlight
+# shumai
+
+Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
+
+⚠️ *This is still experimental software!* ⚠️
 
 ---
 
-But, why?
+- [Usage](#usage)
+- [Install](#install)
+  - [MacOS](#macos)
+  - [Installing from source](#installing-from-source)
+- [Contributing](#contributing)
+- [Supported operations](#supported-operations)
 
-- **Creating new datasets**
+---
+
+## Why build this?
+
+Here are some of the areas that shumai hopes to tackle:
+
+- **Creating datasets**
   - JavaScript, with native typed arrays and a JIT compiler, is perfect for twiddling with data before it can be made into a big flat GPU-compatible array
-- **Small models**
+- **Training small models**
   - FFI bindings in Bun are crazy fast (~3ns), so JS gets out of the way when training small models
 - **Advanced/fine-grained training/inference logic**
   - Bun uses the JSC JIT compiler, meaning you can confidently write complex training logic without needing a native C++ implementation
-- **Applications**
-  - JavaScript has a ~~large~~ HUGE ecosystem, which makes application development a lot easier
+- **Building applications**
+  - JavaScript has a ~~large~~ [HUGE](https://survey.stackoverflow.co/2022/#section-most-popular-technologies-programming-scripting-and-markup-languages) ecosystem, which makes application development a lot easier
 
-## MacOS Install
+## Usage
+
+shumai will always attempt to use an attached GPU or accelerator,
+so it should be quite fast.  If it seems slow, please file an issue!
+
+**Standard array utilities:**
+
+
+```javascript
+import * as sm from "shumaiml"
+
+// create a 1024 by 1024 tensor, randomly filled with normal distribution
+let X = sm.randn([1024, 1024])
+let W = sm.identity(1024)
+let Y = X.matmul(W)
+console.log(Y.shape)
+```
+
+**Conversion to and from JavaScript native arrays:**
+
+```javascript
+const data : Float32Array = new Float32Array(128)
+for (let i = 0; i < 128; ++i) {
+  data = Math.random()
+}
+
+const X : Tensor = sm.tensor(data)
+const pi = sm.scalar(3.14)
+const Y = X.mul(pi)
+
+// tensors can be converted back to native JavaScript
+const Y_data = Y.toFloat32Array()
+
+// scalar tensors can be converted to JavaScript numbers
+const total : number = X.sum().toFloat32()
+```
+
+**Gradients:**
+
+```javascript
+const W = sm.randn([128, 128])
+W.requires_grad = true
+
+const X = sm.randn([128, 128])
+const diff = X.sub(W)
+const mse = diff.mul(diff).sum()
+mse.backward()
+
+W.grad // this gradient is now populated
+
+// copy W without allowing gradient updates
+const Y = W.detach()
+Y.sum().backward() // nothing changes
+
+```
+
+Some more examples can be found [here](https://github.com/facebookresearch/shumai/tree/main/examples).
+
+Supported operators can be found [here](#supported-operations).
+
+## Install
+
+This is a current work in progress!
+If you have any problems building or installing, we would
+greatly appreciate filed issues.
+
+#### MacOS
 
 Ensure you have bun installed (https://bun.sh), and then use `brew` and `npm` to get everything built.
 
@@ -23,13 +104,14 @@ brew install --build-from-source flashlight
 npm install shumaiml
 ```
 
-## Install from source
+### Installing from source
 
-The following are required:
-- A compiler with good C++17 support (eg. gcc >= 7)
-- CMake >= 3.10
+This process will require building the FFI for bun
+and then running `npm pack` to generate a `shumaiml_*.tgz`
+package.  You can then use `npm install $PATH_TO_SOURCE/shumaiml_*.tgz`
+to install the package where you'd like.
 
-### MacOS from source
+#### MacOS from source
 
 Install flashlight
 ```bash
@@ -55,27 +137,13 @@ make -j$(nproc)
 
 (you can record perf stuff with `xcrun xctrace record --template "Time Profiler" --launch $(which bun) train.js`)
 
-### Automated Setup
+#### Linux from source
 
-`setup.sh` is a FAIR Cluster-specific script that sets up dependencies given some specified `FLASHLIGHT_INSTALL_PREFIX`. [ArrayFire](https://github.com/arrayfire/arrayfire) CUDA is assumed to be installed specify its location with `ARRAYFIRE_INSTALL_PREFIX`. Modify those variables before running.
+First, install [flashlight](https://github.com/flashlight/flashlight#building-and-installing).
 
-### Environment Setup
+Then, build bindings for shumai:
 
-To ensure bun can properly `dlopen` the bindings lib and dependent libs, export an `LD_LIBRARY_PATH` that includes the following:
-```shell
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${ARRAYFIRE_INSTALL_PREFIX}/lib:${FLASHLIGHT_INSTALL_PREFIX}/lib:$(pwd)"
-```
-
-### Generating Binding Code
-
-To generate TypeScript and C++ binding code, run `gen_all_binding.sh`. This will populate TypeScript and inline C++ files with bindings code based on the operator schema found in `gen_binding.py`. For bindings to be up to date, C++ shims must be rebuilt: see the below section.
-
-### Compiling C++ Shims
-
-#### With CMake
-
-To build the C++ shims from scratch given an existing Flashlight and ArrayFire installation, run:
-```shell
+```bash
 mkdir -p build && cd build
 cmake .. \
     -DBUILD_SHARED_LIBS=ON \
@@ -85,11 +153,16 @@ cmake .. \
 make -j$(nproc)
 ```
 
-To recompile C++ shims simply run `make -j$(nproc)` from your build directory. `libflashlight_bindings` will be placed in the project root.
+## Contributing
 
-#### With Make
+If you'd like to make changes to the code, first [build from source](#installing-from-source).
 
-See `Makefile`.
+All files ending in `*.inl` or `*_gen.ts` are generated.
+These can be modified by editing [`scripts/gen_binding.py`](https://github.com/facebookresearch/shumai/blob/main/scripts/gen_binding.py)
+and running [`./scripts/gen_all_binding.sh`](https://github.com/facebookresearch/shumai/blob/main/scripts/gen_all_binding.sh).
+
+See the [CONTRIBUTING](CONTRIBUTING.md) file for style guidance and more info on how to help out. 😁
+
 
 ## Supported operations
 
@@ -170,12 +243,10 @@ countNonzero | `countNonzero(tensor: Tensor, axes: number[] = [], keep_dims: boo
 any | `any(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor` |`t.any(axes: number[] = [], keep_dims: boolean = false) : Tensor`
 all | `all(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor` |`t.all(axes: number[] = [], keep_dims: boolean = false) : Tensor`
 
-### Contributing
-
-See the [CONTRIBUTING](CONTRIBUTING.md) file for how to help out.
 
 ### License
 
 shumai is MIT licensed, as found in the LICENSE file.
+
 
 
