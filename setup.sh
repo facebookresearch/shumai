@@ -1,17 +1,17 @@
 #!/bin/bash
+#
+# Build and install Flashlight and build and install Shumai
+# bindings. Builds expects the ArrayFire CPU or CUDA backends
+# to be installed. Change install and library paths accordingly.
+#
 
 SHUMAI_DIR=$(cd $(dirname $0) && pwd)
 
 # Config
-ARRAYFIRE_INSTALL_PREFIX=/checkpoint/jacobkahn/usr/
-FLASHLIGHT_INSTALL_PREFIX=$HOME/usr
-
-# FAIR Cluster modules
-module purge
-module load cuda/11.4
-module load cudnn/v8.4.1.50-cuda.11.6 # works with 11.4
-module load NCCL/2.11.4-4-cuda.11.4
-module load intel/mkl/2020.3.279
+ARRAYFIRE_INSTALL_PREFIX=
+FLASHLIGHT_INSTALL_PREFIX=
+USE_CUDA=OFF # must be ON or OFF
+USE_CPU=ON # must be ON or OFF
 
 set -x
 
