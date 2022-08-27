@@ -1,9 +1,13 @@
 import * as sm from "../shumai";
-import { it, expect, describe } from 'bun:test';
+import {
+  it,
+  expect,
+  describe
+} from 'bun:test';
 /* Run w `bun wiptest` */
 
 describe('ops', () => {
-	it('should support basic math operators (add, sub, mul, div)', () => {
+  it('should support basic math operators (add, sub, mul, div)', () => {
     const a = sm.scalar(4);
     const b = sm.scalar(2);
     expect(sm.add(a, b).valueOf()).toBe(6);
@@ -24,8 +28,8 @@ describe('ops', () => {
   it('should reshape', () => {
     const a = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 2]);
     const b = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 2])
-  
-    for (let i = 0; i < a.shape.length; i++){
+
+    for (let i = 0; i < a.shape.length; i++) {
       expect(a.shape[i]).toBe(b.shape[i]);
     }
   });
