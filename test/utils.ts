@@ -1,10 +1,14 @@
+import {
+  expect
+} from 'bun:test';
 /**
  * exported helper functions to make up for bun's wiptest
  * lacking some features
  */
 
 // validates that actual && expected array are close to (all values w/i given tolerance)
-export const expectArraysClose = (actual: Float32Array | number[], expected: Float32Array | number[], error = 0.001) => {
+const isCloseArr = (actual: Float32Array | number[], expected: Float32Array | number[], error: number) => {
+
   const expLength = expected.length
   if (actual.length !== expLength) return false;
 
@@ -17,3 +21,5 @@ export const expectArraysClose = (actual: Float32Array | number[], expected: Flo
 
   return true;
 }
+
+export const expectArraysClose = (actual: Float32Array | number[], expected: Float32Array | number[], error = 0.001) => expect(isCloseArr(actual, expected, error)).toBe(true);
