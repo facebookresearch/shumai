@@ -4,6 +4,7 @@
   "module": "shumai.ts",
   "type": "module",
   "scripts": {
+    "format": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "postinstall": "bash scripts/build.sh"
   },
   "files": [
@@ -14,6 +15,13 @@
     "scripts/build.sh"
   ],
   "devDependencies": {
-    "bun-types": "^0.1.0"
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/parser": "^5.35.1",
+    "bun-types": "^0.1.0",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2"
   }
 }

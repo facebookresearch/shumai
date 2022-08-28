@@ -281,6 +281,7 @@ for op, args, ret in op_list:
     c_sig = []
     ffi_sig = []
     js_sig = []
+    ts_sig = []
     js_impl = []
     js_args = []
     c_impl = []
@@ -354,6 +355,8 @@ for op, args, ret in op_list:
             js_sig.append(n + ": " + js_arg_type + " = " + d)
         else:
             js_sig.append(n + ": " + js_arg_type)
+        ts_sig.append(n + ": " + js_arg_type)
+
     # TODO ret != single value
     ffi_ret = ""
     c_ret = ret
@@ -392,7 +395,7 @@ for op, args, ret in op_list:
 {c_impl_str}
 }}"""
     full_js.append(js)
-    full_js_types.append(f"  {op}: Function;")
+    full_js_types.append(f"  {op}: ({', '.join(ts_sig[1:])}) => {to_ts[ret]};")
     full_ffi.append(ffi)
     full_c.append(c)
     doc = f"{op} | `{op}({', '.join(js_sig)}) : {to_ts[ret]}` |"
@@ -427,7 +430,8 @@ import {{ FFIType }} from "bun:ffi";
 import {{ arrayArg }} from "../ffi/ffi_bind_utils";
 import {{ fl }} from "../ffi/ffi_flashlight";
 import {{ TensorInterface }} from "./tensor_interface";
-export const gen_tensor_op_shim = (wrapFunc: Function) => {{
+import type {{ Tensor }} from "./tensor";
+export const gen_tensor_op_shim = (wrapFunc: (closure: CallableFunction, ...args: any[]) => Tensor) => {{
   return {{{full_js}
   }};
 }}
@@ -446,6 +450,7 @@ import {{ Tensor, wrapFLTensor }} from "./tensor";
 if sys.argv[1] in ["js_ops_interface", "js_ops_types"]:
     full_js_types = "\n".join(full_js_types)
     full_js_types = f"""\
+import type {{ Tensor }} from "./tensor";
 /* GENERATED CODE (gen_binding.py) */
 interface TensorOpsInterface {{
 {full_js_types}
