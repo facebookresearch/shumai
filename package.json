@@ -4,15 +4,14 @@
   "module": "shumai.ts",
   "type": "module",
   "scripts": {
-    "postinstall": "bash scripts/install.sh"
+    "postinstall": "bash scripts/build.sh"
   },
   "files": [
     "shumai.ts",
     "src/*/**.ts",
-    "install.sh",
     "src/cpp/*",
     "CMakeLists.txt",
-    "scripts/install.sh"
+    "scripts/build.sh"
   ],
   "devDependencies": {
     "bun-types": "^0.1.0"
