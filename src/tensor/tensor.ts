@@ -43,7 +43,7 @@ export function wrapFLTensor(closure: Function, ...args): Tensor {
   return t;
 }
 
-export function scalar(s: Number): Tensor {
+export function scalar(s: number): Tensor {
   return full([], s);
 }
 

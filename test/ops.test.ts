@@ -1,9 +1,12 @@
-import * as sm from "../shumai";
+import * as sm from "shumaiml";
 import {
   it,
   expect,
   describe
 } from 'bun:test';
+import {
+  expectArraysClose
+} from "./utils";
 /* Run w `bun wiptest` */
 
 describe('ops', () => {
@@ -14,6 +17,12 @@ describe('ops', () => {
     expect(sm.sub(a, b).valueOf()).toBe(2);
     expect(sm.mul(a, b).valueOf()).toBe(8);
     expect(sm.div(a, b).valueOf()).toBe(2);
+  });
+
+  it('should work for exp', async () => {
+    const a = sm.tensor(new Float32Array([1, 2, 0]))
+    const r = sm.exp(a);
+    expect(expectArraysClose(r.valueOf(), [Math.exp(1), Math.exp(2), 1])).toBe(true);
   });
 
   it('should copy', () => {
