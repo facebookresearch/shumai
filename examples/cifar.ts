@@ -18,7 +18,7 @@ async function load_from_file(fn) {
 		coarse_labels.push(coarse_ohe);
 		fine_labels.push(fine_ohe);
 		const img_only = new Uint8Array(img_size);
-		img_only.set(0, img.slice(2, img.length));
+		img_only.set(img.slice(2, img.length, 0));
 		const x = Float32Array.from(img_only);
 		imgs.push(sm.tensor(x).reshape([3, 32, 32]));
 	}
@@ -37,7 +37,7 @@ async function load_from_file(fn) {
 		delta = img_size + label_size - offset;
 		n = i + delta;
 		while (n < b.value.length) {
-			img.set(offset, b.value.slice(i, n));
+			img.set(b.value.slice(i, n), offset);
 			digest(img);
 			i += delta;
 			offset = 0;
@@ -46,7 +46,7 @@ async function load_from_file(fn) {
 		}
 		const missing = n - b.value.length;
 		const new_offset = img_size + label_size - missing;
-		img.set(offset, b.value.slice(i, i + new_offset));
+		img.set(b.value.slice(i, i + new_offset), offset);
 		offset = new_offset;
 		size += b.value.length;
 		console.log(`\u001b[2K processing ${size} bytes...\u001b[A`);
