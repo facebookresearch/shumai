@@ -1,6 +1,6 @@
 const t0 = performance.now()
 
-const N = 1024 * 1024
+const N = 1024 * 1024 * 8
 const arr = new Float32Array(N)
 // manuall construct in JS
 for (let i = 0; i < arr.length; ++i) {
