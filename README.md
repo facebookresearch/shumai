@@ -1,8 +1,12 @@
 # shumai
 
+
 Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
 
 ⚠️ *This is still experimental software!* ⚠️
+
+[(discord)](https://discord.gg/KavwUhWvSt)
+
 
 ---
 
