@@ -1,19 +1,6 @@
-import {
-  ptr
-} from "bun:ffi";
-
 interface TensorInterface {
-  new(...args: any[]): TensorInterface;
-  ptr: typeof ptr;
-  ndim: Number
-  shape: BigInt64Array;
-  toString: Function;
-  asContiguousTensor: Function;
-  elements: Number;
-  toFloat32Array: Function;
-  toFloat32: Function;
+  ptr: number
+  elements: number
 }
 
-export {
-  TensorInterface
-};
+export { TensorInterface }

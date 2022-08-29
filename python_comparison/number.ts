@@ -14,4 +14,4 @@ let total = 0
 for (let i = 0; i < arr.length; ++i) {
   total += arr[i]
 }
-console.log((performance.now() - t0) / 1e3, "seconds");
+console.log((performance.now() - t0) / 1e3, 'seconds')
