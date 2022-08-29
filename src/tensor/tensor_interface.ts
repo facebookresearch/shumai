@@ -1,6 +1,6 @@
 interface TensorInterface {
-  ptr: number;
-  elements: number;
+  ptr: number
+  elements: number
 }
 
-export { TensorInterface };
+export { TensorInterface }

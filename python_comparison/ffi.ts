@@ -1,45 +1,45 @@
-import * as ffi from 'bun:ffi';
+import * as ffi from 'bun:ffi'
 const link = ffi.dlopen('libjs_binding.dylib', {
   no_op: {},
   int_mul: {
     args: [ffi.FFIType.i32, ffi.FFIType.i32],
     returns: ffi.FFIType.i32
   }
-});
-const lib = link.symbols;
+})
+const lib = link.symbols
 
 function mul() {
-  const N = 1e7;
+  const N = 1e7
   for (let i = 0; i < N; ++i) {
-    lib.int_mul(i, i);
+    lib.int_mul(i, i)
   }
 }
 
 function noop() {
-  const N = 1e8;
+  const N = 1e8
   for (let i = 0; i < N; ++i) {
-    lib.no_op();
+    lib.no_op()
   }
 }
 
 function wrapped_noop() {
   const f = (x) => {
-    lib.no_op();
-  };
-  const N = 1e8;
+    lib.no_op()
+  }
+  const N = 1e8
   for (let i = 0; i < N; ++i) {
-    f(i);
+    f(i)
   }
 }
 
-const t0 = performance.now();
+const t0 = performance.now()
 
 if (process.argv.length > 2 && process.argv[2] === 'noop') {
-  noop();
+  noop()
 } else if (process.argv.length > 2 && process.argv[2] === 'wrapped_noop') {
-  wrapped_noop();
+  wrapped_noop()
 } else {
-  mul();
+  mul()
 }
 
-console.log((performance.now() - t0) / 1e3, 'seconds');
+console.log((performance.now() - t0) / 1e3, 'seconds')

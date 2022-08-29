@@ -1,4 +1,4 @@
-import { FFIType } from 'bun:ffi';
+import { FFIType } from 'bun:ffi'
 
 const ffi_tensor = {
   init: {},
@@ -51,6 +51,6 @@ const ffi_tensor = {
     args: [FFIType.ptr, FFIType.ptr, FFIType.i32],
     returns: FFIType.i32
   }
-};
+}
 
-export { ffi_tensor };
+export { ffi_tensor }

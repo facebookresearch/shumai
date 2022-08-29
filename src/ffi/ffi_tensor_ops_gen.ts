@@ -1,5 +1,5 @@
 /* GENERATED CODE (gen_binding.py) */
-import { FFIType } from 'bun:ffi';
+import { FFIType } from 'bun:ffi'
 const ffi_tensor_ops = {
   _rand: {
     args: [FFIType.ptr, FFIType.i64],
@@ -289,5 +289,5 @@ const ffi_tensor_ops = {
     args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr
   }
-};
-export { ffi_tensor_ops };
+}
+export { ffi_tensor_ops }
