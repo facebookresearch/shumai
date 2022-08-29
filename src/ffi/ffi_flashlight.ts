@@ -4,8 +4,8 @@ import { ffi_tensor_ops } from './ffi_tensor_ops_gen';
 
 const path = `${__dirname}/../../libflashlight_binding.${suffix}`;
 const { symbols: fl } = dlopen(path, {
-	...ffi_tensor,
-	...ffi_tensor_ops
+  ...ffi_tensor,
+  ...ffi_tensor_ops
 });
 
 export { fl };

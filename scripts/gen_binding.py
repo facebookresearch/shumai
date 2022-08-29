@@ -353,9 +353,10 @@ for op, args, ret in op_list:
         )
         if d:
             js_sig.append(n + ": " + js_arg_type + " = " + d)
+            ts_sig.append(n + "?: " + js_arg_type)
         else:
             js_sig.append(n + ": " + js_arg_type)
-        ts_sig.append(n + ": " + js_arg_type)
+            ts_sig.append(n + ": " + js_arg_type)
 
     # TODO ret != single value
     ffi_ret = ""
