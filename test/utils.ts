@@ -1,12 +1,11 @@
 import {
   expect
 } from 'bun:test';
+
 /**
  * exported helper functions to make up for bun's wiptest
  * lacking some features
  */
-
-
 export const isClose = (actual: number, expected: number, error = 0.001) => {
   const upper = expected + error,
     lower = expected - error;
