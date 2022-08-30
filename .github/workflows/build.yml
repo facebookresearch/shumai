@@ -17,7 +17,6 @@ jobs:
           - label: shumai-flashlight-macos-amd64
             runner: macos-12
             arch: "x64"
-          # TODO: M1
           - label: shumai-flashlight-macos-arm64
             runner: self-hosted
             arch: "arm64"
@@ -82,16 +81,24 @@ jobs:
           #   runner: linux-arm64
           #   arch: "arm64"
     steps:
-      - name: "Install ArrayFire CPU backend with OpenBLAS runtime"
+      - name: "Install ArrayFire CUDA backend with CUDA 11.6"
         run: |
           sudo apt install -y gnupg2 ca-certificates
           sudo apt-key adv --fetch-key https://repo.arrayfire.com/GPG-PUB-KEY-ARRAYFIRE-2020.PUB
           echo "deb [arch=amd64] https://repo.arrayfire.com/debian all main" | sudo tee /etc/apt/sources.list.d/arrayfire.list
           sudo apt update
-          sudo apt install arrayfire-cpu3-dev arrayfire-cpu3-openblas
+          sudo apt install arrayfire-cuda3-dev
+      - name: "Install CUDA Toolkit 11.6"
+        # Use the Ubuntu 18.04 repo per ArrayFire
+        run: |
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb
+          sudo dpkg -i cuda-keyring_1.0-1_all.deb
+          sudo apt update
+          sudo apt install cuda-toolkit-11-6
+          echo "/usr/local/cuda/bin" >> $GITHUB_PATH
       - name: "Install CMake and Ninja"
         run: sudo apt install cmake ninja-build
-      - name: "Build and install Flashlight with the Arrayfire CPU Backend"
+      - name: "Build and install Flashlight with the Arrayfire CUDA Backend"
         # TODO: remove this from-source build and pull in (1) headers and (2) a lib from HEAD
         # or just bite the pullet and get a dpkg port going already
         run: |
@@ -103,11 +110,12 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=$HOME/usr \
             -DFL_USE_ARRAYFIRE=ON \
-            -DFL_ARRAYFIRE_USE_CPU=ON \
+            -DFL_ARRAYFIRE_USE_CUDA=ON \
             -DFL_USE_ONEDNN=OFF \
             -DFL_BUILD_DISTRIBUTED=OFF \
             -DFL_BUILD_TESTS=OFF \
-            -DFL_BUILD_EXAMPLES=OFF
+            -DFL_BUILD_EXAMPLES=OFF \
+            -DCMAKE_CUDA_ARCHITECTURES="60;70;80"
           ninja
           ninja install
       - name: "Checkout Shumai source"
