@@ -1,0 +1,186 @@
+name: build
+on:
+  # Fix this to only be master push when done with dev
+  push:
+  pull_request:
+  # Expose in Github Actions tab
+  workflow_dispatch:
+jobs:
+  darwin:
+    name: darwin
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        include:
+          - label: shumai-flashlight-macos-amd64
+            runner: macos-12
+            arch: "x64"
+          # TODO: M1
+          # - label: shumai-flashlight-macos-arm64
+          #   runner: macos-arm64
+          #   arch: "arm64"
+    steps:
+      - name: "Install ArrayFire CPU backend with OpenBLAS runtime"
+        run: brew install arrayfire
+      - name: "Install CMake and Ninja"
+        run: brew install cmake ninja
+      - name: "Build and install Flashlight with the Arrayfire CPU Backend"
+        # TODO: remove this from-source build and pull in (1) headers and (2) a lib from HEAD
+        # or just bite the pullet and get a dpkg port going already
+        run: |
+          git clone https://github.com/flashlight/flashlight
+          cd flashlight
+          cmake . \
+            -G Ninja \
+            -DBUILD_SHARED_LIBS=ON \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$HOME/usr \
+            -DFL_USE_ARRAYFIRE=ON \
+            -DFL_ARRAYFIRE_USE_CPU=ON \
+            -DFL_USE_ONEDNN=OFF \
+            -DFL_BUILD_DISTRIBUTED=OFF \
+            -DFL_BUILD_TESTS=OFF \
+            -DFL_BUILD_EXAMPLES=OFF
+          ninja
+          ninja install
+      - name: "Checkout Shumai source"
+        uses: actions/checkout@v3
+      - name: "Build Shumai bindings"
+        run: |
+          cmake -S . -B . -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake
+          cmake --build . --parallel
+      - name: "Colocate package assets"
+        run: |
+          mkdir shumai
+          mv -v $HOME/usr/lib/libflashlight.0.3.2.dylib shumai/libflashlight.0.dylib
+          mv -v libflashlight_binding.dylib shumai
+      - name: "Add bindings dylib dir as rpath"
+        run: install_name_tool -add_rpath "@loader_path" shumai/libflashlight_binding.dylib
+      - name: Create package.json
+        run: |
+          echo '{ "name": "@shumai/darwin_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["darwin"], "arch": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
+      - name: "Zip npm package contents"
+        run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.label }}
+          path: ${{ matrix.label }}.tar.gz
+  linux:
+    name: linux
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        include:
+          - label: shumai-flashlight-linux-amd64
+            runner: ubuntu-20.04
+            arch: "x64"
+          # TODO: linux + arm
+          # - label: shumai-flashlight-linux-arm64
+          #   runner: linux-arm64
+          #   arch: "arm64"
+    steps:
+      - name: "Install ArrayFire CPU backend with OpenBLAS runtime"
+        run: |
+          sudo apt install -y gnupg2 ca-certificates
+          sudo apt-key adv --fetch-key https://repo.arrayfire.com/GPG-PUB-KEY-ARRAYFIRE-2020.PUB
+          echo "deb [arch=amd64] https://repo.arrayfire.com/debian all main" | sudo tee /etc/apt/sources.list.d/arrayfire.list
+          sudo apt update
+          sudo apt install arrayfire-cpu3-dev arrayfire-cpu3-openblas
+      - name: "Install CMake and Ninja"
+        run: sudo apt install cmake ninja-build
+      - name: "Build and install Flashlight with the Arrayfire CPU Backend"
+        # TODO: remove this from-source build and pull in (1) headers and (2) a lib from HEAD
+        # or just bite the pullet and get a dpkg port going already
+        run: |
+          git clone https://github.com/flashlight/flashlight
+          cd flashlight
+          cmake . \
+            -G Ninja \
+            -DBUILD_SHARED_LIBS=ON \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=$HOME/usr \
+            -DFL_USE_ARRAYFIRE=ON \
+            -DFL_ARRAYFIRE_USE_CPU=ON \
+            -DFL_USE_ONEDNN=OFF \
+            -DFL_BUILD_DISTRIBUTED=OFF \
+            -DFL_BUILD_TESTS=OFF \
+            -DFL_BUILD_EXAMPLES=OFF
+          ninja
+          ninja install
+      - name: "Checkout Shumai source"
+        uses: actions/checkout@v3
+      - name: "Build Shumai bindings"
+        run: |
+          cmake -S . -B . -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake
+          cmake --build . --parallel
+      - name: "Colocate package assets"
+        run: |
+          mkdir shumai
+          mv --verbose $HOME/usr/lib/libflashlight.so.0.3.2 shumai/libflashlight.so.0
+          mv --verbose libflashlight_binding.so shumai
+      - name: "Add bindings shared lib dir as rpath"
+        run: patchelf --set-rpath '$ORIGIN' shumai/libflashlight_binding.so
+      - name: Create package.json
+        run: |
+          echo '{ "name": "@shumai/linux_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["linux"], "arch": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
+      - name: "Zip npm package contents"
+        run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.label }}
+          path: ${{ matrix.label }}.tar.gz
+  publish:
+    name: "Publish npm packages"
+    runs-on: ubuntu-20.04
+    timeout-minutes: 30
+    needs:
+      - linux
+      - darwin
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+      - uses: actions/download-artifact@v3
+        with:
+          name: shumai-flashlight-linux-amd64
+          path: ${{ runner.temp }}
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: shumai-flashlight-linux-arm64
+      #     path: ${{ runner.temp }}
+      - uses: actions/download-artifact@v3
+        with:
+          name: shumai-flashlight-macos-amd64
+          path: ${{ runner.temp }}
+      - name: "Upload packages to npm"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_SECRET }}
+        run: |
+          cd ${{ runner.temp }}
+          rm -rf shumai
+          tar -xzf shumai-flashlight-linux-amd64.tar.gz
+          cd shumai
+          npm publish --access=public
+
+          # TODO: linux arm
+          # cd ${{ runner.temp }}
+          # rm -rf shumai
+          # tar -xzf shumai-flashlight-linux-arm64.tar.gz
+          # cd shumai
+          # npm publish --access=public
+
+          cd ${{ runner.temp }}
+          rm -rf shumai
+          tar -xzf shumai-flashlight-macos-amd64.tar.gz
+          cd shumai
+          npm publish --access=public
+
+          # TODO: M1
+          # cd ${{ runner.temp }}
+          # rm -rf shumai
+          # tar -xzf shumai-flashlight-macos-arm64.tar.gz
+          # cd shumai
+          # npm publish --access=public

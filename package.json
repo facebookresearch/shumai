@@ -4,15 +4,11 @@
   "module": "shumai.ts",
   "type": "module",
   "scripts": {
-    "format": "eslint '*/**/*.{js,ts}' '*.{js,ts,cjs}' package.json  --quiet --fix",
-    "postinstall": "bash scripts/build.sh"
+    "format": "eslint '*/**/*.{js,ts}' '*.{js,ts,cjs}' package.json  --quiet --fix"
   },
   "files": [
     "shumai.ts",
-    "src/*/**.ts",
-    "src/cpp/*",
-    "CMakeLists.txt",
-    "scripts/build.sh"
+    "src/*/**.ts"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.35.1",
@@ -23,5 +19,10 @@
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
     "typescript": "^4.8.2"
+  },
+  "optionalDependencies": {
+    "@shumai/darwin_x64_shumai_flashlight": "*",
+    "@shumai/darwin_arm64_shumai_flashlight": "*",
+    "@shumai/linux_x64_shumai_flashlight": "*"
   }
 }
