@@ -15,6 +15,10 @@ node_modules/
 *.o
 *.obj
 
+# cifar data
+cifar-100-binary.tar
+cifar-100-binary
+
 # VIM Swap
 [._]*.s[a-v][a-z]
 !*.svg  # comment out if you don't need vector files
