@@ -1,6 +1,6 @@
 import { it, describe, expect } from 'bun:test'
 import * as sm from 'shumaiml'
-import { areSameShape, expectArraysClose, isExpectedShape } from './utils'
+import { areSameShape, expectArraysClose, isShape } from './utils'
 
 describe('transpose', () => {
   it('2D (no change)', () => {
@@ -22,7 +22,7 @@ describe('transpose', () => {
   it('2D, shape has ones', async () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([1, 4])
     const t2 = sm.transpose(t, [1, 0])
-    expect(isExpectedShape(t2, [4, 1])).toBe(true)
+    expect(isShape(t2, [4, 1])).toBe(true)
     expectArraysClose(<Float32Array>t2.valueOf(), [1, 2, 3, 4])
   })
 
@@ -38,7 +38,7 @@ describe('transpose', () => {
   it('3D [r, c, d] => [d, c, r]', () => {
     const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 2, 2])
     const t2 = sm.transpose(t, [2, 1, 0])
-    expect(isExpectedShape(t2, [2, 2, 2])).toBe(true)
+    expect(isShape(t2, [2, 2, 2])).toBe(true)
     expectArraysClose(<Float32Array>t2.valueOf(), [1, 3, 2, 4, 11, 33, 22, 44])
   })
 
@@ -46,17 +46,17 @@ describe('transpose', () => {
     const perm = [2, 0, 1]
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 1, 2])
     const tt = sm.transpose(t, perm)
-    expect(isExpectedShape(tt, [2, 2, 1])).toBe(true)
+    expect(isShape(tt, [2, 2, 1])).toBe(true)
     expectArraysClose(<Float32Array>tt.valueOf(), [1, 3, 2, 4])
 
     const t2 = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 2, 1])
     const tt2 = sm.transpose(t2, perm)
-    expect(isExpectedShape(tt2, [1, 2, 2])).toBe(true)
+    expect(isShape(tt2, [1, 2, 2])).toBe(true)
     expectArraysClose(<Float32Array>tt2.valueOf(), [1, 2, 3, 4])
 
     const t3 = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([1, 2, 2])
     const tt3 = sm.transpose(t3, perm)
-    expect(isExpectedShape(tt3, [2, 1, 2])).toBe(true)
+    expect(isShape(tt3, [2, 1, 2])).toBe(true)
     expectArraysClose(<Float32Array>tt3.valueOf(), [1, 3, 2, 4])
   })
 
@@ -96,7 +96,7 @@ describe('transpose', () => {
       .tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1)))
       .reshape([2, 2, 2, 2])
     const t2 = sm.transpose(t, [1, 0, 3, 2])
-    expect(isExpectedShape(t2, [2, 2, 2, 2])).toBe(true)
+    expect(isShape(t2, [2, 2, 2, 2])).toBe(true)
     expectArraysClose(
       <Float32Array>t2.valueOf(),
       [1, 3, 2, 4, 9, 11, 10, 12, 5, 7, 6, 8, 13, 15, 14, 16]

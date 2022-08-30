@@ -5,7 +5,7 @@ import type { Tensor } from '../src/tensor/tensor'
  * exported helper functions to make up for bun's wiptest
  * lacking some features
  */
-export const isExpectedShape = (t: Tensor, expectedShape: number[]) => {
+export const isShape = (t: Tensor, expectedShape: number[]) => {
   for (let i = 0; i < t.shape.length; i++) {
     if (t.shape[i] !== expectedShape[i]) return false
   }
