@@ -109,11 +109,13 @@ brew install --build-from-source flashlight
 npm install shumaiml
 ```
 
-### Installing from source
+### Installing local build from source
+
+**Note: not required when developing the library locally**
 
 This process will require building the FFI for bun
 and then running `npm pack` to generate a `shumaiml_*.tgz`
-package.  You can then use `npm install $PATH_TO_SOURCE/shumaiml_*.tgz`
+package.  You can then use `npm install $PATH_TO_SOURCE/shumaiml-*.tgz`
 to install the package where you'd like.
 
 #### MacOS from source

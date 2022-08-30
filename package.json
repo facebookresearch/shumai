@@ -4,7 +4,7 @@
   "module": "shumai.ts",
   "type": "module",
   "scripts": {
-    "format": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "format": "eslint '*/**/*.{js,ts}' '*.{js,ts,cjs}' package.json  --quiet --fix",
     "postinstall": "bash scripts/build.sh"
   },
   "files": [
