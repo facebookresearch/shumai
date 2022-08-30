@@ -37,7 +37,7 @@ describe('sum', () => {
   */
 
   /* CURRENTLY FAILING
-    it('sums axis=0 2D Tensor (keepDims = true)', () => {
+    it('sums axis=[0] 2D Tensor (keepDims = true)', () => {
       const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
       const sum = sm.sum(t, [0], true)
       expect(isShape(sum, [1, 2])).toBe(true)

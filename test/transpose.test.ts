@@ -3,7 +3,7 @@ import * as sm from 'shumaiml'
 import { areSameShape, expectArraysClose, isShape } from './utils'
 
 describe('transpose', () => {
-  it('2D (no change)', () => {
+  it('2D Tensor (no change)', () => {
     const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 4])
     const r = sm.transpose(t, [0, 1])
     expect(areSameShape(t, r)).toBe(true)
@@ -19,7 +19,7 @@ describe('transpose', () => {
     });
   */
 
-  it('2D, shape has ones', async () => {
+  it('2D Tensor; shape has ones', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([1, 4])
     const t2 = sm.transpose(t, [1, 0])
     expect(isShape(t2, [4, 1])).toBe(true)
@@ -27,7 +27,7 @@ describe('transpose', () => {
   })
 
   /* CURRENTLY FAILING
-    it('3D [r, c, d] => [d, r, c]', () => {
+    it('3D Tensor [r, c, d] => [d, r, c]', () => {
       const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 2, 2]);
       const t2 = sm.transpose(t, [2, 0, 1]);
       expect(isExpectedShape(t2, [2, 2, 2])).toBe(true)
@@ -35,14 +35,14 @@ describe('transpose', () => {
     });
   */
 
-  it('3D [r, c, d] => [d, c, r]', () => {
+  it('3D Tensor [r, c, d] => [d, c, r]', () => {
     const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 2, 2])
     const t2 = sm.transpose(t, [2, 1, 0])
     expect(isShape(t2, [2, 2, 2])).toBe(true)
     expectArraysClose(<Float32Array>t2.valueOf(), [1, 3, 2, 4, 11, 33, 22, 44])
   })
 
-  it('3D [r, c, d] => [d, r, c], shape has ones', () => {
+  it('3D Tensor [r, c, d] => [d, r, c], shape has ones', () => {
     const perm = [2, 0, 1]
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 1, 2])
     const tt = sm.transpose(t, perm)
@@ -61,7 +61,7 @@ describe('transpose', () => {
   })
 
   /* CURRENTLY FAILING
-    it('3D [r, c, d] => [r, d, c]', () => {
+    it('3D Tensor [r, c, d] => [r, d, c]', () => {
       const perm = [0, 2, 1];
       const t = sm.tensor(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8])).reshape([2, 2, 2]);
       const tt = sm.transpose(t, perm);
@@ -71,7 +71,7 @@ describe('transpose', () => {
   */
 
   /* CURRENTLY FAILING
-    it('5D [r, c, d, e, f] => [r, c, d, f, e]', () => {
+    it('5D Tensor [r, c, d, e, f] => [r, c, d, f, e]', () => {
       const t = sm.tensor(new Float32Array(new Array(32).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2, 2]);
       const t2 = sm.transpose(t, [0, 1, 2, 4, 3]);
       expect(isExpectedShape(t2, [2, 2, 2, 2, 2])).toBe(true)
@@ -83,7 +83,7 @@ describe('transpose', () => {
   */
 
   /* CURRENTLY FAILING
-    it('4D [r, c, d, e] => [c, r, d, e]', () => {
+    it('4D Tensor [r, c, d, e] => [c, r, d, e]', () => {
       const t = sm.tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2]);
       const t2 = sm.transpose(t, [1, 0, 2, 3]);
       expect(isExpectedShape(t2, [2, 2, 2, 2])).toBe(true)
@@ -91,7 +91,7 @@ describe('transpose', () => {
     });
   */
 
-  it('4D [r, c, d, e] => [c, r, e, d]', () => {
+  it('4D Tensor [r, c, d, e] => [c, r, e, d]', () => {
     const t = sm
       .tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1)))
       .reshape([2, 2, 2, 2])
@@ -104,7 +104,7 @@ describe('transpose', () => {
   })
 
   /* CURRENTLY FAILING
-    it('4D [r, c, d, e] => [e, r, c, d]', () => {
+    it('4D Tensor [r, c, d, e] => [e, r, c, d]', () => {
       const t = sm.tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2]);
       const t2 = sm.transpose(t, [3, 0, 1, 2]);
       expect(isExpectedShape(t2, [2, 2, 2, 2])).toBe(true)
@@ -113,7 +113,7 @@ describe('transpose', () => {
   */
 
   /* CURRENTLY FAILING
-    it('4D [r, c, d, e] => [d, c, e, r]', () => {
+    it('4D Tensor [r, c, d, e] => [d, c, e, r]', () => {
       const t = sm.tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2]);
       const t2 = sm.transpose(t, [2, 1, 3, 0]);
       expect(isExpectedShape(t2, [2, 2, 2, 2])).toBe(true)
@@ -122,7 +122,7 @@ describe('transpose', () => {
   */
 
   /* CURRENTLY FAILING
-    it('5D [r, c, d, e, f] => [c, r, d, e, f]', () => {
+    it('5D Tensor [r, c, d, e, f] => [c, r, d, e, f]', () => {
       const t = sm.tensor(new Float32Array(new Array(32).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2, 2]);
       const t2 = sm.transpose(t, [1, 0, 2, 3, 4]);
       expect(isExpectedShape(t2, [2, 2, 2, 2, 2])).toBe(true)
@@ -134,7 +134,7 @@ describe('transpose', () => {
   */
 
   /* CURRENTLY FAILING
-    it('6D [r, c, d, e, f] => [r, c, d, f, e]', () => {
+    it('6D Tensor [r, c, d, e, f] => [r, c, d, f, e]', () => {
       const t = sm.tensor(new Float32Array(new Array(64).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2, 2, 2]);
       const t2 = sm.transpose(t, [0, 1, 2, 3, 5, 4]);
       expect(isExpectedShape(t2, [2, 2, 2, 2, 2, 2])).toBe(true)
@@ -148,7 +148,7 @@ describe('transpose', () => {
   */
 
   /* CURRENTLY FAILING
-    it('6D [r, c, d, e, f, g] => [c, r, d, e, f, g]', () => {
+    it('6D Tensor [r, c, d, e, f, g] => [c, r, d, e, f, g]', () => {
       const t = sm.tensor(new Float32Array(new Array(64).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2, 2, 2]);
       const t2 = sm.transpose(t, [1, 0, 2, 3, 4, 5]);
       expect(isExpectedShape(t2, [2, 2, 2, 2, 2, 2])).toBe(true)

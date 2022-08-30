@@ -68,7 +68,7 @@ describe('ops', () => {
     expectArraysClose(<Float32Array>r.valueOf(), [0.5, 3, 0.25, 0.15])
   })
 
-  it('should work for mul', async () => {
+  it('should work for mul', () => {
     const shape = [2, 2]
     const a = sm.tensor(new Float32Array([1, 2, -3, -4])).reshape(shape)
     const b = sm.tensor(new Float32Array([5, 3, 4, -7])).reshape(shape)

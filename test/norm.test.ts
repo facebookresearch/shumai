@@ -17,20 +17,20 @@ describe('norm', () => {
     });
   
 
-  it('vector -inf norm', async () => {
+  it('vector -inf norm', () => {
     const a = sm.tensor(new Float32Array([1, -2, 3, -4]));
     const norm = sm.norm(a, [0], -Infinity);
     expect(norm.valueOf()).toBe(1);
   });
   */
 
-  it('vector 1 norm', async () => {
+  it('vector 1 norm', () => {
     const a = sm.tensor(new Float32Array([1, -2, 3, -4]))
     const norm = sm.norm(a, [0], 1)
     expect(norm.valueOf()).toBe(10)
   })
 
-  it('vector 2-norm', async () => {
+  it('vector 2 norm', () => {
     const a = sm.tensor(new Float32Array([1, -2, 3, -4]))
     const norm = sm.norm(a, [0], 2)
     expect(isClose(<number>norm.valueOf(), 5.4772)).toBe(true)
