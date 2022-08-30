@@ -1,6 +1,6 @@
 import { it, describe, expect } from 'bun:test'
 import * as sm from 'shumaiml'
-import { areSameShape, expectArraysClose } from './utils'
+import { areSameShape, expectArraysClose, isExpectedShape } from './utils'
 
 describe('transpose', () => {
   it('2D (no change)', () => {
@@ -14,10 +14,7 @@ describe('transpose', () => {
     it('2D (transpose)', () => {
       const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 4]);
       t.transpose([1, 0]);
-      const expected_shape = [4, 2];
-      for (let i = 0; i < t.shape.length; i++) {
-        expect(t.shape[i]).toBe(expected_shape[i])
-      }
+      expect(isExpectedShape(t, [4, 2])).toBe(true)
       expectArraysClose(t.valueOf(), [1, 3, 11, 33, 2, 4, 22, 44]);
     });
   */
@@ -25,10 +22,7 @@ describe('transpose', () => {
   it('2D, shape has ones', async () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([1, 4])
     const t2 = sm.transpose(t, [1, 0])
-    const expected_shape = [4, 1]
-    for (let i = 0; i < t.shape.length; i++) {
-      expect(t2.shape[i]).toBe(expected_shape[i])
-    }
+    expect(isExpectedShape(t2, [4, 1])).toBe(true)
     expectArraysClose(<Float32Array>t2.valueOf(), [1, 2, 3, 4])
   })
 
@@ -36,10 +30,7 @@ describe('transpose', () => {
     it('3D [r, c, d] => [d, r, c]', () => {
       const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 2, 2]);
       const t2 = sm.transpose(t, [2, 0, 1]);
-      const expected_shape = [2, 2, 2];
-      for (let i = 0; i < t2.shape.length; i++) {
-        expect(t2.shape[i]).toBe(expected_shape[i])
-      }
+      expect(isExpectedShape(t2, [2, 2, 2])).toBe(true)
       expectArraysClose(t2.valueOf(), [1, 2, 3, 4, 11, 22, 33, 44]);
     });
   */
@@ -47,10 +38,7 @@ describe('transpose', () => {
   it('3D [r, c, d] => [d, c, r]', () => {
     const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 2, 2])
     const t2 = sm.transpose(t, [2, 1, 0])
-    const expected_shape = [2, 2, 2]
-    for (let i = 0; i < t2.shape.length; i++) {
-      expect(t2.shape[i]).toBe(expected_shape[i])
-    }
+    expect(isExpectedShape(t2, [2, 2, 2])).toBe(true)
     expectArraysClose(<Float32Array>t2.valueOf(), [1, 3, 2, 4, 11, 33, 22, 44])
   })
 
@@ -58,25 +46,17 @@ describe('transpose', () => {
     const perm = [2, 0, 1]
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 1, 2])
     const tt = sm.transpose(t, perm)
-    let expected_shape = [2, 2, 1]
-    for (let i = 0; i < tt.shape.length; i++) {
-      expect(tt.shape[i]).toBe(expected_shape[i])
-    }
+    expect(isExpectedShape(tt, [2, 2, 1])).toBe(true)
     expectArraysClose(<Float32Array>tt.valueOf(), [1, 3, 2, 4])
 
     const t2 = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 2, 1])
     const tt2 = sm.transpose(t2, perm)
-    expected_shape = [1, 2, 2]
-    for (let i = 0; i < tt2.shape.length; i++) {
-      expect(tt2.shape[i]).toBe(expected_shape[i])
-    }
+    expect(isExpectedShape(tt2, [1, 2, 2])).toBe(true)
     expectArraysClose(<Float32Array>tt2.valueOf(), [1, 2, 3, 4])
+
     const t3 = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([1, 2, 2])
     const tt3 = sm.transpose(t3, perm)
-    expected_shape = [2, 1, 2]
-    for (let i = 0; i < tt3.shape.length; i++) {
-      expect(tt3.shape[i]).toBe(expected_shape[i])
-    }
+    expect(isExpectedShape(tt3, [2, 1, 2])).toBe(true)
     expectArraysClose(<Float32Array>tt3.valueOf(), [1, 3, 2, 4])
   })
 
@@ -85,10 +65,7 @@ describe('transpose', () => {
       const perm = [0, 2, 1];
       const t = sm.tensor(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8])).reshape([2, 2, 2]);
       const tt = sm.transpose(t, perm);
-      const expected_shape = [2, 2, 2];
-      for (let i = 0; i < tt.shape.length; i++){
-        expect(tt.shape[i]).toBe(expected_shape[i]);
-      }
+      expect(isExpectedShape(tt, [2, 2, 2])).toBe(true)
       expectArraysClose(tt.valueOf(), [1, 3, 2, 4, 5, 7, 6, 8]);
     });
   */
@@ -97,10 +74,7 @@ describe('transpose', () => {
     it('5D [r, c, d, e, f] => [r, c, d, f, e]', () => {
       const t = sm.tensor(new Float32Array(new Array(32).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2, 2]);
       const t2 = sm.transpose(t, [0, 1, 2, 4, 3]);
-      const expected_shape = [2, 2, 2, 2, 2];
-      for (let i = 0; i < t2.shape.length; i++){
-        expect(t2.shape[i]).toBe(expected_shape[i]);
-      }
+      expect(isExpectedShape(t2, [2, 2, 2, 2, 2])).toBe(true)
       expectArraysClose(t2.valueOf(), [
         1,  3,  2,  4,  5,  7,  6,  8,  9,  11, 10, 12, 13, 15, 14, 16,
         17, 19, 18, 20, 21, 23, 22, 24, 25, 27, 26, 28, 29, 31, 30, 32
@@ -112,10 +86,7 @@ describe('transpose', () => {
     it('4D [r, c, d, e] => [c, r, d, e]', () => {
       const t = sm.tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2]);
       const t2 = sm.transpose(t, [1, 0, 2, 3]);
-      const expected_shape = [2, 2, 2, 2];
-      for (let i = 0; i < t2.shape.length; i++) {
-        expect(t2.shape[i]).toBe(expected_shape[i])
-      }
+      expect(isExpectedShape(t2, [2, 2, 2, 2])).toBe(true)
       expectArraysClose(t2.valueOf(), [1, 2, 3, 4, 9, 10, 11, 12, 5, 6, 7, 8, 13, 14, 15, 16]);
     });
   */
@@ -125,10 +96,7 @@ describe('transpose', () => {
       .tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1)))
       .reshape([2, 2, 2, 2])
     const t2 = sm.transpose(t, [1, 0, 3, 2])
-    const expected_shape = [2, 2, 2, 2]
-    for (let i = 0; i < t2.shape.length; i++) {
-      expect(t2.shape[i]).toBe(expected_shape[i])
-    }
+    expect(isExpectedShape(t2, [2, 2, 2, 2])).toBe(true)
     expectArraysClose(
       <Float32Array>t2.valueOf(),
       [1, 3, 2, 4, 9, 11, 10, 12, 5, 7, 6, 8, 13, 15, 14, 16]
@@ -139,10 +107,7 @@ describe('transpose', () => {
     it('4D [r, c, d, e] => [e, r, c, d]', () => {
       const t = sm.tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2]);
       const t2 = sm.transpose(t, [3, 0, 1, 2]);
-      const expected_shape = [2, 2, 2, 2];
-      for (let i = 0; i < t2.shape.length; i++) {
-        expect(t2.shape[i]).toBe(expected_shape[i]);
-      }
+      expect(isExpectedShape(t2, [2, 2, 2, 2])).toBe(true)
       expectArraysClose(t2.valueOf(), [1, 3, 5, 7, 9, 11, 13, 15, 2, 4, 6, 8, 10, 12, 14, 16]);
     });
   */
@@ -151,10 +116,7 @@ describe('transpose', () => {
     it('4D [r, c, d, e] => [d, c, e, r]', () => {
       const t = sm.tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2]);
       const t2 = sm.transpose(t, [2, 1, 3, 0]);
-      const expected_shape = [2, 2, 2, 2];
-      for (let i = 0; i < t2.shape.length; i++) {
-        expect(t2.shape[i]).toBe(expected_shape[i]);
-      }
+      expect(isExpectedShape(t2, [2, 2, 2, 2])).toBe(true)
       expectArraysClose(t2.valueOf(), [1, 9, 2, 10, 5, 13, 6, 14, 3, 11, 4, 12, 7, 15, 8, 16]);
     });
   */
@@ -163,10 +125,7 @@ describe('transpose', () => {
     it('5D [r, c, d, e, f] => [c, r, d, e, f]', () => {
       const t = sm.tensor(new Float32Array(new Array(32).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2, 2]);
       const t2 = sm.transpose(t, [1, 0, 2, 3, 4]);
-      const expected_shape = [2, 2, 2, 2, 2];
-      for (let i = 0; i < t2.shape.length; i++) {
-        expect(t2.shape[i]).toBe(expected_shape[i]);
-      }
+      expect(isExpectedShape(t2, [2, 2, 2, 2, 2])).toBe(true)
       expectArraysClose(t2.valueOf(), [
         1, 2,  3,  4,  5,  6,  7,  8,  17, 18, 19, 20, 21, 22, 23, 24,
         9, 10, 11, 12, 13, 14, 15, 16, 25, 26, 27, 28, 29, 30, 31, 32
@@ -178,10 +137,7 @@ describe('transpose', () => {
     it('6D [r, c, d, e, f] => [r, c, d, f, e]', () => {
       const t = sm.tensor(new Float32Array(new Array(64).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2, 2, 2]);
       const t2 = sm.transpose(t, [0, 1, 2, 3, 5, 4]);
-      const expected_shape = [2, 2, 2, 2, 2, 2];
-      for (let i = 0; i < t2.shape.length; i++) {
-        expect(t2.shape[i]).toBe(expected_shape[i]);
-      }
+      expect(isExpectedShape(t2, [2, 2, 2, 2, 2, 2])).toBe(true)
       expectArraysClose(t2.valueOf(), [
         1,  3,  2,  4,  5,  7,  6,  8,  9,  11, 10, 12, 13, 15, 14, 16,
         17, 19, 18, 20, 21, 23, 22, 24, 25, 27, 26, 28, 29, 31, 30, 32,
@@ -195,10 +151,7 @@ describe('transpose', () => {
     it('6D [r, c, d, e, f, g] => [c, r, d, e, f, g]', () => {
       const t = sm.tensor(new Float32Array(new Array(64).fill(0).map((x, i) => i + 1))).reshape([2, 2, 2, 2, 2, 2]);
       const t2 = sm.transpose(t, [1, 0, 2, 3, 4, 5]);
-      const expected_shape = [2, 2, 2, 2, 2, 2];
-      for (let i = 0; i < t2.shape.length; i++) {
-        expect(t2.shape[i]).toBe(expected_shape[i]);
-      }
+      expect(isExpectedShape(t2, [2, 2, 2, 2, 2, 2])).toBe(true)
       expectArraysClose(t2.valueOf(), [
         1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16,
         33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
