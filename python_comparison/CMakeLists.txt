@@ -7,7 +7,7 @@ add_library(
   )
 
 
-find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
 add_subdirectory(nanobind)
 nanobind_add_module(py_binding py_binding.cc)

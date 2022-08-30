@@ -2,7 +2,7 @@ import time
 
 t0 = time.time()
 
-N = 1024 * 1024
+N = 1024 * 1024 * 8
 # let python cheat a bit with built ins
 arr = list(range(N))
 # scan and then sum
