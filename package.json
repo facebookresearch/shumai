@@ -21,8 +21,8 @@
     "typescript": "^4.8.2"
   },
   "optionalDependencies": {
-    "@shumai/darwin_x64_shumai_flashlight": "*",
-    "@shumai/darwin_arm64_shumai_flashlight": "*",
-    "@shumai/linux_x64_shumai_flashlight": "*"
+    "@shumai/darwin_x64_shumai_flashlight": "latest",
+    "@shumai/darwin_arm64_shumai_flashlight": "latest",
+    "@shumai/linux_x64_shumai_flashlight": "latest"
   }
 }
