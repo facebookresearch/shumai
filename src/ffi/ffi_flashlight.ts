@@ -13,12 +13,11 @@ const { symbols: fl } = (() => {
     })
   } catch (error) {
     console.error("Bun trace:", error)
-    // TODO: swap to recommending arrayfire-cuda3-cuda-11-6 once linux AF is GPU-only
     throw new Error(`shumai was unable to load backing libraries!
     Make sure a valid tensor backend (e.g. ArrayFire) is installed by running,
     for example:
       ${process.platform === 'darwin' ? 'brew install arrayfire' : ''}
-      ${process.platform === 'linux' ? 'sudo apt install arrayfire-cpu3-openblas' : ''}
+      ${process.platform === 'linux' ? 'sudo apt install arrayfire-cuda3-cuda-11-6' : ''}
 
     or see the ArrayFire documentation
     (https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire)
