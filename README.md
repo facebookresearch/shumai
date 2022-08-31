@@ -19,8 +19,7 @@ Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](ht
 
 - [Usage](#usage)
 - [Install](#install)
-  - [MacOS](#macos)
-  - [Installing from source](#installing-local-build-from-source)
+- [Build from source](#installing-local-build-from-source)
 - [Contributing](#contributing)
 - [Supported operations](#supported-operations)
 
@@ -103,14 +102,18 @@ This is a current work in progress!
 If you have any problems building or installing, we would
 greatly appreciate filed issues.
 
-#### MacOS
+Ensure you have bun installed (https://bun.sh).
 
-Ensure you have bun installed (https://bun.sh), and then use `brew` and `npm` to get everything built.
-
+On MacOS:
 ```bash
-brew tap bwasti/flashlight
-brew install --build-from-source flashlight
-npm install @shumai/shumai
+brew install arrayfire
+bun install @shumai/shumai
+```
+
+On Linux (Ubuntu/Debian):
+```bash
+sudo apt install arrayfire-cuda3-cuda-11-6
+bun install @shumai/shumai
 ```
 
 ### Installing local build from source
