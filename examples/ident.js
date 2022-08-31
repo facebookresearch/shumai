@@ -1,4 +1,4 @@
-import * as sm from 'shumaiml'
+import * as sm from '@shumai/shumai'
 
 const N = 1024
 const D = 5

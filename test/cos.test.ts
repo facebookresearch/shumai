@@ -1,5 +1,5 @@
 import { it, describe } from 'bun:test'
-import * as sm from 'shumaiml'
+import * as sm from '@shumai/shumai'
 import { expectArraysClose } from './utils'
 
 describe('cos', () => {

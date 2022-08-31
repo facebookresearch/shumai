@@ -1,4 +1,4 @@
-import * as sm from 'shumaiml'
+import * as sm from '@shumai/shumai'
 
 function genRand() {
   const out = new Float32Array(128)

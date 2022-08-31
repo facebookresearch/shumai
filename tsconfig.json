@@ -11,7 +11,7 @@
     // "bun-types" is the important part
     "types": ["bun-types"],
     "paths": {
-      "shumaiml": ["./shumai.ts"],
+      "@shumai/shumai": ["./shumai.ts"],
     }
   },
   "exclude": ["examples/*.js"]

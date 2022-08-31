@@ -1,5 +1,5 @@
 import { it, describe, expect } from 'bun:test'
-import * as sm from 'shumaiml'
+import * as sm from '@shumai/shumai'
 import { isClose } from './utils'
 
 describe('norm', () => {

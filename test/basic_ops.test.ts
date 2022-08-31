@@ -1,4 +1,4 @@
-import * as sm from 'shumaiml'
+import * as sm from '@shumai/shumai'
 import { it, expect, describe } from 'bun:test'
 import { areSameShape, expectArraysClose } from './utils'
 

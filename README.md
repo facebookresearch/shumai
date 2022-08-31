@@ -42,7 +42,7 @@ so it should be quite fast.  If it seems slow, please file an issue!
 
 
 ```javascript
-import * as sm from "shumaiml"
+import * as sm from "@shumai/shumai"
 
 // create a 1024 by 1024 tensor, randomly filled with normal distribution
 let X = sm.randn([1024, 1024])
@@ -114,8 +114,8 @@ npm install @shumai/shumai
 **Note: not required when developing the library locally**
 
 This process will require building the FFI for bun
-and then running `npm pack` to generate a `shumaiml_*.tgz`
-package.  You can then use `npm install $PATH_TO_SOURCE/shumaiml-*.tgz`
+and then running `npm pack` to generate a `@shumai/shumai_*.tgz`
+package.  You can then use `npm install $PATH_TO_SOURCE/@shumai/shumai-*.tgz`
 to install the package where you'd like.
 
 #### MacOS from source

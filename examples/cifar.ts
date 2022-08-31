@@ -1,4 +1,4 @@
-import * as sm from 'shumaiml'
+import * as sm from '@shumai/shumai'
 
 const label_size = 2
 const img_size = 1024 * 3
