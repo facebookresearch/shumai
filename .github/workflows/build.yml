@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - build_dev
   # Expose in Github Actions tab
   workflow_dispatch:
 jobs:
@@ -17,9 +18,9 @@ jobs:
             runner: macos-12
             arch: "x64"
           # TODO: M1
-          # - label: shumai-flashlight-macos-arm64
-          #   runner: macos-arm64
-          #   arch: "arm64"
+          - label: shumai-flashlight-macos-arm64
+            runner: self-hosted
+            arch: "arm64"
     steps:
       - name: "Install ArrayFire CPU backend with OpenBLAS runtime"
         run: brew install arrayfire
@@ -155,6 +156,10 @@ jobs:
         with:
           name: shumai-flashlight-macos-amd64
           path: ${{ runner.temp }}
+      - uses: actions/download-artifact@v3
+        with:
+          name: shumai-flashlight-macos-arm64
+          path: ${{ runner.temp }}
       - name: "Upload packages to npm"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_SECRET }}
@@ -178,9 +183,8 @@ jobs:
           cd shumai
           npm publish --access=public
 
-          # TODO: M1
-          # cd ${{ runner.temp }}
-          # rm -rf shumai
-          # tar -xzf shumai-flashlight-macos-arm64.tar.gz
-          # cd shumai
-          # npm publish --access=public
+          cd ${{ runner.temp }}
+          rm -rf shumai
+          tar -xzf shumai-flashlight-macos-arm64.tar.gz
+          cd shumai
+          npm publish --access=public
