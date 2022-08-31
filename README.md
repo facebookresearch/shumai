@@ -2,23 +2,27 @@
 <p align="center">
 <img width="375" alt="shumai_logo_light" src="https://user-images.githubusercontent.com/4842908/187270063-250a42b0-475e-4eb2-bc1e-2b6a54182577.png#gh-light-mode-only">
 <img width="375" alt="shumai_logo_dark" src="https://user-images.githubusercontent.com/4842908/187270061-99666d73-047c-4076-906c-f181c940244c.png#gh-dark-mode-only">
+
 </p>
 
-Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).  Development discussion [here](https://discord.gg/KavwUhWvSt).
+Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
+⚠️ *This is experimental software!* ⚠️
 
+![build](https://github.com/facebookresearch/shumai/actions/workflows/build.yml/badge.svg)
+![Discord](https://img.shields.io/discord/1013580889940295730)
+![npm](https://img.shields.io/npm/v/@shumai/shumai/latest)
+![GitHub](https://img.shields.io/github/license/facebookresearch/shumai)
+![GitHub contributors](https://img.shields.io/github/contributors/facebookresearch/shumai)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/facebookresearch/shumai)
 ---
-
-⚠️ *This is still experimental software!* ⚠️
 
 
 - [Usage](#usage)
 - [Install](#install)
   - [MacOS](#macos)
-  - [Installing from source](#installing-from-source)
+  - [Installing from source](#installing-local-build-from-source)
 - [Contributing](#contributing)
 - [Supported operations](#supported-operations)
-
----
 
 ## Why build this?
 
