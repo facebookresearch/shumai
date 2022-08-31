@@ -9,8 +9,9 @@ Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](ht
 ⚠️ *This is experimental software!* ⚠️
 
 ![build](https://github.com/facebookresearch/shumai/actions/workflows/build.yml/badge.svg)
-![Discord](https://img.shields.io/discord/1013580889940295730)
+[![tests](https://circleci.com/gh/facebookresearch/shumai.svg?style=shield)](https://app.circleci.com/pipelines/github/facebookresearch/shumai)
 ![npm](https://img.shields.io/npm/v/@shumai/shumai/latest)
+![Discord](https://img.shields.io/discord/1013580889940295730)
 ![GitHub](https://img.shields.io/github/license/facebookresearch/shumai)
 ![GitHub contributors](https://img.shields.io/github/contributors/facebookresearch/shumai)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/facebookresearch/shumai)
