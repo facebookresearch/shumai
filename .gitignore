@@ -26,3 +26,8 @@ cifar-100-binary
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
 [._]sw[a-p]
+
+# macOS General
+.DS_Store
+.AppleDouble
+.LSOverride
