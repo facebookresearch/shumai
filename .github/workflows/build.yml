@@ -59,7 +59,7 @@ jobs:
         run: install_name_tool -add_rpath "@loader_path" shumai/libflashlight_binding.dylib
       - name: Create package.json
         run: |
-          echo '{ "name": "@shumai/darwin_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["darwin"], "arch": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
+          echo '{ "name": "@shumai/darwin_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["darwin"], "cpu": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
       - name: "Zip npm package contents"
         run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai
       - uses: actions/upload-artifact@v3
@@ -124,7 +124,7 @@ jobs:
         run: patchelf --set-rpath '$ORIGIN' shumai/libflashlight_binding.so
       - name: Create package.json
         run: |
-          echo '{ "name": "@shumai/linux_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["linux"], "arch": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
+          echo '{ "name": "@shumai/linux_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["linux"], "cpu": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
       - name: "Zip npm package contents"
         run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai
       - uses: actions/upload-artifact@v3
