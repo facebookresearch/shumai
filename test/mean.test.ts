@@ -1,0 +1,80 @@
+import { expect, it, describe } from 'bun:test'
+import * as sm from 'shumaiml'
+import { expectArraysClose, isClose, isShape } from './utils'
+
+describe('mean', () => {
+  it('basic', () => {
+    const t = sm
+      .tensor(
+        new Float32Array([
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+          25, 26, 27, 28, 29, 30, 31
+        ])
+      )
+      .reshape([16, 2])
+    const mean = sm.mean(t)
+
+    expect(isClose(<number>mean.valueOf(), 15.5)).toBe(true)
+  })
+
+  it('propagates NaNs', () => {
+    const t = sm.tensor(new Float32Array([1, 2, 3, NaN, 0, 1])).reshape([3, 2])
+    const mean = sm.mean(t)
+    expect(isClose(<number>mean.valueOf(), NaN)).toBe(true)
+  })
+
+  it('works for 1D Tensor', () => {
+    const t = sm.tensor(new Float32Array([3, 1, 5, 2, 4]))
+    const mean = sm.mean(t)
+    expect(isClose(<number>mean.valueOf(), 3)).toBe(true)
+  })
+
+  it('works for 2D Tensor; keep_dims=true', () => {
+    const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
+    const mean = sm.mean(t, [], true)
+    expect(isShape(mean, [1, 1])).toBe(true)
+    expect(isClose(<number>mean.valueOf(), 7 / 6)).toBe(true)
+  })
+
+  /* TODO: FIX - CURRENTLY FAILS */
+  it('2D Tensor; axis=[0]', () => {
+    const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
+    const mean = sm.mean(t, [0])
+    expect(isShape(mean, [2])).toBe(true)
+    expectArraysClose(<Float32Array>mean.valueOf(), [4 / 3, 1])
+  })
+
+  /* TODO: FIX - CURRENTLY FAILS */
+  it('2D Tensor; axis=[0], keep_dims=true', () => {
+    const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
+    const mean = sm.mean(t, [0], true)
+    expect(isShape(mean, [1, 2])).toBe(true)
+    expectArraysClose(<Float32Array>mean.valueOf(), [4 / 3, 1])
+  })
+
+  /* TODO: FIX - CURRENTLY FAILS */
+  it('2D Tensor; axis=[1]', () => {
+    const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
+    const mean = sm.mean(t, [1])
+    expect(isShape(mean, [3])).toBe(true)
+    expectArraysClose(<Float32Array>mean.valueOf(), [1.5, 1.5, 0.5])
+  })
+
+  /* TODO: FIX - CURRENTLY FAILS */
+  it('2D Tensor; axis=[-1]', () => {
+    const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
+    const mean = sm.mean(t, [-1])
+    expect(isShape(mean, [3])).toBe(true)
+    expectArraysClose(<Float32Array>mean.valueOf(), [1.5, 1.5, 0.5])
+  })
+
+  /* TODO: FIX - CURRENTLY FAILS */
+  it('2D Tensor; axis=[0,1]', () => {
+    const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
+    const mean = sm.mean(t, [0, 1])
+    expect(isShape(mean, [])).toBe(true)
+    expectArraysClose(<Float32Array>mean.valueOf(), [7 / 6])
+  })
+
+  /* TODO: unit tests for gradients once supported */
+})
