@@ -106,7 +106,7 @@ Ensure you have bun installed (https://bun.sh), and then use `brew` and `npm` to
 ```bash
 brew tap bwasti/flashlight
 brew install --build-from-source flashlight
-npm install shumaiml
+npm install @shumai/shumai
 ```
 
 ### Installing local build from source
