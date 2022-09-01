@@ -38,6 +38,7 @@ const isCloseArr = (
   expected: Float32Array | number[],
   error: number
 ) => {
+  console.log(actual)
   const expLength = expected.length
   if (actual.length !== expLength) return false
 
