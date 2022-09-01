@@ -6,7 +6,7 @@ import { ffi_tensor_ops } from './ffi_tensor_ops_gen'
 // and dlopen that instead of searching for a package if present.
 // Either that or find some nice way to load that lib in debug mode.
 
-const pkgname = `@shumai/${process.platform}_${process.arch}_shumai_flashlight`
+const pkgname = `@shumai/${process.platform}_${process.arch}_shumai_flashlight_cpu`
 const BINDING_NAME_PREFIX = 'libflashlight_binding'
 const path = import.meta.resolveSync(`${pkgname}/${BINDING_NAME_PREFIX}.${suffix}`)
 const { symbols: fl } = (() => {

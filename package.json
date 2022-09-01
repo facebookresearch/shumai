@@ -1,5 +1,5 @@
 {
-  "name": "@shumai/shumai",
+  "name": "@shumai/shumai_cpu",
   "version": "0.0.1",
   "module": "shumai.ts",
   "type": "module",
@@ -23,6 +23,6 @@
   "optionalDependencies": {
     "@shumai/darwin_x64_shumai_flashlight": "latest",
     "@shumai/darwin_arm64_shumai_flashlight": "latest",
-    "@shumai/linux_x64_shumai_flashlight": "latest"
+    "@shumai/linux_x64_shumai_flashlight_cpu": "latest"
   }
 }
