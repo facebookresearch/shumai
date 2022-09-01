@@ -1,0 +1,124 @@
+# Copyright (c) Facebook, Inc. and its affiliates.
+# All rights reserved.
+#
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree.
+
+version: 2.1
+
+gpu: &gpu
+  machine:
+    image: ubuntu-2004-cuda-11.4:202110-01
+  resource_class: gpu.nvidia.medium
+
+orbs:
+  node: circleci/node@5.0.2
+
+executors:
+  linux:
+    machine:
+      image: ubuntu-2004:202107-02
+  macos:
+    macos:
+      xcode: 13.4.1
+    resource_class: large
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+
+commands:
+  setup_arrayfire_apt:
+    steps:
+      - run:
+          name: "Set up ArrayFire apt repository"
+          command: |
+            sudo apt update
+            sudo apt install -y gnupg2 ca-certificates apt-utils software-properties-common
+            sudo apt-key adv --fetch-key https://repo.arrayfire.com/GPG-PUB-KEY-ARRAYFIRE-2020.PUB
+            echo "deb [arch=amd64] https://repo.arrayfire.com/debian all main" | sudo tee /etc/apt/sources.list.d/arrayfire.list
+            sudo apt update
+  install_bun:
+    steps:
+      - run:
+          name: "Install bun"
+          command: |
+            curl https://bun.sh/install | bash
+            echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
+            echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
+
+jobs:
+  test-arrayfire-cpu:
+    parameters:
+      os:
+        type: string
+    executor: << parameters.os >>
+    steps:
+      - checkout
+      - when:
+          condition:
+            equal: [macos, << parameters.os >>]
+          steps:
+            - run: brew install arrayfire
+      - when:
+          condition:
+            equal: [linux, << parameters.os >>]
+          steps:
+            - setup_arrayfire_apt
+            - run:
+                name: "Install ArrayFire CPU backend with OpenBLAS runtime"
+                command: sudo apt install arrayfire-cpu3-openblas
+            - run:
+                name: "Update package.json and ffi interface to pull in Linux CPU libs"
+                command: |
+                  # TODO: remove me when we have robust multibackend in Flashlight
+                  sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
+                  sed -i "s/_shumai_flashlight/_shumai_flashlight_cpu/g" src/ffi/ffi_flashlight.ts
+      - node/install:
+          node-version: "16.9.0"
+      - run:
+          name: "Install native lib dependencies"
+          command: npm install
+      - install_bun
+      - run:
+          name: "Verify Bun version"
+          command: bun --version
+      - run:
+          name: "Test library loading"
+          command: bun src/ffi/ffi_flashlight.ts
+      - run:
+          name: "Run all tests"
+          command: bun wiptest
+
+  # Linux only
+  test-arrayfire-gpu:
+    <<: *gpu
+    steps:
+      - setup_arrayfire_apt
+      - run:
+          name: "Install ArrayFire CUDA backend with CUDA 11.6 runtime"
+          command: sudo apt install arrayfire-cuda3-cuda-11-6
+      - node/install:
+          node-version: "16.9.0"
+      - checkout
+      - run:
+          name: "Install native lib dependencies"
+          command: npm install
+      - install_bun
+      - run:
+          name: "Verify Bun version"
+          command: bun --version
+      - run:
+          name: "Test library loading"
+          command: bun src/ffi/ffi_flashlight.ts
+      - run:
+          name: "Run all tests"
+          command: bun wiptest
+
+workflows:
+  version: 2
+  all-tests:
+    jobs:
+      - test-arrayfire-cpu:
+          matrix:
+            parameters:
+              os: [linux, macos]
+      - test-arrayfire-gpu
