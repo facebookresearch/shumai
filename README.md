@@ -24,23 +24,35 @@ Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](ht
 - [Contributing](#contributing)
 - [Supported operations](#supported-operations)
 
+## Quickstart
+Install [Bun](https://bun.sh/) and [ArrayFire](https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire), then run:
+```
+bun install @shumai/shumai
+```
+Only macOS and Linux are supported. Linux installs default to GPU computation with CUDA, and macOS to CPU. Detailed install instructions [below](#install).
+
+*Install is work in progress*: [**please file an issue**](https://github.com/facebookresearch/shumai/issues) if you run into problems.
+
 ## Why build this?
 
-Here are some of the areas that shumai hopes to tackle:
+With Shumai, we hope to make 
 
 - **Creating datasets**
-  - JavaScript, with native typed arrays and a JIT compiler, is perfect for twiddling with data before it can be made into a big flat GPU-compatible array
+  - JavaScript, with native typed arrays and a JIT compiler, is perfect for twiddling with data before it can be made into big, flat GPU-compatible arrays.
 - **Training small models**
   - FFI bindings in Bun are crazy fast (~3ns), so JS gets out of the way when training small models
 - **Advanced/fine-grained training/inference logic**
   - Bun uses the JSC JIT compiler, meaning you can confidently write complex training logic without needing a native C++ implementation
 - **Building applications**
-  - JavaScript has a ~~large~~ [HUGE](https://survey.stackoverflow.co/2022/#section-most-popular-technologies-programming-scripting-and-markup-languages) ecosystem, which makes application development a lot easier
+  - JavaScript has a ~~large~~ [HUGE](https://survey.stackoverflow.co/2022/#section-most-popular-technologies-programming-scripting-and-markup-languages) ecosystem, which facilitates better application development
 
 ## Usage
 
-shumai will always attempt to use an attached GPU or accelerator,
-so it should be quite fast.  If it seems slow, please file an issue!
+shumai will always attempt to use an attached GPU or accelerator; although CPU computation will use the ArrayFire CPU backend, which is not well-optimized.
+
+We hope to support the ArrayFire OpenCL backend and other non-ArrayFire tensor backends soon.
+
+If shumai seems unusually slow, please file an issue!
 
 **Standard array utilities:**
 
@@ -99,49 +111,66 @@ Supported operators can be found [here](#supported-operations).
 
 ## Install
 
-This is a current work in progress!
+**The install procedure is a work in progress!**
 If you have any problems building or installing, we would
-greatly appreciate filed issues.
+greatly appreciate filed issues. Please tell us about your platform/OS when you do.
 
-Ensure you have bun installed (https://bun.sh).
+**Prerequisites**:
+- Ensure you have bun installed (https://bun.sh).
+- Install [ArrayFire](https://github.com/arrayfire/arrayfire). *macOS users should install ArrayFire's CPU backend; Linux users should install the CUDA backend^.*
+  - **macOS** --- ArrayFire can easily be installed with Homebrew:
+  ```
+  brew install arrayfire
+  ```
+- **Linux** --- instructions [can be found here](https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire). On Ubuntu, ArrayFire can be installed via [package managers (e.g. `apt`)](https://github.com/arrayfire/arrayfire/wiki/Install-ArrayFire-From-Linux-Package-Managers).
 
-On MacOS:
-```bash
-brew install arrayfire
+Once `bun` and `ArrayFire` are installed, install the package and backing libs with `bun`:
+```shell
 bun install @shumai/shumai
 ```
 
-On Linux (Ubuntu/Debian):
-```bash
-sudo apt install arrayfire-cuda3-cuda-11-6
-bun install @shumai/shumai
+^**Linux users can use the CPU backend** by swapping the required `package.json` dependency from `@shumai/linux_x64_shumai_flashlight` to `@shumai/linux_x64_shumai_flashlight_cpu`, i.e. running:
+```shell
+sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
 ```
 
-### Installing local build from source
+## Building Native Libraries from Source
 
-**Note: not required when developing the library locally**
+**Note:** *not required when developing TypeScript/Javascript library components locally.*
 
-This process will require building the FFI for bun
-and then running `npm pack` to generate a `@shumai/shumai_*.tgz`
-package.  You can then use `npm install $PATH_TO_SOURCE/@shumai/shumai-*.tgz`
-to install the package where you'd like.
+From source build instructions for:
+- [macOS](#building-on-macos-from-source)
+- [Linux](#building-on-linux-from-source)
 
-#### MacOS from source
+This process will build the dependent ffi libraries (`libflashlight` and `libflashlight_binding`) and pack them using `npm pack` to generate a `@shumai/shumai_*.tgz`
+package. You can then use `npm install $PATH_TO_SOURCE/@shumai/shumai-*.tgz` to install the package where you'd like.
 
-Install flashlight
+### Building on macOS from Source
+
+First, install ArrayFire CPU with `brew install arrayfire`.
+
+Build and install [Flashlight](https://github.com/flashlight/flashlight#building-and-installing):
 ```bash
 mkdir -p $HOME/usr/ # installing flashlight here
-brew install arrayfire
-git clone --recursive --depth 1 https://github.com/bwasti/flashlight.git
+git clone --recursive --depth 1 https://github.com/flashlight/flashlight.git
 cd flashlight
 mkdir -p build
 cd build
-cmake .. -DFL_ARRAYFIRE_USE_CPU=ON -DFL_BUILD_DISTRIBUTED=OFF -DFL_USE_ONEDNN=OFF -DFL_BUILD_TESTS=OFF -DFL_BUILD_EXAMPLES=OFF -DFL_BUILD_SCRIPTS=OFF -DCMAKE_INSTALL_PREFIX=$HOME/usr/
+cmake .. \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \ # or as specified
+  -DFL_ARRAYFIRE_USE_CPU=ON \
+  -DFL_ARRAYFIRE_USE_CUDA=OFF \
+  -DFL_BUILD_DISTRIBUTED=OFF \
+  -DFL_USE_ONEDNN=OFF \
+  -DFL_BUILD_TESTS=OFF \
+  -DFL_BUILD_EXAMPLES=OFF \
+  -DFL_BUILD_SCRIPTS=OFF \
+  -DCMAKE_INSTALL_PREFIX=$HOME/usr/
 make -j$(nproc)
 make install
 ```
 
-Build bindings for shumai
+Build Flashlight bindings for Shumai:
 ```bash
 cd shumai
 mkdir -p build
@@ -150,27 +179,50 @@ cmake .. -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake/
 make -j$(nproc)
 ```
 
-(you can record perf stuff with `xcrun xctrace record --template "Time Profiler" --launch $(which bun) train.js`)
+#### Profiling
 
-#### Linux from source
+On macOS, you can record perf with `xcrun xctrace record --template "Time Profiler" --launch $(which bun) train.js`.
 
-First, install [flashlight](https://github.com/flashlight/flashlight#building-and-installing).
+### Building on Linux from Source
 
-Then, build bindings for shumai:
+First [install ArrayFire](https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire). The Linux build for shumai uses the CUDA backend, but from source, you can build the CPU backend as well (OpenCL support coming soon).
 
+Build and install [Flashlight](https://github.com/flashlight/flashlight#building-and-installing):
+```bash
+mkdir -p $HOME/usr/ # installing flashlight here
+git clone --recursive --depth 1 https://github.com/flashlight/flashlight.git
+cd flashlight
+mkdir -p build
+cd build
+cmake .. \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \ # or as specified
+  -DFL_ARRAYFIRE_USE_CPU=OFF \
+  \ # swap with the above to build for CPU
+  -DFL_ARRAYFIRE_USE_CUDA=ON \ 
+  -DFL_BUILD_DISTRIBUTED=OFF \
+  -DFL_USE_ONEDNN=OFF \
+  -DFL_BUILD_TESTS=OFF \
+  -DFL_BUILD_EXAMPLES=OFF \
+  -DFL_BUILD_SCRIPTS=OFF \
+  -DCMAKE_INSTALL_PREFIX=$HOME/usr/
+make -j$(nproc)
+make install
+```
+
+Build bindings for shumai:
 ```bash
 mkdir -p build && cd build
 cmake .. \
     -DBUILD_SHARED_LIBS=ON \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \ # or as specified
     -Dflashlight_DIR=${FLASHLIGHT_INSTALL_PREFIX}/share/flashlight/cmake \
-    -DArrayFire_DIR=${ARRAYFIRE_INSTALL_PREFIX}/share/ArrayFire/cmake
+    -DArrayFire_DIR=${ARRAYFIRE_INSTALL_PREFIX}/share/ArrayFire/cmake # if built from source, else not needed
 make -j$(nproc)
 ```
 
 ## Contributing
 
-If you'd like to make changes to the code, first [build from source](#installing-from-source).
+If you'd like to make changes to the core bindings or ffi, first [build from source](#installing-from-source).
 
 All files ending in `*.inl` or `*_gen.ts` are generated.
 These can be modified by editing [`scripts/gen_binding.py`](https://github.com/facebookresearch/shumai/blob/main/scripts/gen_binding.py)
@@ -179,7 +231,7 @@ and running [`./scripts/gen_all_binding.sh`](https://github.com/facebookresearch
 See the [CONTRIBUTING](CONTRIBUTING.md) file for style guidance and more info on how to help out. 😁
 
 
-## Supported operations
+## Supported Operations
 
 Some operations are supported as both static functions and methods on existing tensors.
 
