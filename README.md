@@ -8,12 +8,12 @@
 Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
 ⚠️ *This is experimental software!* ⚠️
 
-![build](https://github.com/facebookresearch/shumai/actions/workflows/build.yml/badge.svg)
+[![build](https://github.com/facebookresearch/shumai/actions/workflows/build.yml/badge.svg)](https://github.com/facebookresearch/shumai/actions/workflows/build.yml)
 [![tests](https://circleci.com/gh/facebookresearch/shumai.svg?style=shield)](https://app.circleci.com/pipelines/github/facebookresearch/shumai)
-![npm](https://img.shields.io/npm/v/@shumai/shumai/latest)
-![Discord](https://img.shields.io/discord/1013580889940295730)
-![GitHub](https://img.shields.io/github/license/facebookresearch/shumai)
-![GitHub contributors](https://img.shields.io/github/contributors/facebookresearch/shumai)
+[![npm](https://img.shields.io/npm/v/@shumai/shumai/latest)](https://www.npmjs.com/settings/shumai/packages)
+[![Discord](https://img.shields.io/discord/1013580889940295730)](https://discord.com/channels/1013580889940295730/)
+[![GitHub](https://img.shields.io/github/license/facebookresearch/shumai)](https://github.com/facebookresearch/shumai/blob/main/LICENSE)
+[![GitHub contributors](https://img.shields.io/github/contributors/facebookresearch/shumai)](https://github.com/facebookresearch/shumai/graphs/contributors)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/facebookresearch/shumai)
 ---
 
