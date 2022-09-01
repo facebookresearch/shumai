@@ -32,7 +32,7 @@ export const isClose = (actual: number, expected: number, error = 0.001) => {
   return true
 }
 
-// validates that actual && expected array are close to (all values w/i given tolerance)
+/* validates that actual && expected array are close (all values w/i given tolerance) */
 const isCloseArr = (
   actual: Float32Array | number[],
   expected: Float32Array | number[],
