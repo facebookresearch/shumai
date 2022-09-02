@@ -6,13 +6,13 @@ describe('sum', () => {
   it('basic', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t)
-    expect(isClose(<number>sum.valueOf(), 7)).toBe(true)
+    expect(isClose(sum.toFloat32(), 7)).toBe(true)
   })
 
   it('propagates NaNs', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, NaN, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t)
-    expect(isClose(<number>sum.valueOf(), NaN)).toBe(true)
+    expect(isClose(sum.toFloat32(), NaN)).toBe(true)
   })
 
   it('sums 1D Tensor', () => {
@@ -24,7 +24,7 @@ describe('sum', () => {
     }
     const t = sm.tensor(new Float32Array(array))
     const sum = sm.sum(t)
-    expect(isClose(<number>sum.valueOf(), jsSum)).toBe(true)
+    expect(isClose(sum.toFloat32(), jsSum)).toBe(true)
   })
 
   /* TODO: FIX - CURRENTLY FAILS */
@@ -32,7 +32,7 @@ describe('sum', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t, [0])
     expect(isShape(sum, [2])).toBe(true)
-    expectArraysClose(<Float32Array>sum.valueOf(), [4, 3])
+    expectArraysClose(sum.toFloat32Array(), [4, 3])
   })
 
   /* TODO: FIX - CURRENTLY FAILS */
@@ -40,7 +40,7 @@ describe('sum', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t, [0], true)
     expect(isShape(sum, [1, 2])).toBe(true)
-    expectArraysClose(<Float32Array>sum.valueOf(), [4, 3])
+    expectArraysClose(sum.toFloat32Array(), [4, 3])
   })
 
   /* TODO: FIX - CURRENTLY FAILS */
@@ -48,7 +48,7 @@ describe('sum', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t, [1])
     expect(isShape(sum, [3])).toBe(true)
-    expectArraysClose(<Float32Array>sum.valueOf(), [3, 3, 1])
+    expectArraysClose(sum.toFloat32Array(), [3, 3, 1])
   })
 
   /* TODO: FIX - CURRENTLY FAILS */
@@ -56,7 +56,7 @@ describe('sum', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t, [0, 1])
     expect(isShape(sum, [])).toBe(true)
-    expectArraysClose(<Float32Array>sum.valueOf(), [7])
+    expectArraysClose(sum.toFloat32Array(), [7])
   })
 
   /* TODO: FIX - CURRENTLY FAILS */
@@ -64,14 +64,14 @@ describe('sum', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t, [-1, -2])
     expect(isShape(sum, [])).toBe(true)
-    expectArraysClose(<Float32Array>sum.valueOf(), [7])
+    expectArraysClose(sum.toFloat32Array(), [7])
   })
 
   it('4D, axis=[2, 2, 1]', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([1, 2, 2, 1])
     const sum = sm.sum(t, [0])
     expect(isShape(sum, [2, 2, 1])).toBe(true)
-    expectArraysClose(<Float32Array>sum.valueOf(), [1, 2, 3, 4])
+    expectArraysClose(sum.toFloat32Array(), [1, 2, 3, 4])
   })
 
   /* TODO: unit tests for gradients once supported */

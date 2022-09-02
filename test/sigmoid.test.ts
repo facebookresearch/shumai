@@ -11,7 +11,7 @@ describe('sigmoid', () => {
     for (let i = 0; i < t.elements; i++) {
       expect[i] = 1 / (1 + Math.exp(-values[i]))
     }
-    expectArraysClose(<Float32Array>r.valueOf(), expect)
+    expectArraysClose(r.toFloat32Array(), expect)
   })
 
   /* TODO: FIX - CURRENTLY FAILS (Throws C++ Exception)
@@ -24,7 +24,7 @@ describe('sigmoid', () => {
       for (let i = 0; i < t.elements; i++) {
         expect[i] = 1 / (1 + Math.exp(-1.0))
       }
-      expectArraysClose(<Float32Array>r.valueOf(), expect)
+      expectArraysClose(r.toFloat32Array(), expect)
     })
   */
 
@@ -32,7 +32,7 @@ describe('sigmoid', () => {
     const values = [3, NaN]
     const t = sm.tensor(new Float32Array(values))
     const r = sm.sigmoid(t)
-    expectArraysClose(<Float32Array>r.valueOf(), [1 / (1 + Math.exp(-3)), NaN])
+    expectArraysClose(r.toFloat32Array(), [1 / (1 + Math.exp(-3)), NaN])
   })
 
   /* TODO: unit tests for gradients once supported */
