@@ -1,5 +1,5 @@
 import { ptr, toArrayBuffer, FFIType } from 'bun:ffi'
-import { fl } from '../ffi/ffi_flashlight'
+import { fl, finalizer } from '../ffi/ffi_flashlight'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { TensorInterface } from './tensor_interface'
 import { TensorOpsInterface } from './tensor_ops_interface_gen'
@@ -122,7 +122,7 @@ function backward(base_t: Tensor, jacobian: Tensor) {
 }
 
 class Tensor {
-  underlying: ArrayBuffer
+  underlying = null
   deps: Array<Tensor> = []
   requires_grad = false
   grad: Tensor = null
@@ -133,7 +133,12 @@ class Tensor {
     const numel = Number(fl.elements.native(_ptr))
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - overload toArrayBuffer params
-    this.underlying = toArrayBuffer(_ptr, 0, numel * 4, fl.genTensorDestroyer.native())
+    this._ptr = _ptr
+    //{
+    this.underlying = {}
+    finalizer.finalize(this.underlying, _ptr)
+    //}
+    //this.underlying = toArrayBuffer(_ptr, 0, numel * 4, fl.genTensorDestroyer.native())
   }
 
   backward(jacobian) {
@@ -163,7 +168,8 @@ class Tensor {
   }
 
   get ptr() {
-    return ptr(this.underlying)
+    //return ptr(this.underlying)
+    return this._ptr
   }
 
   get ndim() {
