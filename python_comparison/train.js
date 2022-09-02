@@ -1,8 +1,8 @@
 import * as sm from '@shumai/shumai'
 
 const iters = 10000
-const N = 8
-const hidden = 8
+const N = 32
+const hidden = 32
 
 class Linear {
   constructor(out_dim, inp_dim) {
@@ -37,8 +37,6 @@ function model(x) {
   x = l2.forward(x)
   return x
 }
-
-console.log(model(x).shape)
 
 function mse(a, b) {
   const c = a.sub(b)

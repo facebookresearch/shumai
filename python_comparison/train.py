@@ -3,8 +3,8 @@ from torch import nn
 import time
 
 iters = 10000
-N = 8
-hidden = 8
+N = 32
+hidden = 32
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 x = torch.randn(N, 1).to(device)
@@ -28,7 +28,6 @@ class M(nn.Module):
 
 loss = nn.MSELoss()
 m = M().to(device)
-print(m(x).shape)
 lr = 1e-3
 def optimize(params):
     for param in params:
