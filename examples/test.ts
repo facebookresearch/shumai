@@ -16,4 +16,5 @@ for (let i = 0; i < 10000; ++i) {
   m += a.add(b).mean().toFloat32()
 }
 const t1 = performance.now() / 1e3
+Bun.gc(true)
 console.log(t1 - t0, 'seconds to calculate', m)

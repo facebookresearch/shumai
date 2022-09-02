@@ -63,7 +63,7 @@ const optimize = (...args) => {
   }
 }
 
-const show_timing = false
+const show_timing = true
 const traint0 = performance.now()
 let floss = 0
 for (let i = 0; i < 1000; ++i) {

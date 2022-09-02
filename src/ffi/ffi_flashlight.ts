@@ -7,6 +7,8 @@ import { ffi_tensor_ops } from './ffi_tensor_ops_gen'
 // Either that or find some nice way to load that lib in debug mode.
 
 const pkgname = `@shumai/${process.platform}_${process.arch}_shumai_flashlight`
+const finalizer = require(`${pkgname}/finalizer.node`)
+
 const BINDING_NAME_PREFIX = 'libflashlight_binding'
 const path = import.meta.resolveSync(`${pkgname}/${BINDING_NAME_PREFIX}.${suffix}`)
 const { symbols: fl } = (() => {
@@ -34,4 +36,4 @@ const { symbols: fl } = (() => {
   }
 })()
 
-export { fl }
+export { fl, finalizer }

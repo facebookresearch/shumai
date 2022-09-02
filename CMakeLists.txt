@@ -13,6 +13,16 @@ add_library(
   src/cpp/flashlight_binding.cc
   )
 
+# Flashlight <> JS finalizer bindings
+add_library(flashlight_finalizer_binding SHARED src/cpp/finalizer.cc)
+target_include_directories(flashlight_finalizer_binding PRIVATE src/cpp/napi/)
+target_link_libraries(
+  flashlight_finalizer_binding
+  PRIVATE
+  flashlight::flashlight
+)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -undefined dynamic_lookup") 
+
 # Write lib to the project root
 set_target_properties(
   flashlight_binding
