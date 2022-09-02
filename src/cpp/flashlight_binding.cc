@@ -1,6 +1,7 @@
 #include "flashlight/fl/nn/Init.h"
 #include "flashlight/fl/runtime/Device.h"
 #include "flashlight/fl/runtime/Stream.h"
+#include "flashlight/fl/tensor/Compute.h"
 #include "flashlight/fl/tensor/Index.h"
 #include "flashlight/fl/tensor/Init.h"
 #include "flashlight/fl/tensor/Random.h"
@@ -53,6 +54,11 @@ typedef void (*JSTypedArrayBytesDeallocator)(void *bytes,
                                              void *deallocatorContext);
 
 JSTypedArrayBytesDeallocator genTensorDestroyer() { return destroyTensor; }
+
+void eval(void *t) {
+  auto *tensor = reinterpret_cast<fl::Tensor *>(t);
+  fl::eval(*tensor);
+}
 
 size_t elements(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
