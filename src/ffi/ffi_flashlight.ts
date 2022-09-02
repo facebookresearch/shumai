@@ -16,7 +16,7 @@ const { symbols: fl } = (() => {
       ...ffi_tensor_ops
     })
   } catch (error) {
-    console.error("Bun trace:", error)
+    console.error('Bun trace:', error)
     throw new Error(`shumai was unable to load backing libraries!
     Make sure a valid tensor backend (e.g. ArrayFire) is installed by running,
     for example:
@@ -30,7 +30,7 @@ const { symbols: fl } = (() => {
     If you're still having trouble, please create an issue
     (https://github.com/facebookresearch/shumai/issues)
     outlining your system and platform details.
-    `);
+    `)
   }
 })()
 

@@ -19,6 +19,9 @@ const ffi_tensor = {
     args: [FFIType.i32, FFIType.ptr],
     returns: FFIType.ptr
   },
+  eval: {
+    args: [FFIType.ptr]
+  },
   buffer: {
     args: [FFIType.ptr],
     returns: FFIType.ptr

@@ -54,6 +54,7 @@ const optimize = (...args) => {
       const t = l[key]
       if (t.constructor === sm.Tensor && t.requires_grad) {
         l[key] = upd(t)
+        l[key].eval()
       }
     }
   }
@@ -62,7 +63,7 @@ const optimize = (...args) => {
   }
 }
 
-const show_timing = true
+const show_timing = false
 const traint0 = performance.now()
 let floss = 0
 for (let i = 0; i < 1000; ++i) {

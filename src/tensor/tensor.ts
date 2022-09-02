@@ -158,6 +158,10 @@ class Tensor {
     return
   }
 
+  eval() {
+    return fl.eval.native(this.ptr)
+  }
+
   get ptr() {
     return ptr(this.underlying)
   }
