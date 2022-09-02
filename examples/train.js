@@ -1,7 +1,8 @@
 import * as sm from '@shumai/shumai'
 
-const lr = 1e-3
-const N = 1024
+const iters = 1000
+const N = 32
+const hidden = 32
 
 class Linear {
   constructor(inp_dim, out_dim) {
@@ -24,9 +25,9 @@ function relu(x) {
 const x = sm.randn([N, 1])
 const y = x.mul(sm.scalar(4))
 
-const l0 = new Linear(1, 32)
-const l1 = new Linear(32, 32)
-const l2 = new Linear(32, 1)
+const l0 = new Linear(1, hidden)
+const l1 = new Linear(hidden, hidden)
+const l2 = new Linear(hidden, 1)
 
 function model(x) {
   x = l0.forward(x)
@@ -42,9 +43,11 @@ function mse(a, b) {
   return c.mul(c).mean()
 }
 
+const lr = 1e-3
 const optimize = (...args) => {
   const upd = (v) => {
     const o = v.detach().add(v.grad.detach().mul(sm.scalar(-lr)))
+    o.eval()
     o.requires_grad = true
     v.grad = null
     return o
@@ -54,7 +57,6 @@ const optimize = (...args) => {
       const t = l[key]
       if (t.constructor === sm.Tensor && t.requires_grad) {
         l[key] = upd(t)
-        l[key].eval()
       }
     }
   }
@@ -63,18 +65,30 @@ const optimize = (...args) => {
   }
 }
 
+const zero_grad = (...args) => {
+  const zg = (l) => {
+    for (let key in l) {
+      const t = l[key]
+      if (t.constructor === sm.Tensor && t.requires_grad) {
+        t.grad = null
+      }
+    }
+  }
+  for (let a of args) {
+    zg(a)
+  }
+}
+
 const show_timing = false
-const traint0 = performance.now()
 let floss = 0
-for (let i = 0; i < 1000; ++i) {
+function step() {
+  zero_grad(l0, l1, l2)
   const t0 = performance.now()
   const y_hat = model(x)
   const t1 = performance.now()
   const l = mse(y, y_hat)
+  floss = l
   const t2 = performance.now()
-  if (i === 1000 - 1) {
-    floss = l
-  }
   const stat = l.backward()
   const t3 = performance.now()
   optimize(l0, l1, l2)
@@ -100,6 +114,12 @@ for (let i = 0; i < 1000; ++i) {
     console.log('curr bytes used', Number(sm.bytesUsed()) / 1e6, 'MB')
   }
 }
+
+step()
+const traint0 = performance.now()
+for (let i = 0; i < iters; ++i) {
+  step()
+}
 const traint1 = performance.now()
-console.log('train in', (traint1 - traint0) / 1e3, 'sec')
+console.log('train at', iters / ((traint1 - traint0) / 1e3), 'iters/sec')
 console.log('final loss', floss.toFloat32())
