@@ -14,7 +14,7 @@ describe('transpose', () => {
   it('2D Tensor', () => {
     const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 4])
     t.transpose([1, 0])
-    expect(isShape(t, [4, 2])).toBe(true)
+    expect(isShape(t, [2, 4])).toBe(true)
     expectArraysClose(t.toFloat32Array(), [1, 3, 11, 33, 2, 4, 22, 44])
   })
 
