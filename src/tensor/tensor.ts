@@ -7,6 +7,7 @@ import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 
 fl.init.native()
+const gradient_functions: { [key: string]: CallableFunction } = {}
 
 export function wrapFLTensor(closure: CallableFunction, ...args: any[]): Tensor {
   const ptr_args = args.map((x) => {
@@ -87,7 +88,7 @@ function backward(base_t: Tensor, jacobian: Tensor) {
     if (t.requires_grad && !t.grad) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
     }
-    if (!t.grad_fn) {
+    if (!gradient_functions[t.op]) {
       continue
     }
     let idx = -1
@@ -103,7 +104,7 @@ function backward(base_t: Tensor, jacobian: Tensor) {
         grad_in: t.grad
       }
       const gt0 = performance.now()
-      const g = t.grad_fn(grad_arg)
+      const g = gradient_functions[t.op](grad_arg)
       const gt1 = performance.now()
       if (!(t.op in exec_stats)) {
         exec_stats[t.op] = [0, 0]
@@ -126,7 +127,6 @@ class Tensor {
   deps: Array<Tensor> = []
   requires_grad = false
   grad: Tensor = null
-  grad_fn = null
   op = 'constant'
 
   _injest_ptr(_ptr) {
@@ -248,4 +248,4 @@ function bytesUsed() {
   return fl.bytesUsed.native()
 }
 
-export { tensor, backward, bytesUsed, Tensor }
+export { tensor, backward, bytesUsed, gradient_functions, Tensor }

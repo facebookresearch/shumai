@@ -9,71 +9,6 @@ methods_only = False
 if sys.argv[1] == "js_methods":
     methods_only = True
 
-grad_impls = {
-    "add": """\
-  (grad) => {
-    return grad.grad_in;
-  }
-""",
-    "sub": """\
-  (grad) => {
-    if (grad.idx) {
-      return grad.grad_in.negative();
-    }
-    return grad.grad_in;
-  }
-""",
-    "mul": """\
-  (grad) => {
-    return grad.in[1 - grad.idx].mul(grad.grad_in);
-  }
-""",
-    "div": """\
-  (grad) => {
-    const T = grad.in[0].constructor;
-    const one = new T(new Float32Array([1]));
-    const recip = one.div(grad.in[1]);
-    const go = grad.grad_in.mul(recip);
-    if (grad.idx === 0) {
-        return go;
-    } else if (grad.idx === 1) {
-        return go.negate().mul(recip);
-    }
-  }
-""",
-    "sum": """\
-  (grad) => {
-    return grad.grad_in.tile(grad.in[0].shape);
-  }
-""",
-    "mean": """\
-  (grad) => {
-    const T = grad.in[0].constructor;
-    const num = new T(new Float32Array([grad.in[0].elements]));
-    return grad.grad_in.tile(grad.in[0].shape).div(num);
-  }
-""",
-    "maximum": """\
-  (grad) => {
-    const a_idx = grad.idx;
-    const b_idx = 1 - grad.idx;
-    const mask = grad.in[a_idx].greaterThan(grad.in[b_idx]);
-    return mask.mul(grad.grad_in);
-  }
-""",
-    "matmul": """\
-  (grad) => {
-    if (grad.idx === 0) {
-      const yT = grad.in[1].transpose([1,0]);
-      return grad.grad_in.matmul(yT);
-    } else if (grad.idx === 1) {
-      const xT = grad.in[0].transpose([1,0]);
-      return xT.matmul(grad.grad_in);
-    }
-  }
-""",
-}
-
 coercion_rules = {
     "bool": "(!!{x})",
     "float": "Math.fround({x})",
@@ -384,7 +319,6 @@ for op, args, ret in op_list:
   {js_impl_full}
   const t = {'wrapFLTensor' if not methods_only else 'wrapFunc'}(fl._{op}.native, {', '.join((['this'] if methods_only else []) + js_args)});
   t.op = "{op}";
-  t.grad_fn = {grad_impls[op] if op in grad_impls else 'null'};
   return t;
 }}{',' if methods_only else ''}"""
 
@@ -427,11 +361,11 @@ if sys.argv[1] in ["js", "js_methods"]:
         # js_methods
         full_js = f"""\
 /* GENERATED CODE (gen_binding.py) */
-import {{ FFIType }} from "bun:ffi";
-import {{ arrayArg }} from "../ffi/ffi_bind_utils";
-import {{ fl }} from "../ffi/ffi_flashlight";
-import {{ TensorInterface }} from "./tensor_interface";
-import type {{ Tensor }} from "./tensor";
+import {{ FFIType }} from 'bun:ffi'
+import {{ arrayArg }} from '../ffi/ffi_bind_utils'
+import {{ fl }} from '../ffi/ffi_flashlight'
+import {{ TensorInterface }} from './tensor_interface'
+import type {{ Tensor }} from './tensor'
 export const gen_tensor_op_shim = (wrapFunc: (closure: CallableFunction, ...args: any[]) => Tensor) => {{
   return {{{full_js}
   }};
