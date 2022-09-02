@@ -1,19 +1,19 @@
 import * as sm from '@shumai/shumai'
 
-const iters = 1000
-const N = 32
-const hidden = 32
+const iters = 10000
+const N = 8
+const hidden = 8
 
 class Linear {
-  constructor(inp_dim, out_dim) {
-    this.weight = sm.randn([inp_dim, out_dim])
-    this.bias = sm.randn([1, out_dim])
+  constructor(out_dim, inp_dim) {
+    this.weight = sm.randn([out_dim, inp_dim])
+    this.bias = sm.randn([out_dim, 1])
     this.weight.requires_grad = true
     this.bias.requires_grad = true
   }
 
   forward(x) {
-    x = x.matmul(this.weight)
+    x = this.weight.matmul(x)
     return x.add(this.bias)
   }
 }
@@ -22,12 +22,12 @@ function relu(x) {
   return x.maximum(sm.scalar(0))
 }
 
-const x = sm.randn([N, 1])
+const x = sm.randn([1, N])
 const y = x.mul(sm.scalar(4))
 
-const l0 = new Linear(1, hidden)
+const l0 = new Linear(hidden, 1)
 const l1 = new Linear(hidden, hidden)
-const l2 = new Linear(hidden, 1)
+const l2 = new Linear(1, hidden)
 
 function model(x) {
   x = l0.forward(x)
@@ -37,6 +37,8 @@ function model(x) {
   x = l2.forward(x)
   return x
 }
+
+console.log(model(x).shape)
 
 function mse(a, b) {
   const c = a.sub(b)
