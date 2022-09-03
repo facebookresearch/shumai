@@ -8,13 +8,17 @@ function arrayArg(arg: number | number[], type: FFIType) {
   }
 
   let array: Int32Array | BigInt64Array
-  if (type === FFIType.i32) {
-    array = new Int32Array(arg)
-  } else if (type === FFIType.i64) {
-    array = new BigInt64Array(arg.map((x) => BigInt(x)))
-  } else {
-    throw 'unhandled type for array argument'
+  switch (type) {
+    case FFIType.i32:
+      array = new Int32Array(arg)
+      break
+    case FFIType.i64:
+      array = new BigInt64Array(arg.map((x) => BigInt(x)))
+      break
+    default:
+      throw new Error(`Unsupported type: ${type}`)
   }
+
   return [ptr(array), array.length]
 }
 
