@@ -8,7 +8,7 @@ describe('cos', () => {
     const a = sm.tensor(new Float32Array(values))
     const r = sm.cos(a)
     expectArraysClose(
-      <Float32Array>r.valueOf(),
+      r.toFloat32Array(),
       values.map((v) => Math.cos(v))
     )
   })
@@ -16,7 +16,7 @@ describe('cos', () => {
   it('propagates NaNs', () => {
     const a = sm.tensor(new Float32Array([4, NaN, 0]))
     const r = sm.cos(a)
-    expectArraysClose(<Float32Array>r.valueOf(), [Math.cos(4), NaN, Math.cos(0)])
+    expectArraysClose(r.toFloat32Array(), [Math.cos(4), NaN, Math.cos(0)])
   })
 
   /* TODO: unit tests for gradients once supported */

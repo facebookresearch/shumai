@@ -1,6 +1,9 @@
 import { expect } from 'bun:test'
 import type { Tensor } from '../src/tensor/tensor'
 
+export const calcSizeFromShape = (arr: number[]) =>
+  arr.reduce((acc, val, i) => (i === 0 ? val : acc * val), 0)
+
 /**
  * exported helper functions to make up for bun's wiptest
  * lacking some features
@@ -29,7 +32,7 @@ export const isClose = (actual: number, expected: number, error = 0.001) => {
   return true
 }
 
-// validates that actual && expected array are close to (all values w/i given tolerance)
+/* validates that actual && expected array are close (all values w/i given tolerance) */
 const isCloseArr = (
   actual: Float32Array | number[],
   expected: Float32Array | number[],

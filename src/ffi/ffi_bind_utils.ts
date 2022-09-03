@@ -7,7 +7,7 @@ function arrayArg(arg, type) {
   if (arg.constructor === Number) {
     arg = [arg]
   }
-  let array
+  let array: Int32Array | BigInt64Array
   if (type === FFIType.i32) {
     array = new Int32Array(arg)
   } else if (type === FFIType.i64) {

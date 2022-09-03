@@ -8,7 +8,7 @@ describe('sin', () => {
     const a = sm.tensor(new Float32Array(values))
     const r = sm.sin(a)
     expectArraysClose(
-      <Float32Array>r.valueOf(),
+      r.toFloat32Array(),
       values.map((v) => Math.sin(v))
     )
   })
@@ -16,7 +16,7 @@ describe('sin', () => {
   it('propagates NaNs', () => {
     const a = sm.tensor(new Float32Array([4, NaN, 0]))
     const r = sm.sin(a)
-    expectArraysClose(<Float32Array>r.valueOf(), [Math.sin(4), NaN, Math.sin(0)])
+    expectArraysClose(r.toFloat32Array(), [Math.sin(4), NaN, Math.sin(0)])
   })
 
   /* TODO: unit tests for gradients once supported */
