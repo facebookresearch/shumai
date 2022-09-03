@@ -1,4 +1,6 @@
 import { dlopen, suffix } from 'bun:ffi'
+import { existsSync } from 'fs'
+import { cwd } from 'process'
 import { ffi_tensor } from './ffi_tensor'
 import { ffi_tensor_ops } from './ffi_tensor_ops_gen'
 
@@ -8,7 +10,14 @@ import { ffi_tensor_ops } from './ffi_tensor_ops_gen'
 
 const pkgname = `@shumai/${process.platform}_${process.arch}_shumai_flashlight`
 const BINDING_NAME_PREFIX = 'libflashlight_binding'
-const path = import.meta.resolveSync(`${pkgname}/${BINDING_NAME_PREFIX}.${suffix}`)
+const path = (() => {
+  const local_path = `${cwd()}/${BINDING_NAME_PREFIX}.${suffix}`
+  if (existsSync(local_path)) {
+    return local_path
+  }
+  return import.meta.resolveSync(`${pkgname}/${BINDING_NAME_PREFIX}.${suffix}`)
+})()
+
 const { symbols: fl } = (() => {
   try {
     return dlopen(path, {
