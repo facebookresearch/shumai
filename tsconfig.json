@@ -14,5 +14,5 @@
       "@shumai/shumai": ["./shumai.ts"],
     }
   },
-  "exclude": ["examples/*.js"]
+  "exclude": ["examples/*.js", "python_comparison/*.js"]
 }
