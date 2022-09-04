@@ -313,7 +313,7 @@ for op, args, ret in op_list:
     returns: {ffi_ret}
   }},"""
 
-    js_impl_full = "\n".join(js_impl + (['this.cleanUp()'] if methods_only else []))
+    js_impl_full = "\n".join(js_impl)
     js = f"""
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
   {js_impl_full}

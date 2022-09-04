@@ -152,15 +152,6 @@ class Tensor {
     return backward(this, jacobian)
   }
 
-  cleanUp() {
-    if (this.op_count >= 50) {
-      this.eval()
-      this.op_count = 0
-    } else {
-      this.op_count++
-    }
-  }
-
   // obj is any of {number, Float32Array} (private construction has other options)
   constructor(obj) {
     if (obj.op_count) this.op_count = obj.op_count
@@ -264,6 +255,21 @@ for (const [method, closure] of Object.entries(gen_tensor_op_shim(wrapFLTensor))
 
 function tensor(obj) {
   return new Tensor(obj)
+}
+
+export enum EvalTriggerType {
+  LOSS,
+  OP_COUNT
+}
+
+/* TODO: Bayesian optimization for optimal eval frequency */
+function tune_eval(t: Tensor, threshold = 50) {
+  if (t.op_count >= threshold) {
+    this.eval()
+    this.op_count = 0
+  } else {
+    this.op_count++
+  }
 }
 
 function bytesUsed() {
