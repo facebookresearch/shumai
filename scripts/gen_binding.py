@@ -195,7 +195,7 @@ to_ts = {
     "uint64_t": "number",
     "Tensor": "Tensor",
     "Shape": "number[]",
-    "Axes": "number[]",
+    "Axes": "number | number[]",
 }
 
 
