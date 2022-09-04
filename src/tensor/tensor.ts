@@ -143,7 +143,9 @@ class Tensor {
     const numel = Number(fl.elements.native(_ptr))
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - overload toArrayBuffer params
-    this.underlying = toArrayBuffer(_ptr, 0, numel * 4, _ptr, fl.genTensorDestroyer.native())
+    this.underlying = toArrayBuffer(_ptr, 0, numel * 4, fl.genTensorDestroyer.native())
+    /* TODO: possibly use deallocatorContext? */
+    // this.underlying = toArrayBuffer(_ptr, 0, numel * 4, _ptr, fl.genTensorDestroyer.native())
   }
 
   backward(jacobian) {
