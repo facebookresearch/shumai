@@ -10,10 +10,18 @@ fl.init.native()
 const gradient_functions: { [key: string]: CallableFunction } = {}
 
 export function wrapFLTensor(closure: CallableFunction, ...args: any[]): Tensor {
+  /**
+   * first Tensor in args is tensor that's
+   * operation has been called
+   */
+  let op_count: number = undefined,
+    is_self_op = false
   const ptr_args = args.map((x) => {
     if (x.constructor === Tensor) {
+      if (!op_count) op_count = x.op_count
       return x.ptr
     }
+    if (typeof x === 'boolean' && x) is_self_op = true
     return x
   })
   const _ptr = closure(...ptr_args)
@@ -23,6 +31,7 @@ export function wrapFLTensor(closure: CallableFunction, ...args: any[]): Tensor 
     _ptr: _ptr,
     _deps: deps
   })
+  if (is_self_op) t.op_count = op_count
   t.requires_grad = requires_grad
   return t
 }
@@ -128,20 +137,31 @@ class Tensor {
   requires_grad = false
   grad: Tensor = null
   op = 'constant'
+  op_count = 0
 
   _injest_ptr(_ptr) {
     const numel = Number(fl.elements.native(_ptr))
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - overload toArrayBuffer params
-    this.underlying = toArrayBuffer(_ptr, 0, numel * 4, fl.genTensorDestroyer.native())
+    this.underlying = toArrayBuffer(_ptr, 0, numel * 4, _ptr, fl.genTensorDestroyer.native())
   }
 
   backward(jacobian) {
     return backward(this, jacobian)
   }
 
+  cleanUp() {
+    if (this.op_count >= 50) {
+      this.eval()
+      this.op_count = 0
+    } else {
+      this.op_count++
+    }
+  }
+
   // obj is any of {number, Float32Array} (private construction has other options)
   constructor(obj) {
+    if (obj.op_count) this.op_count = obj.op_count
     if (obj._ptr) {
       this._injest_ptr(obj._ptr)
       this.deps = obj._deps

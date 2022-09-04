@@ -313,11 +313,11 @@ for op, args, ret in op_list:
     returns: {ffi_ret}
   }},"""
 
-    js_impl_full = "\n".join(js_impl)
+    js_impl_full = "\n".join(js_impl + (['this.cleanUp()'] if methods_only else []))
     js = f"""
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
   {js_impl_full}
-  const t = {'wrapFLTensor' if not methods_only else 'wrapFunc'}(fl._{op}.native, {', '.join((['this'] if methods_only else []) + js_args)});
+  const t = {'wrapFLTensor' if not methods_only else 'wrapFunc'}(fl._{op}.native, {', '.join((['this'] if methods_only else []) + js_args)}{', true' if methods_only else ''});
   t.op = "{op}";
   return t;
 }}{',' if methods_only else ''}"""
