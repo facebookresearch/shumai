@@ -373,14 +373,14 @@ export function matmul(tensor: Tensor, other: Tensor) {
   return t
 }
 
-export function amin(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function amin(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._amin.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'amin'
   return t
 }
 
-export function amax(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function amax(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._amax.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'amax'
@@ -409,7 +409,7 @@ export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
   return t
 }
 
-export function sum(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function sum(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._sum.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'sum'
@@ -426,35 +426,40 @@ export function cumsum(tensor: Tensor, axis: number) {
   return t
 }
 
-export function mean(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function mean(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._mean.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'mean'
   return t
 }
 
-export function median(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function median(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._median.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'median'
   return t
 }
 
-export function _var(tensor: Tensor, axes: number[] = [], bias = false, keep_dims = false) {
+export function _var(
+  tensor: Tensor,
+  axes: number | number[] = [],
+  bias = false,
+  keep_dims = false
+) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._var.native, tensor, axes_ptr, axes_len, !!bias, !!keep_dims)
   t.op = 'var'
   return t
 }
 
-export function std(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function std(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._std.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'std'
   return t
 }
 
-export function norm(tensor: Tensor, axes: number[] = [], p = 2, keep_dims = false) {
+export function norm(tensor: Tensor, axes: number | number[] = [], p = 2, keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(
     fl._norm.native,
@@ -468,21 +473,21 @@ export function norm(tensor: Tensor, axes: number[] = [], p = 2, keep_dims = fal
   return t
 }
 
-export function countNonzero(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function countNonzero(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._countNonzero.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'countNonzero'
   return t
 }
 
-export function any(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function any(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._any.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'any'
   return t
 }
 
-export function all(tensor: Tensor, axes: number[] = [], keep_dims = false) {
+export function all(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const t = wrapFLTensor(fl._all.native, tensor, axes_ptr, axes_len, !!keep_dims)
   t.op = 'all'

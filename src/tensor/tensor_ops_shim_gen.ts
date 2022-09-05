@@ -336,14 +336,14 @@ export const gen_tensor_op_shim = (
       return t
     },
 
-    amin(axes: number[] = [], keep_dims = false) {
+    amin(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._amin.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'amin'
       return t
     },
 
-    amax(axes: number[] = [], keep_dims = false) {
+    amax(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._amax.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'amax'
@@ -372,7 +372,7 @@ export const gen_tensor_op_shim = (
       return t
     },
 
-    sum(axes: number[] = [], keep_dims = false) {
+    sum(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._sum.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'sum'
@@ -389,35 +389,35 @@ export const gen_tensor_op_shim = (
       return t
     },
 
-    mean(axes: number[] = [], keep_dims = false) {
+    mean(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._mean.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'mean'
       return t
     },
 
-    median(axes: number[] = [], keep_dims = false) {
+    median(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._median.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'median'
       return t
     },
 
-    _var(axes: number[] = [], bias = false, keep_dims = false) {
+    _var(axes: number | number[] = [], bias = false, keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._var.native, this, axes_ptr, axes_len, !!bias, !!keep_dims)
       t.op = 'var'
       return t
     },
 
-    std(axes: number[] = [], keep_dims = false) {
+    std(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._std.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'std'
       return t
     },
 
-    norm(axes: number[] = [], p = 2, keep_dims = false) {
+    norm(axes: number | number[] = [], p = 2, keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(
         fl._norm.native,
@@ -431,21 +431,21 @@ export const gen_tensor_op_shim = (
       return t
     },
 
-    countNonzero(axes: number[] = [], keep_dims = false) {
+    countNonzero(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._countNonzero.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'countNonzero'
       return t
     },
 
-    any(axes: number[] = [], keep_dims = false) {
+    any(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._any.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'any'
       return t
     },
 
-    all(axes: number[] = [], keep_dims = false) {
+    all(axes: number | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const t = wrapFunc(fl._all.native, this, axes_ptr, axes_len, !!keep_dims)
       t.op = 'all'
