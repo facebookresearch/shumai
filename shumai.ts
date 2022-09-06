@@ -6,6 +6,7 @@ export {
   gradient_functions,
   Tensor
 } from './src/tensor/tensor'
+export * from './src/utils/eval_tuner'
 export * from './src/tensor/tensor_ops_gen'
 import './src/tensor/register_gradients'
 export type { TensorInterface } from './src/tensor/tensor_interface'

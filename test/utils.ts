@@ -1,3 +1,4 @@
+import { EvalTuner } from '@shumai/shumai'
 import { expect } from 'bun:test'
 import type { Tensor } from '../src/tensor/tensor'
 
@@ -58,3 +59,5 @@ export const expectArraysClose = (
   expected: Float32Array | number[],
   error = 0.001
 ) => expect(isCloseArr(actual, expected, error)).toBe(true)
+
+export const eval_tuner = new EvalTuner()
