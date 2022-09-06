@@ -4,6 +4,11 @@ import type { Tensor } from '../src/tensor/tensor'
 export const calcSizeFromShape = (arr: number[]) =>
   arr.reduce((acc, val, i) => (i === 0 ? val : acc * val), 0)
 
+export const logBenchmarkInfo = (t0: number, t1: number, iters: number, o: unknown) => {
+  console.log((1e3 * iters) / (t1 - t0), 'iter/sec')
+  console.log(o, (1e6 * (t1 - t0)) / iters, 'ns/iter')
+}
+
 /**
  * exported helper functions to make up for bun's wiptest
  * lacking some features
