@@ -236,7 +236,7 @@ class Tensor {
 interface Tensor extends TensorInterface, TensorOpsInterface {}
 
 // Initialize other generated methods on the Tensor obj prototype
-for (const [method, closure] of Object.entries(gen_tensor_op_shim(wrapFLTensor))) {
+for (const [method, closure] of Object.entries(gen_tensor_op_shim(Tensor))) {
   Tensor.prototype[method] = closure
 }
 
