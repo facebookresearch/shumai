@@ -4,6 +4,7 @@ export {
   backward,
   bytesUsed,
   gradient_functions,
+  layout,
   Tensor
 } from './src/tensor/tensor'
 export * from './src/tensor/tensor_ops_gen'
