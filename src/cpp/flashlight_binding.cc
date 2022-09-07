@@ -18,7 +18,7 @@ std::vector<T> arrayArg(void *ptr, int len, bool reverse, int invert) {
     const auto idx = reverse ? len - i - 1 : i;
     auto v = reinterpret_cast<T *>(ptr)[idx];
     if (invert && v < 0) {
-      v = invert + v;
+      v = -v - 1;
     } else if (invert) {
       v = invert - v - 1;
     }
