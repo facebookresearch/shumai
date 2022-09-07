@@ -8,7 +8,8 @@
   },
   "files": [
     "shumai.ts",
-    "src/*/**.ts"
+    "src/*/**.ts",
+    "src/*.ts"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.35.1",
