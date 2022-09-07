@@ -233,6 +233,7 @@ for op, args, ret in op_list:
         return arg, None, None
 
     supports_method = normalize_arg(args[0])[0] == "Tensor"
+    first_tensor = None
     if methods_only:
         if not supports_method:
             continue
@@ -253,13 +254,18 @@ for op, args, ret in op_list:
             js_args.append(f"{n}")
             js_arg_types.append("tensor")
             c_impl.append(f"auto *{n}_ptr = reinterpret_cast<fl::Tensor*>({n});")
+            if not first_tensor:
+                first_tensor = f"{n}_ptr"
             c_op_args.append(f"*{n}_ptr")
         elif t == "Shape":
             if not n:
                 n = "shape"
             c_sig.append(f"void *{n}_ptr")
             c_sig.append(f"int64_t {n}_len")
-            c_impl.append(f"auto {n} = arrayArg<long long>({n}_ptr, {n}_len);")
+            if op == "transpose": # bug in flashlight
+                c_impl.append(f"auto {n} = arrayArg<long long>({n}_ptr, {n}_len, g_row_major, {first_tensor}->ndim());")
+            else:
+                c_impl.append(f"auto {n} = arrayArg<long long>({n}_ptr, {n}_len, g_row_major, false);")
             c_op_args.append(f"fl::Shape({n})")
             ffi_sig.append("FFIType.ptr")
             ffi_sig.append("FFIType.i64")
@@ -273,7 +279,7 @@ for op, args, ret in op_list:
                 n = "axes"
             c_sig.append(f"void *{n}_ptr")
             c_sig.append(f"int64_t {n}_len")
-            c_impl.append(f"auto {n} = arrayArg<int>({n}_ptr, {n}_len);")
+            c_impl.append(f"auto {n} = arrayArg<int>({n}_ptr, {n}_len, g_row_major, {first_tensor}->ndim());")
             c_op_args.append(f"{n}")
             ffi_sig.append("FFIType.ptr")
             ffi_sig.append("FFIType.i64")

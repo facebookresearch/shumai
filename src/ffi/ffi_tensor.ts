@@ -5,6 +5,14 @@ const ffi_tensor = {
   bytesUsed: {
     returns: FFIType.u64
   },
+  setRowMajor: {},
+  setColMajor: {},
+  isRowMajor: {
+    returns: FFIType.bool
+  },
+  isColMajor: {
+    returns: FFIType.bool
+  },
   createTensor: {
     args: [FFIType.ptr, FFIType.i32],
     returns: FFIType.ptr

@@ -1,3 +1,4 @@
+#include "flashlight/fl/autograd/Functions.h"
 #include "flashlight/fl/nn/Init.h"
 #include "flashlight/fl/runtime/Device.h"
 #include "flashlight/fl/runtime/Stream.h"
@@ -5,40 +6,46 @@
 #include "flashlight/fl/tensor/Index.h"
 #include "flashlight/fl/tensor/Init.h"
 #include "flashlight/fl/tensor/Random.h"
-#include "flashlight/fl/autograd/Functions.h"
 #include <atomic>
 #include <cstdlib>
 #include <iostream>
 
-template <typename T> std::vector<T> arrayArg(void *ptr, int len) {
+template <typename T>
+std::vector<T> arrayArg(void *ptr, int len, bool reverse, int invert) {
   std::vector<T> out;
   out.reserve(len);
   for (auto i = 0; i < len; ++i) {
-    out.emplace_back(reinterpret_cast<T *>(ptr)[i]);
+    const auto idx = reverse ? len - i - 1 : i;
+    auto v = reinterpret_cast<T *>(ptr)[idx];
+    if (invert && v < 0) {
+      v = invert + v;
+    } else if (invert) {
+      v = invert - v - 1;
+    }
+    out.emplace_back(v);
   }
   return out;
 }
 
-static std::atomic<size_t> g_bytes_used;
+static std::atomic<size_t> g_bytes_used = 0;
+static std::atomic<bool> g_row_major = true;
 
 extern "C" {
 
 void init() { fl::init(); }
 
-size_t bytesUsed() {
-  return g_bytes_used;
-}
+size_t bytesUsed() { return g_bytes_used; }
 
 void *createTensor(void *shape_ptr, int shape_len) {
   static_assert(sizeof(long long) == sizeof(int64_t));
-  auto shape = arrayArg<long long>(shape_ptr, shape_len);
-  auto* t = new fl::Tensor(fl::Shape(shape));
+  auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
+  auto *t = new fl::Tensor(fl::Shape(shape));
   g_bytes_used += t->bytes();
   return t;
 }
 
 void *tensorFromBuffer(int numel, void *ptr) {
-  auto* t = new fl::Tensor(
+  auto *t = new fl::Tensor(
       fl::Tensor::fromBuffer({numel}, (float *)ptr, fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
   return t;
@@ -54,6 +61,14 @@ typedef void (*JSTypedArrayBytesDeallocator)(void *bytes,
                                              void *deallocatorContext);
 
 JSTypedArrayBytesDeallocator genTensorDestroyer() { return destroyTensor; }
+
+void setRowMajor() { g_row_major = true; }
+
+void setColMajor() { g_row_major = false; }
+
+bool isRowMajor() { return g_row_major; }
+
+bool isColMajor() { return !g_row_major; }
 
 void eval(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
@@ -71,7 +86,8 @@ int shape(void *t, void *out, int out_len) {
     return -1;
   }
   for (auto i = 0; i < out_len; ++i) {
-    reinterpret_cast<int64_t *>(out)[i] = tensor->shape()[i];
+    const auto idx = g_row_major ? out_len - i - 1 : i;
+    reinterpret_cast<int64_t *>(out)[i] = tensor->shape()[idx];
   }
   return 0;
 }
