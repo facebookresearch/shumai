@@ -248,4 +248,19 @@ function bytesUsed() {
   return fl.bytesUsed.native()
 }
 
-export { tensor, backward, bytesUsed, gradient_functions, Tensor }
+const layout = {
+  setRowMajor: () => {
+    fl.setRowMajor()
+  },
+  setColMajor: () => {
+    fl.setColMajor()
+  },
+  isRowMajor: () => {
+    return fl.isRowMajor()
+  },
+  isColMajor: () => {
+    return !fl.isRowMajor()
+  }
+}
+
+export { tensor, backward, bytesUsed, layout, gradient_functions, Tensor }

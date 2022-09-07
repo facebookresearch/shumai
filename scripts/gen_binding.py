@@ -164,6 +164,12 @@ op_list = [
     ),
 ]
 
+# ops that need inputs transposed to work correctly
+# if g_row_major == true
+reverse_args_row_major = [
+  "matmul",
+]
+
 to_ffi = {
     "char*": "cstring",
     "void*": "ptr",
@@ -311,9 +317,18 @@ for op, args, ret in op_list:
     c_ret = ret
     c_args = ", ".join(c_op_args)
     if ret == "Tensor":
+        if op in reverse_args_row_major:
+          c_impl.append("if (g_row_major) {")
+          c_args_reversed = ", ".join(c_op_args[::-1])
+          c_impl.append(f"auto* t = new fl::Tensor(fl::{op}({c_args_reversed}));")
+          c_impl.append(f"g_bytes_used += t->bytes();")
+          c_impl.append(f"return t;")
+          c_impl.append("} else {")
         c_impl.append(f"auto* t = new fl::Tensor(fl::{op}({c_args}));")
         c_impl.append(f"g_bytes_used += t->bytes();")
         c_impl.append(f"return t;")
+        if op in reverse_args_row_major:
+          c_impl.append("}")
         c_ret = "void*"
         ffi_ret = f"FFIType.{to_ffi['void*']}"
     else:

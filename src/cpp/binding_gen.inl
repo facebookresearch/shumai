@@ -431,9 +431,15 @@ void *_power(void *tensor, void *other) {
 void *_matmul(void *tensor, void *other) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor *>(tensor);
   auto *other_ptr = reinterpret_cast<fl::Tensor *>(other);
-  auto *t = new fl::Tensor(fl::matmul(*tensor_ptr, *other_ptr));
-  g_bytes_used += t->bytes();
-  return t;
+  if (g_row_major) {
+    auto *t = new fl::Tensor(fl::matmul(*other_ptr, *tensor_ptr));
+    g_bytes_used += t->bytes();
+    return t;
+  } else {
+    auto *t = new fl::Tensor(fl::matmul(*tensor_ptr, *other_ptr));
+    g_bytes_used += t->bytes();
+    return t;
+  }
 }
 
 void *_amin(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
