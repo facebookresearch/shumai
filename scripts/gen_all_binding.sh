@@ -7,3 +7,4 @@ python scripts/gen_binding.py js_ops_interface > src/tensor/tensor_ops_interface
 python scripts/gen_binding.py c > src/cpp/binding_gen.inl
 echo "beautifying javascript & formatting python"
 bun format
+clang-format -i src/cpp/binding_gen.inl src/cpp/flashlight_binding.cc

@@ -1,0 +1,82 @@
+import * as base from './tensor/tensor'
+import * as ops from './tensor/tensor_ops_gen'
+const sm = { ...base, ...ops }
+
+class Module extends Function {
+  constructor() {
+    super('...args', 'return this.__self__.forward(...args)')
+    const self = this.bind(this)
+    this.__self__ = self
+    return self
+  }
+
+  forward() {
+    throw 'You must implement a `forward()` method in your module'
+  }
+}
+
+class Linear extends Module {
+  weight: sm.Tensor
+  bias: sm.Tensor
+  constructor(inp_dim: number, out_dim: number) {
+    super()
+    this.weight = sm.randn([inp_dim, out_dim])
+    this.bias = sm.randn([1, out_dim])
+    this.weight.requires_grad = true
+    this.bias.requires_grad = true
+  }
+
+  forward(x: Tensor): Tensor {
+    x = this.weight.matmul(x)
+    return x.add(this.bias)
+  }
+}
+
+class LSTM extends Module {
+  W_f: sm.Tensor
+  U_f: sm.Tensor
+  b_f: sm.Tensor
+  W_i: sm.Tensor
+  U_i: sm.Tensor
+  b_i: sm.Tensor
+  W_o: sm.Tensor
+  U_o: sm.Tensor
+  b_o: sm.Tensor
+  W_c: sm.Tensor
+  U_c: sm.Tensor
+  b_c: sm.Tensor
+  constructor(inp_dim: number, out_dim: number) {
+    super()
+    this.W_f = sm.randn([inp_dim, out_dim])
+    this.U_f = sm.randn([out_dim, out_dim])
+    this.b_f = sm.randn([1, out_dim])
+    this.W_i = sm.randn([inp_dim, out_dim])
+    this.U_i = sm.randn([out_dim, out_dim])
+    this.b_i = sm.randn([1, out_dim])
+    this.W_o = sm.randn([inp_dim, out_dim])
+    this.U_o = sm.randn([out_dim, out_dim])
+    this.b_o = sm.randn([1, out_dim])
+    this.W_c = sm.randn([inp_dim, out_dim])
+    this.U_c = sm.randn([out_dim, out_dim])
+    this.b_c = sm.randn([1, out_dim])
+  }
+
+  forward(x: Tensor, h: Tensor, c: Tensor): [Tensor, Tensor] {
+    const f_t = this.W_f.matmul(x).add(this.U_f.matmul(h)).add(this.b_f).sigmoid()
+    const i_t = this.W_i.matmul(x).add(this.U_i.matmul(h)).add(this.b_i).sigmoid()
+    const o_t = this.W_o.matmul(x).add(this.U_o.matmul(h)).add(this.b_o).sigmoid()
+    const c_t = this.W_c.matmul(x).add(this.U_c.matmul(h)).add(this.b_c).tanh()
+    const new_c = f_t.mul(c).add(i_t.mul(c_t))
+    const new_h = o_t.mul(new_c.tanh())
+    return [new_h, new_c]
+  }
+}
+
+function linear(inp_dim, out_dim) {
+  return new Linear(inp_dim, out_dim)
+}
+function lstm(inp_dim, out_dim) {
+  return new LSTM(inp_dim, out_dim)
+}
+
+export { Linear, LSTM, linear, lstm }
