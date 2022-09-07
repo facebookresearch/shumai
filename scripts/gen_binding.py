@@ -332,17 +332,19 @@ for op, args, ret in op_list:
         wrap_args = [('this', 'tensor')] + wrap_args
     js_ptr_args = [x[0] if x[1] != "tensor" else f"{x[0]}.ptr" for x in wrap_args]
     js_ptr_result = f"const _ptr = fl._{op}({', '.join(js_ptr_args)})"
-    js_deps = "const deps = [];"
-    for arg in wrap_args:
-        if arg[1] == "tensor":
-            js_deps += f"  if ({arg[0]}.requires_grad) {{ deps.push({arg[0]}) }}"
+    js_requires_grad_args = '||'.join([f"{arg[0]}.requires_grad" for arg in wrap_args if arg[1] == "tensor"])
+    js_requires_grad_args = 'false' if len(js_requires_grad_args) == 0 else js_requires_grad_args
+    js_requires_grad_var = f"const requires_grad = {js_requires_grad_args}"
+    js_grad_args = (['this'] if methods_only else []) + js_args
+    js_deps = f"const deps = requires_grad ? [{', '.join(js_grad_args)}] : []"
     js_tensor_call = '_Tensor' if methods_only else 'Tensor'
     js_tensor_construct = f"const t = new {js_tensor_call}({{_ptr: _ptr, _deps: deps}})";
-    js_requires_grad = f"t.requires_grad = deps.length > 0"
+    js_requires_grad = f"t.requires_grad = requires_grad"
     js = f"""
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
   {js_impl_full}
   {js_ptr_result}
+  {js_requires_grad_var}
   {js_deps}
   {js_tensor_construct}
   {js_requires_grad}

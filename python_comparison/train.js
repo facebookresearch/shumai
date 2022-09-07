@@ -5,9 +5,9 @@ const N = 32
 const hidden = 32
 
 class Linear {
-  constructor(out_dim, inp_dim) {
-    this.weight = sm.randn([out_dim, inp_dim])
-    this.bias = sm.randn([out_dim, 1])
+  constructor(inp_dim, out_dim) {
+    this.weight = sm.randn([inp_dim, out_dim])
+    this.bias = sm.randn([1, out_dim])
     this.weight.requires_grad = true
     this.bias.requires_grad = true
   }
@@ -22,12 +22,12 @@ function relu(x) {
   return x.maximum(sm.scalar(0))
 }
 
-const x = sm.randn([1, N])
+const x = sm.randn([N, 1])
 const y = x.mul(sm.scalar(4))
 
-const l0 = new Linear(hidden, 1)
+const l0 = new Linear(1, hidden)
 const l1 = new Linear(hidden, hidden)
-const l2 = new Linear(1, hidden)
+const l2 = new Linear(hidden, 1)
 
 function model(x) {
   x = l0.forward(x)

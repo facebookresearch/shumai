@@ -89,7 +89,7 @@ function backward(base_t: Tensor, jacobian: Tensor) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
     }
     if (!gradient_functions[t.op]) {
-      continue
+      throw `Cannot differentiate ${t.op}. The gradient function is not defined!`
     }
     let idx = -1
     for (const dep of t.deps) {
