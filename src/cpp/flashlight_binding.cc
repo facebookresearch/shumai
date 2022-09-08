@@ -107,7 +107,7 @@ float scalar(void *t) {
   return tensor->scalar<float>();
 }
 
-void *index(void *t, void *starts, int64_t starts_len, void *ends,
+void *_index(void *t, void *starts, int64_t starts_len, void *ends,
             int64_t ends_len, void *strides, int64_t strides_len) {
   auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
   auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);

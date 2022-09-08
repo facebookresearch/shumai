@@ -249,7 +249,7 @@ class Tensor {
       }
     }
     return wrapFLTensor(
-      fl.index.native,
+      fl._index.native,
       this,
       ...arrayArg(start, FFIType.i64),
       ...arrayArg(end, FFIType.i64),
