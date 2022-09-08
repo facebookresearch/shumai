@@ -229,6 +229,33 @@ class Tensor {
   toFloat32(): number {
     return fl.scalar.native(this.ptr)
   }
+
+  index(args) {
+    if (this.ndim !== args.length) {
+      throw `Must specify index for every dimension! (expected ${this.ndim}, got ${args.length}`
+    }
+    const start = []
+    const end = []
+    const stride = []
+    for (const arg of args) {
+      if (arg == ':') {
+        start.push(-1)
+        end.push(-1)
+      } else if (typeof arg === 'number') {
+        start.push(arg)
+        end.push(arg + 1)
+      } else {
+        throw `${arg} not yet supported.  Please file a bug with desired behavior!`
+      }
+    }
+    return wrapFLTensor(
+      fl.index.native,
+      this,
+      ...arrayArg(start, FFIType.i64),
+      ...arrayArg(end, FFIType.i64),
+      ...arrayArg(stride, FFIType.i64)
+    )
+  }
 }
 
 // Interface extension trick to extend the type definition of Tensor

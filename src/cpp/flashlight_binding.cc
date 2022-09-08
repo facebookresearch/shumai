@@ -107,6 +107,29 @@ float scalar(void *t) {
   return tensor->scalar<float>();
 }
 
+void *index(void *t, void *starts, int64_t starts_len, void *ends,
+            int64_t ends_len, void *strides, int64_t strides_len) {
+  auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
+  auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
+  auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
+  std::vector<fl::Index> indices;
+  indices.reserve(start.size());
+  for (auto i = 0; i < start.size(); ++i) {
+    if (start[i] == -1 && end[i] == -1) {
+      indices.emplace_back(fl::span);
+    } else if (start[i] + 1 == end[i]) {
+      indices.emplace_back(start[i]);
+    } else {
+      indices.emplace_back(
+          fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+    }
+  }
+  auto *tensor = reinterpret_cast<fl::Tensor *>(t);
+  auto *new_tensor = new fl::Tensor(tensor->operator()(indices));
+  g_bytes_used += new_tensor->bytes();
+  return new_tensor;
+}
+
 void *flatten(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   auto *new_tensor = new fl::Tensor(tensor->flatten());

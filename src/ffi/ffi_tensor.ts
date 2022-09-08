@@ -34,6 +34,18 @@ const ffi_tensor = {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
+  index: {
+    args: [
+      FFIType.ptr,
+      FFIType.ptr,
+      FFIType.i64,
+      FFIType.ptr,
+      FFIType.i64,
+      FFIType.ptr,
+      FFIType.i64
+    ],
+    returns: FFIType.ptr
+  },
   flatten: {
     args: [FFIType.ptr],
     returns: FFIType.ptr

@@ -9,6 +9,7 @@ export const calcSizeFromShape = (arr: number[]) =>
  * lacking some features
  */
 export const isShape = (t: Tensor, expectedShape: number[]) => {
+  if (t.shape.length !== expectedShape.length) return false
   for (let i = 0; i < t.shape.length; i++) {
     if (t.shape[i] !== expectedShape[i]) return false
   }
