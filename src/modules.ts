@@ -27,7 +27,7 @@ class Linear extends Module {
   }
 
   forward(x: Tensor): Tensor {
-    x = this.weight.matmul(x)
+    x = x.matmul(this.weight)
     return x.add(this.bias)
   }
 }
