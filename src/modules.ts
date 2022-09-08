@@ -62,10 +62,10 @@ class LSTM extends Module {
   }
 
   forward(x: Tensor, h: Tensor, c: Tensor): [Tensor, Tensor] {
-    const f_t = this.W_f.matmul(x).add(this.U_f.matmul(h)).add(this.b_f).sigmoid()
-    const i_t = this.W_i.matmul(x).add(this.U_i.matmul(h)).add(this.b_i).sigmoid()
-    const o_t = this.W_o.matmul(x).add(this.U_o.matmul(h)).add(this.b_o).sigmoid()
-    const c_t = this.W_c.matmul(x).add(this.U_c.matmul(h)).add(this.b_c).tanh()
+    const f_t = x.matmul(this.W_f).add(h.matmul(this.U_f)).add(this.b_f).sigmoid()
+    const i_t = x.matmul(this.W_i).add(h.matmul(this.U_i)).add(this.b_i).sigmoid()
+    const o_t = x.matmul(this.W_o).add(h.matmul(this.U_o)).add(this.b_o).sigmoid()
+    const c_t = x.matmul(this.W_c).add(h.matmul(this.U_c)).add(this.b_c).tanh()
     const new_c = f_t.mul(c).add(i_t.mul(c_t))
     const new_h = o_t.mul(new_c.tanh())
     return [new_h, new_c]
