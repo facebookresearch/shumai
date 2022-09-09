@@ -10,6 +10,16 @@
     "shumai/*/**.ts",
     "shumai/*.ts"
   ],
+  "keywords": [
+    "bun",
+    "flashlight",
+    "gpu",
+    "tensor",
+    "array",
+    "machine",
+    "learning",
+    "ai"
+  ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
