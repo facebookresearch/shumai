@@ -1,38 +1,9 @@
-import * as base from './tensor/tensor'
-import * as ops from './tensor/tensor_ops_gen'
+import * as base from '../tensor/tensor'
+import * as ops from '../tensor/tensor_ops_gen'
 const sm = { ...base, ...ops }
+import { Module } from './module'
 
-class Module extends Function {
-  constructor() {
-    super('...args', 'return this.__self__.forward(...args)')
-    const self = this.bind(this)
-    this.__self__ = self
-    return self
-  }
-
-  forward() {
-    throw 'You must implement a `forward()` method in your module'
-  }
-}
-
-class Linear extends Module {
-  weight: sm.Tensor
-  bias: sm.Tensor
-  constructor(inp_dim: number, out_dim: number) {
-    super()
-    this.weight = sm.randn([inp_dim, out_dim])
-    this.bias = sm.randn([1, out_dim])
-    this.weight.requires_grad = true
-    this.bias.requires_grad = true
-  }
-
-  forward(x: Tensor): Tensor {
-    x = x.matmul(this.weight)
-    return x.add(this.bias)
-  }
-}
-
-class LSTM extends Module {
+export class LSTM extends Module {
   W_f: sm.Tensor
   U_f: sm.Tensor
   b_f: sm.Tensor
@@ -72,11 +43,6 @@ class LSTM extends Module {
   }
 }
 
-function linear(inp_dim, out_dim) {
-  return new Linear(inp_dim, out_dim)
-}
-function lstm(inp_dim, out_dim) {
+export function lstm(inp_dim, out_dim) {
   return new LSTM(inp_dim, out_dim)
 }
-
-export { Module, Linear, LSTM, linear, lstm }

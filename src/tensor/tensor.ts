@@ -7,7 +7,7 @@ import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 
 fl.init.native()
-const gradient_functions: { [key: string]: CallableFunction } = {}
+export const gradient_functions: { [key: string]: CallableFunction } = {}
 
 export function wrapFLTensor(closure: CallableFunction, ...args: any[]): Tensor {
   const ptr_args = args.map((x) => {
@@ -33,7 +33,7 @@ export function scalar(s: number): Tensor {
 
 // differentiate t with respect to all
 // dependencies with requires_grad === True
-function backward(base_t: Tensor, jacobian: Tensor) {
+export function backward(base_t: Tensor, jacobian: Tensor) {
   const t0 = performance.now()
   if (!jacobian) {
     jacobian = full([], 1)
@@ -122,7 +122,7 @@ function backward(base_t: Tensor, jacobian: Tensor) {
   return [t0, t1, t2, t3, t4, exec_stats]
 }
 
-class Tensor {
+export class Tensor {
   underlying: ArrayBuffer
   deps: Array<Tensor> = []
   requires_grad = false
@@ -273,15 +273,15 @@ for (const [method, closure] of Object.entries(gen_tensor_op_shim(Tensor))) {
   Tensor.prototype[method] = closure
 }
 
-function tensor(obj) {
+export function tensor(obj) {
   return new Tensor(obj)
 }
 
-function bytesUsed() {
+export function bytesUsed() {
   return fl.bytesUsed.native()
 }
 
-const layout = {
+export const layout = {
   setRowMajor: () => {
     fl.setRowMajor()
   },
@@ -295,5 +295,3 @@ const layout = {
     return !fl.isRowMajor()
   }
 }
-
-export { tensor, backward, bytesUsed, layout, gradient_functions, Tensor }

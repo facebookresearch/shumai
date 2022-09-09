@@ -1,4 +1,4 @@
-function* range(
+export function* range(
   length_or_start: number,
   end_: number | null = null,
   stride_: number | null = null
@@ -19,7 +19,7 @@ function* range(
 }
 
 const chars = ['⡆', '⠇', '⠋', '⠙', '⠸', '⢰', '⣠', '⣄']
-function* viter(arraylike) {
+export function* viter(arraylike) {
   const len = arraylike.length
   if (!len) {
     throw `Cannot yet viter over unbounded iterables. Please file an issue!`
@@ -36,7 +36,7 @@ function* viter(arraylike) {
   console.log(`\u001b[2K100% ${len}/${len}\u001b[A\n`)
 }
 
-function shuffle(array: any[]) {
+export function shuffle(array: any[]) {
   let curr_idx: number = array.length
   let rand_idx: number
 
@@ -48,5 +48,3 @@ function shuffle(array: any[]) {
 
   return array
 }
-
-export { range, viter, shuffle }

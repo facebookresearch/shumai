@@ -1,16 +1,3 @@
-export {
-  scalar,
-  tensor,
-  backward,
-  bytesUsed,
-  gradient_functions,
-  layout,
-  Tensor
-} from './src/tensor/tensor'
-export * from './src/tensor/tensor_ops_gen'
-import './src/tensor/register_gradients'
-export type { TensorInterface } from './src/tensor/tensor_interface'
-export type { TensorOpsInterface } from './src/tensor/tensor_ops_interface_gen'
-
-export * as module from './src/modules'
-export * as util from './src/util/iterators.ts'
+export * from './src/tensor'
+export * as module from './src/module'
+export * as util from './src/util'
