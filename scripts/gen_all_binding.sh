@@ -1,10 +1,10 @@
 #!/bin/bash
 
-python scripts/gen_binding.py ffi > src/ffi/ffi_tensor_ops_gen.ts
-python scripts/gen_binding.py js > src/tensor/tensor_ops_gen.ts
-python scripts/gen_binding.py js_methods > src/tensor/tensor_ops_shim_gen.ts
-python scripts/gen_binding.py js_ops_interface > src/tensor/tensor_ops_interface_gen.ts
-python scripts/gen_binding.py c > src/cpp/binding_gen.inl
+python scripts/gen_binding.py ffi > shumai/ffi/ffi_tensor_ops_gen.ts
+python scripts/gen_binding.py js > shumai/tensor/tensor_ops_gen.ts
+python scripts/gen_binding.py js_methods > shumai/tensor/tensor_ops_shim_gen.ts
+python scripts/gen_binding.py js_ops_interface > shumai/tensor/tensor_ops_interface_gen.ts
+python scripts/gen_binding.py c > shumai/cpp/binding_gen.inl
 echo "beautifying javascript & formatting python"
 bun format
-clang-format -i src/cpp/binding_gen.inl src/cpp/flashlight_binding.cc
+clang-format -i shumai/cpp/binding_gen.inl shumai/cpp/flashlight_binding.cc

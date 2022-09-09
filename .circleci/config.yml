@@ -53,7 +53,7 @@ commands:
             find . -type f -name "libflashlight_binding*" | xargs ./dlopen
       - run:
           name: "Test library loading - bun ffi"
-          command: bun src/ffi/ffi_flashlight.ts
+          command: bun shumai/ffi/ffi_flashlight.ts
 
 jobs:
   test-arrayfire-cpu:
@@ -81,7 +81,7 @@ jobs:
                 command: |
                   # TODO: remove me when we have robust multibackend in Flashlight
                   sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
-                  sed -i "s/_shumai_flashlight/_shumai_flashlight_cpu/g" src/ffi/ffi_flashlight.ts
+                  sed -i "s/_shumai_flashlight/_shumai_flashlight_cpu/g" shumai/ffi/ffi_flashlight.ts
       - node/install:
           node-version: "16.9.0"
       - run:
