@@ -1,15 +1,14 @@
 {
   "name": "@shumai/shumai",
   "version": "0.0.2",
-  "module": "shumai.ts",
+  "module": "shumai/index.ts",
   "type": "module",
   "scripts": {
     "format": "eslint '*/**/*.{js,ts}' '*.{js,ts,cjs}' package.json  --quiet --fix"
   },
   "files": [
-    "shumai.ts",
-    "src/*/**.ts",
-    "src/*.ts"
+    "shumai/*/**.ts",
+    "shumai/*.ts"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.35.1",
