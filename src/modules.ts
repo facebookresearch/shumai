@@ -79,4 +79,4 @@ function lstm(inp_dim, out_dim) {
   return new LSTM(inp_dim, out_dim)
 }
 
-export { Linear, LSTM, linear, lstm }
+export { Module, Linear, LSTM, linear, lstm }

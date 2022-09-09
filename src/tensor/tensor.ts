@@ -130,10 +130,14 @@ class Tensor {
   op = 'constant'
 
   _injest_ptr(_ptr) {
-    const numel = Number(fl.elements.native(_ptr))
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - overload toArrayBuffer params
-    this.underlying = toArrayBuffer(_ptr, 0, numel * 4, fl.genTensorDestroyer.native())
+    this.underlying = toArrayBuffer(
+      _ptr,
+      0,
+      Number(fl.bytes.native(_ptr)),
+      fl.genTensorDestroyer.native()
+    )
   }
 
   backward(jacobian) {
@@ -148,7 +152,9 @@ class Tensor {
       return
     }
     if (obj.constructor === Float32Array) {
-      this._injest_ptr(fl.tensorFromBuffer.native(obj.length, ptr(obj)))
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromBuffer.native(len, ptr(obj)))
       return
     }
     if (obj.constructor === Number) {

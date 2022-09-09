@@ -36,7 +36,7 @@ void init() { fl::init(); }
 
 size_t bytesUsed() { return g_bytes_used; }
 
-void *createTensor(void *shape_ptr, int shape_len) {
+void *createTensor(void *shape_ptr, int64_t shape_len) {
   static_assert(sizeof(long long) == sizeof(int64_t));
   auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
   auto *t = new fl::Tensor(fl::Shape(shape));
@@ -44,7 +44,7 @@ void *createTensor(void *shape_ptr, int shape_len) {
   return t;
 }
 
-void *tensorFromBuffer(int numel, void *ptr) {
+void *tensorFromBuffer(int64_t numel, void *ptr) {
   auto *t = new fl::Tensor(
       fl::Tensor::fromBuffer({numel}, (float *)ptr, fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
@@ -80,6 +80,11 @@ size_t elements(void *t) {
   return tensor->elements();
 }
 
+size_t bytes(void *t) {
+  auto *tensor = reinterpret_cast<fl::Tensor *>(t);
+  return tensor->bytes();
+}
+
 int shape(void *t, void *out, int out_len) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   if (out_len != tensor->ndim()) {
@@ -108,7 +113,7 @@ float scalar(void *t) {
 }
 
 void *_index(void *t, void *starts, int64_t starts_len, void *ends,
-            int64_t ends_len, void *strides, int64_t strides_len) {
+             int64_t ends_len, void *strides, int64_t strides_len) {
   auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
   auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
   auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
