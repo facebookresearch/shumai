@@ -13,3 +13,4 @@ export type { TensorInterface } from './src/tensor/tensor_interface'
 export type { TensorOpsInterface } from './src/tensor/tensor_ops_interface_gen'
 
 export * as module from './src/modules'
+export * as util from './src/util/iterators.ts'
