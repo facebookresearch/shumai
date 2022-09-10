@@ -52,16 +52,16 @@ jobs:
           cmake --build . --parallel
       - name: "Colocate package assets"
         run: |
-          mkdir shumai
-          mv -v $HOME/usr/lib/libflashlight.0.3.2.dylib shumai/libflashlight.0.dylib
-          mv -v libflashlight_binding.dylib shumai
+          mkdir -p shumai_bindings
+          mv -v $HOME/usr/lib/libflashlight.0.3.2.dylib shumai_bindings/libflashlight.0.dylib
+          mv -v libflashlight_binding.dylib shumai_bindings
       - name: "Add bindings dylib dir as rpath"
-        run: install_name_tool -add_rpath "@loader_path" shumai/libflashlight_binding.dylib
+        run: install_name_tool -add_rpath "@loader_path" shumai_bindings/libflashlight_binding.dylib
       - name: Create package.json
         run: |
-          echo '{ "name": "@shumai/darwin_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["darwin"], "cpu": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
+          echo '{ "name": "@shumai/darwin_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["darwin"], "cpu": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai_bindings/package.json
       - name: "Zip npm package contents"
-        run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai
+        run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai_bindings
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.label }}
@@ -126,16 +126,16 @@ jobs:
           cmake --build . --parallel
       - name: "Colocate package assets"
         run: |
-          mkdir shumai
-          mv --verbose $HOME/usr/lib/libflashlight.so.0.3.2 shumai/libflashlight.so.0
-          mv --verbose libflashlight_binding.so shumai
+          mkdir -p shumai_bindings
+          mv --verbose $HOME/usr/lib/libflashlight.so.0.3.2 shumai_bindings/libflashlight.so.0
+          mv --verbose libflashlight_binding.so shumai_bindings
       - name: "Add bindings shared lib dir as rpath"
-        run: patchelf --set-rpath '$ORIGIN' shumai/libflashlight_binding.so
+        run: patchelf --set-rpath '$ORIGIN' shumai_bindings/libflashlight_binding.so
       - name: Create package.json
         run: |
-          echo '{ "name": "@shumai/linux_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["linux"], "cpu": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
+          echo '{ "name": "@shumai/linux_${{ matrix.arch }}_shumai_flashlight", "version": "0.0.1-${{github.sha}}", "os": ["linux"], "cpu": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai_bindings/package.json
       - name: "Zip npm package contents"
-        run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai
+        run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai_bindings
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.label }}
@@ -193,16 +193,16 @@ jobs:
           cmake --build . --parallel
       - name: "Colocate package assets"
         run: |
-          mkdir shumai
-          mv --verbose $HOME/usr/lib/libflashlight.so.0.3.2 shumai/libflashlight.so.0
-          mv --verbose libflashlight_binding.so shumai
+          mkdir -p shumai_bindings
+          mv --verbose $HOME/usr/lib/libflashlight.so.0.3.2 shumai_bindings/libflashlight.so.0
+          mv --verbose libflashlight_binding.so shumai_bindings
       - name: "Add bindings shared lib dir as rpath"
-        run: patchelf --set-rpath '$ORIGIN' shumai/libflashlight_binding.so
+        run: patchelf --set-rpath '$ORIGIN' shumai_bindings/libflashlight_binding.so
       - name: Create package.json
         run: |
-          echo '{ "name": "@shumai/linux_${{ matrix.arch }}_shumai_flashlight_cpu", "version": "0.0.1-${{github.sha}}", "os": ["linux"], "cpu": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai/package.json
+          echo '{ "name": "@shumai/linux_${{ matrix.arch }}_shumai_flashlight_cpu", "version": "0.0.1-${{github.sha}}", "os": ["linux"], "cpu": ["${{ matrix.arch }}"], "repository": "https://github.com/${{github.repository}}" }' > shumai_bindings/package.json
       - name: "Zip npm package contents"
-        run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai
+        run: tar -czf ${{ matrix.label }}.tar.gz --directory=$(pwd) shumai_bindings
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.label }}
@@ -246,33 +246,33 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_SECRET }}
         run: |
           cd ${{ runner.temp }}
-          rm -rf shumai
+          rm -rf shumai_bindings
           tar -xzf shumai-flashlight-linux-amd64.tar.gz
-          cd shumai
+          cd shumai_bindings
           npm publish --access=public
 
           # TODO: remove this when we have robust multi-backend in Flashlight
           cd ${{ runner.temp }}
-          rm -rf shumai
+          rm -rf shumai_bindings
           tar -xzf shumai-flashlight-linux-amd64-cpu.tar.gz
-          cd shumai
+          cd shumai_bindings
           npm publish --access=public
 
           # TODO: linux arm
           # cd ${{ runner.temp }}
-          # rm -rf shumai
+          # rm -rf shumai_bindings
           # tar -xzf shumai-flashlight-linux-arm64.tar.gz
-          # cd shumai
+          # cd shumai_bindings
           # npm publish --access=public
 
           cd ${{ runner.temp }}
-          rm -rf shumai
+          rm -rf shumai_bindings
           tar -xzf shumai-flashlight-macos-amd64.tar.gz
-          cd shumai
+          cd shumai_bindings
           npm publish --access=public
 
           cd ${{ runner.temp }}
-          rm -rf shumai
+          rm -rf shumai_bindings
           tar -xzf shumai-flashlight-macos-arm64.tar.gz
-          cd shumai
+          cd shumai_bindings
           npm publish --access=public
