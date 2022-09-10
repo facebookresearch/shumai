@@ -1,9 +1,8 @@
-import { type Base_Eval_Optimizer, EvalOptimizers } from './optimizers'
+import type { Base_Eval_Optimizer } from './optimizers'
 import type { Tensor } from '@shumai/shumai'
 
 /* TODO: more algos supported & tinker w hillclimb defaults */
 export class EvalTuner {
-  public type: EvalOptimizers
   public best_time: number
   public last_i: number
   public done = false
