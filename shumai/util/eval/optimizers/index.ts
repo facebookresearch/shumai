@@ -1,8 +1,3 @@
-export enum EvalOptimizers {
-  STOCH_HILL_CLIMB,
-  FAST
-}
-
 export abstract class Base_Eval_Optimizer {
   // lowerBounds of input space
   public lower_bounds: number
@@ -54,3 +49,6 @@ export abstract class Base_Eval_Optimizer {
     return res
   }
 }
+
+export * from './fast'
+export * from './stoch_hill_climb'

@@ -44,6 +44,16 @@ commands:
             curl https://bun.sh/install | bash
             echo 'export BUN_INSTALL="$HOME/.bun"' >> $BASH_ENV
             echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $BASH_ENV
+  test_library_dlopen:
+    steps:
+      - run:
+          name: "Test library loading - dlopen"
+          command: |
+            g++ .circleci/dlopen.cpp -ldl -o dlopen
+            find . -type f -name "libflashlight_binding*" | xargs ./dlopen
+      - run:
+          name: "Test library loading - bun ffi"
+          command: bun shumai/ffi/ffi_flashlight.ts
 
 jobs:
   test-arrayfire-cpu:
@@ -71,7 +81,7 @@ jobs:
                 command: |
                   # TODO: remove me when we have robust multibackend in Flashlight
                   sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
-                  sed -i "s/_shumai_flashlight/_shumai_flashlight_cpu/g" src/ffi/ffi_flashlight.ts
+                  sed -i "s/_shumai_flashlight/_shumai_flashlight_cpu/g" shumai/ffi/ffi_flashlight.ts
       - node/install:
           node-version: "16.9.0"
       - run:
@@ -81,9 +91,7 @@ jobs:
       - run:
           name: "Verify Bun version"
           command: bun --version
-      - run:
-          name: "Test library loading"
-          command: bun src/ffi/ffi_flashlight.ts
+      - test_library_dlopen
       - run:
           name: "Run all tests"
           command: bun wiptest
@@ -107,8 +115,11 @@ jobs:
           name: "Verify Bun version"
           command: bun --version
       - run:
-          name: "Test library loading"
-          command: bun src/ffi/ffi_flashlight.ts
+          name: "Test library loading - dlopen"
+          command: |
+            g++ .circleci/dlopen.cpp -ldl -o dlopen
+            find . -type f -name "libflashlight_binding*" | xargs ./dlopen
+      - test_library_dlopen
       - run:
           name: "Run all tests"
           command: bun wiptest

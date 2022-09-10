@@ -7,7 +7,7 @@ import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 
 fl.init.native()
-const gradient_functions: { [key: string]: CallableFunction } = {}
+export const gradient_functions: { [key: string]: CallableFunction } = {}
 
 export function wrapFLTensor(closure: CallableFunction, ...args: any[]): Tensor {
   const ptr_args = args.map((x) => {
@@ -33,7 +33,7 @@ export function scalar(s: number): Tensor {
 
 // differentiate t with respect to all
 // dependencies with requires_grad === True
-function backward(base_t: Tensor, jacobian: Tensor) {
+export function backward(base_t: Tensor, jacobian: Tensor) {
   const t0 = performance.now()
   if (!jacobian) {
     jacobian = full([], 1)
@@ -89,7 +89,7 @@ function backward(base_t: Tensor, jacobian: Tensor) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
     }
     if (!gradient_functions[t.op]) {
-      continue
+      throw `Cannot differentiate ${t.op}. The gradient function is not defined!`
     }
     let idx = -1
     for (const dep of t.deps) {
@@ -122,7 +122,7 @@ function backward(base_t: Tensor, jacobian: Tensor) {
   return [t0, t1, t2, t3, t4, exec_stats]
 }
 
-class Tensor {
+export class Tensor {
   underlying: ArrayBuffer
   deps: Array<Tensor> = []
   requires_grad = false
@@ -130,10 +130,14 @@ class Tensor {
   op = 'constant'
 
   _injest_ptr(_ptr) {
-    const numel = Number(fl.elements.native(_ptr))
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - overload toArrayBuffer params
-    this.underlying = toArrayBuffer(_ptr, 0, numel * 4, fl.genTensorDestroyer.native())
+    this.underlying = toArrayBuffer(
+      _ptr,
+      0,
+      Number(fl.bytes.native(_ptr)),
+      fl.genTensorDestroyer.native()
+    )
   }
 
   backward(jacobian) {
@@ -148,7 +152,9 @@ class Tensor {
       return
     }
     if (obj.constructor === Float32Array) {
-      this._injest_ptr(fl.tensorFromBuffer.native(obj.length, ptr(obj)))
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromBuffer.native(len, ptr(obj)))
       return
     }
     if (obj.constructor === Number) {
@@ -229,6 +235,33 @@ class Tensor {
   toFloat32(): number {
     return fl.scalar.native(this.ptr)
   }
+
+  index(args) {
+    if (this.ndim !== args.length) {
+      throw `Must specify index for every dimension! (expected ${this.ndim}, got ${args.length}`
+    }
+    const start = []
+    const end = []
+    const stride = []
+    for (const arg of args) {
+      if (arg == ':') {
+        start.push(-1)
+        end.push(-1)
+      } else if (typeof arg === 'number') {
+        start.push(arg)
+        end.push(arg + 1)
+      } else {
+        throw `${arg} not yet supported.  Please file a bug with desired behavior!`
+      }
+    }
+    return wrapFLTensor(
+      fl._index.native,
+      this,
+      ...arrayArg(start, FFIType.i64),
+      ...arrayArg(end, FFIType.i64),
+      ...arrayArg(stride, FFIType.i64)
+    )
+  }
 }
 
 // Interface extension trick to extend the type definition of Tensor
@@ -236,16 +269,29 @@ class Tensor {
 interface Tensor extends TensorInterface, TensorOpsInterface {}
 
 // Initialize other generated methods on the Tensor obj prototype
-for (const [method, closure] of Object.entries(gen_tensor_op_shim(wrapFLTensor))) {
+for (const [method, closure] of Object.entries(gen_tensor_op_shim(Tensor))) {
   Tensor.prototype[method] = closure
 }
 
-function tensor(obj) {
+export function tensor(obj) {
   return new Tensor(obj)
 }
 
-function bytesUsed() {
+export function bytesUsed() {
   return fl.bytesUsed.native()
 }
 
-export { tensor, backward, bytesUsed, gradient_functions, Tensor }
+export const layout = {
+  setRowMajor: () => {
+    fl.setRowMajor()
+  },
+  setColMajor: () => {
+    fl.setColMajor()
+  },
+  isRowMajor: () => {
+    return fl.isRowMajor()
+  },
+  isColMajor: () => {
+    return !fl.isRowMajor()
+  }
+}

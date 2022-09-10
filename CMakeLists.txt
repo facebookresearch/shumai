@@ -10,7 +10,7 @@ find_package(flashlight CONFIG REQUIRED)
 add_library(
   flashlight_binding
   SHARED
-  src/cpp/flashlight_binding.cc
+  shumai/cpp/flashlight_binding.cc
   )
 
 # Write lib to the project root

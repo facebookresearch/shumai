@@ -5,8 +5,16 @@ const ffi_tensor = {
   bytesUsed: {
     returns: FFIType.u64
   },
+  setRowMajor: {},
+  setColMajor: {},
+  isRowMajor: {
+    returns: FFIType.bool
+  },
+  isColMajor: {
+    returns: FFIType.bool
+  },
   createTensor: {
-    args: [FFIType.ptr, FFIType.i32],
+    args: [FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   destroyTensor: {
@@ -16,7 +24,7 @@ const ffi_tensor = {
     returns: FFIType.ptr
   },
   tensorFromBuffer: {
-    args: [FFIType.i32, FFIType.ptr],
+    args: [FFIType.i64, FFIType.ptr],
     returns: FFIType.ptr
   },
   eval: {
@@ -24,6 +32,18 @@ const ffi_tensor = {
   },
   buffer: {
     args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _index: {
+    args: [
+      FFIType.ptr,
+      FFIType.ptr,
+      FFIType.i64,
+      FFIType.ptr,
+      FFIType.i64,
+      FFIType.ptr,
+      FFIType.i64
+    ],
     returns: FFIType.ptr
   },
   flatten: {
@@ -43,6 +63,10 @@ const ffi_tensor = {
     returns: FFIType.f32
   },
   elements: {
+    args: [FFIType.ptr],
+    returns: FFIType.u64
+  },
+  bytes: {
     args: [FFIType.ptr],
     returns: FFIType.u64
   },

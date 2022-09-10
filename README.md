@@ -5,7 +5,7 @@
 
 </p>
 
-Fast machine learning in JavaScript with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
+A fast differentiable tensor library for research in TypeScript and JavaScript.  Built with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
 ⚠️ *This is experimental software!* ⚠️
 
 [![build](https://github.com/facebookresearch/shumai/actions/workflows/build.yml/badge.svg)](https://github.com/facebookresearch/shumai/actions/workflows/build.yml)

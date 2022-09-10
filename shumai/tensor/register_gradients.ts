@@ -47,6 +47,13 @@ const impls = {
   sum: (grad) => {
     return grad.grad_in.tile(grad.in[0].shape)
   },
+  sigmoid: (grad) => {
+    const o = sm.scalar(1).sub(grad.out)
+    return grad.out.mul(o)
+  },
+  tanh: (grad) => {
+    return sm.scalar(1).sub(grad.out.mul(grad.out))
+  },
   mean: (grad) => {
     const num = sm.scalar(grad.in[0].elements)
     return grad.grad_in.tile(grad.in[0].shape).div(num)
