@@ -7,8 +7,7 @@
     "format": "eslint '*/**/*.{js,ts}' '*.{js,ts,cjs}' package.json  --quiet --fix"
   },
   "files": [
-    "shumai/*/**.ts",
-    "shumai/*.ts"
+    "shumai/**/*.ts"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.35.1",

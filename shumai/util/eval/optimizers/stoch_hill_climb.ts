@@ -1,5 +1,5 @@
 import { Base_Eval_Optimizer } from '.'
-import { getRandomItem } from '../..'
+import { getRandomItem } from '../../array'
 
 /**
  * Modified StochHillClimb, optimized to aggressively

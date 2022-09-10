@@ -1,8 +1,6 @@
 import * as sm from '@shumai/shumai'
 import { it, describe, expect } from 'bun:test'
-import { Fast } from '../src/util/eval/optimizers/fast'
-import { StochHillClimb } from '../src/util/eval/optimizers/stoch_hill_climb'
-import { EvalTuner } from '../src/util/eval/tuner'
+import { Fast, StochHillClimb, EvalTuner } from '@shumai/shumai'
 import { logBenchmarkInfo } from './utils'
 let bestIn: number | undefined = undefined
 

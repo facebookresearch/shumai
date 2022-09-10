@@ -49,6 +49,3 @@ export abstract class Base_Eval_Optimizer {
     return res
   }
 }
-
-export * from './fast'
-export * from './stoch_hill_climb'
