@@ -21,13 +21,32 @@ export function decode(obj: Response | ArrayBuffer): sm.Tensor {
     return t.reshape(shape)
   }
 
-  if (obj.constructor === Response) {
+  if (obj.constructor === Response || obj.constructor === Request) {
     return new Promise((resolve) => {
       obj.arrayBuffer().then((buf) => {
         resolve(impl(buf))
       })
     })
-  } else {
+  } else if (obj.constructor === ArrayBuffer) {
     return impl(obj)
   }
+}
+
+export async function tfetch(url, tensor) {
+  const response = await (() => {
+    if (tensor) {
+      return fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/octet-stream' },
+        body: encode(tensor)
+      })
+    } else {
+      return fetch(url)
+    }
+  })()
+  const buff = await response.arrayBuffer()
+  if (buff.byteLength) {
+    return decode(buff)
+  }
+  return null
 }

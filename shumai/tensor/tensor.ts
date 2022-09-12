@@ -34,11 +34,9 @@ export function scalar(s: number): Tensor {
 // differentiate t with respect to all
 // dependencies with requires_grad === True
 export function backward(base_t: Tensor, jacobian: Tensor) {
-  const t0 = performance.now()
   if (!jacobian) {
     jacobian = full([], 1)
   }
-  const t1 = performance.now()
   const sorted_traversal = [base_t]
   let frontier = [base_t]
   const incoming_count = {}
@@ -61,8 +59,6 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
     frontier = new_frontier
   }
 
-  const t2 = performance.now()
-
   frontier = [base_t]
   while (frontier.length) {
     const new_frontier = []
@@ -77,9 +73,7 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
     frontier = new_frontier
   }
 
-  const t3 = performance.now()
-
-  const exec_stats = {}
+  const all_grads_dict = {}
   base_t.grad = jacobian
   for (const t of sorted_traversal) {
     if (!t.requires_grad || t.deps.length === 0) {
@@ -103,23 +97,22 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
         out: t,
         grad_in: t.grad
       }
-      const gt0 = performance.now()
       const g = gradient_functions[t.op](grad_arg)
-      const gt1 = performance.now()
-      if (!(t.op in exec_stats)) {
-        exec_stats[t.op] = [0, 0]
-      }
-      const [count, tt] = exec_stats[t.op]
-      exec_stats[t.op] = [count + 1, tt + (gt1 - gt0)]
       if (dep.grad) {
         dep.grad = dep.grad.add(g)
       } else {
         dep.grad = g
       }
+      if (!(dep.ptr in all_grads_dict)) {
+        all_grads_dict[dep.ptr] = dep
+      }
     }
   }
-  const t4 = performance.now()
-  return [t0, t1, t2, t3, t4, exec_stats]
+  const all_grads = []
+  for (const key in all_grads_dict) {
+    all_grads.push(all_grads_dict[key])
+  }
+  return all_grads
 }
 
 export class Tensor {
@@ -162,6 +155,11 @@ export class Tensor {
     }
     this._injest_ptr(fl.createTensor.native(...arrayArg(obj, FFIType.i64)))
     return
+  }
+
+  update(tensor: Tensor) {
+    this._injest_ptr(tensor.ptr)
+    this.deps = tensor.deps
   }
 
   eval() {
