@@ -423,7 +423,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
 import {{ FFIType }} from "bun:ffi";
 import {{ arrayArg }} from "../ffi/ffi_bind_utils";
 import {{ fl }} from "../ffi/ffi_flashlight";
-import {{ Tensor, wrapFLTensor }} from "./tensor";
+import {{ Tensor }} from "./tensor";
 {full_js}"""
     print(full_js)
 
