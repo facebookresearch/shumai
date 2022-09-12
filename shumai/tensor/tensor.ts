@@ -177,6 +177,15 @@ export class Tensor {
   }
 
   get shape() {
+    const out64 = this.shape64
+    const out: number[] = []
+    for (const o of out64) {
+      out.push(Number(o))
+    }
+    return out
+  }
+
+  get shape64() {
     const out = new BigInt64Array(this.ndim)
     if (out.length === 0) {
       return out
@@ -185,11 +194,7 @@ export class Tensor {
     if (err != 0) {
       throw "couldn't determine shape"
     }
-    const l: number[] = []
-    for (const o of out) {
-      l.push(Number(o))
-    }
-    return l
+    return out
   }
 
   toString() {
