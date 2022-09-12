@@ -3,6 +3,7 @@ import * as sm from '@shumai/shumai'
 import { expectArraysClose, isShape } from './utils'
 
 describe('flip', () => {
+  /* TODO: FIX - CURRENTLY FAILS */
   it('basic (1D Tensor)', () => {
     const t = sm.tensor(new Float32Array([0, 1, 2, 3]))
     const r = sm.flip(t, 1)
