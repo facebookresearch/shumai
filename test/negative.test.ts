@@ -9,7 +9,6 @@ describe('negative', () => {
     expectArraysClose(r.toFloat32Array(), [-1, 3, -2, -7, 4])
   })
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('should work with larger numbers', () => {
     const t2 = sm.tensor(new Float32Array([1, 10, -3405123, 230538, -2]))
     const r2 = t2.negative()

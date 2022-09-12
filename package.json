@@ -4,11 +4,10 @@
   "module": "shumai/index.ts",
   "type": "module",
   "scripts": {
-    "format": "eslint '*/**/*.{js,ts}' '*.{js,ts,cjs}' package.json  --quiet --fix"
+    "format": "eslint '**/*.{js,ts}' '*.{js,ts,cjs}' package.json --fix"
   },
   "files": [
-    "shumai/*/**.ts",
-    "shumai/*.ts"
+    "shumai/**/*.ts"
   ],
   "keywords": [
     "bun",
@@ -21,14 +20,14 @@
     "ai"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.35.1",
-    "bun-types": "^0.1.0",
+    "bun-types": "^0.1.11",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.3"
   },
   "optionalDependencies": {
     "@shumai/darwin_arm64_shumai_flashlight": "latest",

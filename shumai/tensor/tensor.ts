@@ -9,16 +9,16 @@ import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 fl.init.native()
 export const gradient_functions: { [key: string]: CallableFunction } = {}
 
-export function wrapFLTensor(closure: CallableFunction, ...args: any[]): Tensor {
+export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Tensor {
   const ptr_args = args.map((x) => {
-    if (x.constructor === Tensor) {
+    if (x instanceof Tensor) {
       return x.ptr
     }
     return x
   })
   const _ptr = closure(...ptr_args)
-  const requires_grad = args.some((x) => x.requires_grad)
-  const deps = requires_grad ? args.filter((x) => x.constructor === Tensor) : []
+  const requires_grad = args.some((x) => (x as Tensor).requires_grad)
+  const deps: Tensor[] = requires_grad ? <Tensor[]>args.filter((x) => x instanceof Tensor) : []
   const t = new Tensor({
     _ptr: _ptr,
     _deps: deps
@@ -130,12 +130,12 @@ export class Tensor {
   op = 'constant'
 
   _injest_ptr(_ptr) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore - overload toArrayBuffer params
     this.underlying = toArrayBuffer(
       _ptr,
       0,
       Number(fl.bytes.native(_ptr)),
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - overload toArrayBuffer params
       fl.genTensorDestroyer.native()
     )
   }
@@ -266,7 +266,7 @@ export class Tensor {
 
 // Interface extension trick to extend the type definition of Tensor
 // to include generated ops added to prototype after def
-interface Tensor extends TensorInterface, TensorOpsInterface {}
+export interface Tensor extends TensorInterface, TensorOpsInterface {}
 
 // Initialize other generated methods on the Tensor obj prototype
 for (const [method, closure] of Object.entries(gen_tensor_op_shim(Tensor))) {

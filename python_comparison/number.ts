@@ -12,6 +12,7 @@ for (let i = 1; i < arr.length; ++i) {
 }
 let total = 0
 for (let i = 0; i < arr.length; ++i) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   total += arr[i]
 }
 console.log((performance.now() - t0) / 1e3, 'seconds')

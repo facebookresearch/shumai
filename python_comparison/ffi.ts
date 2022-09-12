@@ -23,7 +23,8 @@ function noop() {
 }
 
 function wrapped_noop() {
-  const f = (x) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const f = (_x: number) => {
     lib.no_op()
   }
   const N = 1e8

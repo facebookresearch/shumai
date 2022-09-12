@@ -27,7 +27,6 @@ describe('sum', () => {
     expect(isClose(sum.toFloat32(), jsSum)).toBe(true)
   })
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('sums axis=[0] 2D Tensor', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t, [0])
@@ -35,7 +34,6 @@ describe('sum', () => {
     expectArraysClose(sum.toFloat32Array(), [4, 3])
   })
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('sums axis=[0] 2D Tensor (keepDims = true)', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t, [0], true)
@@ -43,7 +41,6 @@ describe('sum', () => {
     expectArraysClose(sum.toFloat32Array(), [4, 3])
   })
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('sums axis=[1] 2D Tensor', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const sum = sm.sum(t, [1])
@@ -67,6 +64,7 @@ describe('sum', () => {
     expectArraysClose(sum.toFloat32Array(), [7])
   })
 
+  /* TODO: FIX - CURRENTLY FAILS */
   it('4D, axis=[2, 2, 1]', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([1, 2, 2, 1])
     const sum = sm.sum(t, [0])

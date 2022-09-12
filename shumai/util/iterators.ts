@@ -36,7 +36,7 @@ export function* viter(arraylike) {
   console.log(`\u001b[2K100% ${len}/${len}\u001b[A\n`)
 }
 
-export function shuffle(array: any[]) {
+export function shuffle<T>(array: T[]): T[] {
   let curr_idx: number = array.length
   let rand_idx: number
 

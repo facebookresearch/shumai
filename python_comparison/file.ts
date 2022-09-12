@@ -1,4 +1,4 @@
-import fs from 'node:fs'
+import * as fs from 'node:fs'
 
 const t0 = performance.now()
 fs.readFile('input.txt', 'utf8', function (err, data) {

@@ -2,7 +2,7 @@
 import { FFIType } from 'bun:ffi'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
-import { Tensor, wrapFLTensor } from './tensor'
+import { Tensor } from './tensor'
 
 export function rand(shape: number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)

@@ -411,7 +411,7 @@ import {{ arrayArg }} from '../ffi/ffi_bind_utils'
 import {{ fl }} from '../ffi/ffi_flashlight'
 import {{ TensorInterface }} from './tensor_interface'
 import type {{ Tensor }} from './tensor'
-export const gen_tensor_op_shim = (_Tensor: (...args: any[]) => Tensor) => {{
+export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {{
   return {{{full_js}
   }};
 }}

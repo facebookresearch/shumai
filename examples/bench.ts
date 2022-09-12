@@ -10,9 +10,9 @@ function bench(description, f, iters = 1000) {
   }
   const t = new Tensor(hist)
   console.log(
-    `${description} \t mean: ${Math.round(t.mean()) / 1e3}us    (min: ${
-      Math.round(t.amin()) / 1e3
-    }us, max: ${Math.round(t.amax()) / 1e3}us)`
+    `${description} \t mean: ${Math.round(t.mean().toFloat32()) / 1e3}us    (min: ${
+      Math.round(t.amin().toFloat32()) / 1e3
+    }us, max: ${Math.round(t.amax().toFloat32()) / 1e3}us)`
   )
 }
 
@@ -20,9 +20,11 @@ for (const N of [10, 1000, 100000]) {
   console.log(`${N} elements...`)
   bench(`JS create 0 tensor     `, () => {
     const a = new Float32Array(N)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const t = new Tensor(a)
   })
   bench(`native create 0 tensor `, () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const t = new Tensor(N)
   })
   bench(`JS create random tensor`, () => {
@@ -30,9 +32,11 @@ for (const N of [10, 1000, 100000]) {
     for (let i = 0; i < N; ++i) {
       a[i] = Math.random()
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const t = new Tensor(a)
   })
   bench(`native create random tensor`, () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const t = rand([N])
   })
 }

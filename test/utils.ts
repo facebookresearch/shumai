@@ -1,5 +1,5 @@
 import { expect } from 'bun:test'
-import type { Tensor } from '../src/tensor/tensor'
+import type { Tensor } from '@shumai/shumai'
 
 export const calcSizeFromShape = (arr: number[]) =>
   arr.reduce((acc, val, i) => (i === 0 ? val : acc * val), 0)

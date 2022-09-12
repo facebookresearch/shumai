@@ -25,7 +25,6 @@ describe('transpose', () => {
     expectArraysClose(t2.toFloat32Array(), [1, 2, 3, 4])
   })
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('3D Tensor [r, c, d] => [d, r, c]', () => {
     const t = sm.tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44])).reshape([2, 2, 2])
     const t2 = sm.transpose(t, [2, 0, 1])
@@ -58,7 +57,6 @@ describe('transpose', () => {
     expectArraysClose(tt3.toFloat32Array(), [1, 3, 2, 4])
   })
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('3D Tensor [r, c, d] => [r, d, c]', () => {
     const perm = [0, 2, 1]
     const t = sm.tensor(new Float32Array([1, 2, 3, 4, 5, 6, 7, 8])).reshape([2, 2, 2])
@@ -84,7 +82,6 @@ describe('transpose', () => {
     })
   */
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('4D Tensor [r, c, d, e] => [c, r, d, e]', () => {
     const t = sm
       .tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1)))
@@ -103,7 +100,6 @@ describe('transpose', () => {
     expectArraysClose(t2.toFloat32Array(), [1, 3, 2, 4, 9, 11, 10, 12, 5, 7, 6, 8, 13, 15, 14, 16])
   })
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('4D Tensor [r, c, d, e] => [e, r, c, d]', () => {
     const t = sm
       .tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1)))
@@ -113,7 +109,6 @@ describe('transpose', () => {
     expectArraysClose(t2.toFloat32Array(), [1, 3, 5, 7, 9, 11, 13, 15, 2, 4, 6, 8, 10, 12, 14, 16])
   })
 
-  /* TODO: FIX - CURRENTLY FAILS */
   it('4D Tensor [r, c, d, e] => [d, c, e, r]', () => {
     const t = sm
       .tensor(new Float32Array(new Array(16).fill(0).map((x, i) => i + 1)))
