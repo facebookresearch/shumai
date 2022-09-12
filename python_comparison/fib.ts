@@ -6,6 +6,8 @@ const fib = (n: number): number => {
 }
 
 const N = 35
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const out = fib(N)
 
 console.log((performance.now() - t0) / 1e3, 'seconds')

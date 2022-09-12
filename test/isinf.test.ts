@@ -1,6 +1,6 @@
-import { it, describe } from 'bun:test'
-import * as sm from '@shumai/shumai'
-import { expectArraysClose } from './utils'
+import { /*it,*/ describe } from 'bun:test'
+// import * as sm from '@shumai/shumai'
+// import { expectArraysClose } from './utils'
 
 describe('isinf', () => {
   /* TODO: FIX - CURRENTLY FAILS (Throws C++ Exception CUDA Backend Only)

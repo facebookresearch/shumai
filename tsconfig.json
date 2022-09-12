@@ -11,7 +11,7 @@
     // "bun-types" is the important part
     "types": ["bun-types"],
     "paths": {
-      "@shumai/shumai": ["./shumai.ts"],
+      "@shumai/shumai": ["./shumai/index.ts"],
     }
   },
   "exclude": ["examples/*.js", "python_comparison/*.js"]

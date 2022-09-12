@@ -4,7 +4,7 @@ import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
 import { TensorInterface } from './tensor_interface'
 import type { Tensor } from './tensor'
-export const gen_tensor_op_shim = (_Tensor: (...args: any[]) => Tensor) => {
+export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {
   return {
     reshape(shape: number[]) {
       const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)

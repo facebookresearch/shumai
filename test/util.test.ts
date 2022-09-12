@@ -29,7 +29,7 @@ describe('range', () => {
 
 describe('shuffle', () => {
   it('basic', () => {
-    const a = []
+    const a: number[] = []
     for (const i of sm.util.range(100)) {
       a.push(i)
     }
@@ -38,7 +38,7 @@ describe('shuffle', () => {
   })
 
   it('same elemnts', () => {
-    const a = []
+    const a: number[] = []
     for (const i of sm.util.range(100)) {
       a.push(i)
     }

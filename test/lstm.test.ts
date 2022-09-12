@@ -18,7 +18,7 @@ describe('lstm', () => {
     const h = sm.full([1, 128], 0)
     const c = sm.full([1, 128], 0)
     const l = sm.module.lstm(64, 128)
-    const [hn, cn] = l(x, h, c)
+    const [hn] = l(x, h, c)
     hn.sum().backward()
     expect(!!x.grad).toBe(true)
   })
