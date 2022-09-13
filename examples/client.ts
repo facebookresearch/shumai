@@ -3,7 +3,7 @@ import * as sm from '@shumai/shumai'
 const reference_val = sm.scalar(14)
 const url = 'localhost:3000'
 
-for (const _ of sm.util.range(100)) {
+for (const _ of sm.util.range(200)) {
   const inp = sm.randn([128])
   const t = await sm.io.tfetch(`${url}/forward`, inp)
   t.requires_grad = true

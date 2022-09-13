@@ -3,19 +3,18 @@ import * as sm from '@shumai/shumai'
 const X = sm.scalar(2)
 X.requires_grad = true
 
-let optimize = null
-
 sm.io.serve(
   {
-    forward: (_, t) => {
+    forward: (u, t) => {
       const Y = t.mul(X)
-      optimize = (j) => {
+      // different optimizer per user
+      u.opt = (j) => {
         sm.optim.sgd(Y.backward(j), 1e-2)
       }
       return Y
     },
-    optimize: (_, t) => {
-      optimize(t)
+    optimize: (u, t) => {
+      u.opt(t)
     },
     default: (_) => {
       return X

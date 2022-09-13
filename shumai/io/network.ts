@@ -3,7 +3,8 @@ import * as crypto from 'crypto'
 const _unique_id = crypto
   .createHash('sha256')
   .update('' + process.pid + performance.now())
-  .digest('base64')
+  .digest('hex')
+  .slice(0, 8)
 
 export function encode(tensor: sm.Tensor): ArrayBuffer {
   const shape = tensor.shape64
@@ -46,7 +47,9 @@ export async function tfetch(url, tensor) {
         body: encode(tensor)
       })
     } else {
-      return fetch(url)
+      return fetch(url, {
+        headers: { 'X-Request-ID': _unique_id }
+      })
     }
   })()
   const buff = await response.arrayBuffer()
@@ -57,12 +60,17 @@ export async function tfetch(url, tensor) {
 }
 
 export function serve(request_dict, options) {
+  const user_data = {}
   const serve_request = async (req: Request, fn) => {
-    const user_id = req.headers.get('X-Request-ID')
+    // fix for bug in bun
+    const user_id = String(req.headers.get('X-Request-ID')).slice(0) + '='
+    if (user_data[user_id] === undefined) {
+      user_data[user_id] = { id: user_id }
+    }
     const buf = await req.arrayBuffer()
-    const ret = buf.byteLength ? fn(user_id, sm.io.decode(buf)) : fn(user_id)
+    const ret = buf.byteLength ? fn(user_data[user_id], decode(buf)) : fn(user_data[user_id])
     if (ret && ret.constructor === sm.Tensor) {
-      return new Response(sm.io.encode(ret))
+      return new Response(encode(ret))
     }
     return new Response(ret)
   }
