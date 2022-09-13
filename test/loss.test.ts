@@ -1,5 +1,5 @@
 import * as sm from '@shumai/shumai'
-import { it, expect, describe } from 'bun:test'
+import { it, describe } from 'bun:test'
 import { expectArraysClose } from './utils'
 
 describe('loss', () => {

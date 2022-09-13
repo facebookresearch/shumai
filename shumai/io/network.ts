@@ -1,4 +1,9 @@
 import * as sm from '../tensor'
+import * as crypto from 'crypto'
+const _unique_id = crypto
+  .createHash('sha256')
+  .update('' + process.pid + performance.now())
+  .digest('base64')
 
 export function encode(tensor: sm.Tensor): ArrayBuffer {
   const shape = tensor.shape64
@@ -37,7 +42,7 @@ export async function tfetch(url, tensor) {
     if (tensor) {
       return fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/octet-stream' },
+        headers: { 'Content-Type': 'application/octet-stream', 'X-Request-ID': _unique_id },
         body: encode(tensor)
       })
     } else {
@@ -49,4 +54,31 @@ export async function tfetch(url, tensor) {
     return decode(buff)
   }
   return null
+}
+
+export function serve(request_dict, options) {
+  const serve_request = async (req: Request, fn) => {
+    const user_id = req.headers.get('X-Request-ID')
+    const buf = await req.arrayBuffer()
+    const ret = buf.byteLength ? fn(user_id, sm.io.decode(buf)) : fn(user_id)
+    if (ret && ret.constructor === sm.Tensor) {
+      return new Response(sm.io.encode(ret))
+    }
+    return new Response(ret)
+  }
+  const fetch_handler = {
+    async fetch(req: Request) {
+      const segments = req.url.split('/')
+      const last_seg = segments[segments.length - 1]
+      if (last_seg in request_dict) {
+        return await serve_request(req, request_dict[last_seg])
+      } else if ('default' in request_dict) {
+        return await serve_request(req, request_dict['default'])
+      }
+    }
+  }
+  Bun.serve({
+    ...fetch_handler,
+    ...options
+  })
 }
