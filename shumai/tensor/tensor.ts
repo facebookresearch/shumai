@@ -158,7 +158,7 @@ export class Tensor {
   }
 
   update(tensor: Tensor) {
-    this._injest_ptr(tensor.ptr)
+    this.underlying = tensor.underlying
     this.deps = tensor.deps
   }
 
