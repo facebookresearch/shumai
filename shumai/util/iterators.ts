@@ -20,7 +20,8 @@ export function* range(
 
 const chars = ['⡆', '⠇', '⠋', '⠙', '⠸', '⢰', '⣠', '⣄']
 export function* viter(arraylike) {
-  const len = arraylike.length
+  const is_num = arraylike.constructor === Number
+  const len = is_num ? arraylike : arraylike.length
   if (!len) {
     throw `Cannot yet viter over unbounded iterables. Please file an issue!`
   }
@@ -31,7 +32,7 @@ export function* viter(arraylike) {
         .toString()
         .padStart(2)}% (${i + 1}/${len})\u001b[A`
     )
-    yield arraylike[i]
+    yield is_num ? i : arraylike[i]
   }
   console.log(`\u001b[2K100% ${len}/${len}\u001b[A\n`)
 }

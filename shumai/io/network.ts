@@ -38,17 +38,21 @@ export function decode(obj: Response | ArrayBuffer): sm.Tensor {
   }
 }
 
-export async function tfetch(url, tensor) {
+export async function tfetch(url, tensor, options) {
+  let id = _unique_id
+  if (options && options.id) {
+    id = options.id
+  }
   const response = await (() => {
     if (tensor) {
       return fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/octet-stream', 'X-Request-ID': _unique_id },
+        headers: { 'Content-Type': 'application/octet-stream', 'X-Request-ID': id },
         body: encode(tensor)
       })
     } else {
       return fetch(url, {
-        headers: { 'X-Request-ID': _unique_id }
+        headers: { 'X-Request-ID': id }
       })
     }
   })()
@@ -68,7 +72,9 @@ export function serve(request_dict, options) {
       user_data[user_id] = { id: user_id }
     }
     const buf = await req.arrayBuffer()
-    const ret = buf.byteLength ? fn(user_data[user_id], decode(buf)) : fn(user_data[user_id])
+    const ret = await (buf.byteLength
+      ? fn(user_data[user_id], decode(buf))
+      : fn(user_data[user_id]))
     if (ret && ret.constructor === sm.Tensor) {
       return new Response(encode(ret))
     }
