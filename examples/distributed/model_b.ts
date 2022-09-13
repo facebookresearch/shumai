@@ -8,17 +8,19 @@ const model = (t) => {
 
 sm.io.serve(
   {
-    forward: (u, t) => {
+    forward: async (u, t) => {
       console.log(`fwd b ${b.toFloat32()}`)
       const Y = model(t)
+      await new Promise((r) => setTimeout(r, 200))
       t.requires_grad = true
-      u.backward = (j) => {
+      u.backward = async (j) => {
+        await new Promise((r) => setTimeout(r, 200))
         return [Y.backward(j), t.grad]
       }
       return Y
     },
-    optimize: (u, t) => {
-      const [ts, grad] = u.backward(t)
+    optimize: async (u, t) => {
+      const [ts, grad] = await u.backward(t)
       const ret = grad.detach()
       sm.optim.sgd(ts, 1e-2)
       console.log(`opt b ${b.toFloat32()}`)

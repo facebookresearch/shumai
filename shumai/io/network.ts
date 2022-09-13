@@ -36,6 +36,7 @@ export function decode(obj: Response | ArrayBuffer): sm.Tensor {
   } else if (obj.constructor === ArrayBuffer) {
     return impl(obj)
   }
+  throw `Could not decode object: ${obj}`
 }
 
 export async function tfetch(url, tensor, options) {
@@ -58,7 +59,18 @@ export async function tfetch(url, tensor, options) {
   })()
   const buff = await response.arrayBuffer()
   if (buff.byteLength) {
-    return decode(buff)
+    const t = decode(buff)
+    if (options && options.grad_fn) {
+      t.requires_grad = true
+      t.grad_callback_async = async () => {
+        await options.grad_fn({
+          grad_in: t.grad,
+          out: t,
+          in: tensor
+        })
+      }
+    }
+    return t
   }
   return null
 }

@@ -8,16 +8,18 @@ const model = (t) => {
 
 sm.io.serve(
   {
-    forward: (u, t) => {
+    forward: async (u, t) => {
       console.log(`fwd m ${m.toFloat32()}`)
       const Y = model(t)
-      u.opt = (j) => {
+      await new Promise((r) => setTimeout(r, 200))
+      u.opt = async (j) => {
+        await new Promise((r) => setTimeout(r, 200))
         sm.optim.sgd(Y.backward(j), 1e-2)
       }
       return Y
     },
-    optimize: (u, t) => {
-      u.opt(t)
+    optimize: async (u, t) => {
+      await u.opt(t)
       console.log(`opt m ${m.toFloat32()}`)
     },
     default: (_) => {

@@ -8,7 +8,8 @@ const model_ref = (t) => {
 
 const url = 'localhost:3000'
 
-for (const _ of sm.util.viter(100)) {
+const t0 = performance.now()
+for (const _ of sm.util.viter(50)) {
   const inp = sm.randn([128])
   const t = await sm.io.tfetch(`${url}/forward`, inp)
   t.requires_grad = true
@@ -17,7 +18,14 @@ for (const _ of sm.util.viter(100)) {
   loss.backward()
   await sm.io.tfetch(`${url}/optimize`, t.grad)
 }
+const t1 = performance.now()
 
 const m = await sm.io.tfetch(`${url}/m`)
 const b = await sm.io.tfetch(`${url}/b`)
-console.log('learned:', m.toFloat32(), 'x +', b.toFloat32())
+console.log(
+  'learned:',
+  m.toFloat32(),
+  'x +',
+  b.toFloat32(),
+  `in ${(t1 - t0) / 1e3 / 50} sec per iter`
+)
