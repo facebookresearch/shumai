@@ -111,13 +111,3 @@ export function serve(request_dict, options) {
     ...options
   })
 }
-
-function foo() {
-  return 1
-}
-
-function bar(): Promise<number> {
-  return new Promise((r, _) => {
-    r(1)
-  })
-}
