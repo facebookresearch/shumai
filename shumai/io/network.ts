@@ -19,27 +19,30 @@ export function encode(tensor: sm.Tensor): ArrayBuffer {
   return buf.buffer
 }
 
-export function decode(obj: Response | ArrayBuffer): sm.Tensor {
-  function impl(buf) {
-    const shape_len = new Int32Array(buf, 0, 2)[0]
-    const shape = new BigInt64Array(buf, 8 /* 8 byte offset mandated alignement */, shape_len)
-    const t = sm.tensor(new Float32Array(buf, 8 + 8 * shape_len))
-    return t.reshape(shape)
-  }
-
-  if (obj.constructor === Response || obj.constructor === Request) {
-    return new Promise((resolve) => {
-      obj.arrayBuffer().then((buf) => {
-        resolve(impl(buf))
-      })
-    })
-  } else if (obj.constructor === ArrayBuffer) {
-    return impl(obj)
-  }
-  throw `Could not decode object: ${obj}`
+export function decodeBuffer(buf: ArrayBuffer) {
+  const shape_len = new Int32Array(buf, 0, 2)[0]
+  const shape = new BigInt64Array(buf, 8 /* 8 byte offset mandated alignement */, shape_len)
+  const t = sm.tensor(new Float32Array(buf, 8 + 8 * shape_len))
+  return t.reshape(shape)
 }
 
-export async function tfetch(url, tensor, options) {
+export async function decode(obj: Response | ArrayBuffer) {
+  if (obj.constructor === Response || obj.constructor === Request) {
+    const buf = await obj.arrayBuffer()
+    return decodeBuffer(buf)
+  } else if (obj.constructor === ArrayBuffer) {
+    return decodeBuffer(obj)
+  } else {
+    throw new Error(`Could not decode object: ${obj}`)
+  }
+}
+
+export async function tfetch(
+  url: string,
+  tensor?: sm.Tensor,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options?: { id?: string; grad_fn?: (grad: any) => Promise<void> }
+): Promise<sm.Tensor> {
   let id = _unique_id
   if (options && options.id) {
     id = options.id
@@ -59,7 +62,7 @@ export async function tfetch(url, tensor, options) {
   })()
   const buff = await response.arrayBuffer()
   if (buff.byteLength) {
-    const t = decode(buff)
+    const t = await decode(buff)
     if (options && options.grad_fn) {
       t.requires_grad = true
       t.grad_callback_async = async () => {

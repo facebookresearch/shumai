@@ -1,3 +1,4 @@
+import { util } from '@shumai/shumai'
 export function* range(
   length_or_start: number,
   end_: number | null = null,
@@ -19,7 +20,7 @@ export function* range(
 }
 
 const chars = ['⡆', '⠇', '⠋', '⠙', '⠸', '⢰', '⣠', '⣄']
-export function* viter(arraylike) {
+export function* viter(arraylike: util.ArrayLike) {
   const is_num = arraylike.constructor === Number
   const len = is_num ? arraylike : arraylike.length
   if (!len) {

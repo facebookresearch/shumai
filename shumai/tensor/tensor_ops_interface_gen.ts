@@ -6,10 +6,10 @@ interface TensorOpsInterface {
   full: (val: number) => Tensor
   identity: () => Tensor
   arange: (end: number, step?: number) => Tensor
-  iota: (tileDims?: number[]) => Tensor
-  reshape: (shape: number[]) => Tensor
-  transpose: (axes: number[]) => Tensor
-  tile: (shape: number[]) => Tensor
+  iota: (tileDims?: BigInt64Array | number[]) => Tensor
+  reshape: (shape: BigInt64Array | number[]) => Tensor
+  transpose: (axes: BigInt64Array | number[]) => Tensor
+  tile: (shape: BigInt64Array | number[]) => Tensor
   nonzero: () => Tensor
   negative: () => Tensor
   logicalNot: () => Tensor

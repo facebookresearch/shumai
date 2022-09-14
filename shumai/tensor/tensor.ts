@@ -146,7 +146,7 @@ export class Tensor {
     )
   }
 
-  backward(jacobian) {
+  backward(jacobian?: Tensor) {
     return backward(this, jacobian)
   }
 
