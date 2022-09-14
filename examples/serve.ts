@@ -1,12 +1,12 @@
 import * as sm from '@shumai/shumai'
 
-const X = sm.scalar(2)
+const X = sm.randn([128, 8])
 X.requires_grad = true
 
 sm.io.serve(
   {
     forward: (u, t) => {
-      const Y = t.mul(X)
+      const Y = t.matmul(X)
       // different optimizer per user
       u.opt = (j) => {
         sm.optim.sgd(Y.backward(j), 1e-2)

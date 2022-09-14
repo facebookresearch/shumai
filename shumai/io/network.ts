@@ -75,6 +75,16 @@ export async function tfetch(url, tensor, options) {
   return null
 }
 
+export function connect(forward_url, backward_url) {
+  const backward = async (grad) => {
+    await tfetch(backward_url, grad.grad_in)
+  }
+  async function forward(t) {
+    return await tfetch(forward_url, t, { grad_fn: backward })
+  }
+  return forward
+}
+
 export function serve(request_dict, options) {
   const user_data = {}
   const serve_request = async (req: Request, fn) => {
