@@ -1,6 +1,8 @@
 import { expect } from 'bun:test'
 import type { Tensor } from '@shumai/shumai'
 
+export type ArrayLike = Float32Array | Float64Array | Uint8Array | number[]
+
 export const calcSizeFromShape = (arr: number[]) =>
   arr.reduce((acc, val, i) => (i === 0 ? val : acc * val), 0)
 
@@ -34,11 +36,7 @@ export const isClose = (actual: number, expected: number, error = 0.001) => {
 }
 
 /* validates that actual && expected array are close (all values w/i given tolerance) */
-const isCloseArr = (
-  actual: Float32Array | number[],
-  expected: Float32Array | number[],
-  error: number
-) => {
+const isCloseArr = (actual: ArrayLike, expected: ArrayLike, error: number) => {
   const expLength = expected.length
   if (actual.length !== expLength) return false
 
@@ -49,8 +47,5 @@ const isCloseArr = (
   return true
 }
 
-export const expectArraysClose = (
-  actual: Float32Array | number[],
-  expected: Float32Array | number[],
-  error = 0.001
-) => expect(isCloseArr(actual, expected, error)).toBe(true)
+export const expectArraysClose = (actual: ArrayLike, expected: ArrayLike, error = 0.001) =>
+  expect(isCloseArr(actual, expected, error)).toBe(true)
