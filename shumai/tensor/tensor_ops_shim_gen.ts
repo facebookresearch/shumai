@@ -6,7 +6,7 @@ import { TensorInterface } from './tensor_interface'
 import type { Tensor } from './tensor'
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {
   return {
-    reshape(shape: number[]) {
+    reshape(shape: BigInt64Array | number[]) {
       const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
       const _ptr = fl._reshape(this.ptr, shape_ptr, shape_len)
       const requires_grad = this.requires_grad
@@ -17,7 +17,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    transpose(axes: number[]) {
+    transpose(axes: BigInt64Array | number[]) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._transpose(this.ptr, axes_ptr, axes_len)
       const requires_grad = this.requires_grad
@@ -28,7 +28,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    tile(shape: number[]) {
+    tile(shape: BigInt64Array | number[]) {
       const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
       const _ptr = fl._tile(this.ptr, shape_ptr, shape_len)
       const requires_grad = this.requires_grad

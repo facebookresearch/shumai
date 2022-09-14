@@ -23,10 +23,10 @@ export function decodeBuffer(buf: ArrayBuffer) {
   const shape_len = new Int32Array(buf, 0, 2)[0]
   const shape = new BigInt64Array(buf, 8 /* 8 byte offset mandated alignement */, shape_len)
   const t = sm.tensor(new Float32Array(buf, 8 + 8 * shape_len))
-  return t.reshape(shape as unknown as number[])
+  return t.reshape(shape)
 }
 
-export function decode(obj: Response | ArrayBuffer) {
+export async function decode(obj: Response | ArrayBuffer) {
   return new Promise<sm.Tensor>((resolve, reject) => {
     if (obj.constructor === Response || obj.constructor === Request) {
       return obj

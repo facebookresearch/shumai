@@ -4,7 +4,7 @@ import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
 import { Tensor } from './tensor'
 
-export function rand(shape: number[]) {
+export function rand(shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._rand(shape_ptr, shape_len)
   const requires_grad = false
@@ -15,7 +15,7 @@ export function rand(shape: number[]) {
   return t
 }
 
-export function randn(shape: number[]) {
+export function randn(shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._randn(shape_ptr, shape_len)
   const requires_grad = false
@@ -26,7 +26,7 @@ export function randn(shape: number[]) {
   return t
 }
 
-export function full(shape: number[], val: number) {
+export function full(shape: BigInt64Array | number[], val: number) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._full(shape_ptr, shape_len, Math.fround(val))
   const requires_grad = false
@@ -57,7 +57,7 @@ export function arange(start: number, end: number, step = 1) {
   return t
 }
 
-export function iota(dims: number[], tileDims: number[] = [1]) {
+export function iota(dims: BigInt64Array | number[], tileDims: BigInt64Array | number[] = [1]) {
   const [dims_ptr, dims_len] = arrayArg(dims, FFIType.i64)
   const [tileDims_ptr, tileDims_len] = arrayArg(tileDims, FFIType.i64)
   const _ptr = fl._iota(dims_ptr, dims_len, tileDims_ptr, tileDims_len)
@@ -69,7 +69,7 @@ export function iota(dims: number[], tileDims: number[] = [1]) {
   return t
 }
 
-export function reshape(tensor: Tensor, shape: number[]) {
+export function reshape(tensor: Tensor, shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._reshape(tensor.ptr, shape_ptr, shape_len)
   const requires_grad = tensor.requires_grad
@@ -80,7 +80,7 @@ export function reshape(tensor: Tensor, shape: number[]) {
   return t
 }
 
-export function transpose(tensor: Tensor, axes: number[]) {
+export function transpose(tensor: Tensor, axes: BigInt64Array | number[]) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._transpose(tensor.ptr, axes_ptr, axes_len)
   const requires_grad = tensor.requires_grad
@@ -91,7 +91,7 @@ export function transpose(tensor: Tensor, axes: number[]) {
   return t
 }
 
-export function tile(tensor: Tensor, shape: number[]) {
+export function tile(tensor: Tensor, shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._tile(tensor.ptr, shape_ptr, shape_len)
   const requires_grad = tensor.requires_grad

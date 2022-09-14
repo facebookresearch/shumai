@@ -1,7 +1,6 @@
 import { expect } from 'bun:test'
 import type { Tensor } from '@shumai/shumai'
-
-export type ArrayLike = Float32Array | Float64Array | Uint8Array | number[]
+import { util } from '@shumai/shumai'
 
 export const calcSizeFromShape = (arr: number[]) =>
   arr.reduce((acc, val, i) => (i === 0 ? val : acc * val), 0)
@@ -26,26 +25,50 @@ export const areSameShape = (t1: Tensor, t2: Tensor) => {
   return true
 }
 
-export const isClose = (actual: number, expected: number, error = 0.001) => {
-  const upper = expected + error,
-    lower = expected - error
-  if (actual < lower || actual > upper) {
-    return false
+export const isClose = (actual: number | bigint, expected: number | bigint, error = 0.001) => {
+  if (typeof actual !== typeof expected) return false
+
+  if (typeof actual === 'bigint' && typeof expected === 'bigint') {
+    const upper = expected + BigInt(error),
+      lower = expected - BigInt(error)
+    if (actual < lower || actual > upper) {
+      return false
+    }
+    return true
+  } else if (typeof actual === 'number' && typeof expected === 'number') {
+    const upper = (expected as number) + error,
+      lower = expected - error
+    if (actual < lower || actual > upper) {
+      return false
+    }
+    return true
   }
-  return true
 }
 
 /* validates that actual && expected array are close (all values w/i given tolerance) */
-const isCloseArr = (actual: ArrayLike, expected: ArrayLike, error: number) => {
+const isCloseArr = (actual: util.ArrayLike, expected: util.ArrayLike, error: number) => {
   const expLength = expected.length
   if (actual.length !== expLength) return false
 
   for (let i = 0; i < expLength; i++) {
-    if (!isClose(actual[i], expected[i], error)) return false
+    if (!isClose(actual[i], expected[i], error)) {
+      for (let j = 0; j < actual.length; j++) {
+        console.log(
+          `expected[${j}]:`,
+          expected[j].toString(),
+          '  ** vs **  ',
+          `actual[${j}]:`,
+          actual[j].toString()
+        )
+      }
+      return false
+    }
   }
-
   return true
 }
 
-export const expectArraysClose = (actual: ArrayLike, expected: ArrayLike, error = 0.001) =>
-  expect(isCloseArr(actual, expected, error)).toBe(true)
+export const expectArraysClose = (
+  actual: util.ArrayLike,
+  expected: util.ArrayLike,
+  error = 0.001
+) => expect(isCloseArr(actual, expected, error)).toBe(true)
