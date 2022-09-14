@@ -74,8 +74,12 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
   }
 
   const all_grads_dict = {}
+  const grad_callbacks_async = []
   base_t.grad = jacobian
   for (const t of sorted_traversal) {
+    if (t.grad_callback_async) {
+      grad_callbacks_async.push(t.grad_callback_async)
+    }
     if (!t.requires_grad || t.deps.length === 0) {
       continue
     }
@@ -109,12 +113,8 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
     }
   }
   const all_grads = []
-  const grad_callbacks_async = []
   for (const key in all_grads_dict) {
     const t = all_grads_dict[key]
-    if (t.grad_callback_async) {
-      grad_callbacks_async.push(t.grad_callback_async)
-    }
     all_grads.push(t)
   }
   if (grad_callbacks_async.length) {

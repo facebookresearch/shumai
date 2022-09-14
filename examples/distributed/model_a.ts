@@ -11,9 +11,9 @@ sm.io.serve(
     forward: async (u, t) => {
       console.log(`fwd m ${m.toFloat32()}`)
       const Y = model(t)
-      await new Promise((r) => setTimeout(r, 200))
+      await new Promise((r) => setTimeout(r, 20))
       u.opt = async (j) => {
-        await new Promise((r) => setTimeout(r, 200))
+        await new Promise((r) => setTimeout(r, 20))
         sm.optim.sgd(Y.backward(j), 1e-2)
       }
       return Y

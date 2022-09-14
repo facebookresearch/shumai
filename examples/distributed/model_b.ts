@@ -11,10 +11,10 @@ sm.io.serve(
     forward: async (u, t) => {
       console.log(`fwd b ${b.toFloat32()}`)
       const Y = model(t)
-      await new Promise((r) => setTimeout(r, 200))
+      await new Promise((r) => setTimeout(r, 20))
       t.requires_grad = true
       u.backward = async (j) => {
-        await new Promise((r) => setTimeout(r, 200))
+        await new Promise((r) => setTimeout(r, 20))
         return [Y.backward(j), t.grad]
       }
       return Y

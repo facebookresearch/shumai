@@ -1,21 +1,25 @@
 import * as sm from '@shumai/shumai'
 
-const model = async (t, options) => {
-  t = await sm.io.tfetch('localhost:3001/forward', t, options)
-  t = await sm.io.tfetch('localhost:3002/forward', t, options)
+const model_a = sm.io.connect('localhost:3001/forward', 'localhost:3001/optimize')
+const model_b = sm.io.connect('localhost:3002/forward', 'localhost:3002/optimize')
+
+const model = async (t) => {
+  t = await model_a(t)
+  t = await model_b(t)
   return t
 }
 
 sm.io.serve(
   {
     forward: async (u, t) => {
-      console.log('forward pass')
-      return await model(t, { id: u.id })
+      const out = await model(t)
+      u.opt = async (jacobian) => {
+        await out.backward(jacobian)
+      }
+      return out
     },
     optimize: async (u, j) => {
-      console.log('optimizing')
-      j = await sm.io.tfetch('localhost:3002/optimize', j, { id: u.id })
-      await sm.io.tfetch('localhost:3001/optimize', j, { id: u.id })
+      await u.opt(j)
     },
     m: async (_) => {
       return await sm.io.tfetch('localhost:3001/')

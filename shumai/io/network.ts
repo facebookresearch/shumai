@@ -80,7 +80,11 @@ export async function tfetch(
 
 export function connect(forward_url, backward_url) {
   const backward = async (grad) => {
-    await tfetch(backward_url, grad.grad_in)
+    // possibly need to continue backward pass
+    const jacobian = await tfetch(backward_url, grad.grad_in)
+    if (jacobian) {
+      await grad.in.backward(jacobian)
+    }
   }
   async function forward(t) {
     return await tfetch(forward_url, t, { grad_fn: backward })
