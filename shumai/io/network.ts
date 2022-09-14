@@ -19,25 +19,27 @@ export function encode(tensor: sm.Tensor): ArrayBuffer {
   return buf.buffer
 }
 
-export function decode(obj: Response | ArrayBuffer) {
-  function impl(buf: ArrayBuffer) {
-    const shape_len = new Int32Array(buf, 0, 2)[0]
-    const shape = new BigInt64Array(buf, 8 /* 8 byte offset mandated alignement */, shape_len)
-    const t = sm.tensor(new Float32Array(buf, 8 + 8 * shape_len))
-    return t.reshape(shape as unknown as number[])
-  }
+export function decodeBuffer(buf: ArrayBuffer) {
+  const shape_len = new Int32Array(buf, 0, 2)[0]
+  const shape = new BigInt64Array(buf, 8 /* 8 byte offset mandated alignement */, shape_len)
+  const t = sm.tensor(new Float32Array(buf, 8 + 8 * shape_len))
+  return t.reshape(shape as unknown as number[])
+}
 
-  if (obj.constructor === Response || obj.constructor === Request) {
-    return obj
-      .arrayBuffer()
-      .then((buf) => impl(buf))
-      .catch((e) => {
-        throw new Error(e.message)
-      })
-  } else if (obj.constructor === ArrayBuffer) {
-    return impl(obj)
-  }
-  throw `Could not decode object: ${obj}`
+export function decode(obj: Response | ArrayBuffer) {
+  return new Promise<sm.Tensor>((resolve, reject) => {
+    if (obj.constructor === Response || obj.constructor === Request) {
+      return obj
+        .arrayBuffer()
+        .then((buf) => resolve(decodeBuffer(buf)))
+        .catch((e) => {
+          throw new Error(e.message)
+        })
+    } else if (obj.constructor === ArrayBuffer) {
+      resolve(decodeBuffer(obj))
+    }
+    reject(new Error(`Could not decode object: ${obj}`))
+  })
 }
 
 export async function tfetch(
