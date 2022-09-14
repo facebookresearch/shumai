@@ -102,7 +102,7 @@ export function serve(request_dict, options) {
     }
     const buf = await req.arrayBuffer()
     const ret = await (buf.byteLength
-      ? fn(user_data[user_id], decode(buf))
+      ? fn(user_data[user_id], await decode(buf))
       : fn(user_data[user_id]))
     if (ret && ret.constructor === sm.Tensor) {
       return new Response(encode(ret))
