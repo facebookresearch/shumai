@@ -27,19 +27,14 @@ export function decodeBuffer(buf: ArrayBuffer) {
 }
 
 export async function decode(obj: Response | ArrayBuffer) {
-  return new Promise<sm.Tensor>((resolve, reject) => {
-    if (obj.constructor === Response || obj.constructor === Request) {
-      return obj
-        .arrayBuffer()
-        .then((buf) => resolve(decodeBuffer(buf)))
-        .catch((e) => {
-          throw new Error(e.message)
-        })
-    } else if (obj.constructor === ArrayBuffer) {
-      resolve(decodeBuffer(obj))
-    }
-    reject(new Error(`Could not decode object: ${obj}`))
-  })
+  if (obj.constructor === Response || obj.constructor === Request) {
+    const buf = await obj.arrayBuffer()
+    return decodeBuffer(buf)
+  } else if (obj.constructor === ArrayBuffer) {
+    return decodeBuffer(obj)
+  } else {
+    throw new Error(`Could not decode object: ${obj}`)
+  }
 }
 
 export async function tfetch(
@@ -114,5 +109,15 @@ export function serve(request_dict, options) {
   Bun.serve({
     ...fetch_handler,
     ...options
+  })
+}
+
+function foo() {
+  return 1
+}
+
+function bar(): Promise<number> {
+  return new Promise((r, _) => {
+    r(1)
   })
 }
