@@ -18,6 +18,7 @@
   "exclude": ["examples/**/*"],
   "typedocOptions": {
     "entryPoints": ["shumai/index.ts"],
-    "out": "docs"
+    "out": "docs",
+    "readme": "docs.md"
   }
 }
