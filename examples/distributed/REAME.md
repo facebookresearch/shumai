@@ -1,14 +1,27 @@
-# Distributed in Shumai
+# Distributed Training in Shumai
+
+To try this example, run all three servers (`model.ts`, `model_a.ts`, `model_b.ts`) at once in a separate shell with this command:
+```
+$ bash examples/distributed/serve.sh
+```
+
+Then, in another shell, run the client (which feeds data to the model):
+
+```
+$ bun examples/distributed/data.ts
+100% 200/200
+3.931849241256714 x + -6.879758358001709
+```
+
+Thats' it!  We can query the statistics and parse them with `jq`:
+```
+$ curl -s localhost:3000/statistics | jq '"\(.m.weight) x + \(.b.weight)"'
+"3.931849241256714 x + -6.879758358001709"
+```
 
 
 ### Servers
 
-In three different shells, kick off the model servers:
-```
-$ bun model_a.ts
-$ bun model_b.ts
-$ bun model.ts
-```
 
 `model_a` is a parameterized multiplication (by `m`):
 
@@ -35,8 +48,4 @@ All it does it generate examples and calculate the loss between the output of `m
 The models never see the actual loss function nor the examples themselves.
 
 We generate examples of the form mx + b.  We hardcode m to be 4 and b to be -7. Eventually we hope the loss to go down and the learned values of `m` and `b` (which are on two different servers) to converge to the hardcoded values.
-
-Run the client with `bun data.ts`:
-
-![Screen Recording 2022-09-13 at 2 53 59 PM](https://user-images.githubusercontent.com/4842908/189988722-5fc2bc77-ff80-4d2d-8738-f868f5b7eaf7.gif)
 
