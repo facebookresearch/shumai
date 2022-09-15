@@ -1,21 +1,21 @@
-import * as base from '../tensor/tensor'
+import type { Tensor } from '../tensor'
 import * as ops from '../tensor/tensor_ops_gen'
-const sm = { ...base, ...ops }
+const sm = { ...ops }
 import { Module } from './module'
 
 export class LSTM extends Module {
-  W_f: sm.Tensor
-  U_f: sm.Tensor
-  b_f: sm.Tensor
-  W_i: sm.Tensor
-  U_i: sm.Tensor
-  b_i: sm.Tensor
-  W_o: sm.Tensor
-  U_o: sm.Tensor
-  b_o: sm.Tensor
-  W_c: sm.Tensor
-  U_c: sm.Tensor
-  b_c: sm.Tensor
+  W_f: Tensor
+  U_f: Tensor
+  b_f: Tensor
+  W_i: Tensor
+  U_i: Tensor
+  b_i: Tensor
+  W_o: Tensor
+  U_o: Tensor
+  b_o: Tensor
+  W_c: Tensor
+  U_c: Tensor
+  b_c: Tensor
   constructor(inp_dim: number, out_dim: number) {
     super()
     this.W_f = sm.randn([inp_dim, out_dim])
