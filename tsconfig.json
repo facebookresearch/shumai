@@ -15,5 +15,9 @@
       "@shumai/shumai": ["./shumai/index.ts"],
     }
   },
-  "exclude": ["examples/**/*"]
+  "exclude": ["examples/**/*"],
+  "typedocOptions": {
+    "entryPoints": ["shumai/index.ts"],
+    "out": "docs"
+  }
 }

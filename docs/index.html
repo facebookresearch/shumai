@@ -1,0 +1,650 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@shumai/shumai</title><meta name="description" content="Documentation for @shumai/shumai"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">@shumai/shumai</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<h2>@shumai/shumai</h2></div>
+<div class="tsd-panel tsd-typography"><p align="center">
+<img width="375" alt="shumai_logo_light" src="https://user-images.githubusercontent.com/4842908/187270063-250a42b0-475e-4eb2-bc1e-2b6a54182577.png#gh-light-mode-only">
+<img width="375" alt="shumai_logo_dark" src="https://user-images.githubusercontent.com/4842908/187270061-99666d73-047c-4076-906c-f181c940244c.png#gh-dark-mode-only">
+
+</p>
+
+<p>A fast differentiable tensor library for research in TypeScript and JavaScript.  Built with <a href="https://bun.sh">bun</a> + <a href="https://github.com/flashlight/flashlight">flashlight</a>.
+⚠️ <em>This is experimental software!</em> ⚠️</p>
+<p><a href="https://github.com/facebookresearch/shumai/actions/workflows/build.yml"><img src="https://github.com/facebookresearch/shumai/actions/workflows/build.yml/badge.svg" alt="build"></a>
+<a href="https://app.circleci.com/pipelines/github/facebookresearch/shumai"><img src="https://circleci.com/gh/facebookresearch/shumai.svg?style=shield" alt="tests"></a>
+<a href="https://www.npmjs.com/settings/shumai/packages"><img src="https://img.shields.io/npm/v/@shumai/shumai/latest" alt="npm"></a>
+<a href="https://discord.com/channels/1013580889940295730/"><img src="https://img.shields.io/discord/1013580889940295730" alt="Discord"></a>
+<a href="https://github.com/facebookresearch/shumai/blob/main/LICENSE"><img src="https://img.shields.io/github/license/facebookresearch/shumai" alt="GitHub"></a>
+<a href="https://github.com/facebookresearch/shumai/graphs/contributors"><img src="https://img.shields.io/github/contributors/facebookresearch/shumai" alt="GitHub contributors"></a>
+<img src="https://img.shields.io/github/commit-activity/w/facebookresearch/shumai" alt="GitHub commit activity"></p>
+<hr>
+<ul>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#install">Install</a></li>
+<li><a href="#installing-local-build-from-source">Build from source</a></li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#supported-operations">Supported operations</a></li>
+</ul>
+
+<a href="#quickstart" id="quickstart" style="color: inherit; text-decoration: none;">
+  <h2>Quickstart</h2>
+</a>
+<p>Install <a href="https://bun.sh/">Bun</a> and <a href="https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire">ArrayFire</a>, then run:</p>
+<pre><code><span class="hl-0">bun</span><span class="hl-1"> </span><span class="hl-0">install</span><span class="hl-1"> @</span><span class="hl-0">shumai</span><span class="hl-1">/</span><span class="hl-0">shumai</span>
+</code></pre>
+<p>Only macOS and Linux are supported. Linux installs default to GPU computation with CUDA, and macOS to CPU. Detailed install instructions <a href="#install">below</a>.</p>
+<p><em>Install is work in progress</em>: <a href="https://github.com/facebookresearch/shumai/issues"><strong>please file an issue</strong></a> if you run into problems.</p>
+
+<a href="#why-build-this" id="why-build-this" style="color: inherit; text-decoration: none;">
+  <h2>Why build this?</h2>
+</a>
+<p>With Shumai, we hope to make </p>
+<ul>
+<li><strong>Creating datasets</strong><ul>
+<li>JavaScript, with native typed arrays and a JIT compiler, is perfect for twiddling with data before it can be made into big, flat GPU-compatible arrays.</li>
+</ul>
+</li>
+<li><strong>Training small models</strong><ul>
+<li>FFI bindings in Bun are crazy fast (~3ns), so JS gets out of the way when training small models</li>
+</ul>
+</li>
+<li><strong>Advanced/fine-grained training/inference logic</strong><ul>
+<li>Bun uses the JSC JIT compiler, meaning you can confidently write complex training logic without needing a native C++ implementation</li>
+</ul>
+</li>
+<li><strong>Building applications</strong><ul>
+<li>JavaScript has a <del>large</del> <a href="https://survey.stackoverflow.co/2022/#section-most-popular-technologies-programming-scripting-and-markup-languages">HUGE</a> ecosystem, which facilitates better application development</li>
+</ul>
+</li>
+</ul>
+
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h2>Usage</h2>
+</a>
+<p>shumai will always attempt to use an attached GPU or accelerator; although CPU computation will use the ArrayFire CPU backend, which is not well-optimized.</p>
+<p>We hope to support the ArrayFire OpenCL backend and other non-ArrayFire tensor backends soon.</p>
+<p>If shumai seems unusually slow, please file an issue!</p>
+<p><strong>Standard array utilities:</strong></p>
+<pre><code class="language-javascript"><span class="hl-2">import</span><span class="hl-1"> </span><span class="hl-3">*</span><span class="hl-1"> </span><span class="hl-2">as</span><span class="hl-1"> </span><span class="hl-0">sm</span><span class="hl-1"> </span><span class="hl-2">from</span><span class="hl-1"> </span><span class="hl-4">&quot;@shumai/shumai&quot;</span><br/><br/><span class="hl-5">// create a 1024 by 1024 tensor, randomly filled with normal distribution</span><br/><span class="hl-3">let</span><span class="hl-1"> </span><span class="hl-6">X</span><span class="hl-1"> = </span><span class="hl-0">sm</span><span class="hl-1">.</span><span class="hl-7">randn</span><span class="hl-1">([</span><span class="hl-8">1024</span><span class="hl-1">, </span><span class="hl-8">1024</span><span class="hl-1">])</span><br/><span class="hl-3">let</span><span class="hl-1"> </span><span class="hl-6">W</span><span class="hl-1"> = </span><span class="hl-0">sm</span><span class="hl-1">.</span><span class="hl-7">identity</span><span class="hl-1">(</span><span class="hl-8">1024</span><span class="hl-1">)</span><br/><span class="hl-3">let</span><span class="hl-1"> </span><span class="hl-6">Y</span><span class="hl-1"> = </span><span class="hl-6">X</span><span class="hl-1">.</span><span class="hl-7">matmul</span><span class="hl-1">(</span><span class="hl-6">W</span><span class="hl-1">)</span><br/><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-7">log</span><span class="hl-1">(</span><span class="hl-6">Y</span><span class="hl-1">.</span><span class="hl-0">shape</span><span class="hl-1">)</span>
+</code></pre>
+<p><strong>Conversion to and from JavaScript native arrays:</strong></p>
+<pre><code class="language-javascript"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">data</span><span class="hl-1"> : </span><span class="hl-9">Float32Array</span><span class="hl-1"> = </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-7">Float32Array</span><span class="hl-1">(</span><span class="hl-8">128</span><span class="hl-1">)</span><br/><span class="hl-2">for</span><span class="hl-1"> (</span><span class="hl-3">let</span><span class="hl-1"> </span><span class="hl-0">i</span><span class="hl-1"> = </span><span class="hl-8">0</span><span class="hl-1">; </span><span class="hl-0">i</span><span class="hl-1"> &lt; </span><span class="hl-8">128</span><span class="hl-1">; ++</span><span class="hl-0">i</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-0">data</span><span class="hl-1"> = </span><span class="hl-0">Math</span><span class="hl-1">.</span><span class="hl-7">random</span><span class="hl-1">()</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">X</span><span class="hl-1"> : </span><span class="hl-9">Tensor</span><span class="hl-1"> = </span><span class="hl-0">sm</span><span class="hl-1">.</span><span class="hl-7">tensor</span><span class="hl-1">(</span><span class="hl-0">data</span><span class="hl-1">)</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">pi</span><span class="hl-1"> = </span><span class="hl-0">sm</span><span class="hl-1">.</span><span class="hl-7">scalar</span><span class="hl-1">(</span><span class="hl-8">3.14</span><span class="hl-1">)</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">Y</span><span class="hl-1"> = </span><span class="hl-6">X</span><span class="hl-1">.</span><span class="hl-7">mul</span><span class="hl-1">(</span><span class="hl-0">pi</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// tensors can be converted back to native JavaScript</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">Y_data</span><span class="hl-1"> = </span><span class="hl-6">Y</span><span class="hl-1">.</span><span class="hl-7">toFloat32Array</span><span class="hl-1">()</span><br/><br/><span class="hl-5">// scalar tensors can be converted to JavaScript numbers</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">total</span><span class="hl-1"> : </span><span class="hl-9">number</span><span class="hl-1"> = </span><span class="hl-6">X</span><span class="hl-1">.</span><span class="hl-7">sum</span><span class="hl-1">().</span><span class="hl-7">toFloat32</span><span class="hl-1">()</span>
+</code></pre>
+<p><strong>Gradients:</strong></p>
+<pre><code class="language-javascript"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">W</span><span class="hl-1"> = </span><span class="hl-0">sm</span><span class="hl-1">.</span><span class="hl-7">randn</span><span class="hl-1">([</span><span class="hl-8">128</span><span class="hl-1">, </span><span class="hl-8">128</span><span class="hl-1">])</span><br/><span class="hl-6">W</span><span class="hl-1">.</span><span class="hl-0">requires_grad</span><span class="hl-1"> = </span><span class="hl-3">true</span><br/><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">X</span><span class="hl-1"> = </span><span class="hl-0">sm</span><span class="hl-1">.</span><span class="hl-7">randn</span><span class="hl-1">([</span><span class="hl-8">128</span><span class="hl-1">, </span><span class="hl-8">128</span><span class="hl-1">])</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">diff</span><span class="hl-1"> = </span><span class="hl-6">X</span><span class="hl-1">.</span><span class="hl-7">sub</span><span class="hl-1">(</span><span class="hl-6">W</span><span class="hl-1">)</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">mse</span><span class="hl-1"> = </span><span class="hl-0">diff</span><span class="hl-1">.</span><span class="hl-7">mul</span><span class="hl-1">(</span><span class="hl-0">diff</span><span class="hl-1">).</span><span class="hl-7">sum</span><span class="hl-1">()</span><br/><span class="hl-0">mse</span><span class="hl-1">.</span><span class="hl-7">backward</span><span class="hl-1">()</span><br/><br/><span class="hl-6">W</span><span class="hl-1">.</span><span class="hl-0">grad</span><span class="hl-1"> </span><span class="hl-5">// this gradient is now populated</span><br/><br/><span class="hl-5">// copy W without allowing gradient updates</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-6">Y</span><span class="hl-1"> = </span><span class="hl-6">W</span><span class="hl-1">.</span><span class="hl-7">detach</span><span class="hl-1">()</span><br/><span class="hl-6">Y</span><span class="hl-1">.</span><span class="hl-7">sum</span><span class="hl-1">().</span><span class="hl-7">backward</span><span class="hl-1">() </span><span class="hl-5">// nothing changes</span><br/>
+</code></pre>
+<p>Some more examples can be found <a href="https://github.com/facebookresearch/shumai/tree/main/examples">here</a>.</p>
+<p>Supported operators can be found <a href="#supported-operations">here</a>.</p>
+
+<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+  <h2>Install</h2>
+</a>
+<p><strong>The install procedure is a work in progress!</strong>
+If you have any problems building or installing, we would
+greatly appreciate filed issues. Please tell us about your platform/OS when you do.</p>
+<p><strong>Prerequisites</strong>:</p>
+<ul>
+<li>Ensure you have bun installed (<a href="https://bun.sh">https://bun.sh</a>).</li>
+<li>Install <a href="https://github.com/arrayfire/arrayfire">ArrayFire</a>. <em>macOS users should install ArrayFire&#39;s CPU backend; Linux users should install the CUDA backend^.</em><ul>
+<li><strong>macOS</strong> --- ArrayFire can easily be installed with Homebrew:</li>
+</ul>
+<pre><code><span class="hl-0">brew</span><span class="hl-1"> </span><span class="hl-0">install</span><span class="hl-1"> </span><span class="hl-0">arrayfire</span>
+</code></pre>
+</li>
+<li><strong>Linux</strong> --- instructions <a href="https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire">can be found here</a>. On Ubuntu, ArrayFire can be installed via <a href="https://github.com/arrayfire/arrayfire/wiki/Install-ArrayFire-From-Linux-Package-Managers">package managers (e.g. <code>apt</code>)</a>.</li>
+</ul>
+<p>Once <code>bun</code> and <code>ArrayFire</code> are installed, install the package and backing libs with <code>bun</code>:</p>
+<pre><code class="language-shell"><span class="hl-1">bun install @shumai/shumai</span>
+</code></pre>
+<p>^<strong>Linux users can use the CPU backend</strong> by swapping the required <code>package.json</code> dependency from <code>@shumai/linux_x64_shumai_flashlight</code> to <code>@shumai/linux_x64_shumai_flashlight_cpu</code>, i.e. running:</p>
+<pre><code class="language-shell"><span class="hl-1">sed -i </span><span class="hl-4">&quot;s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g&quot;</span><span class="hl-1"> package.json</span>
+</code></pre>
+
+<a href="#building-native-libraries-from-source" id="building-native-libraries-from-source" style="color: inherit; text-decoration: none;">
+  <h2>Building Native Libraries from Source</h2>
+</a>
+<p><strong>Note:</strong> <em>not required when developing TypeScript/Javascript library components locally.</em></p>
+<p>From source build instructions for:</p>
+<ul>
+<li><a href="#building-on-macos-from-source">macOS</a></li>
+<li><a href="#building-on-linux-from-source">Linux</a></li>
+</ul>
+<p>This process will build the dependent ffi libraries (<code>libflashlight</code> and <code>libflashlight_binding</code>) and pack them using <code>npm pack</code> to generate a <code>@shumai/shumai_*.tgz</code>
+package. You can then use <code>npm install $PATH_TO_SOURCE/@shumai/shumai-*.tgz</code> to install the package where you&#39;d like.</p>
+
+<a href="#building-on-macos-from-source" id="building-on-macos-from-source" style="color: inherit; text-decoration: none;">
+  <h3>Building on macOS from Source</h3>
+</a>
+<p>First, install ArrayFire CPU with <code>brew install arrayfire</code>.</p>
+<p>Build and install <a href="https://github.com/flashlight/flashlight#building-and-installing">Flashlight</a>:</p>
+<pre><code class="language-bash"><span class="hl-1">mkdir -p </span><span class="hl-0">$HOME</span><span class="hl-1">/usr/ </span><span class="hl-5"># installing flashlight here</span><br/><span class="hl-1">git clone --recursive --depth 1 https://github.com/flashlight/flashlight.git</span><br/><span class="hl-7">cd</span><span class="hl-1"> flashlight</span><br/><span class="hl-1">mkdir -p build</span><br/><span class="hl-7">cd</span><span class="hl-1"> build</span><br/><span class="hl-1">cmake .. \</span><br/><span class="hl-1">  -DCMAKE_BUILD_TYPE=RelWithDebInfo </span><span class="hl-10">\ </span><span class="hl-5"># or as specified</span><br/><span class="hl-1">  -DFL_ARRAYFIRE_USE_CPU=ON \</span><br/><span class="hl-1">  -DFL_ARRAYFIRE_USE_CUDA=OFF \</span><br/><span class="hl-1">  -DFL_BUILD_DISTRIBUTED=OFF \</span><br/><span class="hl-1">  -DFL_USE_ONEDNN=OFF \</span><br/><span class="hl-1">  -DFL_BUILD_TESTS=OFF \</span><br/><span class="hl-1">  -DFL_BUILD_EXAMPLES=OFF \</span><br/><span class="hl-1">  -DFL_BUILD_SCRIPTS=OFF \</span><br/><span class="hl-1">  -DCMAKE_INSTALL_PREFIX=</span><span class="hl-0">$HOME</span><span class="hl-1">/usr/</span><br/><span class="hl-1">make -j</span><span class="hl-4">$(nproc)</span><br/><span class="hl-1">make install</span>
+</code></pre>
+<p>Build Flashlight bindings for Shumai:</p>
+<pre><code class="language-bash"><span class="hl-7">cd</span><span class="hl-1"> shumai</span><br/><span class="hl-1">mkdir -p build</span><br/><span class="hl-7">cd</span><span class="hl-1"> build</span><br/><span class="hl-1">cmake .. -Dflashlight_DIR=</span><span class="hl-0">$HOME</span><span class="hl-1">/usr/share/flashlight/cmake/</span><br/><span class="hl-1">make -j</span><span class="hl-4">$(nproc)</span>
+</code></pre>
+
+<a href="#profiling" id="profiling" style="color: inherit; text-decoration: none;">
+  <h4>Profiling</h4>
+</a>
+<p>On macOS, you can record perf with <code>xcrun xctrace record --template &quot;Time Profiler&quot; --launch $(which bun) train.js</code>.</p>
+
+<a href="#building-on-linux-from-source" id="building-on-linux-from-source" style="color: inherit; text-decoration: none;">
+  <h3>Building on Linux from Source</h3>
+</a>
+<p>First <a href="https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire">install ArrayFire</a>. The Linux build for shumai uses the CUDA backend, but from source, you can build the CPU backend as well (OpenCL support coming soon).</p>
+<p>Build and install <a href="https://github.com/flashlight/flashlight#building-and-installing">Flashlight</a>:</p>
+<pre><code class="language-bash"><span class="hl-1">mkdir -p </span><span class="hl-0">$HOME</span><span class="hl-1">/usr/ </span><span class="hl-5"># installing flashlight here</span><br/><span class="hl-1">git clone --recursive --depth 1 https://github.com/flashlight/flashlight.git</span><br/><span class="hl-7">cd</span><span class="hl-1"> flashlight</span><br/><span class="hl-1">mkdir -p build</span><br/><span class="hl-7">cd</span><span class="hl-1"> build</span><br/><span class="hl-1">cmake .. \</span><br/><span class="hl-1">  -DCMAKE_BUILD_TYPE=RelWithDebInfo </span><span class="hl-10">\ </span><span class="hl-5"># or as specified</span><br/><span class="hl-1">  -DFL_ARRAYFIRE_USE_CPU=OFF \</span><br/><span class="hl-1">  </span><span class="hl-10">\ </span><span class="hl-5"># swap with the above to build for CPU</span><br/><span class="hl-1">  -DFL_ARRAYFIRE_USE_CUDA=ON </span><span class="hl-10">\ </span><br/><span class="hl-1">  -DFL_BUILD_DISTRIBUTED=OFF \</span><br/><span class="hl-1">  -DFL_USE_ONEDNN=OFF \</span><br/><span class="hl-1">  -DFL_BUILD_TESTS=OFF \</span><br/><span class="hl-1">  -DFL_BUILD_EXAMPLES=OFF \</span><br/><span class="hl-1">  -DFL_BUILD_SCRIPTS=OFF \</span><br/><span class="hl-1">  -DCMAKE_INSTALL_PREFIX=</span><span class="hl-0">$HOME</span><span class="hl-1">/usr/</span><br/><span class="hl-1">make -j</span><span class="hl-4">$(nproc)</span><br/><span class="hl-1">make install</span>
+</code></pre>
+<p>Build bindings for shumai:</p>
+<pre><code class="language-bash"><span class="hl-1">mkdir -p build &amp;&amp; </span><span class="hl-7">cd</span><span class="hl-1"> build</span><br/><span class="hl-1">cmake .. \</span><br/><span class="hl-1">    -DBUILD_SHARED_LIBS=ON \</span><br/><span class="hl-1">    -DCMAKE_BUILD_TYPE=RelWithDebInfo </span><span class="hl-10">\ </span><span class="hl-5"># or as specified</span><br/><span class="hl-1">    -Dflashlight_DIR=</span><span class="hl-0">${FLASHLIGHT_INSTALL_PREFIX}</span><span class="hl-1">/share/flashlight/cmake \</span><br/><span class="hl-1">    -DArrayFire_DIR=</span><span class="hl-0">${ARRAYFIRE_INSTALL_PREFIX}</span><span class="hl-1">/share/ArrayFire/cmake </span><span class="hl-5"># if built from source, else not needed</span><br/><span class="hl-1">make -j</span><span class="hl-4">$(nproc)</span>
+</code></pre>
+
+<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
+  <h2>Contributing</h2>
+</a>
+<p>If you&#39;d like to make changes to the core bindings or ffi, first <a href="#installing-from-source">build from source</a>.</p>
+<p>All files ending in <code>*.inl</code> or <code>*_gen.ts</code> are generated.
+These can be modified by editing <a href="https://github.com/facebookresearch/shumai/blob/main/scripts/gen_binding.py"><code>scripts/gen_binding.py</code></a>
+and running <a href="https://github.com/facebookresearch/shumai/blob/main/scripts/gen_all_binding.sh"><code>./scripts/gen_all_binding.sh</code></a>.</p>
+<p>See the <a href="CONTRIBUTING.md">CONTRIBUTING</a> file for style guidance and more info on how to help out. 😁</p>
+
+<a href="#supported-operations" id="supported-operations" style="color: inherit; text-decoration: none;">
+  <h2>Supported Operations</h2>
+</a>
+<p>Some operations are supported as both static functions and methods on existing tensors.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Function</th>
+<th>Tensor Method (<code>t : Tensor</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>rand</td>
+<td><code>rand(shape: number[]) : Tensor</code></td>
+<td></td>
+</tr>
+<tr>
+<td>randn</td>
+<td><code>randn(shape: number[]) : Tensor</code></td>
+<td></td>
+</tr>
+<tr>
+<td>full</td>
+<td><code>full(shape: number[], val: number) : Tensor</code></td>
+<td></td>
+</tr>
+<tr>
+<td>identity</td>
+<td><code>identity(dim: number) : Tensor</code></td>
+<td></td>
+</tr>
+<tr>
+<td>arange</td>
+<td><code>arange(start: number, end: number, step: number = 1) : Tensor</code></td>
+<td></td>
+</tr>
+<tr>
+<td>iota</td>
+<td><code>iota(dims: number[], tileDims: number[] = [1]) : Tensor</code></td>
+<td></td>
+</tr>
+<tr>
+<td>reshape</td>
+<td><code>reshape(tensor: Tensor, shape: number[]) : Tensor</code></td>
+<td><code>t.reshape(shape: number[]) : Tensor</code></td>
+</tr>
+<tr>
+<td>transpose</td>
+<td><code>transpose(tensor: Tensor, axes: number[]) : Tensor</code></td>
+<td><code>t.transpose(axes: number[]) : Tensor</code></td>
+</tr>
+<tr>
+<td>tile</td>
+<td><code>tile(tensor: Tensor, shape: number[]) : Tensor</code></td>
+<td><code>t.tile(shape: number[]) : Tensor</code></td>
+</tr>
+<tr>
+<td>nonzero</td>
+<td><code>nonzero(tensor: Tensor) : Tensor</code></td>
+<td><code>t.nonzero() : Tensor</code></td>
+</tr>
+<tr>
+<td>negative</td>
+<td><code>negative(tensor: Tensor) : Tensor</code></td>
+<td><code>t.negative() : Tensor</code></td>
+</tr>
+<tr>
+<td>logicalNot</td>
+<td><code>logicalNot(tensor: Tensor) : Tensor</code></td>
+<td><code>t.logicalNot() : Tensor</code></td>
+</tr>
+<tr>
+<td>exp</td>
+<td><code>exp(tensor: Tensor) : Tensor</code></td>
+<td><code>t.exp() : Tensor</code></td>
+</tr>
+<tr>
+<td>log</td>
+<td><code>log(tensor: Tensor) : Tensor</code></td>
+<td><code>t.log() : Tensor</code></td>
+</tr>
+<tr>
+<td>log1p</td>
+<td><code>log1p(tensor: Tensor) : Tensor</code></td>
+<td><code>t.log1p() : Tensor</code></td>
+</tr>
+<tr>
+<td>sin</td>
+<td><code>sin(tensor: Tensor) : Tensor</code></td>
+<td><code>t.sin() : Tensor</code></td>
+</tr>
+<tr>
+<td>cos</td>
+<td><code>cos(tensor: Tensor) : Tensor</code></td>
+<td><code>t.cos() : Tensor</code></td>
+</tr>
+<tr>
+<td>sqrt</td>
+<td><code>sqrt(tensor: Tensor) : Tensor</code></td>
+<td><code>t.sqrt() : Tensor</code></td>
+</tr>
+<tr>
+<td>tanh</td>
+<td><code>tanh(tensor: Tensor) : Tensor</code></td>
+<td><code>t.tanh() : Tensor</code></td>
+</tr>
+<tr>
+<td>floor</td>
+<td><code>floor(tensor: Tensor) : Tensor</code></td>
+<td><code>t.floor() : Tensor</code></td>
+</tr>
+<tr>
+<td>ceil</td>
+<td><code>ceil(tensor: Tensor) : Tensor</code></td>
+<td><code>t.ceil() : Tensor</code></td>
+</tr>
+<tr>
+<td>rint</td>
+<td><code>rint(tensor: Tensor) : Tensor</code></td>
+<td><code>t.rint() : Tensor</code></td>
+</tr>
+<tr>
+<td>absolute</td>
+<td><code>absolute(tensor: Tensor) : Tensor</code></td>
+<td><code>t.absolute() : Tensor</code></td>
+</tr>
+<tr>
+<td>abs</td>
+<td><code>abs(tensor: Tensor) : Tensor</code></td>
+<td><code>t.abs() : Tensor</code></td>
+</tr>
+<tr>
+<td>sigmoid</td>
+<td><code>sigmoid(tensor: Tensor) : Tensor</code></td>
+<td><code>t.sigmoid() : Tensor</code></td>
+</tr>
+<tr>
+<td>erf</td>
+<td><code>erf(tensor: Tensor) : Tensor</code></td>
+<td><code>t.erf() : Tensor</code></td>
+</tr>
+<tr>
+<td>flip</td>
+<td><code>flip(tensor: Tensor, dim: number) : Tensor</code></td>
+<td><code>t.flip(dim: number) : Tensor</code></td>
+</tr>
+<tr>
+<td>clip</td>
+<td><code>clip(tensor: Tensor, low: Tensor, high: Tensor) : Tensor</code></td>
+<td><code>t.clip(low: Tensor, high: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>roll</td>
+<td><code>roll(tensor: Tensor, shift: number, axis: number) : Tensor</code></td>
+<td><code>t.roll(shift: number, axis: number) : Tensor</code></td>
+</tr>
+<tr>
+<td>isnan</td>
+<td><code>isnan(tensor: Tensor) : Tensor</code></td>
+<td><code>t.isnan() : Tensor</code></td>
+</tr>
+<tr>
+<td>isinf</td>
+<td><code>isinf(tensor: Tensor) : Tensor</code></td>
+<td><code>t.isinf() : Tensor</code></td>
+</tr>
+<tr>
+<td>sign</td>
+<td><code>sign(tensor: Tensor) : Tensor</code></td>
+<td><code>t.sign() : Tensor</code></td>
+</tr>
+<tr>
+<td>tril</td>
+<td><code>tril(tensor: Tensor) : Tensor</code></td>
+<td><code>t.tril() : Tensor</code></td>
+</tr>
+<tr>
+<td>triu</td>
+<td><code>triu(tensor: Tensor) : Tensor</code></td>
+<td><code>t.triu() : Tensor</code></td>
+</tr>
+<tr>
+<td>where</td>
+<td><code>where(cond: Tensor, x: Tensor, y: Tensor) : Tensor</code></td>
+<td><code>t.where(x: Tensor, y: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>sort</td>
+<td><code>sort(tensor: Tensor, dim: number) : Tensor</code></td>
+<td><code>t.sort(dim: number) : Tensor</code></td>
+</tr>
+<tr>
+<td>add</td>
+<td><code>add(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.add(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>sub</td>
+<td><code>sub(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.sub(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>mul</td>
+<td><code>mul(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.mul(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>div</td>
+<td><code>div(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.div(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>eq</td>
+<td><code>eq(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.eq(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>neq</td>
+<td><code>neq(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.neq(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>lessThan</td>
+<td><code>lessThan(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.lessThan(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>lessThanEqual</td>
+<td><code>lessThanEqual(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.lessThanEqual(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>greaterThan</td>
+<td><code>greaterThan(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.greaterThan(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>greaterThanEqual</td>
+<td><code>greaterThanEqual(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.greaterThanEqual(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>logicalOr</td>
+<td><code>logicalOr(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.logicalOr(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>logicalAnd</td>
+<td><code>logicalAnd(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.logicalAnd(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>mod</td>
+<td><code>mod(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.mod(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>bitwiseAnd</td>
+<td><code>bitwiseAnd(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.bitwiseAnd(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>bitwiseOr</td>
+<td><code>bitwiseOr(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.bitwiseOr(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>bitwiseXor</td>
+<td><code>bitwiseXor(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.bitwiseXor(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>lShift</td>
+<td><code>lShift(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.lShift(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>rShift</td>
+<td><code>rShift(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.rShift(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>minimum</td>
+<td><code>minimum(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.minimum(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>maximum</td>
+<td><code>maximum(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.maximum(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>power</td>
+<td><code>power(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.power(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>matmul</td>
+<td><code>matmul(tensor: Tensor, other: Tensor) : Tensor</code></td>
+<td><code>t.matmul(other: Tensor) : Tensor</code></td>
+</tr>
+<tr>
+<td>amin</td>
+<td><code>amin(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.amin(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>amax</td>
+<td><code>amax(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.amax(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>argmin</td>
+<td><code>argmin(tensor: Tensor, axis: number, keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.argmin(axis: number, keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>argmax</td>
+<td><code>argmax(tensor: Tensor, axis: number, keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.argmax(axis: number, keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>sum</td>
+<td><code>sum(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.sum(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>cumsum</td>
+<td><code>cumsum(tensor: Tensor, axis: number) : Tensor</code></td>
+<td><code>t.cumsum(axis: number) : Tensor</code></td>
+</tr>
+<tr>
+<td>mean</td>
+<td><code>mean(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.mean(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>median</td>
+<td><code>median(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.median(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>var</td>
+<td><code>var(tensor: Tensor, axes: number[] = [], bias: boolean = false, keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.var(axes: number[] = [], bias: boolean = false, keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>std</td>
+<td><code>std(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.std(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>norm</td>
+<td><code>norm(tensor: Tensor, axes: number[] = [], p: number = 2, keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.norm(axes: number[] = [], p: number = 2, keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>countNonzero</td>
+<td><code>countNonzero(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.countNonzero(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>any</td>
+<td><code>any(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.any(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+<tr>
+<td>all</td>
+<td><code>all(tensor: Tensor, axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+<td><code>t.all(axes: number[] = [], keep_dims: boolean = false) : Tensor</code></td>
+</tr>
+</tbody></table>
+
+<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+  <h3>License</h3>
+</a>
+<p>shumai is MIT licensed, as found in the LICENSE file.</p>
+</div></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current selected"><a href="modules.html">@shumai/shumai</a>
+<ul>
+<li class="tsd-kind-namespace"><a href="modules/io.html">io</a></li>
+<li class="tsd-kind-namespace"><a href="modules/loss.html">loss</a></li>
+<li class="tsd-kind-namespace"><a href="modules/module.html">module</a></li>
+<li class="tsd-kind-namespace"><a href="modules/optim.html">optim</a></li>
+<li class="tsd-kind-namespace"><a href="modules/util.html">util</a></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="tsd-kind-class"><a href="classes/Tensor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Tensor</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/TensorInterface.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Tensor<wbr/>Interface</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/TensorOpsInterface.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Tensor<wbr/>Ops<wbr/>Interface</a></li>
+<li class="tsd-kind-variable"><a href="variables/gradient_functions.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-variable)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-32-path"></rect><path d="M11.106 16L8.85 7.24H9.966L11.454 13.192C11.558 13.608 11.646 13.996 11.718 14.356C11.79 14.708 11.842 14.976 11.874 15.16C11.906 14.976 11.954 14.708 12.018 14.356C12.09 13.996 12.178 13.608 12.282 13.192L13.758 7.24H14.85L12.582 16H11.106Z" fill="var(--color-text)" id="icon-32-text"></path></svg>gradient_<wbr/>functions</a></li>
+<li class="tsd-kind-variable"><a href="variables/layout.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-32-path"></use><use href="#icon-32-text"></use></svg>layout</a></li>
+<li class="tsd-kind-function"><a href="functions/_var.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-function)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-64-path"></rect><path d="M9.39 16V7.24H14.55V8.224H10.446V11.128H14.238V12.112H10.47V16H9.39Z" fill="var(--color-text)" id="icon-64-text"></path></svg>_var</a></li>
+<li class="tsd-kind-function"><a href="functions/abs.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>abs</a></li>
+<li class="tsd-kind-function"><a href="functions/absolute.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>absolute</a></li>
+<li class="tsd-kind-function"><a href="functions/add.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>add</a></li>
+<li class="tsd-kind-function"><a href="functions/all.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>all</a></li>
+<li class="tsd-kind-function"><a href="functions/amax.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>amax</a></li>
+<li class="tsd-kind-function"><a href="functions/amin.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>amin</a></li>
+<li class="tsd-kind-function"><a href="functions/any.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>any</a></li>
+<li class="tsd-kind-function"><a href="functions/arange.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>arange</a></li>
+<li class="tsd-kind-function"><a href="functions/argmax.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>argmax</a></li>
+<li class="tsd-kind-function"><a href="functions/argmin.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>argmin</a></li>
+<li class="tsd-kind-function"><a href="functions/backward.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>backward</a></li>
+<li class="tsd-kind-function"><a href="functions/bitwiseAnd.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>bitwise<wbr/>And</a></li>
+<li class="tsd-kind-function"><a href="functions/bitwiseOr.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>bitwise<wbr/>Or</a></li>
+<li class="tsd-kind-function"><a href="functions/bitwiseXor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>bitwise<wbr/>Xor</a></li>
+<li class="tsd-kind-function"><a href="functions/bytesUsed.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>bytes<wbr/>Used</a></li>
+<li class="tsd-kind-function"><a href="functions/ceil.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>ceil</a></li>
+<li class="tsd-kind-function"><a href="functions/clip.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>clip</a></li>
+<li class="tsd-kind-function"><a href="functions/cos.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>cos</a></li>
+<li class="tsd-kind-function"><a href="functions/countNonzero.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>count<wbr/>Nonzero</a></li>
+<li class="tsd-kind-function"><a href="functions/cumsum.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>cumsum</a></li>
+<li class="tsd-kind-function"><a href="functions/div.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>div</a></li>
+<li class="tsd-kind-function"><a href="functions/eq.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>eq</a></li>
+<li class="tsd-kind-function"><a href="functions/erf.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>erf</a></li>
+<li class="tsd-kind-function"><a href="functions/exp.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>exp</a></li>
+<li class="tsd-kind-function"><a href="functions/flip.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>flip</a></li>
+<li class="tsd-kind-function"><a href="functions/floor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>floor</a></li>
+<li class="tsd-kind-function"><a href="functions/full.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>full</a></li>
+<li class="tsd-kind-function"><a href="functions/greaterThan.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>greater<wbr/>Than</a></li>
+<li class="tsd-kind-function"><a href="functions/greaterThanEqual.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>greater<wbr/>Than<wbr/>Equal</a></li>
+<li class="tsd-kind-function"><a href="functions/identity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>identity</a></li>
+<li class="tsd-kind-function"><a href="functions/iota.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>iota</a></li>
+<li class="tsd-kind-function"><a href="functions/isinf.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>isinf</a></li>
+<li class="tsd-kind-function"><a href="functions/isnan.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>isnan</a></li>
+<li class="tsd-kind-function"><a href="functions/lShift.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>l<wbr/>Shift</a></li>
+<li class="tsd-kind-function"><a href="functions/lessThan.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>less<wbr/>Than</a></li>
+<li class="tsd-kind-function"><a href="functions/lessThanEqual.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>less<wbr/>Than<wbr/>Equal</a></li>
+<li class="tsd-kind-function"><a href="functions/log.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>log</a></li>
+<li class="tsd-kind-function"><a href="functions/log1p.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>log1p</a></li>
+<li class="tsd-kind-function"><a href="functions/logicalAnd.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>logical<wbr/>And</a></li>
+<li class="tsd-kind-function"><a href="functions/logicalNot.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>logical<wbr/>Not</a></li>
+<li class="tsd-kind-function"><a href="functions/logicalOr.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>logical<wbr/>Or</a></li>
+<li class="tsd-kind-function"><a href="functions/matmul.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>matmul</a></li>
+<li class="tsd-kind-function"><a href="functions/maximum.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>maximum</a></li>
+<li class="tsd-kind-function"><a href="functions/mean.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>mean</a></li>
+<li class="tsd-kind-function"><a href="functions/median.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>median</a></li>
+<li class="tsd-kind-function"><a href="functions/minimum.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>minimum</a></li>
+<li class="tsd-kind-function"><a href="functions/mod.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>mod</a></li>
+<li class="tsd-kind-function"><a href="functions/mul.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>mul</a></li>
+<li class="tsd-kind-function"><a href="functions/negative.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>negative</a></li>
+<li class="tsd-kind-function"><a href="functions/neq.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>neq</a></li>
+<li class="tsd-kind-function"><a href="functions/nonzero.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>nonzero</a></li>
+<li class="tsd-kind-function"><a href="functions/norm.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>norm</a></li>
+<li class="tsd-kind-function"><a href="functions/power.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>power</a></li>
+<li class="tsd-kind-function"><a href="functions/rShift.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>r<wbr/>Shift</a></li>
+<li class="tsd-kind-function"><a href="functions/rand.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>rand</a></li>
+<li class="tsd-kind-function"><a href="functions/randn.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>randn</a></li>
+<li class="tsd-kind-function"><a href="functions/reshape.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>reshape</a></li>
+<li class="tsd-kind-function"><a href="functions/rint.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>rint</a></li>
+<li class="tsd-kind-function"><a href="functions/roll.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>roll</a></li>
+<li class="tsd-kind-function"><a href="functions/scalar.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>scalar</a></li>
+<li class="tsd-kind-function"><a href="functions/sigmoid.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>sigmoid</a></li>
+<li class="tsd-kind-function"><a href="functions/sign.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>sign</a></li>
+<li class="tsd-kind-function"><a href="functions/sin.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>sin</a></li>
+<li class="tsd-kind-function"><a href="functions/sort.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>sort</a></li>
+<li class="tsd-kind-function"><a href="functions/sqrt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>sqrt</a></li>
+<li class="tsd-kind-function"><a href="functions/std.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>std</a></li>
+<li class="tsd-kind-function"><a href="functions/sub.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>sub</a></li>
+<li class="tsd-kind-function"><a href="functions/sum.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>sum</a></li>
+<li class="tsd-kind-function"><a href="functions/tanh.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>tanh</a></li>
+<li class="tsd-kind-function"><a href="functions/tensor-1.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>tensor</a></li>
+<li class="tsd-kind-function"><a href="functions/tile.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>tile</a></li>
+<li class="tsd-kind-function"><a href="functions/transpose.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>transpose</a></li>
+<li class="tsd-kind-function"><a href="functions/tril.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>tril</a></li>
+<li class="tsd-kind-function"><a href="functions/triu.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>triu</a></li>
+<li class="tsd-kind-function"><a href="functions/where.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>where</a></li>
+<li class="tsd-kind-function"><a href="functions/wrapFLTensor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>wrapFLTensor</a></li></ul></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="assets/main.js"></script></body></html>
