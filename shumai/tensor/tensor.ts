@@ -6,6 +6,7 @@ import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 
 fl.init.native()
+/** @private */
 export const gradient_functions: { [key: string]: CallableFunction } = {}
 
 /** @private */
@@ -331,21 +332,28 @@ export function tensor(obj) {
   return new Tensor(obj)
 }
 
+/**
+ * @returns The current number of bytes allocated and managed by Shumai.
+ */
 export function bytesUsed() {
   return fl.bytesUsed.native()
 }
 
 export const layout = {
+  /** Set the framework layout to be row major (default). */
   setRowMajor: () => {
     fl.setRowMajor()
   },
+  /** Set the framework layout to be column major. */
   setColMajor: () => {
     fl.setColMajor()
   },
-  isRowMajor: () => {
+  /** Return true if the framework is currently row major. */
+  isRowMajor: () : boolean => {
     return fl.isRowMajor()
   },
-  isColMajor: () => {
+  /** Return true if the framework is currently column major. */
+  isColMajor: () : boolean => {
     return !fl.isRowMajor()
   }
 }
