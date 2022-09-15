@@ -19,6 +19,7 @@
   "typedocOptions": {
     "entryPoints": ["shumai/index.ts"],
     "out": "docs",
-    "readme": "docs.md"
+    "readme": "docs.md",
+    "searchInComments": true
   }
 }
