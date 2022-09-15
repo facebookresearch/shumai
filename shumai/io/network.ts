@@ -95,7 +95,7 @@ export function connect(forward_url, backward_url) {
 export function serve(request_dict, options) {
   const user_data = {}
   const statistics = {}
-  const sub_stat_fn = request_dict.statistics.bind({})
+  const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
     if (sub_stat_fn) {
       const s = await sub_stat_fn(u)
