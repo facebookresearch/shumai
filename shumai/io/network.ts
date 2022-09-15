@@ -107,7 +107,7 @@ export type ServeOpts = {
   ) => Response | Promise<Response> | undefined | Promise<undefined>
 }
 
-/* TODO: specify a bettery type than any as it's a function */
+/* TODO: specify a better type than any as it's a function */
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics: Record<string, { hits: number; seconds: number }> = {}
@@ -117,9 +117,9 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
       const s = await sub_stat_fn(u)
       return { ...s, ...statistics }
     }
-    return { ...statistics }
+    return statistics
   }
-  /* TODO: specify a bettery type than any as its a function */
+  /* TODO: specify a better type than any as its a function */
   const serve_request = async (req: Request, fn: any) => {
     // fix for bug in bun
     const user_id = String(req.headers.get('X-Request-ID')).slice(0) + '='
@@ -173,19 +173,18 @@ export function serve_model(
   req_map: Record<string, (...args: any[]) => any | Promise<any>>
 ) {
   const base_req_map = {
-    forward: async (u: sm.Tensor, input: sm.Tensor) => {
+    /* TODO: Refine type of param `u` */
+    forward: async (u: any, input: sm.Tensor) => {
       const out = await fn(input)
       input.requires_grad = true
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore - overwrite `backward` when calculating grads
       u.backward = async (jacobian?: sm.Tensor) => {
         return [out.backward(jacobian), input.grad]
       }
       return out
     },
-    optimize: async (u: sm.Tensor, t: sm.Tensor) => {
-      const [ts, grad] = (await u.backward(t)) as unknown as [sm.Tensor[], sm.Tensor]
-      let ret = null
+    optimize: async (u: any, t: sm.Tensor) => {
+      const [ts, grad] = <[sm.Tensor[], sm.Tensor]>await u.backward(t)
+      let ret: sm.Tensor = null
       if (grad) {
         ret = grad.detach()
       }
