@@ -1,6 +1,20 @@
 # Distributed Training in Shumai
 
-To try this example, run all three servers (`model.ts`, `model_a.ts`, `model_b.ts`) at once in a separate shell with this command:
+```
+   model a ◄───┐ ┌────► model b
+(parameter m)  │ │   (parameter b)
+               │ │
+               │ │
+               ▼ ▼
+              model
+                ▲
+                │
+                ▼
+               data
+       (feeds training data)
+```
+
+To try this example, run all three model servers (`model.ts`, `model_a.ts`, `model_b.ts`) at once in a separate shell with this command:
 ```
 $ bash examples/distributed/serve.sh
 ```
