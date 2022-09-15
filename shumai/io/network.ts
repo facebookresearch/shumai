@@ -94,6 +94,15 @@ export function connect(forward_url, backward_url) {
 
 export function serve(request_dict, options) {
   const user_data = {}
+  const statistics = {}
+  const sub_stat_fn = request_dict.statistics
+  request_dict.statistics = async (u) => {
+    if (sub_stat_fn) {
+      const s = await sub_stat_fn(u)
+      return JSON.stringify({ ...s, ...statistics })
+    }
+    return JSON.stringify(statistics)
+  }
   const serve_request = async (req: Request, fn) => {
     // fix for bug in bun
     const user_id = String(req.headers.get('X-Request-ID')).slice(0) + '='
@@ -113,10 +122,20 @@ export function serve(request_dict, options) {
     async fetch(req: Request) {
       const segments = req.url.split('/')
       const last_seg = segments[segments.length - 1]
-      if (last_seg in request_dict) {
-        return await serve_request(req, request_dict[last_seg])
-      } else if ('default' in request_dict) {
-        return await serve_request(req, request_dict['default'])
+      const route = last_seg in request_dict ? last_seg : 'default'
+      if (route in request_dict) {
+        const t0 = performance.now()
+        const res = await serve_request(req, request_dict[route])
+        const t1 = performance.now()
+        if (!(route in statistics)) {
+          statistics[route] = {
+            hits: 0,
+            seconds: 0
+          }
+        }
+        statistics[route].hits += 1
+        statistics[route].seconds += (t1 - t0) / 1e3
+        return res
       }
     }
   }
@@ -124,4 +143,33 @@ export function serve(request_dict, options) {
     ...fetch_handler,
     ...options
   })
+}
+
+export function serve_model(fn, grad_update, options, req_map) {
+  const base_req_map = {
+    forward: async (u, input) => {
+      const out = await fn(input)
+      input.requires_grad = true
+      u.backward = async (j) => {
+        return [await out.backward(j), input.grad]
+      }
+      return out
+    },
+    optimize: async (u, t) => {
+      const [ts, grad] = await u.backward(t)
+      let ret = null
+      if (grad) {
+        ret = grad.detach()
+      }
+      await grad_update(ts)
+      return ret
+    }
+  }
+  serve(
+    {
+      ...base_req_map,
+      ...req_map
+    },
+    options
+  )
 }

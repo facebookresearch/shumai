@@ -7,25 +7,18 @@ const model_ref = (t) => {
 }
 
 const url = 'localhost:3000'
+const model = sm.io.connect(`${url}/forward`, `${url}/optimize`)
 
-const t0 = performance.now()
-for (const _ of sm.util.viter(50)) {
-  const inp = sm.randn([128])
-  const t = await sm.io.tfetch(`${url}/forward`, inp)
-  t.requires_grad = true
+for (const _ of sm.util.viter(200)) {
+  const input = sm.randn([128])
+  const out_ref = model_ref(input)
 
-  const loss = sm.loss.mse(t, model_ref(inp))
-  loss.backward()
-  await sm.io.tfetch(`${url}/optimize`, t.grad)
+  const out = await model(input)
+
+  const loss = sm.loss.mse(out_ref, out)
+  await loss.backward()
 }
-const t1 = performance.now()
 
-const m = await sm.io.tfetch(`${url}/m`)
-const b = await sm.io.tfetch(`${url}/b`)
-console.log(
-  'learned:',
-  m.toFloat32(),
-  'x +',
-  b.toFloat32(),
-  `in ${(t1 - t0) / 1e3 / 50} sec per iter`
-)
+const res = await fetch(`${url}/statistics`)
+const stat = await res.json()
+console.log(`${stat.m.weight} x + ${stat.b.weight}`)

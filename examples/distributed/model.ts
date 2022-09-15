@@ -9,24 +9,15 @@ const model = async (t) => {
   return t
 }
 
-sm.io.serve(
+sm.io.serve_model(
+  model,
+  sm.optim.sgd,
+  { port: 3000 },
   {
-    forward: async (u, t) => {
-      const out = await model(t)
-      u.opt = async (jacobian) => {
-        await out.backward(jacobian)
-      }
-      return out
-    },
-    optimize: async (u, j) => {
-      await u.opt(j)
-    },
-    m: async (_) => {
-      return await sm.io.tfetch('localhost:3001/')
-    },
-    b: async (_) => {
-      return await sm.io.tfetch('localhost:3002/')
+    statistics: async (_) => {
+      const m_stat = await (await fetch('localhost:3001/statistics')).json()
+      const b_stat = await (await fetch('localhost:3002/statistics')).json()
+      return { m: m_stat, b: b_stat }
     }
-  },
-  { port: 3000 }
+  }
 )

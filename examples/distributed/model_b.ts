@@ -6,29 +6,13 @@ const model = (t) => {
   return t.add(b)
 }
 
-sm.io.serve(
+sm.io.serve_model(
+  model,
+  sm.optim.sgd,
+  { port: 3002 },
   {
-    forward: async (u, t) => {
-      console.log(`fwd b ${b.toFloat32()}`)
-      const Y = model(t)
-      await new Promise((r) => setTimeout(r, 20))
-      t.requires_grad = true
-      u.backward = async (j) => {
-        await new Promise((r) => setTimeout(r, 20))
-        return [Y.backward(j), t.grad]
-      }
-      return Y
-    },
-    optimize: async (u, t) => {
-      const [ts, grad] = await u.backward(t)
-      const ret = grad.detach()
-      sm.optim.sgd(ts, 1e-2)
-      console.log(`opt b ${b.toFloat32()}`)
-      return ret
-    },
-    default: (_) => {
-      return b
+    statistics: (_) => {
+      return { weight: b.toFloat32() }
     }
-  },
-  { port: 3002 }
+  }
 )
