@@ -44,7 +44,10 @@ commands:
       - run:
           name: "Build Flashlight"
           command: |
+<<<<<<< HEAD
             cd /tmp
+=======
+>>>>>>> 2fc76ae (Build Flashlight bindings inline in CI)
             git clone https://github.com/flashlight/flashlight
             cd flashlight
             mkdir -p build
@@ -112,7 +115,10 @@ jobs:
             - run:
                 name: "Install ArrayFire CPU backend with OpenBLAS runtime"
                 command: sudo apt install arrayfire-cpu3-openblas arrayfire-cpu-dev
+<<<<<<< HEAD
             # For now, since we're building bindings from source, don't pull anything in.
+=======
+>>>>>>> 2fc76ae (Build Flashlight bindings inline in CI)
             # - run:
             #     name: "Update package.json and ffi interface to pull in Linux CPU libs"
             #     command: |
@@ -155,9 +161,9 @@ jobs:
             sudo rm /usr/local/cuda # only points to ArrayFire CUDA 11.6 runtime libs
             sudo ln -s /usr/local/cuda-11.4 /usr/local/cuda
             echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> $BASH_ENV
+      - checkout
       - install_flashlight:
           arrayfire_backend: "CUDA"
-      - checkout
       - build_flashlight_bindings
       - node/install:
           node-version: "16.9.0"
