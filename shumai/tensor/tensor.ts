@@ -152,6 +152,14 @@ export class Tensor {
 
   // obj is any of {number, Float32Array} (private construction has other options)
   constructor(obj) {
+    if (obj.constructor === Tensor) {
+      this.underlying = obj.underlying
+      this.deps = obj.deps
+      this.requires_grad = obj.requires_grad
+      this.grad = obj.grad
+      this.op = obj.op
+      return
+    }
     if (obj._ptr) {
       this._injest_ptr(obj._ptr)
       this.deps = obj._deps
@@ -227,14 +235,18 @@ export class Tensor {
   }
 
   copy() {
+    return new Tensor(this)
+  }
+
+  deepCopy() {
     return wrapFLTensor(fl.copy.native, this.ptr)
   }
 
   detach() {
-    const tmp_req_grad = this.requires_grad
-    this.requires_grad = false
-    const t = wrapFLTensor(fl.copy.native, this.ptr)
-    this.requires_grad = tmp_req_grad
+    const t = this.copy()
+    t.requires_grad = false
+    t.grad = null
+    t.deps = []
     return t
   }
 

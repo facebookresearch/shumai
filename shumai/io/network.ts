@@ -110,9 +110,10 @@ export type ServeOpts = {
 /* TODO: specify a better type than any as it's a function */
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
-  const statistics: Record<string, { hits: number; seconds: number }> = {}
-  const sub_stat_fn = request_dict.statistics.bind({})
-  request_dict.statistics = async (u: sm.Tensor) => {
+  const statistics = {}
+  
+  const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
+  request_dict.statistics = async (u) => {
     if (sub_stat_fn) {
       const s = await sub_stat_fn(u)
       return { ...s, ...statistics }
