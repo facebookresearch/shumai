@@ -99,7 +99,7 @@ export function serve(request_dict, options) {
   request_dict.statistics = async (u) => {
     if (sub_stat_fn) {
       const s = await sub_stat_fn(u)
-      return {...s, ...statistics }
+      return { ...s, ...statistics }
     }
     return statistics
   }
@@ -117,7 +117,7 @@ export function serve(request_dict, options) {
       return new Response(encode(ret))
     } else if (ret && ret.constructor === Object) {
       const headers = new Headers([['Content-Type', 'application/json']])
-      return new Response(JSON.stringify(ret), {headers:headers})
+      return new Response(JSON.stringify(ret), { headers: headers })
     }
     return new Response(ret)
   }
