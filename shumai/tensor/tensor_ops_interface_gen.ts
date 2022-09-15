@@ -1,5 +1,6 @@
+/* GENERATED CODE (gen_binding.py) */
 import type { Tensor } from './tensor'
-/** @private GENERATED CODE (gen_binding.py) */
+/** @private */
 interface TensorOpsInterface {
   reshape(shape: BigInt64Array | number[]): Tensor
   transpose(axes: BigInt64Array | number[]): Tensor

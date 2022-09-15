@@ -8,6 +8,7 @@ import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 fl.init.native()
 export const gradient_functions: { [key: string]: CallableFunction } = {}
 
+/** @private */
 export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Tensor {
   const ptr_args = args.map((x) => {
     if (x instanceof Tensor) {
@@ -135,8 +136,8 @@ export class Tensor {
   op = 'constant'
 
   grad_callback_async?: (grad?: any) => Promise<void>
-  opt?: (j?: Tensor) => Promise<void>
 
+  /** @private */
   _injest_ptr(_ptr) {
     this.underlying = toArrayBuffer(
       _ptr,

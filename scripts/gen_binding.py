@@ -446,8 +446,9 @@ import {{ Tensor }} from "./tensor"
 if sys.argv[1] in ["js_ops_interface", "js_ops_types"]:
     full_js_types = "\n".join(full_js_types)
     full_js_types = f"""\
+/* GENERATED CODE (gen_binding.py) */
 import type {{ Tensor }} from "./tensor";
-/** @private GENERATED CODE (gen_binding.py) */
+/** @private */
 interface TensorOpsInterface {{
 {full_js_types}
 }}
