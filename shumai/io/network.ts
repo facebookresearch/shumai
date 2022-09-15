@@ -95,13 +95,13 @@ export function connect(forward_url, backward_url) {
 export function serve(request_dict, options) {
   const user_data = {}
   const statistics = {}
-  const sub_stat_fn = request_dict.statistics
+  const sub_stat_fn = request_dict.statistics.bind({})
   request_dict.statistics = async (u) => {
     if (sub_stat_fn) {
       const s = await sub_stat_fn(u)
-      return JSON.stringify({ ...s, ...statistics })
+      return {...s, ...statistics }
     }
-    return JSON.stringify(statistics)
+    return statistics
   }
   const serve_request = async (req: Request, fn) => {
     // fix for bug in bun
@@ -115,6 +115,9 @@ export function serve(request_dict, options) {
       : fn(user_data[user_id]))
     if (ret && ret.constructor === sm.Tensor) {
       return new Response(encode(ret))
+    } else if (ret && ret.constructor === Object) {
+      const headers = new Headers([['Content-Type', 'application/json']])
+      return new Response(JSON.stringify(ret), {headers:headers})
     }
     return new Response(ret)
   }
