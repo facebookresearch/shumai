@@ -1,5 +1,6 @@
 import textwrap
 import sys
+import pathlib
 
 if len(sys.argv) < 2:
     print("usage: python gen_binding.py (js|js_methods|c|ffi|docs)")
@@ -17,6 +18,17 @@ coercion_rules = {
     "uint32_t": "({x} <= 0 ? 0 : {x} >= 0xffffffff ? 0xffffffff : +{x} || 0)",
     "int64_t": "({x}.constructor === BigInt ? {x} : BigInt({x} || 0))",
 }
+
+comments = {}
+with open(pathlib.Path(__file__).parent.resolve() / 'ops.doc') as f:
+    def process_comment(comment):
+        lines = comment.split('\n')
+        op_name = lines[0][:-1]
+        c = '\n'.join('*   ' + x for x in lines[1:]).strip()
+        c = '/**\n' + c + '\n*/\n'
+        comments[op_name] = c
+    for comment in f.read().split('---'):
+        process_comment(comment.strip())
 
 op_list = [
     ("rand", ["Shape"], "Tensor"),
@@ -355,7 +367,7 @@ for op, args, ret in op_list:
     js_tensor_call = '_Tensor' if methods_only else 'Tensor'
     js_tensor_construct = f"const t = new {js_tensor_call}({{_ptr: _ptr, _deps: deps}})";
     js_requires_grad = f"t.requires_grad = requires_grad"
-    js = f"""
+    js = f"""\
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
   {js_impl_full}
   {js_ptr_result}
@@ -366,8 +378,11 @@ for op, args, ret in op_list:
   t.op = "{op}";
   return t;
 }}{',' if methods_only else ''}"""
+    if op in comments:
+        js = comments[op] + js
 
     js = textwrap.indent(js, "    ") if methods_only else js
+    js += '\n'
 
     c_impl_str = textwrap.indent("\n".join(c_impl), "  ")
     c = f"""
@@ -375,7 +390,8 @@ for op, args, ret in op_list:
 {c_impl_str}
 }}"""
     full_js.append(js)
-    full_js_types.append(f"  {op}: ({', '.join(ts_sig[1:])}) => {to_ts[ret]};")
+    if supports_method:
+        full_js_types.append(f"  {op}({', '.join(ts_sig[1:])}) : {to_ts[ret]};")
     full_ffi.append(ffi)
     full_c.append(c)
     doc = f"{op} | `{op}({', '.join(js_sig)}) : {to_ts[ret]}` |"
@@ -419,10 +435,11 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         # js
         full_js = f"""\
 /* GENERATED CODE (gen_binding.py) */
-import {{ FFIType }} from "bun:ffi";
-import {{ arrayArg }} from "../ffi/ffi_bind_utils";
-import {{ fl }} from "../ffi/ffi_flashlight";
-import {{ Tensor }} from "./tensor";
+import {{ FFIType }} from "bun:ffi"
+import {{ arrayArg }} from "../ffi/ffi_bind_utils"
+import {{ fl }} from "../ffi/ffi_flashlight"
+import {{ Tensor }} from "./tensor"
+
 {full_js}"""
     print(full_js)
 
@@ -430,7 +447,7 @@ if sys.argv[1] in ["js_ops_interface", "js_ops_types"]:
     full_js_types = "\n".join(full_js_types)
     full_js_types = f"""\
 import type {{ Tensor }} from "./tensor";
-/* GENERATED CODE (gen_binding.py) */
+/** @private GENERATED CODE (gen_binding.py) */
 interface TensorOpsInterface {{
 {full_js_types}
 }}

@@ -4,6 +4,23 @@ import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
 import { Tensor } from './tensor'
 
+/**
+ *
+ *   Generate a uniform distribution.
+ *
+ *   @remarks
+ *   For a normal (Gaussian) distribution, see {@link randn}.
+ *
+ *   @example
+ *   ```javascript
+ *   // 128x8 uniformly random tensor
+ *   const t = sm.rand([128, 8])
+ *   ```
+ *
+ *   @param shape - The shape of the output {@link Tensor}
+ *
+ *   @returns A new {@link Tensor} of uniformly random values
+ */
 export function rand(shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._rand(shape_ptr, shape_len)
@@ -15,6 +32,23 @@ export function rand(shape: BigInt64Array | number[]) {
   return t
 }
 
+/**
+ *
+ *   Generate a normal (Gaussian) distribution.
+ *
+ *   @remarks
+ *   For a uniform distribution, see {@link rand}.
+ *
+ *   @example
+ *   ```javascript
+ *   // 128x8 gaussian tensor
+ *   const t = sm.randn([128, 8])
+ *   ```
+ *
+ *   @param shape - The shape of the output {@link Tensor}
+ *
+ *   @returns A new {@link Tensor} of random values sampled from a Gaussian distribution
+ */
 export function randn(shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._randn(shape_ptr, shape_len)
@@ -26,6 +60,21 @@ export function randn(shape: BigInt64Array | number[]) {
   return t
 }
 
+/**
+ *
+ *   Create a {@link Tensor} filled with a single value.
+ *
+ *   @example
+ *   ```javascript
+ *   // 128x8 tensor of all 1s
+ *   const t = sm.full([128, 8], 1)
+ *   ```
+ *
+ *   @param shape - The shape of the output {@link Tensor}
+ *   @param val - The value used to fill the output
+ *
+ *   @returns A new {@link Tensor} of a single user specified value.
+ */
 export function full(shape: BigInt64Array | number[], val: number) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._full(shape_ptr, shape_len, Math.fround(val))
@@ -37,6 +86,23 @@ export function full(shape: BigInt64Array | number[], val: number) {
   return t
 }
 
+/**
+ *
+ *   Create a square N-dimensional identity {@link Tensor}.
+ *
+ *   @remarks
+ *   This is similar to the `eye` API of other tensor frameworks.
+ *
+ *   @example
+ *   ```javascript
+ *   // 128x128 identity tensor
+ *   const t = sm.identity(128)
+ *   ```
+ *
+ *   @param dim - The dimension of the output {@link Tensor}
+ *
+ *   @returns A new identity {@link Tensor}.
+ */
 export function identity(dim: number) {
   const _ptr = fl._identity(dim.constructor === BigInt ? dim : BigInt(dim || 0))
   const requires_grad = false
@@ -47,6 +113,22 @@ export function identity(dim: number) {
   return t
 }
 
+/**
+ *
+ *   Create a {@link Tensor} of evenly-spaced values in a given interval.
+ *
+ *   @example
+ *   ```javascript
+ *   // create a tensor of even values starting with 0: `[0,2,4,8]`
+ *   const t = sm.arange(0, 10, 2)
+ *   ```
+ *
+ *   @param start - The start of the interval (inclusive)
+ *   @param end - The end of the interval (exclusive)
+ *   @param step - An optional argument to stride the interval
+ *
+ *   @returns A new 1D {@link Tensor} containing the user defined interval.
+ */
 export function arange(start: number, end: number, step = 1) {
   const _ptr = fl._arange(Math.fround(start), Math.fround(end), Math.fround(step))
   const requires_grad = false
