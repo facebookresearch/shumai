@@ -539,7 +539,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    amin(axes: number | number[] = [], keep_dims = false) {
+    amin(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._amin(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -550,7 +550,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    amax(axes: number | number[] = [], keep_dims = false) {
+    amax(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._amax(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -593,7 +593,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    sum(axes: number | number[] = [], keep_dims = false) {
+    sum(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._sum(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -619,7 +619,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    mean(axes: number | number[] = [], keep_dims = false) {
+    mean(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._mean(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -630,7 +630,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    median(axes: number | number[] = [], keep_dims = false) {
+    median(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._median(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -641,7 +641,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    _var(axes: number | number[] = [], bias = false, keep_dims = false) {
+    _var(axes: BigInt64Array | number[] = [], bias = false, keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._var(this.ptr, axes_ptr, axes_len, !!bias, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -652,7 +652,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    std(axes: number | number[] = [], keep_dims = false) {
+    std(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._std(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -663,7 +663,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    norm(axes: number | number[] = [], p = 2, keep_dims = false) {
+    norm(axes: BigInt64Array | number[] = [], p = 2, keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._norm(
         this.ptr,
@@ -682,7 +682,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    countNonzero(axes: number | number[] = [], keep_dims = false) {
+    countNonzero(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._countNonzero(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -693,7 +693,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    any(axes: number | number[] = [], keep_dims = false) {
+    any(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._any(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad
@@ -704,7 +704,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    all(axes: number | number[] = [], keep_dims = false) {
+    all(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const _ptr = fl._all(this.ptr, axes_ptr, axes_len, !!keep_dims)
       const requires_grad = this.requires_grad

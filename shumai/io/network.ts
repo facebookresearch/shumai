@@ -111,7 +111,7 @@ export type ServeOpts = {
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics = {}
-  
+
   const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
     if (sub_stat_fn) {

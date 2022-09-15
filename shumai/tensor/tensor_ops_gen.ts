@@ -602,7 +602,7 @@ export function matmul(tensor: Tensor, other: Tensor) {
   return t
 }
 
-export function amin(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._amin(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad
@@ -613,7 +613,7 @@ export function amin(tensor: Tensor, axes: number | number[] = [], keep_dims = f
   return t
 }
 
-export function amax(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function amax(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._amax(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad
@@ -656,7 +656,7 @@ export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
   return t
 }
 
-export function sum(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function sum(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._sum(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad
@@ -679,7 +679,7 @@ export function cumsum(tensor: Tensor, axis: number) {
   return t
 }
 
-export function mean(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._mean(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad
@@ -690,7 +690,7 @@ export function mean(tensor: Tensor, axes: number | number[] = [], keep_dims = f
   return t
 }
 
-export function median(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function median(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._median(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad
@@ -703,7 +703,7 @@ export function median(tensor: Tensor, axes: number | number[] = [], keep_dims =
 
 export function _var(
   tensor: Tensor,
-  axes: number | number[] = [],
+  axes: BigInt64Array | number[] = [],
   bias = false,
   keep_dims = false
 ) {
@@ -717,7 +717,7 @@ export function _var(
   return t
 }
 
-export function std(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function std(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._std(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad
@@ -728,7 +728,12 @@ export function std(tensor: Tensor, axes: number | number[] = [], keep_dims = fa
   return t
 }
 
-export function norm(tensor: Tensor, axes: number | number[] = [], p = 2, keep_dims = false) {
+export function norm(
+  tensor: Tensor,
+  axes: BigInt64Array | number[] = [],
+  p = 2,
+  keep_dims = false
+) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._norm(
     tensor.ptr,
@@ -747,7 +752,11 @@ export function norm(tensor: Tensor, axes: number | number[] = [], p = 2, keep_d
   return t
 }
 
-export function countNonzero(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function countNonzero(
+  tensor: Tensor,
+  axes: BigInt64Array | number[] = [],
+  keep_dims = false
+) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._countNonzero(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad
@@ -758,7 +767,7 @@ export function countNonzero(tensor: Tensor, axes: number | number[] = [], keep_
   return t
 }
 
-export function any(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._any(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad
@@ -769,7 +778,7 @@ export function any(tensor: Tensor, axes: number | number[] = [], keep_dims = fa
   return t
 }
 
-export function all(tensor: Tensor, axes: number | number[] = [], keep_dims = false) {
+export function all(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._all(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   const requires_grad = tensor.requires_grad

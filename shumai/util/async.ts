@@ -4,6 +4,6 @@ export function sleep(ms: number) {
   })
 }
 
-export function all(...args: Promise[]) {
+export function all(...args: Promise<any>[]) {
   return Promise.all(args)
 }

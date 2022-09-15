@@ -45,7 +45,7 @@ describe('index_assign', () => {
     const s = t.index_assign(o, [':', 2])
     for (let i = 0; i < 128; ++i) {
       const check = s.toFloat32Array()[2 * 128 + i]
-      expect(isClose(ref, check)).toBe(true)
+      expect(isClose(ref[i], check)).toBe(true)
     }
   })
 })

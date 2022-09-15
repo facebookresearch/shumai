@@ -1,6 +1,6 @@
 import { ptr, FFIType } from 'bun:ffi'
 
-function arrayArg(arg: number | number[], type: FFIType) {
+function arrayArg(arg: number | number[] | BigInt64Array, type: FFIType) {
   if (typeof arg === 'number') arg = [arg]
 
   if (arg.length == 0) {

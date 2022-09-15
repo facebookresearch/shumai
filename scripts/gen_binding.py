@@ -201,7 +201,7 @@ to_ts = {
     "uint64_t": "number",
     "Tensor": "Tensor",
     "Shape": "BigInt64Array | number[]",
-    "Axes": "number | number[]",
+    "Axes": "BigInt64Array | number[]",
 }
 
 
