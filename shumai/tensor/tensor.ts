@@ -319,7 +319,7 @@ export class Tensor {
 
 // Interface extension trick to extend the type definition of Tensor
 // to include generated ops added to prototype after def
-export interface Tensor extends TensorOpsInterface { }
+export interface Tensor extends TensorOpsInterface { } // eslint-disable-line
 
 // Initialize other generated methods on the Tensor obj prototype
 for (const [method, closure] of Object.entries(gen_tensor_op_shim(Tensor))) {

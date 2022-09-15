@@ -303,7 +303,7 @@ for op, args, ret in op_list:
         js_arg_type = (
             to_ts[t]
             if t != "Tensor"
-            else ("TensorInterface" if methods_only else "Tensor")
+            else "Tensor"
         )
         if d:
             js_sig.append(n + ": " + js_arg_type + " = " + d)
@@ -409,7 +409,6 @@ if sys.argv[1] in ["js", "js_methods"]:
 import {{ FFIType }} from 'bun:ffi'
 import {{ arrayArg }} from '../ffi/ffi_bind_utils'
 import {{ fl }} from '../ffi/ffi_flashlight'
-import {{ TensorInterface }} from './tensor_interface'
 import type {{ Tensor }} from './tensor'
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {{
   return {{{full_js}
