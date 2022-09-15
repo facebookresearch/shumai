@@ -5,18 +5,18 @@ X.requires_grad = true
 
 sm.io.serve(
   {
-    forward: (u, t) => {
-      const Y = t.matmul(X)
+    forward: async (u: sm.Tensor, input: sm.Tensor) => {
+      const Y = input.matmul(X)
       // different optimizer per user
-      u.opt = (j) => {
-        sm.optim.sgd(Y.backward(j), 1e-2)
+      u.opt = async (j?: sm.Tensor) => {
+        sm.optim.sgd(await Y.backward(j), 1e-2)
       }
       return Y
     },
-    optimize: (u, t) => {
+    optimize: (u, t: sm.Tensor) => {
       u.opt(t)
     },
-    default: (_) => {
+    default: () => {
       return X
     }
   },

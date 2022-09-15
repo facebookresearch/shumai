@@ -20,9 +20,15 @@ export function* range(
 }
 
 const chars = ['⡆', '⠇', '⠋', '⠙', '⠸', '⢰', '⣠', '⣄']
-export function* viter(arraylike: util.ArrayLike) {
-  const is_num = arraylike.constructor === Number
-  const len = is_num ? arraylike : arraylike.length
+export function* viter(arrayLike: util.ArrayLike | number) {
+  let len: number,
+    is_num = false
+  if (typeof arrayLike === 'number') {
+    len = arrayLike
+    is_num = true
+  } else {
+    len = arrayLike.length
+  }
   if (!len) {
     throw `Cannot yet viter over unbounded iterables. Please file an issue!`
   }
@@ -33,7 +39,7 @@ export function* viter(arraylike: util.ArrayLike) {
         .toString()
         .padStart(2)}% (${i + 1}/${len})\u001b[A`
     )
-    yield is_num ? i : arraylike[i]
+    yield is_num ? i : arrayLike[i]
   }
   console.log(`\u001b[2K100% ${len}/${len}\u001b[A\n`)
 }
@@ -41,12 +47,10 @@ export function* viter(arraylike: util.ArrayLike) {
 export function shuffle<T>(array: T[]): T[] {
   let curr_idx: number = array.length
   let rand_idx: number
-
   while (curr_idx != 0) {
     rand_idx = Math.floor(Math.random() * curr_idx)
     curr_idx--
     ;[array[curr_idx], array[rand_idx]] = [array[rand_idx], array[curr_idx]]
   }
-
   return array
 }

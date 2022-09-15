@@ -1,5 +1,7 @@
 import * as sm from '../tensor'
 import * as crypto from 'crypto'
+import type { Errorlike, Server } from 'bun'
+import { OptimizerFn } from '../optim'
 const _unique_id = crypto
   .createHash('sha256')
   .update('' + process.pid + performance.now())
@@ -41,7 +43,7 @@ export async function tfetch(
   url: string,
   tensor?: sm.Tensor,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: { id?: string; grad_fn?: (grad: any) => Promise<void> }
+  options?: { id?: string; grad_fn?: (grad?: any) => Promise<void> }
 ): Promise<sm.Tensor> {
   let id = _unique_id
   if (options && options.id) {
@@ -78,7 +80,7 @@ export async function tfetch(
   return null
 }
 
-export function connect(forward_url, backward_url) {
+export function connect(forward_url: string, backward_url: string) {
   const backward = async (grad) => {
     // possibly need to continue backward pass
     const jacobian = await tfetch(backward_url, grad.grad_in)
@@ -86,15 +88,30 @@ export function connect(forward_url, backward_url) {
       await grad.in.backward(jacobian)
     }
   }
-  async function forward(t) {
-    return await tfetch(forward_url, t, { grad_fn: backward })
+  async function forward(t: sm.Tensor) {
+    return tfetch(forward_url, t, { grad_fn: backward })
   }
   return forward
 }
 
-export function serve(request_dict, options) {
+/* copy Bun's Serve Type, less fetch as we supply that logic */
+export type ServeOpts = {
+  port?: string | number
+  hostname?: string
+  baseURI?: string
+  maxRequestBodySize?: number
+  development?: boolean
+  error?: (
+    this: Server,
+    request: Errorlike
+  ) => Response | Promise<Response> | undefined | Promise<undefined>
+}
+
+/* TODO: specify a better type than any as it's a function */
+export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics = {}
+  
   const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
     if (sub_stat_fn) {
@@ -103,7 +120,8 @@ export function serve(request_dict, options) {
     }
     return statistics
   }
-  const serve_request = async (req: Request, fn) => {
+  /* TODO: specify a better type than any as its a function */
+  const serve_request = async (req: Request, fn: any) => {
     // fix for bug in bun
     const user_id = String(req.headers.get('X-Request-ID')).slice(0) + '='
     if (user_data[user_id] === undefined) {
@@ -148,19 +166,26 @@ export function serve(request_dict, options) {
   })
 }
 
-export function serve_model(fn, grad_update, options, req_map) {
+export function serve_model(
+  fn: (t: sm.Tensor) => sm.Tensor | Promise<sm.Tensor>,
+  grad_update: OptimizerFn,
+  options: ServeOpts,
+  // TODO: pending further type refinement (requires a fn; same comments above)
+  req_map: Record<string, (...args: any[]) => any | Promise<any>>
+) {
   const base_req_map = {
-    forward: async (u, input) => {
+    /* TODO: Refine type of param `u` */
+    forward: async (u: any, input: sm.Tensor) => {
       const out = await fn(input)
       input.requires_grad = true
-      u.backward = async (j) => {
-        return [await out.backward(j), input.grad]
+      u.backward = async (jacobian?: sm.Tensor) => {
+        return [out.backward(jacobian), input.grad]
       }
       return out
     },
-    optimize: async (u, t) => {
-      const [ts, grad] = await u.backward(t)
-      let ret = null
+    optimize: async (u: any, t: sm.Tensor) => {
+      const [ts, grad] = <[sm.Tensor[], sm.Tensor]>await u.backward(t)
+      let ret: sm.Tensor = null
       if (grad) {
         ret = grad.detach()
       }

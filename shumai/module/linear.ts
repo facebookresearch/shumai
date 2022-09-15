@@ -1,11 +1,12 @@
-import * as base from '../tensor/tensor'
+import type { Tensor } from '../tensor'
 import * as ops from '../tensor/tensor_ops_gen'
-const sm = { ...base, ...ops }
 import { Module } from './module'
 
+const sm = { ...ops }
+
 export class Linear extends Module {
-  weight: sm.Tensor
-  bias: sm.Tensor
+  weight: Tensor
+  bias: Tensor
   constructor(inp_dim: number, out_dim: number) {
     super()
     this.weight = sm.randn([inp_dim, out_dim])

@@ -38,11 +38,11 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
     jacobian = full([], 1)
   }
   const sorted_traversal = [base_t]
-  let frontier = [base_t]
-  const incoming_count = {}
+  let frontier: Tensor[] = [base_t]
+  const incoming_count: Record<number, number> = {}
   incoming_count[base_t.ptr] = 0
   while (frontier.length) {
-    const new_frontier = []
+    const new_frontier: Tensor[] = []
     for (const t of frontier) {
       for (const dep of t.deps) {
         if (!dep.requires_grad) {
@@ -61,7 +61,7 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
 
   frontier = [base_t]
   while (frontier.length) {
-    const new_frontier = []
+    const new_frontier: Tensor[] = []
     for (const t of frontier) {
       for (const dep of t.deps) {
         if (--incoming_count[dep.ptr] === 0) {
@@ -73,8 +73,8 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
     frontier = new_frontier
   }
 
-  const all_grads_dict = {}
-  const grad_callbacks_async = []
+  const all_grads_dict: Record<number, Tensor> = {}
+  const grad_callbacks_async: Array<(grad?: any) => Promise<void>> = []
   base_t.grad = jacobian
   for (const t of sorted_traversal) {
     if (t.grad_callback_async) {
@@ -112,7 +112,7 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
       }
     }
   }
-  const all_grads = []
+  const all_grads: Tensor[] = []
   for (const key in all_grads_dict) {
     const t = all_grads_dict[key]
     all_grads.push(t)
