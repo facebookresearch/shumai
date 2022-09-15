@@ -79,4 +79,13 @@ const t = sm.arange(0, 10, 2)
 @param step - An optional argument to stride the interval
 
 @returns A new 1D {@link Tensor} containing the user defined interval.
+---
+reshape:
 
+Reshape a {@link Tensor} without modifying the underlying data.
+
+@remarks
+The resultant shape must contain the same number of elements as the base Tensor.
+
+%%static%%@param tensor - {@link Tensor} to reshape
+@param shape - The shape of the output {@link Tensor}

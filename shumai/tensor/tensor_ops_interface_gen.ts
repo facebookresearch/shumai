@@ -2,6 +2,15 @@
 import type { Tensor } from './tensor'
 /** @private */
 interface TensorOpsInterface {
+  /**
+   *
+   *   Reshape a {@link Tensor} without modifying the underlying data.
+   *
+   *   @remarks
+   *   The resultant shape must contain the same number of elements as the base Tensor.
+   *
+   *   @param shape - The shape of the output {@link Tensor}
+   */
   reshape(shape: BigInt64Array | number[]): Tensor
   transpose(axes: BigInt64Array | number[]): Tensor
   tile(shape: BigInt64Array | number[]): Tensor

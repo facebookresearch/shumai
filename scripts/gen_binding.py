@@ -3,7 +3,7 @@ import sys
 import pathlib
 
 if len(sys.argv) < 2:
-    print("usage: python gen_binding.py (js|js_methods|c|ffi|docs)")
+    print("usage: python gen_binding.py (js|js_methods|c|ffi)")
     exit(1)
 
 methods_only = False
@@ -21,12 +21,26 @@ coercion_rules = {
 
 comments = {}
 with open(pathlib.Path(__file__).parent.resolve() / 'ops.doc') as f:
+    def js(lines, prefix=0):
+        p = ' ' * prefix
+        c = '\n'.join((p + '*   ' + x) for x in lines).strip()
+        c = p + '/**\n' + p + c + '\n'+ p +'*/\n'
+        return c.rstrip()
+
     def process_comment(comment):
         lines = comment.split('\n')
         op_name = lines[0][:-1]
-        c = '\n'.join('*   ' + x for x in lines[1:]).strip()
-        c = '/**\n' + c + '\n*/\n'
-        comments[op_name] = c
+        base_comment = lines[1:]
+        function_comment = []
+        method_comment = []
+        for l in base_comment:
+            if l.startswith('%%static%%'):
+                function_comment.append(l[len('%%static%%'):])
+            else:
+                function_comment.append(l)
+                method_comment.append(l)
+
+        comments[op_name] = (js(function_comment), js(method_comment, 2))
     for comment in f.read().split('---'):
         process_comment(comment.strip())
 
@@ -228,7 +242,6 @@ full_js_types = []
 full_js_unary = []
 full_ffi = []
 full_c = []
-full_docs = []
 
 for op, args, ret in op_list:
     c_sig = []
@@ -378,8 +391,8 @@ for op, args, ret in op_list:
   t.op = "{op}";
   return t;
 }}{',' if methods_only else ''}"""
-    if op in comments:
-        js = comments[op] + js
+    if op in comments and sys.argv[1] == "js":
+        js = comments[op][0] + js
 
     js = textwrap.indent(js, "    ") if methods_only else js
     js += '\n'
@@ -391,18 +404,12 @@ for op, args, ret in op_list:
 }}"""
     full_js.append(js)
     if supports_method:
+        if op in comments:
+            full_js_types.append(comments[op][1])
         full_js_types.append(f"  {op}({', '.join(ts_sig[1:])}) : {to_ts[ret]};")
     full_ffi.append(ffi)
     full_c.append(c)
-    doc = f"{op} | `{op}({', '.join(js_sig)}) : {to_ts[ret]}` |"
-    if supports_method:
-        doc += f"`t.{op}({', '.join(js_sig[1:])}) : {to_ts[ret]}`"
-    full_docs.append(doc)
 
-if sys.argv[1] == "docs":
-    print("Operation | Function | Tensor Method (`t : Tensor`)")
-    print("---|---|---")
-    print("\n".join(full_docs))
 if sys.argv[1] == "c":
     print("\n".join(full_c))
 

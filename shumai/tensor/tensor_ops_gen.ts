@@ -20,8 +20,7 @@ import { Tensor } from './tensor'
  *   @param shape - The shape of the output {@link Tensor}
  *
  *   @returns A new {@link Tensor} of uniformly random values
- */
-export function rand(shape: BigInt64Array | number[]) {
+ */ export function rand(shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._rand(shape_ptr, shape_len)
   const requires_grad = false
@@ -48,8 +47,7 @@ export function rand(shape: BigInt64Array | number[]) {
  *   @param shape - The shape of the output {@link Tensor}
  *
  *   @returns A new {@link Tensor} of random values sampled from a Gaussian distribution
- */
-export function randn(shape: BigInt64Array | number[]) {
+ */ export function randn(shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._randn(shape_ptr, shape_len)
   const requires_grad = false
@@ -74,8 +72,7 @@ export function randn(shape: BigInt64Array | number[]) {
  *   @param val - The value used to fill the output
  *
  *   @returns A new {@link Tensor} of a single user specified value.
- */
-export function full(shape: BigInt64Array | number[], val: number) {
+ */ export function full(shape: BigInt64Array | number[], val: number) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._full(shape_ptr, shape_len, Math.fround(val))
   const requires_grad = false
@@ -102,8 +99,7 @@ export function full(shape: BigInt64Array | number[], val: number) {
  *   @param dim - The dimension of the output {@link Tensor}
  *
  *   @returns A new identity {@link Tensor}.
- */
-export function identity(dim: number) {
+ */ export function identity(dim: number) {
   const _ptr = fl._identity(dim.constructor === BigInt ? dim : BigInt(dim || 0))
   const requires_grad = false
   const deps = requires_grad ? [dim.constructor === BigInt ? dim : BigInt(dim || 0)] : []
@@ -128,8 +124,7 @@ export function identity(dim: number) {
  *   @param step - An optional argument to stride the interval
  *
  *   @returns A new 1D {@link Tensor} containing the user defined interval.
- */
-export function arange(start: number, end: number, step = 1) {
+ */ export function arange(start: number, end: number, step = 1) {
   const _ptr = fl._arange(Math.fround(start), Math.fround(end), Math.fround(step))
   const requires_grad = false
   const deps = requires_grad ? [Math.fround(start), Math.fround(end), Math.fround(step)] : []
@@ -151,7 +146,16 @@ export function iota(dims: BigInt64Array | number[], tileDims: BigInt64Array | n
   return t
 }
 
-export function reshape(tensor: Tensor, shape: BigInt64Array | number[]) {
+/**
+ *
+ *   Reshape a {@link Tensor} without modifying the underlying data.
+ *
+ *   @remarks
+ *   The resultant shape must contain the same number of elements as the base Tensor.
+ *
+ *   @param tensor - {@link Tensor} to reshape
+ *   @param shape - The shape of the output {@link Tensor}
+ */ export function reshape(tensor: Tensor, shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._reshape(tensor.ptr, shape_ptr, shape_len)
   const requires_grad = tensor.requires_grad
