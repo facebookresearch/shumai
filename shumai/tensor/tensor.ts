@@ -1,7 +1,6 @@
 import { ptr, toArrayBuffer, FFIType } from 'bun:ffi'
 import { fl } from '../ffi/ffi_flashlight'
 import { arrayArg } from '../ffi/ffi_bind_utils'
-import { TensorInterface } from './tensor_interface'
 import { TensorOpsInterface } from './tensor_ops_interface_gen'
 import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
@@ -134,6 +133,9 @@ export class Tensor {
   requires_grad = false
   grad: Tensor = null
   op = 'constant'
+
+  grad_callback_async?: (grad?: any) => Promise<void>
+  opt?: (j?: Tensor) => Promise<void>
 
   _injest_ptr(_ptr) {
     this.underlying = toArrayBuffer(
@@ -317,7 +319,7 @@ export class Tensor {
 
 // Interface extension trick to extend the type definition of Tensor
 // to include generated ops added to prototype after def
-export interface Tensor extends TensorInterface, TensorOpsInterface {}
+export interface Tensor extends TensorOpsInterface { }
 
 // Initialize other generated methods on the Tensor obj prototype
 for (const [method, closure] of Object.entries(gen_tensor_op_shim(Tensor))) {

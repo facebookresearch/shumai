@@ -2,7 +2,6 @@
 import { FFIType } from 'bun:ffi'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
-import { TensorInterface } from './tensor_interface'
 import type { Tensor } from './tensor'
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {
   return {
@@ -221,7 +220,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    clip(low: TensorInterface, high: TensorInterface) {
+    clip(low: Tensor, high: Tensor) {
       const _ptr = fl._clip(this.ptr, low.ptr, high.ptr)
       const requires_grad = this.requires_grad || low.requires_grad || high.requires_grad
       const deps = requires_grad ? [this, low, high] : []
@@ -297,7 +296,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    where(x: TensorInterface, y: TensorInterface) {
+    where(x: Tensor, y: Tensor) {
       const _ptr = fl._where(this.ptr, x.ptr, y.ptr)
       const requires_grad = this.requires_grad || x.requires_grad || y.requires_grad
       const deps = requires_grad ? [this, x, y] : []
@@ -319,7 +318,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    add(tensor: TensorInterface) {
+    add(tensor: Tensor) {
       const _ptr = fl._add(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -329,7 +328,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    sub(tensor: TensorInterface) {
+    sub(tensor: Tensor) {
       const _ptr = fl._sub(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -339,7 +338,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    mul(tensor: TensorInterface) {
+    mul(tensor: Tensor) {
       const _ptr = fl._mul(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -349,7 +348,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    div(tensor: TensorInterface) {
+    div(tensor: Tensor) {
       const _ptr = fl._div(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -359,7 +358,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    eq(tensor: TensorInterface) {
+    eq(tensor: Tensor) {
       const _ptr = fl._eq(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -369,7 +368,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    neq(tensor: TensorInterface) {
+    neq(tensor: Tensor) {
       const _ptr = fl._neq(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -379,7 +378,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    lessThan(tensor: TensorInterface) {
+    lessThan(tensor: Tensor) {
       const _ptr = fl._lessThan(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -389,7 +388,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    lessThanEqual(tensor: TensorInterface) {
+    lessThanEqual(tensor: Tensor) {
       const _ptr = fl._lessThanEqual(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -399,7 +398,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    greaterThan(tensor: TensorInterface) {
+    greaterThan(tensor: Tensor) {
       const _ptr = fl._greaterThan(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -409,7 +408,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    greaterThanEqual(tensor: TensorInterface) {
+    greaterThanEqual(tensor: Tensor) {
       const _ptr = fl._greaterThanEqual(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -419,7 +418,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    logicalOr(tensor: TensorInterface) {
+    logicalOr(tensor: Tensor) {
       const _ptr = fl._logicalOr(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -429,7 +428,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    logicalAnd(tensor: TensorInterface) {
+    logicalAnd(tensor: Tensor) {
       const _ptr = fl._logicalAnd(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -439,7 +438,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    mod(tensor: TensorInterface) {
+    mod(tensor: Tensor) {
       const _ptr = fl._mod(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -449,7 +448,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    bitwiseAnd(tensor: TensorInterface) {
+    bitwiseAnd(tensor: Tensor) {
       const _ptr = fl._bitwiseAnd(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -459,7 +458,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    bitwiseOr(tensor: TensorInterface) {
+    bitwiseOr(tensor: Tensor) {
       const _ptr = fl._bitwiseOr(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -469,7 +468,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    bitwiseXor(tensor: TensorInterface) {
+    bitwiseXor(tensor: Tensor) {
       const _ptr = fl._bitwiseXor(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -479,7 +478,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    lShift(tensor: TensorInterface) {
+    lShift(tensor: Tensor) {
       const _ptr = fl._lShift(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -489,7 +488,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    rShift(tensor: TensorInterface) {
+    rShift(tensor: Tensor) {
       const _ptr = fl._rShift(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -499,7 +498,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    minimum(tensor: TensorInterface) {
+    minimum(tensor: Tensor) {
       const _ptr = fl._minimum(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -509,7 +508,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    maximum(tensor: TensorInterface) {
+    maximum(tensor: Tensor) {
       const _ptr = fl._maximum(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -519,7 +518,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    power(tensor: TensorInterface) {
+    power(tensor: Tensor) {
       const _ptr = fl._power(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
@@ -529,7 +528,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    matmul(tensor: TensorInterface) {
+    matmul(tensor: Tensor) {
       const _ptr = fl._matmul(this.ptr, tensor.ptr)
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
