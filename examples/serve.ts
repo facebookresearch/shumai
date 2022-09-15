@@ -1,7 +1,6 @@
 import * as sm from '@shumai/shumai'
 
-const X = sm.randn([128, 8])
-X.requires_grad = true
+const X = sm.randn([128, 8]).requireGrad()
 
 sm.io.serve(
   {

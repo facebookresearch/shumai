@@ -242,6 +242,12 @@ export class Tensor {
     return wrapFLTensor(fl.copy.native, this.ptr)
   }
 
+  requireGrad() {
+    const t = this.copy()
+    t.requires_grad = true
+    return t
+  }
+
   detach() {
     const t = this.copy()
     t.requires_grad = false
