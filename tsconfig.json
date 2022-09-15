@@ -4,6 +4,7 @@
     "module": "esnext",
     "target": "esnext",
     "moduleResolution": "node",
+    "skipLibCheck": true,
 
     // so that if your project isn't using TypeScript, it still has autocomplete
     "allowJs": true,
@@ -14,5 +15,5 @@
       "@shumai/shumai": ["./shumai/index.ts"],
     }
   },
-  "exclude": ["examples/**/*.js"]
+  "exclude": ["examples/**/*"]
 }
