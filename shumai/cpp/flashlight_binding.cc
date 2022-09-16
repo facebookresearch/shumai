@@ -104,7 +104,7 @@ int ndim(void *t) {
 
 float *buffer(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
-  return tensor->host<float>();
+  return tensor->astype(fl::dtype::f32).host<float>();
 }
 
 float scalar(void *t) {
