@@ -158,6 +158,7 @@ jobs:
       - checkout
       - install_flashlight:
           arrayfire_backend: "CUDA"
+      - checkout
       - build_flashlight_bindings
       - node/install:
           node-version: "16.9.0"
