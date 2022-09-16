@@ -153,6 +153,7 @@ jobs:
           command: |
             sudo rm /usr/local/cuda # only points to ArrayFire CUDA 11.6 runtime libs
             sudo ln -s /usr/local/cuda-11.4 /usr/local/cuda
+            echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> $BASH_ENV
       - install_flashlight:
           arrayfire_backend: "CUDA"
       - build_flashlight_bindings
