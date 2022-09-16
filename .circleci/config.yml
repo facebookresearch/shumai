@@ -44,6 +44,7 @@ commands:
       - run:
           name: "Build Flashlight"
           command: |
+            cd /tmp
             git clone https://github.com/flashlight/flashlight
             cd flashlight
             mkdir -p build
@@ -141,7 +142,7 @@ jobs:
           command: bun wiptest
 
   # Linux only
-  test-arrayfire-gpu:
+  test-arrayfire-gpu-linux:
     <<: *gpu
     steps:
       - setup_arrayfire_apt
@@ -156,10 +157,11 @@ jobs:
             echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> $BASH_ENV
       - install_flashlight:
           arrayfire_backend: "CUDA"
+      - checkout
       - build_flashlight_bindings
       - node/install:
           node-version: "16.9.0"
-      - checkout
+
       - run:
           name: "Install native lib dependencies"
           command: npm install
@@ -190,4 +192,4 @@ workflows:
           matrix:
             parameters:
               os: [linux, macos]
-      #- test-arrayfire-gpu
+      - test-arrayfire-gpu-linux
