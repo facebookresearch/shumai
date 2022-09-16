@@ -49,7 +49,7 @@ const t = sm.full([128, 8], 1)
 ---
 identity:
 
-Create a square N-dimensional identity {@link Tensor}.
+Create a square 2D identity {@link Tensor}.
 
 @remarks
 This is similar to the `eye` API of other tensor frameworks.
@@ -80,12 +80,89 @@ const t = sm.arange(0, 10, 2)
 
 @returns A new 1D {@link Tensor} containing the user defined interval.
 ---
+iota:
+
+Tile a {@link Tensor} of N-dimensionally shaped ranges.
+
+@example
+```javascript
+const t0 = sm.iota([2, 2], [2])
+// same as
+const t1 = sm.arange(0, 4).reshape([2, 2]).tile([2])
+```
+
+@param dims - The dimension of the intermediate (untiled tensor). This shape determines the range of the values within the output.
+@param tileDims - How to tile the intermediate tensor.
+@returns A new {@link Tensor}
+---
 reshape:
 
-Reshape a {@link Tensor} without modifying the underlying data.
+Reshape a {@link Tensor} without modifying the underlying data. %%suggest_other%%
 
 @remarks
 The resultant shape must contain the same number of elements as the base Tensor.
 
+@example
+
+```javascript
+const t = sm.randn([64])
+
+// equivalent calls
+const a = t.reshape([8, 8])
+const b = sm.reshape(t, [8, 8])
+```
+
+
 %%static%%@param tensor - {@link Tensor} to reshape
 @param shape - The shape of the output {@link Tensor}
+---
+transpose:
+
+Re-arrange the layout of the values within a {@link Tensor}. %%suggest_other%%
+
+@remarks
+The total number of elements of the tensor does not change.
+
+@example
+```javascript
+const t = sm.rand([128, 8])
+
+// equivalent calls
+const a = t.transpose([1, 0])
+a.shape // [8, 128]
+const b = sm.transpose(t, [1, 0])
+b.shape // [8, 128]
+```
+
+%%static%%@param tensor - {@link Tensor} to transpose
+@param axes - The new order of the indices of the current axes after tranposing
+@returns A new {@link Tensor}
+---
+tile:
+
+Replicate a {@link Tensor} about it's axes. %%suggest_other%%
+
+@example
+
+```javascript
+const t = sm.identity(4)
+
+// equivalent calls
+const a = sm.tile(t, [2, 2])
+a.shape // [8, 8]
+const b = t.tile([2, 2])
+b.shape // [8, 8]
+
+// tiling by 1 on all dims does nothing
+const no_op = t.tile([1, 1])
+```
+
+%%static%%@param tensor - {@link Tensor} to tile
+@param shape - A shape describing the number of iterations to tile each axis.
+@returns A new {@link Tensor}
+---
+exp:
+
+$$e^x$$
+
+

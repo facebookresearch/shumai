@@ -21,11 +21,14 @@ coercion_rules = {
 
 comments = {}
 with open(pathlib.Path(__file__).parent.resolve() / 'ops.doc') as f:
-    def js(lines, prefix=0):
+    def js(op, lines, is_static, prefix=0):
         p = ' ' * prefix
         c = '\n'.join((p + '*   ' + x) for x in lines).strip()
         c = p + '/**\n' + p + c + '\n'+ p +'*/\n'
-        return c.rstrip()
+        c = c.rstrip()
+        static_replacement = f'There is a static function version of this method: {{@link {op}}}.'
+        method_replacement = f'There is a method version of this static function: {{@link Tensor.{op}}}.'
+        return c.replace('%%suggest_other%%', method_replacement if is_static else static_replacement)
 
     def process_comment(comment):
         lines = comment.split('\n')
@@ -40,7 +43,7 @@ with open(pathlib.Path(__file__).parent.resolve() / 'ops.doc') as f:
                 function_comment.append(l)
                 method_comment.append(l)
 
-        comments[op_name] = (js(function_comment), js(method_comment, 2))
+        comments[op_name] = (js(op_name, function_comment, True), js(op_name, method_comment, False, 2))
     for comment in f.read().split('---'):
         process_comment(comment.strip())
 
