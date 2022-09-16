@@ -33,7 +33,9 @@ export function decodeBuffer(buf: ArrayBuffer) {
   }
   const shape = new BigInt64Array(buf, 8 /* 8 byte offset mandated alignement */, shape_len)
   const t = sm.tensor(new Float32Array(buf, 8 + 8 * shape_len))
-  return t.reshape(shape)
+  const reshaped = t.reshape(shape)
+  reshaped.op = 'network'
+  return reshaped
 }
 
 /** @private */
@@ -114,14 +116,8 @@ export async function tfetch(
     })
     if (options && options.grad_fn) {
       t.requires_grad = true
-      t.grad_callback_async = async () => {
-        const jacobian = await options.grad_fn({
-          grad_in: t.grad,
-          out: t,
-          in: tensor
-        })
-        return tensor.backward(jacobian)
-      }
+      t.deps = [tensor]
+      t.grad_callback_async = options.grad_fn
     }
     return t
   }
@@ -169,14 +165,11 @@ export function remote_model(url: string, backward_url?: string) {
     forward_url = `${url}`
   }
   const backward = async (grad) => {
-    // possibly need to continue backward pass
     const jacobian = await tfetch(backward_url, grad.grad_in)
-    if (jacobian) {
-      await grad.in.backward(jacobian)
-    }
+    return jacobian
   }
   async function forward(t: sm.Tensor) {
-    return tfetch(forward_url, t, { grad_fn: backward })
+    return await tfetch(forward_url, t, { grad_fn: backward })
   }
   return forward
 }
@@ -340,13 +333,13 @@ export function serve_model(
     forward: async (u: any, input: sm.Tensor) => {
       const out = await fn(input)
       input.requires_grad = true
-      u.backward = async (jacobian?: sm.Tensor) => {
-        return [out.backward(jacobian), input.grad]
+      u.saved_backward = async (jacobian?: sm.Tensor) => {
+        return [await out.backward(jacobian), input.grad]
       }
       return out
     },
     optimize: async (u: any, t: sm.Tensor) => {
-      const [ts, grad] = <[sm.Tensor[], sm.Tensor]>await u.backward(t)
+      const [ts, grad] = <[sm.Tensor[], sm.Tensor]>await u.saved_backward(t)
       let ret: sm.Tensor = null
       if (grad) {
         ret = grad.detach()

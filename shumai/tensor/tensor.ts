@@ -32,58 +32,9 @@ export function scalar(s: number): Tensor {
   return full([], s)
 }
 
-// differentiate t with respect to all
-// dependencies with requires_grad === True
-export function backward(base_t: Tensor, jacobian: Tensor) {
-  if (!jacobian) {
-    jacobian = full([], 1)
-  }
-  const sorted_traversal = [base_t]
-  let frontier: Tensor[] = [base_t]
-  const incoming_count: Record<number, number> = {}
-  incoming_count[base_t.ptr] = 0
-  while (frontier.length) {
-    const new_frontier: Tensor[] = []
-    for (const t of frontier) {
-      for (const dep of t.deps) {
-        if (!dep.requires_grad) {
-          continue
-        }
-        if (dep.ptr in incoming_count) {
-          incoming_count[dep.ptr]++
-        } else {
-          incoming_count[dep.ptr] = 1
-          new_frontier.push(dep)
-        }
-      }
-    }
-    frontier = new_frontier
-  }
-
-  frontier = [base_t]
-  while (frontier.length) {
-    const new_frontier: Tensor[] = []
-    for (const t of frontier) {
-      for (const dep of t.deps) {
-        if (--incoming_count[dep.ptr] === 0) {
-          new_frontier.push(dep)
-          sorted_traversal.push(dep)
-        }
-      }
-    }
-    frontier = new_frontier
-  }
-
+function traverse_gradients(sorted_traversal) {
   const all_grads_dict: Record<number, Tensor> = {}
-  const grad_callbacks_async: Array<(grad?: any) => Promise<void>> = []
-  base_t.grad = jacobian
   for (const t of sorted_traversal) {
-    if (t.grad_callback_async) {
-      grad_callbacks_async.push(t.grad_callback_async)
-    }
-    if (!t.requires_grad || t.deps.length === 0) {
-      continue
-    }
     if (t.requires_grad && !t.grad) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
     }
@@ -113,8 +64,100 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
       }
     }
   }
+  return all_grads_dict
+}
 
-  const calc_grads = () => {
+async function async_traverse_gradients(sorted_traversal) {
+  const all_grads_dict: Record<number, Tensor> = {}
+  for (const t of sorted_traversal) {
+    if (t.requires_grad && !t.grad) {
+      throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
+    }
+    if (!gradient_functions[t.op] && !t.grad_callback_async) {
+      throw `Cannot differentiate ${t.op}. The gradient function is not defined!`
+    }
+    let idx = -1
+    for (const dep of t.deps) {
+      idx++
+      if (!dep.requires_grad) {
+        continue
+      }
+      const grad_arg = {
+        idx: idx,
+        in: t.deps,
+        out: t,
+        grad_in: t.grad
+      }
+      let g
+      if (t.grad_callback_async) {
+        g = await t.grad_callback_async(grad_arg)
+      } else {
+        g = gradient_functions[t.op](grad_arg)
+      }
+      if (dep.grad) {
+        dep.grad = dep.grad.add(g)
+      } else {
+        dep.grad = g
+      }
+      if (!(dep.ptr in all_grads_dict)) {
+        all_grads_dict[dep.ptr] = dep
+      }
+    }
+  }
+  return all_grads_dict
+}
+
+// differentiate t with respect to all
+// dependencies with requires_grad === True
+export function backward(base_t: Tensor, jacobian: Tensor) {
+  if (!jacobian) {
+    jacobian = full([], 1)
+  }
+  let frontier: Tensor[] = [base_t]
+  const incoming_count: Record<number, number> = {}
+  incoming_count[base_t.ptr] = 0
+  while (frontier.length) {
+    const new_frontier: Tensor[] = []
+    for (const t of frontier) {
+      for (const dep of t.deps) {
+        if (!dep.requires_grad) {
+          continue
+        }
+        if (dep.ptr in incoming_count) {
+          incoming_count[dep.ptr]++
+        } else {
+          incoming_count[dep.ptr] = 1
+          new_frontier.push(dep)
+        }
+      }
+    }
+    frontier = new_frontier
+  }
+
+  frontier = [base_t]
+  const sorted_traversal = base_t.deps.length ? [base_t] : []
+  let need_async = false
+  while (frontier.length) {
+    const new_frontier: Tensor[] = []
+    for (const t of frontier) {
+      for (const dep of t.deps) {
+        if (--incoming_count[dep.ptr] === 0) {
+          new_frontier.push(dep)
+          if (dep.requires_grad && dep.deps.length) {
+            if (dep.grad_callback_async) {
+              need_async = true
+            }
+            sorted_traversal.push(dep)
+          }
+        }
+      }
+    }
+    frontier = new_frontier
+  }
+
+  base_t.grad = jacobian
+
+  const calc_grads = (all_grads_dict) => {
     const all_grads: Tensor[] = []
     for (const key in all_grads_dict) {
       const t = all_grads_dict[key]
@@ -123,20 +166,13 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
     return all_grads
   }
 
-  if (grad_callbacks_async.length) {
+  if (need_async) {
     return (async () => {
-      for (const cb of grad_callbacks_async) {
-        const more_grads = await cb()
-        for (const t of more_grads) {
-          if (!(t.ptr in all_grads_dict)) {
-            all_grads_dict[t.ptr] = t
-          }
-        }
-      }
-      return calc_grads()
+      return calc_grads(await async_traverse_gradients(sorted_traversal))
     })()
   }
-  return calc_grads()
+
+  return calc_grads(traverse_gradients(sorted_traversal))
 }
 
 export class Tensor {
