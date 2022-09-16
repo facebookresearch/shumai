@@ -22,7 +22,13 @@ export function encode(tensor: sm.Tensor): ArrayBuffer {
 }
 
 export function decodeBuffer(buf: ArrayBuffer) {
+  if (buf.byteLength < 8) {
+    throw 'buffer cannot be decoded'
+  }
   const shape_len = new Int32Array(buf, 0, 2)[0]
+  if (shape_len > buf.byteLength) {
+    throw 'buffer cannot be decoded'
+  }
   const shape = new BigInt64Array(buf, 8 /* 8 byte offset mandated alignement */, shape_len)
   const t = sm.tensor(new Float32Array(buf, 8 + 8 * shape_len))
   return t.reshape(shape)
@@ -64,7 +70,9 @@ export async function tfetch(
   })()
   const buff = await response.arrayBuffer()
   if (buff.byteLength) {
-    const t = await decode(buff)
+    const t = await decode(buff).catch((err) => {
+      throw `tfetched result invalid: ${err}`
+    })
     if (options && options.grad_fn) {
       t.requires_grad = true
       t.grad_callback_async = async () => {
@@ -80,7 +88,13 @@ export async function tfetch(
   return null
 }
 
-export function connect(forward_url: string, backward_url: string) {
+export function remote_model(url: string, backward_url?: string) {
+  let forward_url = `${url}/forward`
+  if (!backward_url) {
+    backward_url = `${url}/optimize`
+  } else {
+    forward_url = `${url}`
+  }
   const backward = async (grad) => {
     // possibly need to continue backward pass
     const jacobian = await tfetch(backward_url, grad.grad_in)

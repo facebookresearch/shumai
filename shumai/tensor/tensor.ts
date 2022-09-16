@@ -349,11 +349,11 @@ export const layout = {
     fl.setColMajor()
   },
   /** Return true if the framework is currently row major. */
-  isRowMajor: () : boolean => {
+  isRowMajor: (): boolean => {
     return fl.isRowMajor()
   },
   /** Return true if the framework is currently column major. */
-  isColMajor: () : boolean => {
+  isColMajor: (): boolean => {
     return !fl.isRowMajor()
   }
 }

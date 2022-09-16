@@ -1,7 +1,7 @@
 import * as sm from '@shumai/shumai'
 
 const url = 'localhost:3000'
-const model = sm.io.connect(`${url}/forward`, `${url}/optimize`)
+const model = sm.io.remote_model(url)
 
 const ref_weight = sm.full([128, 8], 1)
 
