@@ -85,7 +85,7 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Create a square N-dimensional identity {@link Tensor}.
+ *   Create a square 2D identity {@link Tensor}.
  *
  *   @remarks
  *   This is similar to the `eye` API of other tensor frameworks.
@@ -134,7 +134,21 @@ import { Tensor } from './tensor'
   return t
 }
 
-export function iota(dims: BigInt64Array | number[], tileDims: BigInt64Array | number[] = [1]) {
+/**
+ *
+ *   Tile a {@link Tensor} of N-dimensionally shaped ranges.
+ *
+ *   @example
+ *   ```javascript
+ *   const t0 = sm.iota([2, 2], [2])
+ *   // same as
+ *   const t1 = sm.arange(0, 4).reshape([2, 2]).tile([2])
+ *   ```
+ *
+ *   @param dims - The dimension of the intermediate (untiled tensor). This shape determines the range of the values within the output.
+ *   @param tileDims - How to tile the intermediate tensor.
+ *   @returns A new {@link Tensor}
+ */ export function iota(dims: BigInt64Array | number[], tileDims: BigInt64Array | number[] = [1]) {
   const [dims_ptr, dims_len] = arrayArg(dims, FFIType.i64)
   const [tileDims_ptr, tileDims_len] = arrayArg(tileDims, FFIType.i64)
   const _ptr = fl._iota(dims_ptr, dims_len, tileDims_ptr, tileDims_len)
@@ -148,10 +162,21 @@ export function iota(dims: BigInt64Array | number[], tileDims: BigInt64Array | n
 
 /**
  *
- *   Reshape a {@link Tensor} without modifying the underlying data.
+ *   Reshape a {@link Tensor} without modifying the underlying data. There is a method version of this static function: {@link Tensor.reshape}.
  *
  *   @remarks
  *   The resultant shape must contain the same number of elements as the base Tensor.
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([64])
+ *
+ *   // equivalent calls
+ *   const a = t.reshape([8, 8])
+ *   const b = sm.reshape(t, [8, 8])
+ *   ```
+ *
  *
  *   @param tensor - {@link Tensor} to reshape
  *   @param shape - The shape of the output {@link Tensor}
@@ -166,7 +191,28 @@ export function iota(dims: BigInt64Array | number[], tileDims: BigInt64Array | n
   return t
 }
 
-export function transpose(tensor: Tensor, axes: BigInt64Array | number[]) {
+/**
+ *
+ *   Re-arrange the layout of the values within a {@link Tensor}. There is a method version of this static function: {@link Tensor.transpose}.
+ *
+ *   @remarks
+ *   The total number of elements of the tensor does not change.
+ *
+ *   @example
+ *   ```javascript
+ *   const t = sm.rand([128, 8])
+ *
+ *   // equivalent calls
+ *   const a = t.transpose([1, 0])
+ *   a.shape // [8, 128]
+ *   const b = sm.transpose(t, [1, 0])
+ *   b.shape // [8, 128]
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} to transpose
+ *   @param axes - The new order of the indices of the current axes after tranposing
+ *   @returns A new {@link Tensor}
+ */ export function transpose(tensor: Tensor, axes: BigInt64Array | number[]) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const _ptr = fl._transpose(tensor.ptr, axes_ptr, axes_len)
   const requires_grad = tensor.requires_grad
@@ -177,7 +223,29 @@ export function transpose(tensor: Tensor, axes: BigInt64Array | number[]) {
   return t
 }
 
-export function tile(tensor: Tensor, shape: BigInt64Array | number[]) {
+/**
+ *
+ *   Replicate a {@link Tensor} about its axes. There is a method version of this static function: {@link Tensor.tile}.
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.identity(4)
+ *
+ *   // equivalent calls
+ *   const a = sm.tile(t, [2, 2])
+ *   a.shape // [8, 8]
+ *   const b = t.tile([2, 2])
+ *   b.shape // [8, 8]
+ *
+ *   // tiling by 1 on all dims does nothing
+ *   const no_op = t.tile([1, 1])
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} to tile
+ *   @param shape - A shape describing the number of iterations to tile each axis.
+ *   @returns A new {@link Tensor}
+ */ export function tile(tensor: Tensor, shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
   const _ptr = fl._tile(tensor.ptr, shape_ptr, shape_len)
   const requires_grad = tensor.requires_grad
@@ -188,7 +256,27 @@ export function tile(tensor: Tensor, shape: BigInt64Array | number[]) {
   return t
 }
 
-export function nonzero(tensor: Tensor) {
+/**
+ *
+ *   Determine the indices of elements that are non-zero. There is a method version of this static function: {@link Tensor.nonzero}.
+ *
+ *   @remarks
+ *
+ *   Indices correspond to a flattened version of the input tensor.
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([100])
+ *
+ *   // equivalent calls
+ *   const a = t.nonzero()
+ *   const b = sm.nonzero(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will be used to find indices
+ *   @returns - A new {@link Tensor} composed of the flattened indices of the non-zero elements in the input
+ */ export function nonzero(tensor: Tensor) {
   const _ptr = fl._nonzero(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -198,7 +286,25 @@ export function nonzero(tensor: Tensor) {
   return t
 }
 
-export function negative(tensor: Tensor) {
+/**
+ *
+ *   Negate a tensor. There is a method version of this static function: {@link Tensor.negative}.
+ *
+ *   $$-x | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([100])
+ *
+ *   // equivalent calls
+ *   const a = t.negative()
+ *   const b = sm.negative(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will be negated
+ *   @returns - A new {@link Tensor}
+ */ export function negative(tensor: Tensor) {
   const _ptr = fl._negative(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -208,7 +314,25 @@ export function negative(tensor: Tensor) {
   return t
 }
 
-export function logicalNot(tensor: Tensor) {
+/**
+ *
+ *   Take the logical `not` of every element in a tensor. There is a method version of this static function: {@link Tensor.logicalNot}.
+ *
+ *   $$\neg x | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.rand([100]).greaterThan(sm.scalar(0.5))
+ *
+ *   // equivalent calls
+ *   const a = t.logicalNot()
+ *   const b = sm.logicalNot(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will be logically inverted
+ *   @returns - A new {@link Tensor}
+ */ export function logicalNot(tensor: Tensor) {
   const _ptr = fl._logicalNot(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -218,7 +342,25 @@ export function logicalNot(tensor: Tensor) {
   return t
 }
 
-export function exp(tensor: Tensor) {
+/**
+ *
+ *   Compute the exponential of each element in a tensor. There is a method version of this static function: {@link Tensor.exp}.
+ *
+ *   $$e^x | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([100])
+ *
+ *   // equivalent calls
+ *   const a = t.exp()
+ *   const b = sm.exp(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will be exponentiated
+ *   @returns - A new {@link Tensor}
+ */ export function exp(tensor: Tensor) {
   const _ptr = fl._exp(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -228,7 +370,25 @@ export function exp(tensor: Tensor) {
   return t
 }
 
-export function log(tensor: Tensor) {
+/**
+ *
+ *   Compute the natural logarithm of each element in a tensor. There is a method version of this static function: {@link Tensor.log}.
+ *
+ *   $$\ln(x) | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([100])
+ *
+ *   // equivalent calls
+ *   const a = t.log()
+ *   const b = sm.log(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their natural logarithm calculated
+ *   @returns - A new {@link Tensor}
+ */ export function log(tensor: Tensor) {
   const _ptr = fl._log(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -238,7 +398,25 @@ export function log(tensor: Tensor) {
   return t
 }
 
-export function log1p(tensor: Tensor) {
+/**
+ *
+ *   Compute the natural logarithm of one plus each element in a tensor. There is a method version of this static function: {@link Tensor.log1p}.
+ *
+ *   $$\ln(1 + x) | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([100])
+ *
+ *   // equivalent calls
+ *   const a = t.log1p()
+ *   const b = sm.log1p(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have one added before their natural logarithm is calculated
+ *   @returns - A new {@link Tensor}
+ */ export function log1p(tensor: Tensor) {
   const _ptr = fl._log1p(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -248,7 +426,25 @@ export function log1p(tensor: Tensor) {
   return t
 }
 
-export function sin(tensor: Tensor) {
+/**
+ *
+ *   Compute the sine function each element in a tensor. There is a method version of this static function: {@link Tensor.sin}.
+ *
+ *   $$\sin(x) | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.sin()
+ *   const b = sm.sin(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their sine calculated
+ *   @returns - A new {@link Tensor}
+ */ export function sin(tensor: Tensor) {
   const _ptr = fl._sin(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -258,7 +454,25 @@ export function sin(tensor: Tensor) {
   return t
 }
 
-export function cos(tensor: Tensor) {
+/**
+ *
+ *   Compute the cosine function each element in a tensor. There is a method version of this static function: {@link Tensor.cos}.
+ *
+ *   $$\cos(x) | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.cos()
+ *   const b = sm.cos(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their cosine calculated
+ *   @returns - A new {@link Tensor}
+ */ export function cos(tensor: Tensor) {
   const _ptr = fl._cos(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -268,7 +482,25 @@ export function cos(tensor: Tensor) {
   return t
 }
 
-export function sqrt(tensor: Tensor) {
+/**
+ *
+ *   Compute the square root of each element in a tensor. There is a method version of this static function: {@link Tensor.sqrt}.
+ *
+ *   $$\sqrt{x} | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.sqrt()
+ *   const b = sm.sqrt(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their square root calculated
+ *   @returns - A new {@link Tensor}
+ */ export function sqrt(tensor: Tensor) {
   const _ptr = fl._sqrt(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -278,7 +510,25 @@ export function sqrt(tensor: Tensor) {
   return t
 }
 
-export function tanh(tensor: Tensor) {
+/**
+ *
+ *   Compute the hyperbolic tangent function each element in a tensor. There is a method version of this static function: {@link Tensor.tanh}.
+ *
+ *   $$\tanh(x) | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.tanh()
+ *   const b = sm.tanh(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their hyperbolic tangent calculated
+ *   @returns - A new {@link Tensor}
+ */ export function tanh(tensor: Tensor) {
   const _ptr = fl._tanh(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -288,7 +538,25 @@ export function tanh(tensor: Tensor) {
   return t
 }
 
-export function floor(tensor: Tensor) {
+/**
+ *
+ *   Compute the mathematical floor (round down) of each element in a tensor. There is a method version of this static function: {@link Tensor.floor}.
+ *
+ *   $$\lfloor x \rfloor | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.floor()
+ *   const b = sm.floor(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their mathematical floor calculated
+ *   @returns - A new {@link Tensor}
+ */ export function floor(tensor: Tensor) {
   const _ptr = fl._floor(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -298,7 +566,25 @@ export function floor(tensor: Tensor) {
   return t
 }
 
-export function ceil(tensor: Tensor) {
+/**
+ *
+ *   Compute the mathematical ceiling (round up) of each element in a tensor. There is a method version of this static function: {@link Tensor.ceil}.
+ *
+ *   $$\lceil x \rceil | \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.ceil()
+ *   const b = sm.ceil(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their mathematical ceiling calculated
+ *   @returns - A new {@link Tensor}
+ */ export function ceil(tensor: Tensor) {
   const _ptr = fl._ceil(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []

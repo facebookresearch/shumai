@@ -290,7 +290,7 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
  * Serve a model with forward and optimization endpoints.
  *
  * @remarks
- * 
+ *
  * This server is to be used with {@link io.remote_model | `io.remote_model`}.
  * The function does not return.
  *
@@ -301,7 +301,7 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
  * function model(input) {
  *   return input.matmul(weight).maximum(sm.scalar(0))
  * }
- * 
+ *
  * function optimize(differentiated_tensors) {
  *   for (let t of differentiated_tensors) {
  *     t.update(t.add(t.grad.mul(sm.scalar(1e-3))))

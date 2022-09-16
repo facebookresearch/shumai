@@ -140,7 +140,7 @@ b.shape // [8, 128]
 ---
 tile:
 
-Replicate a {@link Tensor} about it's axes. %%suggest_other%%
+Replicate a {@link Tensor} about its axes. %%suggest_other%%
 
 @example
 
@@ -161,8 +161,232 @@ const no_op = t.tile([1, 1])
 @param shape - A shape describing the number of iterations to tile each axis.
 @returns A new {@link Tensor}
 ---
+nonzero:
+
+Determine the indices of elements that are non-zero. %%suggest_other%%
+
+@remarks
+
+Indices correspond to a flattened version of the input tensor.
+
+@example
+
+```javascript
+const t = sm.randn([100])
+
+// equivalent calls
+const a = t.nonzero()
+const b = sm.nonzero(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will be used to find indices
+@returns - A new {@link Tensor} composed of the flattened indices of the non-zero elements in the input
+---
+negative:
+
+Negate a tensor. %%suggest_other%%
+
+$$-x | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([100])
+
+// equivalent calls
+const a = t.negative()
+const b = sm.negative(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will be negated
+@returns - A new {@link Tensor}
+---
+logicalNot:
+
+Take the logical `not` of every element in a tensor. %%suggest_other%%
+
+$$\neg x | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.rand([100]).greaterThan(sm.scalar(0.5))
+
+// equivalent calls
+const a = t.logicalNot()
+const b = sm.logicalNot(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will be logically inverted
+@returns - A new {@link Tensor}
+---
 exp:
 
-$$e^x$$
+Compute the exponential of each element in a tensor. %%suggest_other%%
 
+$$e^x | \forall x \in T$$
 
+@example
+
+```javascript
+const t = sm.randn([100])
+
+// equivalent calls
+const a = t.exp()
+const b = sm.exp(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will be exponentiated
+@returns - A new {@link Tensor}
+---
+log:
+
+Compute the natural logarithm of each element in a tensor. %%suggest_other%%
+
+$$\ln(x) | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([100])
+
+// equivalent calls
+const a = t.log()
+const b = sm.log(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their natural logarithm calculated
+@returns - A new {@link Tensor}
+---
+log1p:
+
+Compute the natural logarithm of one plus each element in a tensor. %%suggest_other%%
+
+$$\ln(1 + x) | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([100])
+
+// equivalent calls
+const a = t.log1p()
+const b = sm.log1p(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have one added before their natural logarithm is calculated
+@returns - A new {@link Tensor}
+---
+sin:
+
+Compute the sine function each element in a tensor. %%suggest_other%%
+
+$$\sin(x) | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.sin()
+const b = sm.sin(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their sine calculated
+@returns - A new {@link Tensor}
+---
+cos:
+
+Compute the cosine function each element in a tensor. %%suggest_other%%
+
+$$\cos(x) | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.cos()
+const b = sm.cos(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their cosine calculated
+@returns - A new {@link Tensor}
+---
+sqrt:
+
+Compute the square root of each element in a tensor. %%suggest_other%%
+
+$$\sqrt{x} | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.sqrt()
+const b = sm.sqrt(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their square root calculated
+@returns - A new {@link Tensor}
+---
+tanh:
+
+Compute the hyperbolic tangent function each element in a tensor. %%suggest_other%%
+
+$$\tanh(x) | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.tanh()
+const b = sm.tanh(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their hyperbolic tangent calculated
+@returns - A new {@link Tensor}
+---
+floor:
+
+Compute the mathematical floor (round down) of each element in a tensor. %%suggest_other%%
+
+$$\lfloor x \rfloor | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.floor()
+const b = sm.floor(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their mathematical floor calculated
+@returns - A new {@link Tensor}
+---
+ceil:
+
+Compute the mathematical ceiling (round up) of each element in a tensor. %%suggest_other%%
+
+$$\lceil x \rceil | \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.ceil()
+const b = sm.ceil(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their mathematical ceiling calculated
+@returns - A new {@link Tensor}
