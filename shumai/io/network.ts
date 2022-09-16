@@ -115,11 +115,12 @@ export async function tfetch(
     if (options && options.grad_fn) {
       t.requires_grad = true
       t.grad_callback_async = async () => {
-        await options.grad_fn({
+        const jacobian = await options.grad_fn({
           grad_in: t.grad,
           out: t,
           in: tensor
         })
+        return tensor.backward(jacobian)
       }
     }
     return t
@@ -350,7 +351,9 @@ export function serve_model(
       if (grad) {
         ret = grad.detach()
       }
-      await grad_update(ts)
+      if (grad_update) {
+        await grad_update(ts)
+      }
       return ret
     }
   }

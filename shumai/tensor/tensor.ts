@@ -113,20 +113,30 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
       }
     }
   }
-  const all_grads: Tensor[] = []
-  for (const key in all_grads_dict) {
-    const t = all_grads_dict[key]
-    all_grads.push(t)
+
+  const calc_grads = () => {
+    const all_grads: Tensor[] = []
+    for (const key in all_grads_dict) {
+      const t = all_grads_dict[key]
+      all_grads.push(t)
+    }
+    return all_grads
   }
+
   if (grad_callbacks_async.length) {
     return (async () => {
       for (const cb of grad_callbacks_async) {
-        await cb()
+        const more_grads = await cb()
+        for (const t of more_grads) {
+          if (!(t.ptr in all_grads_dict)) {
+            all_grads_dict[t.ptr] = t
+          }
+        }
       }
-      return all_grads
+      return calc_grads()
     })()
   }
-  return all_grads
+  return calc_grads()
 }
 
 export class Tensor {
