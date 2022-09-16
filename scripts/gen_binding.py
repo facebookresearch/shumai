@@ -27,7 +27,7 @@ with open(pathlib.Path(__file__).parent.resolve() / 'ops.doc') as f:
         c = p + '/**\n' + p + c + '\n'+ p +'*/\n'
         c = c.rstrip()
         static_replacement = f'There is a static function version of this method: {{@link {op}}}.'
-        method_replacement = f'There is a method version of this static function: {{@link Tensor.{op}}}.'
+        method_replacement = f'There is a method version of this static function: {{@link Tensor.{op} | Tensor.{op} }}.'
         return c.replace('%%suggest_other%%', method_replacement if is_static else static_replacement)
 
     def process_comment(comment):

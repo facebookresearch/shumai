@@ -25,7 +25,7 @@
 <ul class="tsd-hierarchy">
 <li><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></li></ul></section></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L4">shumai/tensor/tensor_ops_interface_gen.ts:4</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L4">shumai/tensor/tensor_ops_interface_gen.ts:4</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -107,17 +107,37 @@
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="abs.abs-1">abs<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#abs.abs-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Calculate the absolute value for every element in a <a href="../classes/Tensor.html">Tensor</a>. There is a static function version of this method: <a href="../functions/abs.html">abs</a>.</p>
+<p>  $$|x| : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">abs</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">abs</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L89">shumai/tensor/tensor_ops_interface_gen.ts:89</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L364">shumai/tensor/tensor_ops_interface_gen.ts:364</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="absolute" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>absolute</span><a href="#absolute" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="absolute.absolute-1">absolute<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#absolute.absolute-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Calculate the absolute value for every element in a <a href="../classes/Tensor.html">Tensor</a>. There is a static function version of this method: <a href="../functions/absolute.html">absolute</a>.</p>
+<p>  $$|x| : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">absolute</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">absolute</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L88">shumai/tensor/tensor_ops_interface_gen.ts:88</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L345">shumai/tensor/tensor_ops_interface_gen.ts:345</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="add" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add</span><a href="#add" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -130,7 +150,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L102">shumai/tensor/tensor_ops_interface_gen.ts:102</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L413">shumai/tensor/tensor_ops_interface_gen.ts:413</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="all" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>all</span><a href="#all" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -145,7 +165,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L137">shumai/tensor/tensor_ops_interface_gen.ts:137</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L448">shumai/tensor/tensor_ops_interface_gen.ts:448</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="amax" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>amax</span><a href="#amax" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -160,7 +180,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L125">shumai/tensor/tensor_ops_interface_gen.ts:125</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L436">shumai/tensor/tensor_ops_interface_gen.ts:436</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="amin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>amin</span><a href="#amin" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -175,7 +195,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L124">shumai/tensor/tensor_ops_interface_gen.ts:124</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L435">shumai/tensor/tensor_ops_interface_gen.ts:435</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="any" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>any</span><a href="#any" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -190,7 +210,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L136">shumai/tensor/tensor_ops_interface_gen.ts:136</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L447">shumai/tensor/tensor_ops_interface_gen.ts:447</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="argmax" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>argmax</span><a href="#argmax" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -205,7 +225,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L127">shumai/tensor/tensor_ops_interface_gen.ts:127</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L438">shumai/tensor/tensor_ops_interface_gen.ts:438</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="argmin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>argmin</span><a href="#argmin" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -220,7 +240,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L126">shumai/tensor/tensor_ops_interface_gen.ts:126</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L437">shumai/tensor/tensor_ops_interface_gen.ts:437</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="bitwiseAnd" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>bitwise<wbr/>And</span><a href="#bitwiseAnd" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -233,7 +253,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L115">shumai/tensor/tensor_ops_interface_gen.ts:115</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L426">shumai/tensor/tensor_ops_interface_gen.ts:426</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="bitwiseOr" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>bitwise<wbr/>Or</span><a href="#bitwiseOr" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -246,7 +266,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L116">shumai/tensor/tensor_ops_interface_gen.ts:116</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L427">shumai/tensor/tensor_ops_interface_gen.ts:427</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="bitwiseXor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>bitwise<wbr/>Xor</span><a href="#bitwiseXor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -259,15 +279,25 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L117">shumai/tensor/tensor_ops_interface_gen.ts:117</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L428">shumai/tensor/tensor_ops_interface_gen.ts:428</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="ceil" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>ceil</span><a href="#ceil" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="ceil.ceil-1">ceil<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#ceil.ceil-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Compute the mathematical ceiling (round up) of each element in a tensor. There is a static function version of this method: <a href="../functions/ceil.html">ceil</a>.</p>
+<p>  $$\lceil x \rceil : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">ceil</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">ceil</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L86">shumai/tensor/tensor_ops_interface_gen.ts:86</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L300">shumai/tensor/tensor_ops_interface_gen.ts:300</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="clip" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>clip</span><a href="#clip" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -282,15 +312,25 @@
 <h5>high: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L93">shumai/tensor/tensor_ops_interface_gen.ts:93</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L404">shumai/tensor/tensor_ops_interface_gen.ts:404</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="cos" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>cos</span><a href="#cos" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="cos.cos-1">cos<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#cos.cos-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Compute the cosine function each element in a tensor. There is a static function version of this method: <a href="../functions/cos.html">cos</a>.</p>
+<p>  $$\cos(x) : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">cos</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">cos</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L82">shumai/tensor/tensor_ops_interface_gen.ts:82</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L224">shumai/tensor/tensor_ops_interface_gen.ts:224</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="countNonzero" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>count<wbr/>Nonzero</span><a href="#countNonzero" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -305,7 +345,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L135">shumai/tensor/tensor_ops_interface_gen.ts:135</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L446">shumai/tensor/tensor_ops_interface_gen.ts:446</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="cumsum" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>cumsum</span><a href="#cumsum" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -318,7 +358,7 @@
 <h5>axis: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L129">shumai/tensor/tensor_ops_interface_gen.ts:129</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L440">shumai/tensor/tensor_ops_interface_gen.ts:440</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="div" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>div</span><a href="#div" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -331,7 +371,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L105">shumai/tensor/tensor_ops_interface_gen.ts:105</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L416">shumai/tensor/tensor_ops_interface_gen.ts:416</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="eq" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>eq</span><a href="#eq" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -344,25 +384,43 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L106">shumai/tensor/tensor_ops_interface_gen.ts:106</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L417">shumai/tensor/tensor_ops_interface_gen.ts:417</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="erf" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>erf</span><a href="#erf" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="erf.erf-1">erf<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#erf.erf-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Calculate the error function (<a href="https://en.wikipedia.org/wiki/Error_function">Wikipedia entry</a>) for each element in a <a href="../classes/Tensor.html">Tensor</a>. There is a static function version of this method: <a href="../functions/erf.html">erf</a>.</p>
+<p>  $$\frac{2}{\sqrt{\pi}}\int_0^{x} e^{-t^2} dt : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">1337</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">erf</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">erf</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L91">shumai/tensor/tensor_ops_interface_gen.ts:91</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L402">shumai/tensor/tensor_ops_interface_gen.ts:402</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="exp" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>exp</span><a href="#exp" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="exp.exp-1">exp<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#exp.exp-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>$$e^x$$</p>
+<div class="tsd-comment tsd-typography"><p>Compute the exponential of each element in a tensor. There is a static function version of this method: <a href="../functions/exp.html">exp</a>.</p>
+<p>  $$e^x : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">100</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">exp</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">exp</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L78">shumai/tensor/tensor_ops_interface_gen.ts:78</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L148">shumai/tensor/tensor_ops_interface_gen.ts:148</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="flip" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>flip</span><a href="#flip" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -375,15 +433,25 @@
 <h5>dim: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L92">shumai/tensor/tensor_ops_interface_gen.ts:92</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L403">shumai/tensor/tensor_ops_interface_gen.ts:403</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="floor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>floor</span><a href="#floor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="floor.floor-1">floor<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#floor.floor-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Compute the mathematical floor (round down) of each element in a tensor. There is a static function version of this method: <a href="../functions/floor.html">floor</a>.</p>
+<p>  $$\lfloor x \rfloor : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">floor</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">floor</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L85">shumai/tensor/tensor_ops_interface_gen.ts:85</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L281">shumai/tensor/tensor_ops_interface_gen.ts:281</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="greaterThan" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>greater<wbr/>Than</span><a href="#greaterThan" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -396,7 +464,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L110">shumai/tensor/tensor_ops_interface_gen.ts:110</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L421">shumai/tensor/tensor_ops_interface_gen.ts:421</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="greaterThanEqual" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>greater<wbr/>Than<wbr/>Equal</span><a href="#greaterThanEqual" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -409,7 +477,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L111">shumai/tensor/tensor_ops_interface_gen.ts:111</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L422">shumai/tensor/tensor_ops_interface_gen.ts:422</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="isinf" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>isinf</span><a href="#isinf" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -417,7 +485,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L96">shumai/tensor/tensor_ops_interface_gen.ts:96</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L407">shumai/tensor/tensor_ops_interface_gen.ts:407</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="isnan" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>isnan</span><a href="#isnan" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -425,7 +493,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L95">shumai/tensor/tensor_ops_interface_gen.ts:95</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L406">shumai/tensor/tensor_ops_interface_gen.ts:406</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="lShift" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>l<wbr/>Shift</span><a href="#lShift" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -438,7 +506,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L118">shumai/tensor/tensor_ops_interface_gen.ts:118</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L429">shumai/tensor/tensor_ops_interface_gen.ts:429</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="lessThan" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>less<wbr/>Than</span><a href="#lessThan" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -451,7 +519,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L108">shumai/tensor/tensor_ops_interface_gen.ts:108</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L419">shumai/tensor/tensor_ops_interface_gen.ts:419</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="lessThanEqual" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>less<wbr/>Than<wbr/>Equal</span><a href="#lessThanEqual" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -464,23 +532,43 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L109">shumai/tensor/tensor_ops_interface_gen.ts:109</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L420">shumai/tensor/tensor_ops_interface_gen.ts:420</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="log" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>log</span><a href="#log" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="log.log-1">log<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#log.log-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Compute the natural logarithm of each element in a tensor. There is a static function version of this method: <a href="../functions/log.html">log</a>.</p>
+<p>  $$\ln(x) : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">100</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">log</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">log</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L79">shumai/tensor/tensor_ops_interface_gen.ts:79</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L167">shumai/tensor/tensor_ops_interface_gen.ts:167</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="log1p" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>log1p</span><a href="#log1p" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="log1p.log1p-1">log1p<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#log1p.log1p-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Compute the natural logarithm of one plus each element in a tensor. There is a static function version of this method: <a href="../functions/log1p.html">log1p</a>.</p>
+<p>  $$\ln(1 + x) : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">100</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">log1p</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">log1p</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L80">shumai/tensor/tensor_ops_interface_gen.ts:80</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L186">shumai/tensor/tensor_ops_interface_gen.ts:186</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="logicalAnd" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>logical<wbr/>And</span><a href="#logicalAnd" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -493,15 +581,25 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L113">shumai/tensor/tensor_ops_interface_gen.ts:113</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L424">shumai/tensor/tensor_ops_interface_gen.ts:424</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="logicalNot" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>logical<wbr/>Not</span><a href="#logicalNot" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="logicalNot.logicalNot-1">logical<wbr/>Not<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#logicalNot.logicalNot-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Take the logical <code>not</code> of every element in a tensor. There is a static function version of this method: <a href="../functions/logicalNot.html">logicalNot</a>.</p>
+<p>  $$\neg x : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">rand</span><span class="hl-0">([</span><span class="hl-8">100</span><span class="hl-0">]).</span><span class="hl-7">greaterThan</span><span class="hl-0">(</span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">scalar</span><span class="hl-0">(</span><span class="hl-8">0.5</span><span class="hl-0">))</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">logicalNot</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">logicalNot</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L73">shumai/tensor/tensor_ops_interface_gen.ts:73</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L129">shumai/tensor/tensor_ops_interface_gen.ts:129</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="logicalOr" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>logical<wbr/>Or</span><a href="#logicalOr" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -514,7 +612,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L112">shumai/tensor/tensor_ops_interface_gen.ts:112</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L423">shumai/tensor/tensor_ops_interface_gen.ts:423</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="matmul" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>matmul</span><a href="#matmul" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -527,7 +625,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L123">shumai/tensor/tensor_ops_interface_gen.ts:123</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L434">shumai/tensor/tensor_ops_interface_gen.ts:434</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="maximum" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>maximum</span><a href="#maximum" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -540,7 +638,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L121">shumai/tensor/tensor_ops_interface_gen.ts:121</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L432">shumai/tensor/tensor_ops_interface_gen.ts:432</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="mean" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>mean</span><a href="#mean" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -555,7 +653,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L130">shumai/tensor/tensor_ops_interface_gen.ts:130</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L441">shumai/tensor/tensor_ops_interface_gen.ts:441</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="median" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>median</span><a href="#median" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -570,7 +668,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L131">shumai/tensor/tensor_ops_interface_gen.ts:131</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L442">shumai/tensor/tensor_ops_interface_gen.ts:442</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="minimum" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>minimum</span><a href="#minimum" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -583,7 +681,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L120">shumai/tensor/tensor_ops_interface_gen.ts:120</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L431">shumai/tensor/tensor_ops_interface_gen.ts:431</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="mod" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>mod</span><a href="#mod" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -596,7 +694,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L114">shumai/tensor/tensor_ops_interface_gen.ts:114</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L425">shumai/tensor/tensor_ops_interface_gen.ts:425</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="mul" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>mul</span><a href="#mul" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -609,15 +707,25 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L104">shumai/tensor/tensor_ops_interface_gen.ts:104</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L415">shumai/tensor/tensor_ops_interface_gen.ts:415</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="negative" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>negative</span><a href="#negative" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="negative.negative-1">negative<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#negative.negative-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Negate a tensor. There is a static function version of this method: <a href="../functions/negative.html">negative</a>.</p>
+<p>  $$-x : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">100</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">negative</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">negative</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L72">shumai/tensor/tensor_ops_interface_gen.ts:72</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L110">shumai/tensor/tensor_ops_interface_gen.ts:110</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="neq" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>neq</span><a href="#neq" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -630,15 +738,26 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L107">shumai/tensor/tensor_ops_interface_gen.ts:107</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L418">shumai/tensor/tensor_ops_interface_gen.ts:418</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="nonzero" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>nonzero</span><a href="#nonzero" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="nonzero.nonzero-1">nonzero<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#nonzero.nonzero-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Determine the indices of elements that are non-zero. There is a static function version of this method: <a href="../functions/nonzero.html">nonzero</a>.</p>
+
+<h3>Remarks</h3><p>Indices correspond to a flattened version of the input tensor.</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">100</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">nonzero</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">nonzero</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a> composed of the flattened indices of the non-zero elements in the input</li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L71">shumai/tensor/tensor_ops_interface_gen.ts:71</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L91">shumai/tensor/tensor_ops_interface_gen.ts:91</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="norm" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>norm</span><a href="#norm" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -655,7 +774,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L134">shumai/tensor/tensor_ops_interface_gen.ts:134</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L445">shumai/tensor/tensor_ops_interface_gen.ts:445</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="power" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>power</span><a href="#power" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -668,7 +787,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L122">shumai/tensor/tensor_ops_interface_gen.ts:122</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L433">shumai/tensor/tensor_ops_interface_gen.ts:433</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="rShift" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>r<wbr/>Shift</span><a href="#rShift" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -681,7 +800,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L119">shumai/tensor/tensor_ops_interface_gen.ts:119</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L430">shumai/tensor/tensor_ops_interface_gen.ts:430</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="reshape" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>reshape</span><a href="#reshape" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -703,15 +822,32 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L25">shumai/tensor/tensor_ops_interface_gen.ts:25</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L25">shumai/tensor/tensor_ops_interface_gen.ts:25</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="rint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>rint</span><a href="#rint" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="rint.rint-1">rint<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#rint.rint-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Round each element in a tensor to the nearest integer. There is a static function version of this method: <a href="../functions/rint.html">rint</a>.</p>
+<p>  $$
+  x =
+  \begin{cases}
+      \lfloor x \rfloor,&amp; \text{if } x - \lfloor x \rfloor \leq \frac{1}{2}\\
+      \lceil x \rceil,&amp; \text{otherwise}
+  \end{cases}
+  \forall x \in T
+  $$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">rint</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">rint</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L87">shumai/tensor/tensor_ops_interface_gen.ts:87</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L326">shumai/tensor/tensor_ops_interface_gen.ts:326</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="roll" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>roll</span><a href="#roll" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -726,15 +862,25 @@
 <h5>axis: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L94">shumai/tensor/tensor_ops_interface_gen.ts:94</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L405">shumai/tensor/tensor_ops_interface_gen.ts:405</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="sigmoid" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sigmoid</span><a href="#sigmoid" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="sigmoid.sigmoid-1">sigmoid<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#sigmoid.sigmoid-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Calculate the sigmoid (logistic function) for each element in a <a href="../classes/Tensor.html">Tensor</a>. There is a static function version of this method: <a href="../functions/sigmoid.html">sigmoid</a>.</p>
+<p>  $$\frac{1}{1 + e^{-x}} : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">1337</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">sigmoid</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">sigmoid</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L90">shumai/tensor/tensor_ops_interface_gen.ts:90</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L383">shumai/tensor/tensor_ops_interface_gen.ts:383</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="sign" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sign</span><a href="#sign" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -742,15 +888,25 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L97">shumai/tensor/tensor_ops_interface_gen.ts:97</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L408">shumai/tensor/tensor_ops_interface_gen.ts:408</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="sin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sin</span><a href="#sin" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="sin.sin-1">sin<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#sin.sin-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Compute the sine function each element in a tensor. There is a static function version of this method: <a href="../functions/sin.html">sin</a>.</p>
+<p>  $$\sin(x) : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">sin</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">sin</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L81">shumai/tensor/tensor_ops_interface_gen.ts:81</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L205">shumai/tensor/tensor_ops_interface_gen.ts:205</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="sort" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sort</span><a href="#sort" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -763,15 +919,25 @@
 <h5>dim: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L101">shumai/tensor/tensor_ops_interface_gen.ts:101</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L412">shumai/tensor/tensor_ops_interface_gen.ts:412</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="sqrt" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sqrt</span><a href="#sqrt" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="sqrt.sqrt-1">sqrt<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#sqrt.sqrt-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Compute the square root of each element in a tensor. There is a static function version of this method: <a href="../functions/sqrt.html">sqrt</a>.</p>
+<p>  $$\sqrt x : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">sqrt</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">sqrt</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L83">shumai/tensor/tensor_ops_interface_gen.ts:83</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L243">shumai/tensor/tensor_ops_interface_gen.ts:243</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="std" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>std</span><a href="#std" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -786,7 +952,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L133">shumai/tensor/tensor_ops_interface_gen.ts:133</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L444">shumai/tensor/tensor_ops_interface_gen.ts:444</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="sub" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sub</span><a href="#sub" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -799,7 +965,7 @@
 <h5>other: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L103">shumai/tensor/tensor_ops_interface_gen.ts:103</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L414">shumai/tensor/tensor_ops_interface_gen.ts:414</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="sum" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sum</span><a href="#sum" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -814,21 +980,31 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L128">shumai/tensor/tensor_ops_interface_gen.ts:128</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L439">shumai/tensor/tensor_ops_interface_gen.ts:439</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="tanh" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>tanh</span><a href="#tanh" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="tanh.tanh-1">tanh<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#tanh.tanh-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Compute the hyperbolic tangent function each element in a tensor. There is a static function version of this method: <a href="../functions/tanh.html">tanh</a>.</p>
+<p>  $$\tanh(x) : \forall x \in T$$</p>
+
+<h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">randn</span><span class="hl-0">([</span><span class="hl-8">128</span><span class="hl-0">, </span><span class="hl-8">128</span><span class="hl-0">])</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">tanh</span><span class="hl-0">()</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">tanh</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">)</span>
+</code></pre>
+
+<h3>Returns</h3><ul>
+<li>A new <a href="../classes/Tensor.html">Tensor</a></li>
+</ul>
+</div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L84">shumai/tensor/tensor_ops_interface_gen.ts:84</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L262">shumai/tensor/tensor_ops_interface_gen.ts:262</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="tile" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>tile</span><a href="#tile" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="tile.tile-1">tile<span class="tsd-signature-symbol">(</span>shape<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BigInt64Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#tile.tile-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Replicate a <a href="../classes/Tensor.html">Tensor</a> about it&#39;s axes. There is a static function version of this method: <a href="../functions/tile.html">tile</a>.</p>
+<div class="tsd-comment tsd-typography"><p>Replicate a <a href="../classes/Tensor.html">Tensor</a> about its axes. There is a static function version of this method: <a href="../functions/tile.html">tile</a>.</p>
 
 <h3>Example</h3><pre><code class="language-javascript"><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">t</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">identity</span><span class="hl-0">(</span><span class="hl-8">4</span><span class="hl-0">)</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// equivalent calls</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">a</span><span class="hl-0"> = </span><span class="hl-3">sm</span><span class="hl-0">.</span><span class="hl-7">tile</span><span class="hl-0">(</span><span class="hl-3">t</span><span class="hl-0">, [</span><span class="hl-8">2</span><span class="hl-0">, </span><span class="hl-8">2</span><span class="hl-0">])</span><br/><span class="hl-0">  </span><span class="hl-3">a</span><span class="hl-0">.</span><span class="hl-3">shape</span><span class="hl-0"> </span><span class="hl-5">// [8, 8]</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">b</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">tile</span><span class="hl-0">([</span><span class="hl-8">2</span><span class="hl-0">, </span><span class="hl-8">2</span><span class="hl-0">])</span><br/><span class="hl-0">  </span><span class="hl-3">b</span><span class="hl-0">.</span><span class="hl-3">shape</span><span class="hl-0"> </span><span class="hl-5">// [8, 8]</span><br/><br/><span class="hl-0">  </span><span class="hl-5">// tiling by 1 on all dims does nothing</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-6">no_op</span><span class="hl-0"> = </span><span class="hl-3">t</span><span class="hl-0">.</span><span class="hl-7">tile</span><span class="hl-0">([</span><span class="hl-8">1</span><span class="hl-0">, </span><span class="hl-8">1</span><span class="hl-0">])</span>
 </code></pre>
@@ -844,7 +1020,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L70">shumai/tensor/tensor_ops_interface_gen.ts:70</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L70">shumai/tensor/tensor_ops_interface_gen.ts:70</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="transpose" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>transpose</span><a href="#transpose" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -868,7 +1044,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L47">shumai/tensor/tensor_ops_interface_gen.ts:47</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L47">shumai/tensor/tensor_ops_interface_gen.ts:47</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="tril" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>tril</span><a href="#tril" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -876,7 +1052,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L98">shumai/tensor/tensor_ops_interface_gen.ts:98</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L409">shumai/tensor/tensor_ops_interface_gen.ts:409</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="triu" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>triu</span><a href="#triu" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -884,7 +1060,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L99">shumai/tensor/tensor_ops_interface_gen.ts:99</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L410">shumai/tensor/tensor_ops_interface_gen.ts:410</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="var" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>var</span><a href="#var" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -901,7 +1077,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> keep_dims: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L132">shumai/tensor/tensor_ops_interface_gen.ts:132</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L443">shumai/tensor/tensor_ops_interface_gen.ts:443</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="where" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>where</span><a href="#where" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -916,7 +1092,7 @@
 <h5>y: <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/bdd9cc4/shumai/tensor/tensor_ops_interface_gen.ts#L100">shumai/tensor/tensor_ops_interface_gen.ts:100</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/d5079c4/shumai/tensor/tensor_ops_interface_gen.ts#L411">shumai/tensor/tensor_ops_interface_gen.ts:411</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">

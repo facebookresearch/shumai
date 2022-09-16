@@ -93,7 +93,7 @@ interface TensorOpsInterface {
    *
    *   Negate a tensor. There is a static function version of this method: {@link negative}.
    *
-   *   $$-x | \forall x \in T$$
+   *   $$-x : \forall x \in T$$
    *
    *   @example
    *
@@ -112,7 +112,7 @@ interface TensorOpsInterface {
    *
    *   Take the logical `not` of every element in a tensor. There is a static function version of this method: {@link logicalNot}.
    *
-   *   $$\neg x | \forall x \in T$$
+   *   $$\neg x : \forall x \in T$$
    *
    *   @example
    *
@@ -131,7 +131,7 @@ interface TensorOpsInterface {
    *
    *   Compute the exponential of each element in a tensor. There is a static function version of this method: {@link exp}.
    *
-   *   $$e^x | \forall x \in T$$
+   *   $$e^x : \forall x \in T$$
    *
    *   @example
    *
@@ -150,7 +150,7 @@ interface TensorOpsInterface {
    *
    *   Compute the natural logarithm of each element in a tensor. There is a static function version of this method: {@link log}.
    *
-   *   $$\ln(x) | \forall x \in T$$
+   *   $$\ln(x) : \forall x \in T$$
    *
    *   @example
    *
@@ -169,7 +169,7 @@ interface TensorOpsInterface {
    *
    *   Compute the natural logarithm of one plus each element in a tensor. There is a static function version of this method: {@link log1p}.
    *
-   *   $$\ln(1 + x) | \forall x \in T$$
+   *   $$\ln(1 + x) : \forall x \in T$$
    *
    *   @example
    *
@@ -188,7 +188,7 @@ interface TensorOpsInterface {
    *
    *   Compute the sine function each element in a tensor. There is a static function version of this method: {@link sin}.
    *
-   *   $$\sin(x) | \forall x \in T$$
+   *   $$\sin(x) : \forall x \in T$$
    *
    *   @example
    *
@@ -207,7 +207,7 @@ interface TensorOpsInterface {
    *
    *   Compute the cosine function each element in a tensor. There is a static function version of this method: {@link cos}.
    *
-   *   $$\cos(x) | \forall x \in T$$
+   *   $$\cos(x) : \forall x \in T$$
    *
    *   @example
    *
@@ -226,7 +226,7 @@ interface TensorOpsInterface {
    *
    *   Compute the square root of each element in a tensor. There is a static function version of this method: {@link sqrt}.
    *
-   *   $$\sqrt{x} | \forall x \in T$$
+   *   $$\sqrt x : \forall x \in T$$
    *
    *   @example
    *
@@ -245,7 +245,7 @@ interface TensorOpsInterface {
    *
    *   Compute the hyperbolic tangent function each element in a tensor. There is a static function version of this method: {@link tanh}.
    *
-   *   $$\tanh(x) | \forall x \in T$$
+   *   $$\tanh(x) : \forall x \in T$$
    *
    *   @example
    *
@@ -264,7 +264,7 @@ interface TensorOpsInterface {
    *
    *   Compute the mathematical floor (round down) of each element in a tensor. There is a static function version of this method: {@link floor}.
    *
-   *   $$\lfloor x \rfloor | \forall x \in T$$
+   *   $$\lfloor x \rfloor : \forall x \in T$$
    *
    *   @example
    *
@@ -283,7 +283,7 @@ interface TensorOpsInterface {
    *
    *   Compute the mathematical ceiling (round up) of each element in a tensor. There is a static function version of this method: {@link ceil}.
    *
-   *   $$\lceil x \rceil | \forall x \in T$$
+   *   $$\lceil x \rceil : \forall x \in T$$
    *
    *   @example
    *
@@ -298,10 +298,107 @@ interface TensorOpsInterface {
    *   @returns - A new {@link Tensor}
    */
   ceil(): Tensor
+  /**
+   *
+   *   Round each element in a tensor to the nearest integer. There is a static function version of this method: {@link rint}.
+   *
+   *   $$
+   *   x =
+   *   \begin\{cases\}
+   *       \lfloor x \rfloor,& \text\{if \} x - \lfloor x \rfloor \leq \frac\{1\}\{2\}\\\\
+   *       \lceil x \rceil,& \text\{otherwise\}
+   *   \end\{cases\}
+   *   \forall x \in T
+   *   $$
+   *
+   *   @example
+   *
+   *   ```javascript
+   *   const t = sm.randn([128, 128])
+   *
+   *   // equivalent calls
+   *   const a = t.rint()
+   *   const b = sm.rint(t)
+   *   ```
+   *
+   *   @returns - A new {@link Tensor}
+   */
   rint(): Tensor
+  /**
+   *
+   *   Calculate the absolute value for every element in a {@link Tensor}. There is a static function version of this method: {@link absolute}.
+   *
+   *   $$|x| : \forall x \in T$$
+   *
+   *   @example
+   *
+   *   ```javascript
+   *   const t = sm.randn([128, 128])
+   *
+   *   // equivalent calls
+   *   const a = t.absolute()
+   *   const b = sm.absolute(t)
+   *   ```
+   *
+   *   @returns - A new {@link Tensor}
+   */
   absolute(): Tensor
+  /**
+   *
+   *   Calculate the absolute value for every element in a {@link Tensor}. There is a static function version of this method: {@link abs}.
+   *
+   *   $$|x| : \forall x \in T$$
+   *
+   *   @example
+   *
+   *   ```javascript
+   *   const t = sm.randn([128, 128])
+   *
+   *   // equivalent calls
+   *   const a = t.abs()
+   *   const b = sm.abs(t)
+   *   ```
+   *
+   *   @returns - A new {@link Tensor}
+   */
   abs(): Tensor
+  /**
+   *
+   *   Calculate the sigmoid (logistic function) for each element in a {@link Tensor}. There is a static function version of this method: {@link sigmoid}.
+   *
+   *   $$\frac\{1\}\{1 + e^\{-x\}\} : \forall x \in T$$
+   *
+   *   @example
+   *
+   *   ```javascript
+   *   const t = sm.randn([1337])
+   *
+   *   // equivalent calls
+   *   const a = t.sigmoid()
+   *   const b = sm.sigmoid(t)
+   *   ```
+   *
+   *   @returns - A new {@link Tensor}
+   */
   sigmoid(): Tensor
+  /**
+   *
+   *   Calculate the error function ({@link https://en.wikipedia.org/wiki/Error_function | Wikipedia entry}) for each element in a {@link Tensor}. There is a static function version of this method: {@link erf}.
+   *
+   *   $$\frac\{2\}\{\sqrt\{\pi\}\}\int_0^\{x\} e^\{-t^2\} dt : \forall x \in T$$
+   *
+   *   @example
+   *
+   *   ```javascript
+   *   const t = sm.randn([1337])
+   *
+   *   // equivalent calls
+   *   const a = t.erf()
+   *   const b = sm.erf(t)
+   *   ```
+   *
+   *   @returns - A new {@link Tensor}
+   */
   erf(): Tensor
   flip(dim: number): Tensor
   clip(low: Tensor, high: Tensor): Tensor

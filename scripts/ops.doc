@@ -186,7 +186,7 @@ negative:
 
 Negate a tensor. %%suggest_other%%
 
-$$-x | \forall x \in T$$
+$$-x : \forall x \in T$$
 
 @example
 
@@ -205,7 +205,7 @@ logicalNot:
 
 Take the logical `not` of every element in a tensor. %%suggest_other%%
 
-$$\neg x | \forall x \in T$$
+$$\neg x : \forall x \in T$$
 
 @example
 
@@ -224,7 +224,7 @@ exp:
 
 Compute the exponential of each element in a tensor. %%suggest_other%%
 
-$$e^x | \forall x \in T$$
+$$e^x : \forall x \in T$$
 
 @example
 
@@ -243,7 +243,7 @@ log:
 
 Compute the natural logarithm of each element in a tensor. %%suggest_other%%
 
-$$\ln(x) | \forall x \in T$$
+$$\ln(x) : \forall x \in T$$
 
 @example
 
@@ -262,7 +262,7 @@ log1p:
 
 Compute the natural logarithm of one plus each element in a tensor. %%suggest_other%%
 
-$$\ln(1 + x) | \forall x \in T$$
+$$\ln(1 + x) : \forall x \in T$$
 
 @example
 
@@ -281,7 +281,7 @@ sin:
 
 Compute the sine function each element in a tensor. %%suggest_other%%
 
-$$\sin(x) | \forall x \in T$$
+$$\sin(x) : \forall x \in T$$
 
 @example
 
@@ -300,7 +300,7 @@ cos:
 
 Compute the cosine function each element in a tensor. %%suggest_other%%
 
-$$\cos(x) | \forall x \in T$$
+$$\cos(x) : \forall x \in T$$
 
 @example
 
@@ -319,7 +319,7 @@ sqrt:
 
 Compute the square root of each element in a tensor. %%suggest_other%%
 
-$$\sqrt{x} | \forall x \in T$$
+$$\sqrt x : \forall x \in T$$
 
 @example
 
@@ -338,7 +338,7 @@ tanh:
 
 Compute the hyperbolic tangent function each element in a tensor. %%suggest_other%%
 
-$$\tanh(x) | \forall x \in T$$
+$$\tanh(x) : \forall x \in T$$
 
 @example
 
@@ -357,7 +357,7 @@ floor:
 
 Compute the mathematical floor (round down) of each element in a tensor. %%suggest_other%%
 
-$$\lfloor x \rfloor | \forall x \in T$$
+$$\lfloor x \rfloor : \forall x \in T$$
 
 @example
 
@@ -376,7 +376,7 @@ ceil:
 
 Compute the mathematical ceiling (round up) of each element in a tensor. %%suggest_other%%
 
-$$\lceil x \rceil | \forall x \in T$$
+$$\lceil x \rceil : \forall x \in T$$
 
 @example
 
@@ -389,4 +389,106 @@ const b = sm.ceil(t)
 ```
 
 %%static%%@param tensor - {@link Tensor} whose values will have their mathematical ceiling calculated
+@returns - A new {@link Tensor}
+---
+rint:
+
+Round each element in a tensor to the nearest integer. %%suggest_other%%
+
+$$
+x = 
+\begin\{cases\}
+    \lfloor x \rfloor,& \text\{if \} x - \lfloor x \rfloor \leq \frac\{1\}\{2\}\\\\
+    \lceil x \rceil,& \text\{otherwise\}
+\end\{cases\}
+\forall x \in T
+$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.rint()
+const b = sm.rint(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will be rounded to the nearest integer 
+@returns - A new {@link Tensor}
+---
+absolute:
+
+Calculate the absolute value for every element in a {@link Tensor}. %%suggest_other%%
+
+$$|x| : \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.absolute()
+const b = sm.absolute(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their absolute value calculated
+@returns - A new {@link Tensor}
+---
+abs:
+
+Calculate the absolute value for every element in a {@link Tensor}. %%suggest_other%%
+
+$$|x| : \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([128, 128])
+
+// equivalent calls
+const a = t.abs()
+const b = sm.abs(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their absolute value calculated
+@returns - A new {@link Tensor}
+---
+sigmoid:
+
+Calculate the sigmoid (logistic function) for each element in a {@link Tensor}. %%suggest_other%%
+
+$$\frac\{1\}\{1 + e^\{-x\}\} : \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([1337])
+
+// equivalent calls
+const a = t.sigmoid()
+const b = sm.sigmoid(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their sigmoid calculated
+@returns - A new {@link Tensor}
+---
+erf:
+
+Calculate the error function ({@link https://en.wikipedia.org/wiki/Error_function | Wikipedia entry}) for each element in a {@link Tensor}. %%suggest_other%%
+
+$$\frac\{2\}\{\sqrt\{\pi\}\}\int_0^\{x\} e^\{-t^2\} dt : \forall x \in T$$
+
+@example
+
+```javascript
+const t = sm.randn([1337])
+
+// equivalent calls
+const a = t.erf()
+const b = sm.erf(t)
+```
+
+%%static%%@param tensor - {@link Tensor} whose values will have their error function calculated
 @returns - A new {@link Tensor}

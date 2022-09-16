@@ -162,7 +162,7 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Reshape a {@link Tensor} without modifying the underlying data. There is a method version of this static function: {@link Tensor.reshape}.
+ *   Reshape a {@link Tensor} without modifying the underlying data. There is a method version of this static function: {@link Tensor.reshape | Tensor.reshape }.
  *
  *   @remarks
  *   The resultant shape must contain the same number of elements as the base Tensor.
@@ -193,7 +193,7 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Re-arrange the layout of the values within a {@link Tensor}. There is a method version of this static function: {@link Tensor.transpose}.
+ *   Re-arrange the layout of the values within a {@link Tensor}. There is a method version of this static function: {@link Tensor.transpose | Tensor.transpose }.
  *
  *   @remarks
  *   The total number of elements of the tensor does not change.
@@ -225,7 +225,7 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Replicate a {@link Tensor} about its axes. There is a method version of this static function: {@link Tensor.tile}.
+ *   Replicate a {@link Tensor} about its axes. There is a method version of this static function: {@link Tensor.tile | Tensor.tile }.
  *
  *   @example
  *
@@ -258,7 +258,7 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Determine the indices of elements that are non-zero. There is a method version of this static function: {@link Tensor.nonzero}.
+ *   Determine the indices of elements that are non-zero. There is a method version of this static function: {@link Tensor.nonzero | Tensor.nonzero }.
  *
  *   @remarks
  *
@@ -288,9 +288,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Negate a tensor. There is a method version of this static function: {@link Tensor.negative}.
+ *   Negate a tensor. There is a method version of this static function: {@link Tensor.negative | Tensor.negative }.
  *
- *   $$-x | \forall x \in T$$
+ *   $$-x : \forall x \in T$$
  *
  *   @example
  *
@@ -316,9 +316,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Take the logical `not` of every element in a tensor. There is a method version of this static function: {@link Tensor.logicalNot}.
+ *   Take the logical `not` of every element in a tensor. There is a method version of this static function: {@link Tensor.logicalNot | Tensor.logicalNot }.
  *
- *   $$\neg x | \forall x \in T$$
+ *   $$\neg x : \forall x \in T$$
  *
  *   @example
  *
@@ -344,9 +344,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the exponential of each element in a tensor. There is a method version of this static function: {@link Tensor.exp}.
+ *   Compute the exponential of each element in a tensor. There is a method version of this static function: {@link Tensor.exp | Tensor.exp }.
  *
- *   $$e^x | \forall x \in T$$
+ *   $$e^x : \forall x \in T$$
  *
  *   @example
  *
@@ -372,9 +372,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the natural logarithm of each element in a tensor. There is a method version of this static function: {@link Tensor.log}.
+ *   Compute the natural logarithm of each element in a tensor. There is a method version of this static function: {@link Tensor.log | Tensor.log }.
  *
- *   $$\ln(x) | \forall x \in T$$
+ *   $$\ln(x) : \forall x \in T$$
  *
  *   @example
  *
@@ -400,9 +400,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the natural logarithm of one plus each element in a tensor. There is a method version of this static function: {@link Tensor.log1p}.
+ *   Compute the natural logarithm of one plus each element in a tensor. There is a method version of this static function: {@link Tensor.log1p | Tensor.log1p }.
  *
- *   $$\ln(1 + x) | \forall x \in T$$
+ *   $$\ln(1 + x) : \forall x \in T$$
  *
  *   @example
  *
@@ -428,9 +428,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the sine function each element in a tensor. There is a method version of this static function: {@link Tensor.sin}.
+ *   Compute the sine function each element in a tensor. There is a method version of this static function: {@link Tensor.sin | Tensor.sin }.
  *
- *   $$\sin(x) | \forall x \in T$$
+ *   $$\sin(x) : \forall x \in T$$
  *
  *   @example
  *
@@ -456,9 +456,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the cosine function each element in a tensor. There is a method version of this static function: {@link Tensor.cos}.
+ *   Compute the cosine function each element in a tensor. There is a method version of this static function: {@link Tensor.cos | Tensor.cos }.
  *
- *   $$\cos(x) | \forall x \in T$$
+ *   $$\cos(x) : \forall x \in T$$
  *
  *   @example
  *
@@ -484,9 +484,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the square root of each element in a tensor. There is a method version of this static function: {@link Tensor.sqrt}.
+ *   Compute the square root of each element in a tensor. There is a method version of this static function: {@link Tensor.sqrt | Tensor.sqrt }.
  *
- *   $$\sqrt{x} | \forall x \in T$$
+ *   $$\sqrt x : \forall x \in T$$
  *
  *   @example
  *
@@ -512,9 +512,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the hyperbolic tangent function each element in a tensor. There is a method version of this static function: {@link Tensor.tanh}.
+ *   Compute the hyperbolic tangent function each element in a tensor. There is a method version of this static function: {@link Tensor.tanh | Tensor.tanh }.
  *
- *   $$\tanh(x) | \forall x \in T$$
+ *   $$\tanh(x) : \forall x \in T$$
  *
  *   @example
  *
@@ -540,9 +540,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the mathematical floor (round down) of each element in a tensor. There is a method version of this static function: {@link Tensor.floor}.
+ *   Compute the mathematical floor (round down) of each element in a tensor. There is a method version of this static function: {@link Tensor.floor | Tensor.floor }.
  *
- *   $$\lfloor x \rfloor | \forall x \in T$$
+ *   $$\lfloor x \rfloor : \forall x \in T$$
  *
  *   @example
  *
@@ -568,9 +568,9 @@ import { Tensor } from './tensor'
 
 /**
  *
- *   Compute the mathematical ceiling (round up) of each element in a tensor. There is a method version of this static function: {@link Tensor.ceil}.
+ *   Compute the mathematical ceiling (round up) of each element in a tensor. There is a method version of this static function: {@link Tensor.ceil | Tensor.ceil }.
  *
- *   $$\lceil x \rceil | \forall x \in T$$
+ *   $$\lceil x \rceil : \forall x \in T$$
  *
  *   @example
  *
@@ -594,7 +594,32 @@ import { Tensor } from './tensor'
   return t
 }
 
-export function rint(tensor: Tensor) {
+/**
+ *
+ *   Round each element in a tensor to the nearest integer. There is a method version of this static function: {@link Tensor.rint | Tensor.rint }.
+ *
+ *   $$
+ *   x =
+ *   \begin\{cases\}
+ *       \lfloor x \rfloor,& \text\{if \} x - \lfloor x \rfloor \leq \frac\{1\}\{2\}\\\\
+ *       \lceil x \rceil,& \text\{otherwise\}
+ *   \end\{cases\}
+ *   \forall x \in T
+ *   $$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.rint()
+ *   const b = sm.rint(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will be rounded to the nearest integer
+ *   @returns - A new {@link Tensor}
+ */ export function rint(tensor: Tensor) {
   const _ptr = fl._rint(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -604,7 +629,25 @@ export function rint(tensor: Tensor) {
   return t
 }
 
-export function absolute(tensor: Tensor) {
+/**
+ *
+ *   Calculate the absolute value for every element in a {@link Tensor}. There is a method version of this static function: {@link Tensor.absolute | Tensor.absolute }.
+ *
+ *   $$|x| : \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.absolute()
+ *   const b = sm.absolute(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their absolute value calculated
+ *   @returns - A new {@link Tensor}
+ */ export function absolute(tensor: Tensor) {
   const _ptr = fl._absolute(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -614,7 +657,25 @@ export function absolute(tensor: Tensor) {
   return t
 }
 
-export function abs(tensor: Tensor) {
+/**
+ *
+ *   Calculate the absolute value for every element in a {@link Tensor}. There is a method version of this static function: {@link Tensor.abs | Tensor.abs }.
+ *
+ *   $$|x| : \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([128, 128])
+ *
+ *   // equivalent calls
+ *   const a = t.abs()
+ *   const b = sm.abs(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their absolute value calculated
+ *   @returns - A new {@link Tensor}
+ */ export function abs(tensor: Tensor) {
   const _ptr = fl._abs(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -624,7 +685,25 @@ export function abs(tensor: Tensor) {
   return t
 }
 
-export function sigmoid(tensor: Tensor) {
+/**
+ *
+ *   Calculate the sigmoid (logistic function) for each element in a {@link Tensor}. There is a method version of this static function: {@link Tensor.sigmoid | Tensor.sigmoid }.
+ *
+ *   $$\frac\{1\}\{1 + e^\{-x\}\} : \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([1337])
+ *
+ *   // equivalent calls
+ *   const a = t.sigmoid()
+ *   const b = sm.sigmoid(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their sigmoid calculated
+ *   @returns - A new {@link Tensor}
+ */ export function sigmoid(tensor: Tensor) {
   const _ptr = fl._sigmoid(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -634,7 +713,25 @@ export function sigmoid(tensor: Tensor) {
   return t
 }
 
-export function erf(tensor: Tensor) {
+/**
+ *
+ *   Calculate the error function ({@link https://en.wikipedia.org/wiki/Error_function | Wikipedia entry}) for each element in a {@link Tensor}. There is a method version of this static function: {@link Tensor.erf | Tensor.erf }.
+ *
+ *   $$\frac\{2\}\{\sqrt\{\pi\}\}\int_0^\{x\} e^\{-t^2\} dt : \forall x \in T$$
+ *
+ *   @example
+ *
+ *   ```javascript
+ *   const t = sm.randn([1337])
+ *
+ *   // equivalent calls
+ *   const a = t.erf()
+ *   const b = sm.erf(t)
+ *   ```
+ *
+ *   @param tensor - {@link Tensor} whose values will have their error function calculated
+ *   @returns - A new {@link Tensor}
+ */ export function erf(tensor: Tensor) {
   const _ptr = fl._erf(tensor.ptr)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
