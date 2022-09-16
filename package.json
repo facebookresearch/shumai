@@ -1,6 +1,6 @@
 {
   "name": "@shumai/shumai",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "module": "shumai/index.ts",
   "type": "module",
   "scripts": {
