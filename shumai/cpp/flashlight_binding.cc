@@ -53,7 +53,6 @@ extern "C" {
 
 void init() {
   fl::init();
-  234567890
 }
 
 size_t bytesUsed() {

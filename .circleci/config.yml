@@ -44,10 +44,7 @@ commands:
       - run:
           name: "Build Flashlight"
           command: |
-<<<<<<< HEAD
             cd /tmp
-=======
->>>>>>> 2fc76ae (Build Flashlight bindings inline in CI)
             git clone https://github.com/flashlight/flashlight
             cd flashlight
             mkdir -p build
@@ -115,10 +112,7 @@ jobs:
             - run:
                 name: "Install ArrayFire CPU backend with OpenBLAS runtime"
                 command: sudo apt install arrayfire-cpu3-openblas arrayfire-cpu-dev
-<<<<<<< HEAD
             # For now, since we're building bindings from source, don't pull anything in.
-=======
->>>>>>> 2fc76ae (Build Flashlight bindings inline in CI)
             # - run:
             #     name: "Update package.json and ffi interface to pull in Linux CPU libs"
             #     command: |
