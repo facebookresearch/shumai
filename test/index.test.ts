@@ -29,12 +29,12 @@ describe('index', () => {
   })
 })
 
-describe('index_assign', () => {
+describe('indexedAssign', () => {
   it('single element 1D', () => {
     const t = sm.randn([128])
     const o = sm.randn([1])
     const ref = o.toFloat32()
-    const s = t.index_assign(o, [7])
+    const s = t.indexedAssign(o, [7])
     const check = s.toFloat32()
     expect(isClose(ref, check)).toBe(true)
   })
@@ -42,7 +42,7 @@ describe('index_assign', () => {
     const t = sm.randn([128, 8])
     const o = sm.randn([128])
     const ref = o.toFloat32Array()
-    const s = t.index_assign(o, [':', 2])
+    const s = t.indexedAssign(o, [':', 2])
     for (let i = 0; i < 128; ++i) {
       const check = s.toFloat32Array()[2 * 128 + i]
       expect(isClose(ref[i], check)).toBe(true)

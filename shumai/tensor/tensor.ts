@@ -274,7 +274,8 @@ export class Tensor {
     return fl.scalar.native(this.ptr)
   }
 
-  index_args(args) {
+  /** @private */
+  _index_args(args) {
     if (this.ndim !== args.length) {
       throw `Must specify index for every dimension! (expected ${this.ndim}, got ${args.length}`
     }
@@ -296,7 +297,7 @@ export class Tensor {
   }
 
   index(args) {
-    const [start, end, stride] = this.index_args(args)
+    const [start, end, stride] = this._index_args(args)
     return wrapFLTensor(
       fl._index.native,
       this,
@@ -306,10 +307,10 @@ export class Tensor {
     )
   }
 
-  index_assign(t, args) {
-    const [start, end, stride] = this.index_args(args)
+  indexedAssign(t, args) {
+    const [start, end, stride] = this._index_args(args)
     return wrapFLTensor(
-      fl._index_assign.native,
+      fl._indexedAssign.native,
       this,
       t,
       ...arrayArg(start, FFIType.i64),
