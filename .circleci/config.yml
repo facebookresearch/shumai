@@ -153,11 +153,14 @@ jobs:
           name: "Install CUDA Toolkit 11.6"
           # Use the Ubuntu 18.04 repo per ArrayFire
           command: |
+            cd /tmp
             wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb
             sudo dpkg -i cuda-keyring_1.0-1_all.deb
             sudo apt update
             sudo apt install cuda-toolkit-11-6
-            echo "/usr/local/cuda/bin" >> $GITHUB_PATH
+            sudo rm /usr/local/cuda # may point to other non-11.6 CUDA libs
+            sudo ln -s /usr/local/cuda-11.6 /usr/local/cuda
+            echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> $BASH_ENV
       - install_flashlight:
           arrayfire_backend: "CUDA"
       - checkout
