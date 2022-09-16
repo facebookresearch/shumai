@@ -148,6 +148,11 @@ jobs:
       - run:
           name: "Install ArrayFire CUDA backend with CUDA 11.6 runtime"
           command: sudo apt install arrayfire-cuda3-cuda-11-6 arrayfire-cuda-dev
+      - run:
+          name: "Clean up CUDA lib paths"
+          command: |
+            sudo rm /usr/local/cuda # only points to ArrayFire CUDA 11.6 runtime libs
+            sudo ln -s /usr/local/cuda-11.4 /usr/local/cuda
       - install_flashlight:
           arrayfire_backend: "CUDA"
       - build_flashlight_bindings
