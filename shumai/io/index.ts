@@ -1,9 +1,11 @@
+export * from './network'
+
 /**
- * Below are some examples of how to use functions in this namespace.
+ * Below are some examples of how to use functions in the `io` namespace.
  * 
  * ### Inference
  * 
- * Want to expose your model to the network? Use `io.serve`:
+ * Want to expose your model to the network? Use {@link io.serve | `io.serve`}:
  * 
  * ```javascript
  * import * as sm from '@shumai/shumai'
@@ -17,7 +19,7 @@
  * })
  * ```
  * 
- * A client can use `io.tfetch` (basically `fetch` but for Tensors):
+ * A client can use {@link io.tfetch | `io.tfetch`} (basically `fetch` but for Tensors):
  * 
  * ```javascript
  * import * as sm from '@shumai/shumai'
@@ -67,7 +69,7 @@
  * 
  * ### Wrappers
  * 
- * The above setup seems pretty useful, and we can get rid of that boiler-plate code. Using `io.serve_model` will create `/forward` and `/optimize` endpoints for you.
+ * Shumai provides wrapper for the above setup code. {@link io.serve_model | `io.serve_model`} will create `/forward` and `/optimize` endpoints for you.
  * 
  * ```javascript
  * import * as sm from '@shumai/shumai'
@@ -76,7 +78,7 @@
  * sm.io.serve_model(model, sm.optim.sgd)
  * ```
  * 
- * And the client can attach with `io.remote_model`, which attaches a hook to `backward` for automatic gradients.
+ * And the client can attach with {@link io.remote_model | `io.remote_model`}, which attaches a hook to `backward` for automatic gradients.
  * 
  * ```javascript
  * import * as sm from '@shumai/shumai'
@@ -114,7 +116,7 @@
  *     A(input),
  *     B(input)
  *   )
- *   // automatically pipelined (isn't async is great?)
+ *   // automatically pipelined (isn't async great?)
  *   const c = await C(a)
  *   return c.mul(b).matmul(weight)
  * }
@@ -167,4 +169,3 @@
  * ```
  * @module
  */
-export * from './network'

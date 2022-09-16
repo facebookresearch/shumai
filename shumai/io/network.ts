@@ -8,6 +8,7 @@ const _unique_id = crypto
   .digest('hex')
   .slice(0, 8)
 
+/** @private */
 export function encode(tensor: sm.Tensor): ArrayBuffer {
   const shape = tensor.shape64
   const shape_len = new Int32Array([shape.length, 0])
@@ -21,6 +22,7 @@ export function encode(tensor: sm.Tensor): ArrayBuffer {
   return buf.buffer
 }
 
+/** @private */
 export function decodeBuffer(buf: ArrayBuffer) {
   if (buf.byteLength < 8) {
     throw 'buffer cannot be decoded'
@@ -34,6 +36,7 @@ export function decodeBuffer(buf: ArrayBuffer) {
   return t.reshape(shape)
 }
 
+/** @private */
 export async function decode(obj: Response | ArrayBuffer) {
   if (obj.constructor === Response || obj.constructor === Request) {
     const buf = await obj.arrayBuffer()
@@ -45,6 +48,42 @@ export async function decode(obj: Response | ArrayBuffer) {
   }
 }
 
+/**
+ * Similar to the Web standard {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch | fetch} API, this function enables asynchronous transfer of remote tensors.
+ *
+ * @example
+ *
+ * The function can be used with the `await` keyword:
+ *
+ * ```javascript
+ * // input and output at once
+ * const i = sm.randn([128])
+ * const t = await sm.io.tfetch('localhost:3000', i)
+ *
+ * // no expected return value
+ * await sm.io.tfetch('localhost:3000', i)
+ *
+ * // no input
+ * const t = await sm.io.tfetch('localhost:3000')
+ * ```
+ *
+ * or with a chained callbacks:
+ *
+ * ```javascript
+ * sm.io.tfetch('localhost:3000', i).then((t) => {
+ *   // t is a tensor or null
+ *   if (t) {
+ *     console.log(t.shape)
+ *   }
+ * }).catch((err) => {
+ *   console.log('hit an error retrieving this tensor...')
+ * })
+ * ```
+ *
+ * @param url - The location to either send or request the tensor from.
+ * @param tensor - An optional tensor that will be sent to the remote location.
+ * @returns A tensor from the remote location or null (if the response is empty)
+ */
 export async function tfetch(
   url: string,
   tensor?: sm.Tensor,
@@ -88,6 +127,39 @@ export async function tfetch(
   return null
 }
 
+/**
+ * Connect to a remote model as if it were a local differentiable function.
+ *
+ * @remarks
+ *
+ * This function assumes a server running {@link io.serve_model | `io.serve_model`}.
+ *
+ * @example
+ *
+ * Similar to {@link io.tfetch | `io.tfetch`}, the `await` keyword may be used:
+ *
+ * ```javascript
+ * const model = sm.io.remote_model('localhost:3000')
+ * const input = sm.randn([128])
+ * // await is necessary, as model invocation is asynchronous
+ * const output = await model(input)
+ * const loss = sm.loss.mse(output, reference)
+ * // note the use of the await keyword for the backward pass
+ * await loss.backward()
+ * ```
+ * or chained callbacks:
+ *
+ * ```javascript
+ * model(input).then((output) => {
+ *   loss_fn(output).backward()
+ * }).then(() => {
+ *   console.log('backward executed!')
+ * })
+ * ```
+ *
+ * @param url - The location of the remote model (must be running {@link io.serve_model | `io.serve_model`}).
+ * @returns An asynchronous function that can be invoked with an input tensor.
+ */
 export function remote_model(url: string, backward_url?: string) {
   let forward_url = `${url}/forward`
   if (!backward_url) {
@@ -121,7 +193,41 @@ export type ServeOpts = {
   ) => Response | Promise<Response> | undefined | Promise<undefined>
 }
 
-/* TODO: specify a better type than any as it's a function */
+/**
+ * Spawn an HTTP server to handle tensor input and output requests.
+ *
+ * @remarks
+ * This function does not return.  The default port is 3000.
+ *
+ * @example
+ *
+ * ```javascript
+ * // any function with tensor inputs/outputs can be served
+ * function genRandTensor() {
+ *   return sm.rand([128])
+ * }
+ *
+ * // async functions can be served as well
+ * async function talkToServer() {
+ *   const t = await sm.io.tfetch(different_server)
+ *   return t.mul(sm.rand([128]))
+ * }
+ *
+ * sm.io.serve({
+ *   genRandTensor: genRandTensor,
+ *   remoteCall: talkToServer
+ * })
+ * ```
+ *
+ * The above functions are accessible from a different process with {@link io.tfetch | `io.tfetch`}:
+ * ```javascript
+ * const t0 = await sm.io.tfetch(`${host}:3000/genRandTensor`)
+ * const t1 = await sm.io.tfetch(`${host}:3000/remoteCall`)
+ * ```
+ *
+ * @param request_dict - A map of endpoint names to the underlying (possibly async) function calls.
+ * @param options - A set of options passed to the underlying Bun.serve call.
+ */
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics = {}
@@ -180,6 +286,47 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   })
 }
 
+/**
+ * Serve a model with forward and optimization endpoints.
+ *
+ * @remarks
+ * 
+ * This server is to be used with {@link io.remote_model | `io.remote_model`}.
+ * The function does not return.
+ *
+ * @example
+ *
+ * ```javascript
+ * const weight = sm.randn([128, 128]).requireGrad()
+ * function model(input) {
+ *   return input.matmul(weight).maximum(sm.scalar(0))
+ * }
+ * 
+ * function optimize(differentiated_tensors) {
+ *   for (let t of differentiated_tensors) {
+ *     t.update(t.add(t.grad.mul(sm.scalar(1e-3))))
+ *   }
+ * }
+ * sm.io.serve_model(model, optimize)
+ * ```
+ *
+ * Additional functions can also be served (as in {@link io.serve | `io.serve`}):
+ *
+ * ```javascript
+ * function extraMethod() {
+ *   return sm.identity(7)
+ * }
+ * sm.io.serve_model(model, sm.optim.sgd, {port:3000}, {
+ *   ident: extraMethod
+ * })
+ * ```
+ *
+ * @param fn - A function that will run on forward calls
+ * @param grad_update - A function that will run on backward calls, with a list of differentiated tensors passed in
+ * @param options - An optional list of options passed to the underlying Bun.serve call
+ * @param req_map - An optional map of additional handlers passed to the underlying {@link io.serve | `io.serve`} call
+ *
+ */
 export function serve_model(
   fn: (t: sm.Tensor) => sm.Tensor | Promise<sm.Tensor>,
   grad_update: OptimizerFn,
