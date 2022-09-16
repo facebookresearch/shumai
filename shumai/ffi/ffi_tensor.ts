@@ -27,10 +27,10 @@ const ffi_tensor = {
     args: [FFIType.i64, FFIType.ptr],
     returns: FFIType.ptr
   },
-  eval: {
+  _eval: {
     args: [FFIType.ptr]
   },
-  buffer: {
+  _buffer: {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
@@ -46,7 +46,7 @@ const ffi_tensor = {
     ],
     returns: FFIType.ptr
   },
-  _index_assign: {
+  _indexedAssign: {
     args: [
       FFIType.ptr,
       FFIType.ptr,
@@ -59,35 +59,35 @@ const ffi_tensor = {
     ],
     returns: FFIType.ptr
   },
-  flatten: {
+  _flatten: {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
-  asContiguousTensor: {
+  _asContiguousTensor: {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
-  copy: {
+  _copy: {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
-  scalar: {
+  _scalar: {
     args: [FFIType.ptr],
     returns: FFIType.f32
   },
-  elements: {
+  _elements: {
     args: [FFIType.ptr],
     returns: FFIType.u64
   },
-  bytes: {
+  _bytes: {
     args: [FFIType.ptr],
     returns: FFIType.u64
   },
-  ndim: {
+  _ndim: {
     args: [FFIType.ptr],
     returns: FFIType.i32
   },
-  shape: {
+  _shape: {
     args: [FFIType.ptr, FFIType.ptr, FFIType.i32],
     returns: FFIType.i32
   }

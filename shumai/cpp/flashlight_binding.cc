@@ -70,22 +70,22 @@ bool isRowMajor() { return g_row_major; }
 
 bool isColMajor() { return !g_row_major; }
 
-void eval(void *t) {
+void _eval(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   fl::eval(*tensor);
 }
 
-size_t elements(void *t) {
+size_t _elements(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   return tensor->elements();
 }
 
-size_t bytes(void *t) {
+size_t _bytes(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   return tensor->bytes();
 }
 
-int shape(void *t, void *out, int out_len) {
+int _shape(void *t, void *out, int out_len) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   if (out_len != tensor->ndim()) {
     return -1;
@@ -97,17 +97,17 @@ int shape(void *t, void *out, int out_len) {
   return 0;
 }
 
-int ndim(void *t) {
+int _ndim(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   return tensor->ndim();
 }
 
-float *buffer(void *t) {
+float *_buffer(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   return tensor->astype(fl::dtype::f32).host<float>();
 }
 
-float scalar(void *t) {
+float _scalar(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   return tensor->scalar<float>();
 }
@@ -136,8 +136,8 @@ void *_index(void *t, void *starts, int64_t starts_len, void *ends,
 }
 
 void *_indexedAssign(void *t, void *other, void *starts, int64_t starts_len,
-                    void *ends, int64_t ends_len, void *strides,
-                    int64_t strides_len) {
+                     void *ends, int64_t ends_len, void *strides,
+                     int64_t strides_len) {
   auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
   auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
   auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
@@ -160,21 +160,21 @@ void *_indexedAssign(void *t, void *other, void *starts, int64_t starts_len,
   return new_tensor;
 }
 
-void *flatten(void *t) {
+void *_flatten(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   auto *new_tensor = new fl::Tensor(tensor->flatten());
   g_bytes_used += new_tensor->bytes();
   return new_tensor;
 }
 
-void *asContiguousTensor(void *t) {
+void *_asContiguousTensor(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   auto *new_tensor = new fl::Tensor(tensor->asContiguousTensor());
   g_bytes_used += new_tensor->bytes();
   return new_tensor;
 }
 
-void *copy(void *t) {
+void *_copy(void *t) {
   auto *tensor = reinterpret_cast<fl::Tensor *>(t);
   auto *new_tensor = new fl::Tensor(tensor->copy());
   g_bytes_used += new_tensor->bytes();

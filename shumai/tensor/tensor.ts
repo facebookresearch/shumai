@@ -143,7 +143,7 @@ export class Tensor {
     this.underlying = toArrayBuffer(
       _ptr,
       0,
-      Number(fl.bytes.native(_ptr)),
+      Number(fl._bytes.native(_ptr)),
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - overload toArrayBuffer params
       fl.genTensorDestroyer.native()
@@ -188,7 +188,7 @@ export class Tensor {
   }
 
   eval() {
-    return fl.eval.native(this.ptr)
+    return fl._eval.native(this.ptr)
   }
 
   get ptr() {
@@ -196,7 +196,7 @@ export class Tensor {
   }
 
   get ndim() {
-    return Number(fl.ndim.native(this.ptr))
+    return Number(fl._ndim.native(this.ptr))
   }
 
   get shape() {
@@ -213,7 +213,7 @@ export class Tensor {
     if (out.length === 0) {
       return out
     }
-    const err = fl.shape.native(this.ptr, ptr(out), out.length)
+    const err = fl._shape.native(this.ptr, ptr(out), out.length)
     if (err != 0) {
       throw "couldn't determine shape"
     }
@@ -235,7 +235,7 @@ export class Tensor {
   }
 
   asContiguousTensor() {
-    return wrapFLTensor(fl.asContiguousTensor.native, this.ptr)
+    return wrapFLTensor(fl._asContiguousTensor.native, this.ptr)
   }
 
   copy() {
@@ -243,7 +243,7 @@ export class Tensor {
   }
 
   deepCopy() {
-    return wrapFLTensor(fl.copy.native, this.ptr)
+    return wrapFLTensor(fl._copy.native, this.ptr)
   }
 
   requireGrad() {
@@ -261,17 +261,17 @@ export class Tensor {
   }
 
   get elements() {
-    return Number(fl.elements.native(this.ptr))
+    return Number(fl._elements.native(this.ptr))
   }
 
   toFloat32Array() {
     const contig = this.asContiguousTensor()
     const elems = contig.elements
-    return new Float32Array(toArrayBuffer(fl.buffer.native(contig.ptr), 0, elems * 4))
+    return new Float32Array(toArrayBuffer(fl._buffer.native(contig.ptr), 0, elems * 4))
   }
 
   toFloat32(): number {
-    return fl.scalar.native(this.ptr)
+    return fl._scalar.native(this.ptr)
   }
 
   /** @private */
