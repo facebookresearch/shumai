@@ -111,6 +111,7 @@ jobs:
             - run:
                 name: "Install ArrayFire CPU backend with OpenBLAS runtime"
                 command: sudo apt install arrayfire-cpu3-openblas arrayfire-cpu-dev
+            # For now, since we're building bindings from source, don't pull anything in.
             # - run:
             #     name: "Update package.json and ffi interface to pull in Linux CPU libs"
             #     command: |
