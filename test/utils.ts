@@ -57,13 +57,18 @@ export const isClose = (actual: number | bigint, expected: number | bigint, erro
 }
 
 /* validates that actual && expected array are close (all values w/i given tolerance) */
-const isCloseArr = (actual: util.ArrayLike, expected: util.ArrayLike, error: number) => {
-  const expLength = expected.length
-  if (actual.length !== expLength) return false
+const isCloseArr = (actual: util.ArrayLike, expected: util.ArrayLike | number, error: number) => {
+  if (typeof expected === 'number') expected = [expected]
+  const expLength = expected.length,
+    actualLength = actual.length
+  if (actualLength !== expLength) {
+    logShape([actualLength], [expLength])
+    return false
+  }
 
   for (let i = 0; i < expLength; i++) {
     if (!isClose(actual[i], expected[i], error)) {
-      for (let j = 0; j < actual.length; j++) {
+      for (let j = 0; j < actualLength; j++) {
         console.log(
           `expected[${j}]:`,
           expected[j].toString(),
@@ -80,6 +85,6 @@ const isCloseArr = (actual: util.ArrayLike, expected: util.ArrayLike, error: num
 
 export const expectArraysClose = (
   actual: util.ArrayLike,
-  expected: util.ArrayLike,
+  expected: util.ArrayLike | number,
   error = 0.001
 ) => expect(isCloseArr(actual, expected, error)).toBe(true)
