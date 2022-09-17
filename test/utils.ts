@@ -5,14 +5,23 @@ import { util } from '@shumai/shumai'
 export const calcSizeFromShape = (arr: number[]) =>
   arr.reduce((acc, val, i) => (i === 0 ? val : acc * val), 0)
 
+const logShape = (actual_shape: number[], expected_shape: number[]) =>
+  console.log('actual_shape: ', actual_shape, '  ** vs **  ', 'expected_shape: ', expected_shape)
+
 /**
  * exported helper functions to make up for bun's wiptest
  * lacking some features
  */
 export const isShape = (t: Tensor, expectedShape: number[]) => {
-  if (t.shape.length !== expectedShape.length) return false
+  if (t.shape.length !== expectedShape.length) {
+    logShape(t.shape, expectedShape)
+    return false
+  }
   for (let i = 0; i < t.shape.length; i++) {
-    if (t.shape[i] !== expectedShape[i]) return false
+    if (t.shape[i] !== expectedShape[i]) {
+      logShape(t.shape, expectedShape)
+      return false
+    }
   }
   return true
 }
@@ -20,7 +29,9 @@ export const isShape = (t: Tensor, expectedShape: number[]) => {
 export const areSameShape = (t1: Tensor, t2: Tensor) => {
   const count = t1.shape.length >= t2.shape.length ? t1.shape.length : t2.shape.length
   for (let i = 0; i <= count; i++) {
-    if (t1.shape[i] !== t2.shape[i]) return false
+    if (t1.shape[i] !== t2.shape[i]) {
+      return false
+    }
   }
   return true
 }
@@ -46,13 +57,18 @@ export const isClose = (actual: number | bigint, expected: number | bigint, erro
 }
 
 /* validates that actual && expected array are close (all values w/i given tolerance) */
-const isCloseArr = (actual: util.ArrayLike, expected: util.ArrayLike, error: number) => {
-  const expLength = expected.length
-  if (actual.length !== expLength) return false
+const isCloseArr = (actual: util.ArrayLike, expected: util.ArrayLike | number, error: number) => {
+  if (typeof expected === 'number') expected = [expected]
+  const expLength = expected.length,
+    actualLength = actual.length
+  if (actualLength !== expLength) {
+    logShape([actualLength], [expLength])
+    return false
+  }
 
   for (let i = 0; i < expLength; i++) {
     if (!isClose(actual[i], expected[i], error)) {
-      for (let j = 0; j < actual.length; j++) {
+      for (let j = 0; j < actualLength; j++) {
         console.log(
           `expected[${j}]:`,
           expected[j].toString(),
@@ -69,6 +85,6 @@ const isCloseArr = (actual: util.ArrayLike, expected: util.ArrayLike, error: num
 
 export const expectArraysClose = (
   actual: util.ArrayLike,
-  expected: util.ArrayLike,
+  expected: util.ArrayLike | number,
   error = 0.001
 ) => expect(isCloseArr(actual, expected, error)).toBe(true)

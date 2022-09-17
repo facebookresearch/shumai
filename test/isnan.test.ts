@@ -17,5 +17,5 @@ describe('isnan', () => {
     expectArraysClose(r.toFloat32Array(), [1, 0, 0, 0, 0])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })

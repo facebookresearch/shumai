@@ -73,5 +73,5 @@ describe('mean', () => {
     expectArraysClose(mean.toFloat32Array(), [7 / 6])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })

@@ -19,5 +19,5 @@ describe('cos', () => {
     expectArraysClose(r.toFloat32Array(), [Math.cos(4), NaN, Math.cos(0)])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })

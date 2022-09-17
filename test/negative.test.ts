@@ -21,5 +21,5 @@ describe('negative', () => {
     expectArraysClose(r.toFloat32Array(), [-1, 3, NaN, -7, 10234])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })

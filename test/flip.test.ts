@@ -16,5 +16,5 @@ describe('flip', () => {
     expectArraysClose(r2.toFloat32Array(), [0, 1, 2, 12345678])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })
