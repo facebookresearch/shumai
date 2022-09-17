@@ -1,6 +1,6 @@
-import { it, describe, expect } from 'bun:test'
+import { it, describe } from 'bun:test'
 import * as sm from '@shumai/shumai'
-import { expectArraysClose, isShape } from './utils'
+import { expectArraysClose } from './utils'
 
 describe('log1p', () => {
   it('basic', () => {
@@ -16,7 +16,6 @@ describe('log1p', () => {
     const values = [1, NaN]
     const a = sm.tensor(new Float32Array(values))
     const r = a.log1p()
-    expect(isShape(r, [2, 2]))
     expectArraysClose(
       r.toFloat32Array(),
       values.map((v) => Math.log1p(v))
