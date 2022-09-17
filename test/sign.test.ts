@@ -17,5 +17,5 @@ describe('sign', () => {
     expectArraysClose(r.toFloat32Array(), [1, 0, -1])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })

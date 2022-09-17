@@ -33,5 +33,5 @@ describe('erf', () => {
     expectArraysClose(res.toFloat32Array(), [0.5204999, NaN, 0.0])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })

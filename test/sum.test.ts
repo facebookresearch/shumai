@@ -72,5 +72,5 @@ describe('sum', () => {
     expectArraysClose(sum.toFloat32Array(), [1, 2, 3, 4])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })

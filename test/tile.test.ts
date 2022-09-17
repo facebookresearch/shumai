@@ -72,5 +72,5 @@ describe('tile', () => {
     expectArraysClose(t2.toFloat32Array(), [1, 2, NaN, 1, 2, NaN])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })

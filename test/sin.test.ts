@@ -19,5 +19,5 @@ describe('sin', () => {
     expectArraysClose(r.toFloat32Array(), [Math.sin(4), NaN, Math.sin(0)])
   })
 
-  /* TODO: unit tests for gradients once supported */
+  /* TODO: unit tests for gradients */
 })
