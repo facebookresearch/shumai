@@ -5,14 +5,23 @@ import { util } from '@shumai/shumai'
 export const calcSizeFromShape = (arr: number[]) =>
   arr.reduce((acc, val, i) => (i === 0 ? val : acc * val), 0)
 
+const logShape = (actual_shape: number[], expected_shape: number[]) =>
+  console.log('actual_shape: ', actual_shape, '  ** vs **  ', 'expected_shape: ', expected_shape)
+
 /**
  * exported helper functions to make up for bun's wiptest
  * lacking some features
  */
 export const isShape = (t: Tensor, expectedShape: number[]) => {
-  if (t.shape.length !== expectedShape.length) return false
+  if (t.shape.length !== expectedShape.length) {
+    logShape(t.shape, expectedShape)
+    return false
+  }
   for (let i = 0; i < t.shape.length; i++) {
-    if (t.shape[i] !== expectedShape[i]) return false
+    if (t.shape[i] !== expectedShape[i]) {
+      logShape(t.shape, expectedShape)
+      return false
+    }
   }
   return true
 }
@@ -20,7 +29,9 @@ export const isShape = (t: Tensor, expectedShape: number[]) => {
 export const areSameShape = (t1: Tensor, t2: Tensor) => {
   const count = t1.shape.length >= t2.shape.length ? t1.shape.length : t2.shape.length
   for (let i = 0; i <= count; i++) {
-    if (t1.shape[i] !== t2.shape[i]) return false
+    if (t1.shape[i] !== t2.shape[i]) {
+      return false
+    }
   }
   return true
 }
