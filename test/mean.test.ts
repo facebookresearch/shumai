@@ -32,7 +32,7 @@ describe('mean', () => {
   /* TODO: FIX - CURRENTLY FAILS */
   it('works for 2D Tensor; keep_dims=true', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
-    const mean = sm.mean(t, [], true)
+    const mean = t.mean([], true)
     expect(isShape(mean, [1, 1])).toBe(true)
     expect(isClose(mean.toFloat32(), 7 / 6)).toBe(true)
   })
