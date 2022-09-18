@@ -27,6 +27,10 @@ std::vector<T> arrayArg(void *ptr, int len, bool reverse, int invert) {
   return out;
 }
 
+uint axisArg(uint axis, bool reverse, int ndim) {
+  return reverse ? ndim - axis - 1 : axis;
+}
+
 static std::atomic<size_t> g_bytes_used = 0;
 static std::atomic<bool> g_row_major = true;
 
