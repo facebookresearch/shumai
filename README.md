@@ -7,7 +7,9 @@
 
 A fast differentiable tensor library for research in TypeScript and JavaScript.  Built with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
 
-![shumai](https://user-images.githubusercontent.com/4842908/190880737-c530c604-c61b-466a-bf9d-a2d9e88288f3.gif)
+![shumai_big](https://user-images.githubusercontent.com/4842908/190880994-6e59dd90-22ef-4a6a-9129-5be04086b59a.gif)
+
+
 
 ⚠️ *This is experimental software!* ⚠️
 
