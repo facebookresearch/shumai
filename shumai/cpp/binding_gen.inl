@@ -202,9 +202,10 @@ void *_clip(void *tensor, void *low, void *high) {
   return t;
 }
 
-void *_roll(void *tensor, int shift, uint32_t axis) {
+void *_roll(void *tensor, int shift, int32_t axis) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor *>(tensor);
-  auto *t = new fl::Tensor(fl::roll(*tensor_ptr, shift, axis));
+  auto used_axis = axisArg(axis, g_row_major, tensor_ptr->ndim());
+  auto *t = new fl::Tensor(fl::roll(*tensor_ptr, shift, used_axis));
   g_bytes_used += t->bytes();
   return t;
 }
@@ -460,16 +461,18 @@ void *_amax(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   return t;
 }
 
-void *_argmin(void *tensor, uint32_t axis, bool keep_dims) {
+void *_argmin(void *tensor, int32_t axis, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor *>(tensor);
-  auto *t = new fl::Tensor(fl::argmin(*tensor_ptr, axis, keep_dims));
+  auto used_axis = axisArg(axis, g_row_major, tensor_ptr->ndim());
+  auto *t = new fl::Tensor(fl::argmin(*tensor_ptr, used_axis, keep_dims));
   g_bytes_used += t->bytes();
   return t;
 }
 
-void *_argmax(void *tensor, uint32_t axis, bool keep_dims) {
+void *_argmax(void *tensor, int32_t axis, bool keep_dims) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor *>(tensor);
-  auto *t = new fl::Tensor(fl::argmax(*tensor_ptr, axis, keep_dims));
+  auto used_axis = axisArg(axis, g_row_major, tensor_ptr->ndim());
+  auto *t = new fl::Tensor(fl::argmax(*tensor_ptr, used_axis, keep_dims));
   g_bytes_used += t->bytes();
   return t;
 }
@@ -483,9 +486,10 @@ void *_sum(void *tensor, void *axes_ptr, int64_t axes_len, bool keep_dims) {
   return t;
 }
 
-void *_cumsum(void *tensor, uint32_t axis) {
+void *_cumsum(void *tensor, int32_t axis) {
   auto *tensor_ptr = reinterpret_cast<fl::Tensor *>(tensor);
-  auto *t = new fl::Tensor(fl::cumsum(*tensor_ptr, axis));
+  auto used_axis = axisArg(axis, g_row_major, tensor_ptr->ndim());
+  auto *t = new fl::Tensor(fl::cumsum(*tensor_ptr, used_axis));
   g_bytes_used += t->bytes();
   return t;
 }

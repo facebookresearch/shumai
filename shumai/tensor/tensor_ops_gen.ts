@@ -764,14 +764,10 @@ export function clip(tensor: Tensor, low: Tensor, high: Tensor) {
 }
 
 export function roll(tensor: Tensor, shift: number, axis: number) {
-  const _ptr = fl._roll(
-    tensor.ptr,
-    shift | 0,
-    axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0
-  )
+  const _ptr = fl._roll(tensor.ptr, shift | 0, axis >= 0xffffffff ? 0xffffffff : +axis || 0)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad
-    ? [tensor, shift | 0, axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0]
+    ? [tensor, shift | 0, axis >= 0xffffffff ? 0xffffffff : +axis || 0]
     : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.requires_grad = requires_grad
@@ -1094,14 +1090,10 @@ export function amax(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
 }
 
 export function argmin(tensor: Tensor, axis: number, keep_dims = false) {
-  const _ptr = fl._argmin(
-    tensor.ptr,
-    axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0,
-    !!keep_dims
-  )
+  const _ptr = fl._argmin(tensor.ptr, axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad
-    ? [tensor, axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims]
+    ? [tensor, axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims]
     : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.requires_grad = requires_grad
@@ -1110,14 +1102,10 @@ export function argmin(tensor: Tensor, axis: number, keep_dims = false) {
 }
 
 export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
-  const _ptr = fl._argmax(
-    tensor.ptr,
-    axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0,
-    !!keep_dims
-  )
+  const _ptr = fl._argmax(tensor.ptr, axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims)
   const requires_grad = tensor.requires_grad
   const deps = requires_grad
-    ? [tensor, axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims]
+    ? [tensor, axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims]
     : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.requires_grad = requires_grad
@@ -1137,11 +1125,9 @@ export function sum(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
 }
 
 export function cumsum(tensor: Tensor, axis: number) {
-  const _ptr = fl._cumsum(tensor.ptr, axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0)
+  const _ptr = fl._cumsum(tensor.ptr, axis >= 0xffffffff ? 0xffffffff : +axis || 0)
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad
-    ? [tensor, axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0]
-    : []
+  const deps = requires_grad ? [tensor, axis >= 0xffffffff ? 0xffffffff : +axis || 0] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.requires_grad = requires_grad
   t.op = 'cumsum'
