@@ -327,7 +327,7 @@ for op, args, ret in op_list:
         elif t == "Axis":
             if not n:
                 n = "axis"
-            c_sig.append(f"{t} {n}")
+            c_sig.append(f"uint32_t {n}")
             c_impl.append(f"auto used_{n} = axisArg({n}, g_row_major, {first_tensor}->ndim());")
             c_op_args.append(f"used_{n}")
             ffi_sig.append("FFIType.u32")
