@@ -114,7 +114,7 @@ const ffi_tensor_ops = {
     returns: FFIType.ptr
   },
   _roll: {
-    args: [FFIType.ptr, FFIType.i32, FFIType.u32],
+    args: [FFIType.ptr, FFIType.i32, FFIType.i32],
     returns: FFIType.ptr
   },
   _isnan: {
@@ -242,11 +242,11 @@ const ffi_tensor_ops = {
     returns: FFIType.ptr
   },
   _argmin: {
-    args: [FFIType.ptr, FFIType.u32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.i32, FFIType.bool],
     returns: FFIType.ptr
   },
   _argmax: {
-    args: [FFIType.ptr, FFIType.u32, FFIType.bool],
+    args: [FFIType.ptr, FFIType.i32, FFIType.bool],
     returns: FFIType.ptr
   },
   _sum: {
@@ -254,7 +254,7 @@ const ffi_tensor_ops = {
     returns: FFIType.ptr
   },
   _cumsum: {
-    args: [FFIType.ptr, FFIType.u32],
+    args: [FFIType.ptr, FFIType.i32],
     returns: FFIType.ptr
   },
   _mean: {

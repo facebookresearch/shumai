@@ -23,9 +23,9 @@ describe('cumsum', () => {
     expect(isShape(r, [2, 2]))
     expectArraysClose(r.toFloat32Array(), [1, 2, 4, 6])
   })
-  it('3D Tensor, axis=0', () => {
+  it('3D Tensor, axis=2', () => {
     const a = sm.tensor(new Float32Array([0, 1, 2, 3, 4, 5, 6, 7])).reshape([2, 2, 2])
-    const r = a.cumsum(0)
+    const r = a.cumsum(2)
     expect(isShape(r, [2, 2, 2]))
     expectArraysClose(r.toFloat32Array(), [0, 1, 2, 5, 4, 9, 6, 13])
   })
