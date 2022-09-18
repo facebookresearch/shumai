@@ -7,6 +7,8 @@
 
 A fast differentiable tensor library for research in TypeScript and JavaScript.  Built with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
 
+![shumai](https://user-images.githubusercontent.com/4842908/190880737-c530c604-c61b-466a-bf9d-a2d9e88288f3.gif)
+
 ⚠️ *This is experimental software!* ⚠️
 
 [![docs](https://img.shields.io/badge/docs-available-blue)](https://facebookresearch.github.io/shumai/)
@@ -16,6 +18,7 @@ A fast differentiable tensor library for research in TypeScript and JavaScript. 
 [![Discord](https://img.shields.io/discord/1013580889940295730)](https://discord.com/channels/1013580889940295730/)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/facebookresearch/shumai)
 [![GitHub](https://img.shields.io/github/license/facebookresearch/shumai)](https://github.com/facebookresearch/shumai/blob/main/LICENSE)
+
 ---
 
 
