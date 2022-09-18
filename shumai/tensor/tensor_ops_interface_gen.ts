@@ -402,7 +402,7 @@ interface TensorOpsInterface {
   erf(): Tensor
   flip(dim: number): Tensor
   clip(low: Tensor, high: Tensor): Tensor
-  roll(shift: number, axis: number): Tensor
+  roll(shift: number, axis?: number): Tensor
   isnan(): Tensor
   isinf(): Tensor
   sign(): Tensor
@@ -434,10 +434,10 @@ interface TensorOpsInterface {
   matmul(other: Tensor): Tensor
   amin(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   amax(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
-  argmin(axis: number, keep_dims?: boolean): Tensor
-  argmax(axis: number, keep_dims?: boolean): Tensor
+  argmin(axis?: number, keep_dims?: boolean): Tensor
+  argmax(axis?: number, keep_dims?: boolean): Tensor
   sum(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
-  cumsum(axis: number): Tensor
+  cumsum(axis?: number): Tensor
   mean(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   median(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   var(axes?: BigInt64Array | number[], bias?: boolean, keep_dims?: boolean): Tensor

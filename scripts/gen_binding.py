@@ -15,6 +15,7 @@ coercion_rules = {
     "float": "Math.fround({x})",
     "double": "({x} + 0.00000000000001 - 0.00000000000001)",
     "int": "({x} | 0)",
+    "Axis": "({x} <= 0 ? 0 : {x} >= 0xffffffff ? 0xffffffff : +{x} || 0)",
     "uint32_t": "({x} <= 0 ? 0 : {x} >= 0xffffffff ? 0xffffffff : +{x} || 0)",
     "int64_t": "({x}.constructor === BigInt ? {x} : BigInt({x} || 0))",
 }
@@ -61,7 +62,7 @@ op_list = [
     ("reshape", [("Tensor", "tensor"), "Shape"], "Tensor"),
     ("transpose", [("Tensor", "tensor"), ("Shape", "axes")], "Tensor"),
     ("tile", [("Tensor", "tensor"), "Shape"], "Tensor"),
-    # ("concatenate", ["TensorVector", ("uint32_t", "axis")], "Tensor"),
+    # ("concatenate", ["TensorVector", ("Axis", "axis", "0")], "Tensor"),
     ("nonzero", [("Tensor", "tensor")], "Tensor"),
     # ("pad", [("Tensor", "tensor"), "PairVector"], "Tensor"),
     ("negative", ["Tensor"], "Tensor"),
@@ -82,7 +83,7 @@ op_list = [
     ("erf", ["Tensor"], "Tensor"),
     ("flip", ["Tensor", ("uint32_t", "dim")], "Tensor"),
     ("clip", [("Tensor", "tensor"), ("Tensor", "low"), ("Tensor", "high")], "Tensor"),
-    ("roll", ["Tensor", ("int", "shift"), ("uint32_t", "axis")], "Tensor"),
+    ("roll", ["Tensor", ("int", "shift"), ("Axis", "axis", "0")], "Tensor"),
     ("isnan", ["Tensor"], "Tensor"),
     ("isinf", ["Tensor"], "Tensor"),
     ("sign", ["Tensor"], "Tensor"),
@@ -127,12 +128,12 @@ op_list = [
     # max
     (
         "argmin",
-        ["Tensor", ("uint32_t", "axis"), ("bool", "keep_dims", "false")],
+        ["Tensor", ("Axis", "axis", "0"), ("bool", "keep_dims", "false")],
         "Tensor",
     ),
     (
         "argmax",
-        ["Tensor", ("uint32_t", "axis"), ("bool", "keep_dims", "false")],
+        ["Tensor", ("Axis", "axis", "0"), ("bool", "keep_dims", "false")],
         "Tensor",
     ),
     (
@@ -140,7 +141,7 @@ op_list = [
         [("Tensor", "tensor"), ("Axes", "axes", "[]"), ("bool", "keep_dims", "false")],
         "Tensor",
     ),
-    ("cumsum", [("Tensor", "tensor"), ("uint32_t", "axis")], "Tensor"),
+    ("cumsum", [("Tensor", "tensor"), ("Axis", "axis", "0")], "Tensor"),
     (
         "mean",
         [("Tensor", "tensor"), ("Axes", "axes", "[]"), ("bool", "keep_dims", "false")],
@@ -229,6 +230,7 @@ to_ts = {
     "uint32_t": "number",
     "uint64_t": "number",
     "Tensor": "Tensor",
+    "Axis": "number",
     "Shape": "BigInt64Array | number[]",
     "Axes": "BigInt64Array | number[]",
 }
@@ -322,6 +324,15 @@ for op, args, ret in op_list:
             js_args.append(f"{n}_len")
             js_arg_types.append("axes_ptr")
             js_arg_types.append("axes_len")
+        elif t == "Axis":
+            if not n:
+                n = "axis"
+            c_sig.append(f"{t} {n}")
+            c_impl.append(f"auto used_{n} = axisArg({n}, g_row_major, {first_tensor}->ndim());")
+            c_op_args.append(f"used_{n}")
+            ffi_sig.append("FFIType.u32")
+            js_args.append(coercion_rules[t].format(x=n))
+            js_arg_types.append(t)
         else:
             c_sig.append(f"{t} {n}")
             c_op_args.append(f"{n}")

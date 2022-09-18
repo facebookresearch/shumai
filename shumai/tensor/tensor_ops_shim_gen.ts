@@ -230,7 +230,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    roll(shift: number, axis: number) {
+    roll(shift: number, axis = 0) {
       const _ptr = fl._roll(
         this.ptr,
         shift | 0,
@@ -560,7 +560,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    argmin(axis: number, keep_dims = false) {
+    argmin(axis = 0, keep_dims = false) {
       const _ptr = fl._argmin(
         this.ptr,
         axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0,
@@ -576,7 +576,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    argmax(axis: number, keep_dims = false) {
+    argmax(axis = 0, keep_dims = false) {
       const _ptr = fl._argmax(
         this.ptr,
         axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0,
@@ -603,7 +603,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    cumsum(axis: number) {
+    cumsum(axis = 0) {
       const _ptr = fl._cumsum(
         this.ptr,
         axis <= 0 ? 0 : axis >= 0xffffffff ? 0xffffffff : +axis || 0
