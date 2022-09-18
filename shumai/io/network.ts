@@ -116,6 +116,7 @@ export async function tfetch(
     })
     if (options && options.grad_fn) {
       t.requires_grad = true
+      tensor.requires_grad = true
       t.deps = [tensor]
       t.grad_callback_async = options.grad_fn
     }

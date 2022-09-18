@@ -1,7 +1,7 @@
 import * as sm from '@shumai/shumai'
 
-const model_a = sm.io.connect('localhost:3001/forward', 'localhost:3001/optimize')
-const model_b = sm.io.connect('localhost:3002/forward', 'localhost:3002/optimize')
+const model_a = sm.io.remote_model('localhost:3001')
+const model_b = sm.io.remote_model('localhost:3002')
 
 const model = async (t: sm.Tensor) => {
   t = await model_a(t)
