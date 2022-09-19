@@ -200,6 +200,16 @@ reverse_args_row_major = [
   "matmul",
 ]
 
+# called directly after the base case
+c_overwrites = {
+    "norm": lambda c_op_args: f"""
+      if (p == std::numeric_limits<double>::infinity()) {{
+        t = fl::abs({c_op_args[0]});
+        t = fl::amax(t, {c_op_args[1]}, {c_op_args[3]});
+      }}
+    """
+}
+
 to_ffi = {
     "char*": "cstring",
     "void*": "ptr",
@@ -380,12 +390,16 @@ for op, args, ret in op_list:
           c_impl.append("if (g_row_major) {")
           c_args_reversed = ", ".join(c_op_args[::-1])
           c_impl.append(f"auto t = fl::{op}({c_args_reversed});")
+          if op in c_overwrites and not methods_only:
+              c_impl.append(c_overwrites[op](c_args_reversed))
           if fix_keep_dims:
             c_impl.append(keep_dims_fix)
           c_impl.append(f"g_bytes_used += t.bytes();")
           c_impl.append(f"return new fl::Tensor(t);")
           c_impl.append("} else {")
         c_impl.append(f"auto t = fl::{op}({c_args});")
+        if op in c_overwrites and not methods_only:
+          c_impl.append(c_overwrites[op](c_op_args))
         if fix_keep_dims:
           c_impl.append(keep_dims_fix)
         c_impl.append(f"g_bytes_used += t.bytes();")

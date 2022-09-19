@@ -697,6 +697,11 @@ void* _norm(void* tensor,
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
   auto t = fl::norm(*tensor_ptr, axes, p, keep_dims);
 
+  if (p == std::numeric_limits<double>::infinity()) {
+    t = fl::abs(*tensor_ptr);
+    t = fl::amax(t, axes, keep_dims);
+  }
+
   auto axes_set = std::unordered_set<int>(axes.begin(), axes.end());
 
   auto base_shape = tensor_ptr->shape().get();
