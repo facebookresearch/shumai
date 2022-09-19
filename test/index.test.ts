@@ -28,7 +28,6 @@ describe('index', () => {
     expect(isShape(s, [128])).toBe(true)
   })
 })
-
 describe('indexedAssign', () => {
   it('single element 1D', () => {
     const t = sm.randn([128])
@@ -39,6 +38,7 @@ describe('indexedAssign', () => {
     expect(areSameShape(s, t)).toBe(true)
     expect(isClose(ref, check)).toBe(true)
   })
+  /* TODO: FIX - CURRENTLY FAILS */
   it('range 2D', () => {
     const t = sm.randn([2, 4])
     const o = sm.randn([2])

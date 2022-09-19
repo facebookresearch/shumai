@@ -9,7 +9,6 @@ describe('range', () => {
     }
     expect(a.length).toBe(100)
   })
-
   it('should iterate between range', () => {
     const a = []
     for (const i of sm.util.range(2, 100)) {
@@ -26,7 +25,6 @@ describe('range', () => {
     expect(a.length).toBe(49)
   })
 })
-
 describe('shuffle', () => {
   it('basic', () => {
     const a: number[] = []
@@ -36,7 +34,6 @@ describe('shuffle', () => {
     const b = sm.util.shuffle(a)
     expect(b.length).toBe(100)
   })
-
   it('same elemnts', () => {
     const a: number[] = []
     for (const i of sm.util.range(100)) {

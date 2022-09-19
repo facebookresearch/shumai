@@ -9,14 +9,12 @@ describe('cumsum', () => {
     expect(isShape(r, [4])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [1, 3, 6, 10])
   })
-  /* TODO: FIX - CURRENTLY FAILS */
   it('2D Tensor, axis=1', () => {
     const a = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 2])
     const r = a.cumsum(1)
     expect(isShape(r, [2, 2]))
     expectArraysClose(r.toFloat32Array(), [1, 3, 3, 7])
   })
-  /* TODO: FIX - CURRENTLY FAILS */
   it('2D Tensor, axis=0', () => {
     const a = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 2])
     const r = a.cumsum(0)

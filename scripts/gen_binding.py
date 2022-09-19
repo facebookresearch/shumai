@@ -15,7 +15,7 @@ coercion_rules = {
     "float": "Math.fround({x})",
     "double": "({x} + 0.00000000000001 - 0.00000000000001)",
     "int": "({x} | 0)",
-    "int32_t": "({x} >= 0xffffffff ? 0xffffffff : +{x} || 0)",
+    "int32_t": "({x} | 0)",
     "uint32_t": "({x} <= 0 ? 0 : {x} >= 0xffffffff ? 0xffffffff : +{x} || 0)",
     "int64_t": "({x}.constructor === BigInt ? {x} : BigInt({x} || 0))",
 }

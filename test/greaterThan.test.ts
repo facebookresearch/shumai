@@ -40,7 +40,6 @@ describe('greaterThan', () => {
     expect(isShape(r, [2])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [1, 1])
   })
-
   it('1D Tensor with NaNs', () => {
     const a = sm.tensor(new Float32Array([1.1, NaN, 2.1]))
     const b = sm.tensor(new Float32Array([2.1, 3.1, NaN]))
@@ -48,8 +47,6 @@ describe('greaterThan', () => {
     expect(isShape(r, [3])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [0, 0, 0])
   })
-
-  /* TODO: FIX - CURRENTLY FAILS */
   it('2D Tensor', () => {
     let a = sm.tensor(new Float32Array([1, 4, 5, 8, 9, 11])).reshape([2, 3]),
       b = sm.tensor(new Float32Array([2, 3, 6, 7, 10, 11])).reshape([2, 3]),
@@ -75,7 +72,6 @@ describe('greaterThan', () => {
     expect(isShape(r, [2, 2])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [0, 0, 0, 0])
   })
-
   it('2D Tensor with NaNs', () => {
     const a = sm.tensor(new Float32Array([1.1, NaN, 0.1, NaN])).reshape([2, 2])
     const b = sm.tensor(new Float32Array([0.1, NaN, 1.1, NaN])).reshape([2, 2])
@@ -83,7 +79,6 @@ describe('greaterThan', () => {
     expect(isShape(r, [2, 2])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [1, 0, 0, 0])
   })
-
   it('3D Tensor', () => {
     let a = sm.tensor(new Float32Array([1, 4, 5, 8, 9, 11])).reshape([2, 3, 1]),
       b = sm.tensor(new Float32Array([2, 3, 6, 7, 10, 11])).reshape([2, 3, 1]),
@@ -109,7 +104,6 @@ describe('greaterThan', () => {
     expect(isShape(r, [2, 3, 1])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [0, 0, 0, 0, 0, 1])
   })
-
   it('3D Tensor with NaNs', () => {
     const a = sm.tensor(new Float32Array([1.1, NaN, 1.1, 0.1, 0.1, 0.1])).reshape([2, 3, 1])
     const b = sm.tensor(new Float32Array([0.1, 0.1, 1.1, 1.1, 0.1, NaN])).reshape([2, 3, 1])
@@ -117,8 +111,6 @@ describe('greaterThan', () => {
     expect(isShape(r, [2, 3, 1])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [1, 0, 0, 0, 0, 0])
   })
-
-  /* TODO: FIX - CURRENTLY FAILS */
   it('4D Tensor', () => {
     let a = sm.tensor(new Float32Array([1, 4, 5, 8])).reshape([2, 2, 1, 1]),
       b = sm.tensor(new Float32Array([2, 3, 6, 8])).reshape([2, 2, 1, 1]),
@@ -156,7 +148,6 @@ describe('greaterThan', () => {
     expect(isShape(r, [2, 2, 1, 1])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [1, 1, 1, 1])
   })
-
   it('4D Tensor with NaNs', () => {
     const a = sm.tensor(new Float32Array([1.1, NaN, 0.1, 0.1])).reshape([2, 2, 1, 1])
     const b = sm.tensor(new Float32Array([0.1, 1.1, 1.1, NaN])).reshape([2, 2, 1, 1])
@@ -164,6 +155,5 @@ describe('greaterThan', () => {
     expect(isShape(r, [2, 2, 1, 1])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [1, 0, 0, 0])
   })
-
   /* TODO: unit tests for gradients */
 })
