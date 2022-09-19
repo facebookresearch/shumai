@@ -231,11 +231,9 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     roll(shift: number, axis: number) {
-      const _ptr = fl._roll(this.ptr, shift | 0, axis >= 0xffffffff ? 0xffffffff : +axis || 0)
+      const _ptr = fl._roll(this.ptr, shift | 0, axis | 0)
       const requires_grad = this.requires_grad
-      const deps = requires_grad
-        ? [this, shift | 0, axis >= 0xffffffff ? 0xffffffff : +axis || 0]
-        : []
+      const deps = requires_grad ? [this, shift | 0, axis | 0] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.requires_grad = requires_grad
       t.op = 'roll'
@@ -557,11 +555,9 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     argmin(axis: number, keep_dims = false) {
-      const _ptr = fl._argmin(this.ptr, axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims)
+      const _ptr = fl._argmin(this.ptr, axis | 0, !!keep_dims)
       const requires_grad = this.requires_grad
-      const deps = requires_grad
-        ? [this, axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims]
-        : []
+      const deps = requires_grad ? [this, axis | 0, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.requires_grad = requires_grad
       t.op = 'argmin'
@@ -569,11 +565,9 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     argmax(axis: number, keep_dims = false) {
-      const _ptr = fl._argmax(this.ptr, axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims)
+      const _ptr = fl._argmax(this.ptr, axis | 0, !!keep_dims)
       const requires_grad = this.requires_grad
-      const deps = requires_grad
-        ? [this, axis >= 0xffffffff ? 0xffffffff : +axis || 0, !!keep_dims]
-        : []
+      const deps = requires_grad ? [this, axis | 0, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.requires_grad = requires_grad
       t.op = 'argmax'
@@ -592,9 +586,9 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     cumsum(axis: number) {
-      const _ptr = fl._cumsum(this.ptr, axis >= 0xffffffff ? 0xffffffff : +axis || 0)
+      const _ptr = fl._cumsum(this.ptr, axis | 0)
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axis >= 0xffffffff ? 0xffffffff : +axis || 0] : []
+      const deps = requires_grad ? [this, axis | 0] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.requires_grad = requires_grad
       t.op = 'cumsum'
