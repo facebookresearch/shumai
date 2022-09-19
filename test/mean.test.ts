@@ -16,62 +16,50 @@ describe('mean', () => {
 
     expect(isClose(mean.toFloat32(), 15.5)).toBe(true)
   })
-
   it('propagates NaNs', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, NaN, 0, 1])).reshape([3, 2])
     const mean = sm.mean(t)
     expect(isClose(mean.toFloat32(), NaN)).toBe(true)
   })
-
   it('works for 1D Tensor', () => {
     const t = sm.tensor(new Float32Array([3, 1, 5, 2, 4]))
     const mean = sm.mean(t)
     expect(isClose(mean.toFloat32(), 3)).toBe(true)
   })
-
-  /* TODO: FIX - CURRENTLY FAILS */
   it('works for 2D Tensor; keep_dims=true', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const mean = t.mean([], true)
     expect(isShape(mean, [1, 1])).toBe(true)
     expect(isClose(mean.toFloat32(), 7 / 6)).toBe(true)
   })
-
   it('2D Tensor; axis=[0]', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const mean = sm.mean(t, [0])
     expect(isShape(mean, [2])).toBe(true)
     expectArraysClose(mean.toFloat32Array(), [4 / 3, 1])
   })
-
   it('2D Tensor; axis=[0], keep_dims=true', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const mean = sm.mean(t, [0], true)
     expect(isShape(mean, [1, 2])).toBe(true)
     expectArraysClose(mean.toFloat32Array(), [4 / 3, 1])
   })
-
   it('2D Tensor; axis=[1]', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const mean = sm.mean(t, [1])
     expect(isShape(mean, [3])).toBe(true)
     expectArraysClose(mean.toFloat32Array(), [1.5, 1.5, 0.5])
   })
-
   it('2D Tensor; axis=[-1]', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const mean = sm.mean(t, [-1])
     expect(isShape(mean, [3])).toBe(true)
     expectArraysClose(mean.toFloat32Array(), [1.5, 1.5, 0.5])
   })
-
-  /* TODO: FIX - CURRENTLY FAILS */
   it('2D Tensor; axis=[0,1]', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 0, 0, 1])).reshape([3, 2])
     const mean = sm.mean(t, [0, 1])
     expect(isShape(mean, [])).toBe(true)
     expectArraysClose(mean.toFloat32Array(), [7 / 6])
   })
-
-  /* TODO: unit tests for gradients */
 })

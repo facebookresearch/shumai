@@ -45,14 +45,12 @@ describe('argmin', () => {
     const r = sm.argmin(a, -1)
     expectArraysClose(r.toFloat32Array(), [3])
   })
-  /* TODO: FIX - CURRENTLY FAILS */
   it('2D Tensor, axis=0', () => {
     const a = sm.tensor(new Float32Array([3, -1, 0, 100, -7, 2])).reshape([2, 3])
     const r = sm.argmin(a, 0)
     expect(isShape(r, [3])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [0, 1, 0])
   })
-  /* TODO: FIX - CURRENTLY FAILS */
   it('2D Tensor, axis=1', () => {
     const a = sm.tensor(new Float32Array([3, 2, 5, 100, -7, -8])).reshape([2, 3])
     expectArraysClose(sm.argmin(a, 1).toFloat32Array(), [1, 2])

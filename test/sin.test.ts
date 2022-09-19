@@ -12,12 +12,10 @@ describe('sin', () => {
       values.map((v) => Math.sin(v))
     )
   })
-
   it('propagates NaNs', () => {
     const a = sm.tensor(new Float32Array([4, NaN, 0]))
     const r = sm.sin(a)
     expectArraysClose(r.toFloat32Array(), [Math.sin(4), NaN, Math.sin(0)])
   })
-
   /* TODO: unit tests for gradients */
 })
