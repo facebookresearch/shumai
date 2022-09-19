@@ -269,6 +269,8 @@ for op, args, ret in op_list:
 
     supports_method = normalize_arg(args[0])[0] == "Tensor"
     first_tensor = None
+    first_axes = None
+    first_axis = None
     fix_keep_dims = False
     if methods_only:
         if not supports_method:
@@ -313,6 +315,7 @@ for op, args, ret in op_list:
         elif t == "Axes":
             if not n:
                 n = "axes"
+            first_axes = n
             c_sig.append(f"void *{n}_ptr")
             c_sig.append(f"int64_t {n}_len")
             c_impl.append(f"auto {n} = arrayArg<int>({n}_ptr, {n}_len, g_row_major, {first_tensor}->ndim());")
@@ -329,6 +332,7 @@ for op, args, ret in op_list:
             if n == "axis":
                 c_impl.append(f"auto used_{n} = axisArg(axis, g_row_major, {first_tensor}->ndim());")
                 c_op_args.append(f"used_axis")
+                first_axis = f"static_cast<int>(used_{n})"
             else:
                 c_op_args.append(f"{n}")
             if n == "keep_dims":
@@ -352,24 +356,36 @@ for op, args, ret in op_list:
     ffi_ret = ""
     c_ret = ret
     c_args = ", ".join(c_op_args)
+    axes_set = f"""
+      auto axes_set = std::unordered_set<int>({first_axes}.begin(), {first_axes}.end());
+    """ if first_axes else f"auto axes_set = std::unordered_set<int>{{{first_axis}}};"
     keep_dims_fix = f"""
-    if (keep_dims && t.ndim() == 0) {{
-      std::vector<fl::Dim> shape_v({first_tensor}->ndim(), 1);
-      const auto& shape = fl::Shape(shape_v);
+      {axes_set}
+      auto base_shape = {first_tensor}->shape().get();
+      std::vector<fl::Dim> new_shape;
+      for (auto idx = 0; idx < base_shape.size(); ++idx) {{
+        if (axes_set.count(idx) || (axes_set.size() == 0)) {{
+          if (keep_dims) {{
+            new_shape.emplace_back(1);
+          }}
+          continue;
+        }}
+        new_shape.emplace_back(base_shape[idx]);
+      }}
+      const auto& shape = fl::Shape(new_shape);
       t = fl::reshape(t, shape);
-    }}
     """
     if ret == "Tensor":
         if op in reverse_args_row_major:
           c_impl.append("if (g_row_major) {")
           c_args_reversed = ", ".join(c_op_args[::-1])
-          c_impl.append(f"auto t = fl::Tensor(fl::{op}({c_args_reversed}));")
+          c_impl.append(f"auto t = fl::{op}({c_args_reversed});")
           if fix_keep_dims:
             c_impl.append(keep_dims_fix)
           c_impl.append(f"g_bytes_used += t.bytes();")
           c_impl.append(f"return new fl::Tensor(t);")
           c_impl.append("} else {")
-        c_impl.append(f"auto t = fl::Tensor(fl::{op}({c_args}));")
+        c_impl.append(f"auto t = fl::{op}({c_args});")
         if fix_keep_dims:
           c_impl.append(keep_dims_fix)
         c_impl.append(f"g_bytes_used += t.bytes();")
