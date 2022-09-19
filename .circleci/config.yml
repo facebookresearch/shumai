@@ -96,33 +96,33 @@ jobs:
           name: "Run all tests"
           command: bun wiptest
 
-  # Linux only
-  test-arrayfire-gpu:
-    <<: *gpu
-    steps:
-      - setup_arrayfire_apt
-      - run:
-          name: "Install ArrayFire CUDA backend with CUDA 11.6 runtime"
-          command: sudo apt install arrayfire-cuda3-cuda-11-6
-      - node/install:
-          node-version: "16.9.0"
-      - checkout
-      - run:
-          name: "Install native lib dependencies"
-          command: npm install
-      - install_bun
-      - run:
-          name: "Verify Bun version"
-          command: bun --version
-      - run:
-          name: "Test library loading - dlopen"
-          command: |
-            g++ .circleci/dlopen.cpp -ldl -o dlopen
-            find . -type f -name "libflashlight_binding*" | xargs ./dlopen
-      - test_library_dlopen
-      - run:
-          name: "Run all tests"
-          command: bun wiptest
+#   # Linux only
+#   test-arrayfire-gpu:
+#     <<: *gpu
+#     steps:
+#       - setup_arrayfire_apt
+#       - run:
+#           name: "Install ArrayFire CUDA backend with CUDA 11.6 runtime"
+#           command: sudo apt install arrayfire-cuda3-cuda-11-6
+#       - node/install:
+#           node-version: "16.9.0"
+#       - checkout
+#       - run:
+#           name: "Install native lib dependencies"
+#           command: npm install
+#       - install_bun
+#       - run:
+#           name: "Verify Bun version"
+#           command: bun --version
+#       - run:
+#           name: "Test library loading - dlopen"
+#           command: |
+#             g++ .circleci/dlopen.cpp -ldl -o dlopen
+#             find . -type f -name "libflashlight_binding*" | xargs ./dlopen
+#       - test_library_dlopen
+#       - run:
+#           name: "Run all tests"
+#           command: bun wiptest
 
 workflows:
   version: 2
@@ -132,4 +132,4 @@ workflows:
           matrix:
             parameters:
               os: [linux, macos]
-      - test-arrayfire-gpu
+      #- test-arrayfire-gpu
