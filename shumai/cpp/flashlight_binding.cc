@@ -189,8 +189,11 @@ void* _indexedAssign(void* t,
     }
   }
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  auto new_t = tensor->copy();
   auto* assign = reinterpret_cast<fl::Tensor*>(other);
-  auto* new_tensor = new fl::Tensor((tensor->operator()(indices) = *assign));
+  new_t(indices) *= 0;
+  new_t(indices) += *assign;
+  auto* new_tensor = new fl::Tensor(new_t);
   g_bytes_used += new_tensor->bytes();
   return new_tensor;
 }

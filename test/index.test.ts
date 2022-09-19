@@ -1,6 +1,6 @@
 import * as sm from '@shumai/shumai'
 import { it, expect, describe } from 'bun:test'
-import { isShape, isClose } from './utils'
+import { isShape, isClose, areSameShape } from './utils'
 
 describe('index', () => {
   it('single element 1D', () => {
@@ -35,16 +35,18 @@ describe('indexedAssign', () => {
     const o = sm.randn([1])
     const ref = o.toFloat32()
     const s = t.indexedAssign(o, [7])
-    const check = s.toFloat32()
+    const check = s.toFloat32Array()[7]
+    expect(areSameShape(s, t)).toBe(true)
     expect(isClose(ref, check)).toBe(true)
   })
   it('range 2D', () => {
-    const t = sm.randn([128, 8])
-    const o = sm.randn([128])
+    const t = sm.randn([2, 4])
+    const o = sm.randn([2])
     const ref = o.toFloat32Array()
     const s = t.indexedAssign(o, [':', 2])
-    for (let i = 0; i < 128; ++i) {
-      const check = s.toFloat32Array()[2 * 128 + i]
+    expect(areSameShape(s, t)).toBe(true)
+    for (let i = 0; i < 2; ++i) {
+      const check = s.toFloat32Array()[4 * i + 2]
       expect(isClose(ref[i], check)).toBe(true)
     }
   })
