@@ -269,6 +269,7 @@ for op, args, ret in op_list:
 
     supports_method = normalize_arg(args[0])[0] == "Tensor"
     first_tensor = None
+    fix_keep_dims = False
     if methods_only:
         if not supports_method:
             continue
@@ -330,6 +331,8 @@ for op, args, ret in op_list:
                 c_op_args.append(f"used_axis")
             else:
                 c_op_args.append(f"{n}")
+            if n == "keep_dims":
+                fix_keep_dims = True
             ffi_sig.append(f"FFIType.{to_ffi[t]}")
             js_args.append(coercion_rules[t].format(x=n))
             js_arg_types.append(t)
@@ -349,17 +352,28 @@ for op, args, ret in op_list:
     ffi_ret = ""
     c_ret = ret
     c_args = ", ".join(c_op_args)
+    keep_dims_fix = f"""
+    if (keep_dims && t.ndim() == 0) {{
+      std::vector<fl::Dim> shape_v({first_tensor}->ndim(), 1);
+      const auto& shape = fl::Shape(shape_v);
+      t = fl::reshape(t, shape);
+    }}
+    """
     if ret == "Tensor":
         if op in reverse_args_row_major:
           c_impl.append("if (g_row_major) {")
           c_args_reversed = ", ".join(c_op_args[::-1])
-          c_impl.append(f"auto* t = new fl::Tensor(fl::{op}({c_args_reversed}));")
-          c_impl.append(f"g_bytes_used += t->bytes();")
-          c_impl.append(f"return t;")
+          c_impl.append(f"auto t = fl::Tensor(fl::{op}({c_args_reversed}));")
+          if fix_keep_dims:
+            c_impl.append(keep_dims_fix)
+          c_impl.append(f"g_bytes_used += t.bytes();")
+          c_impl.append(f"return new fl::Tensor(t);")
           c_impl.append("} else {")
-        c_impl.append(f"auto* t = new fl::Tensor(fl::{op}({c_args}));")
-        c_impl.append(f"g_bytes_used += t->bytes();")
-        c_impl.append(f"return t;")
+        c_impl.append(f"auto t = fl::Tensor(fl::{op}({c_args}));")
+        if fix_keep_dims:
+          c_impl.append(keep_dims_fix)
+        c_impl.append(f"g_bytes_used += t.bytes();")
+        c_impl.append(f"return new fl::Tensor(t);")
         if op in reverse_args_row_major:
           c_impl.append("}")
         c_ret = "void*"
