@@ -16,7 +16,7 @@ std::vector<T> arrayArg(void* ptr, int len, bool reverse, int invert) {
   out.reserve(len);
   for (auto i = 0; i < len; ++i) {
     const auto idx = reverse ? len - i - 1 : i;
-    auto v = reinterpret_cast<T*>(ptr)[idx];
+    auto v = reinterpret_cast<int64_t*>(ptr)[idx];
     if (invert && v < 0) {
       v = -v - 1;
     } else if (invert) {
