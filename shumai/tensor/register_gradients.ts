@@ -61,6 +61,10 @@ const impls = {
     const mask = grad.in[a_idx].greaterThan(grad.in[b_idx])
     return mask.mul(grad.grad_in)
   },
+  mean: (grad: Grad) => {
+    const num = sm.scalar(grad.in[0].elements)
+    return grad.grad_in.tile(grad.in[0].shape).div(num)
+  },
   mul: (grad: Grad) => {
     return possiblyReduce(grad.in[1 - grad.idx].mul(grad.grad_in), grad)
   },
@@ -79,10 +83,6 @@ const impls = {
   },
   tanh: (grad: Grad) => {
     return sm.scalar(1).sub(grad.out.mul(grad.out))
-  },
-  mean: (grad: Grad) => {
-    const num = sm.scalar(grad.in[0].elements)
-    return grad.grad_in.tile(grad.in[0].shape).div(num)
   }
 }
 
