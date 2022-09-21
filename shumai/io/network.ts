@@ -225,15 +225,15 @@ export type ServeOpts = {
  */
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
-  const statistics = {}
+  const statistics: Record<string, number> = {}
 
   const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
     if (sub_stat_fn) {
       const s = await sub_stat_fn(u)
-      return { ...s, ...statistics }
+      return { ...s, statistics }
     }
-    return statistics
+    return { statistics }
   }
   /* TODO: specify a better type than any as its a function */
   const serve_request = async (req: Request, fn: any) => {
@@ -250,6 +250,7 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
       return new Response(encode(ret))
     } else if (ret && ret.constructor === Object) {
       const headers = new Headers([['Content-Type', 'application/json']])
+      headers.set('Access-Control-Allow-Origin', '*')
       return new Response(JSON.stringify(ret), { headers: headers })
     }
     return new Response(ret)
