@@ -1,8 +1,16 @@
 import * as base from './tensor'
+import type { Tensor } from './tensor'
 import * as ops from './tensor_ops_gen'
 const sm = { ...base, ...ops }
 
-function possiblyReduce(grad_out, grad) {
+export interface Grad {
+  idx: number
+  in: Tensor[]
+  grad_in: Tensor
+  out: Tensor[]
+}
+
+function possiblyReduce(grad_out: Tensor, grad: Grad) {
   const input = grad.in[grad.idx]
   const new_shape = input.shape
   if (grad.grad_in.shape.length != input.shape.length) {
@@ -23,19 +31,10 @@ function possiblyReduce(grad_out, grad) {
 }
 
 const impls = {
-  add: (grad) => {
+  add: (grad: Grad) => {
     return possiblyReduce(grad.grad_in, grad)
   },
-  sub: (grad) => {
-    if (grad.idx) {
-      return possiblyReduce(grad.grad_in.negative(), grad)
-    }
-    return possiblyReduce(grad.grad_in, grad)
-  },
-  mul: (grad) => {
-    return possiblyReduce(grad.in[1 - grad.idx].mul(grad.grad_in), grad)
-  },
-  div: (grad) => {
+  div: (grad: Grad) => {
     const recip = sm.scalar(1).div(grad.in[1])
     const go = grad.grad_in.mul(recip)
     if (grad.idx === 0) {
@@ -44,27 +43,10 @@ const impls = {
       return possiblyReduce(go.negate().mul(recip), grad)
     }
   },
-  sum: (grad) => {
-    return grad.grad_in.tile(grad.in[0].shape)
+  exp: (grad: Grad) => {
+    return sm.exp(grad.in[0])
   },
-  sigmoid: (grad) => {
-    const o = sm.scalar(1).sub(grad.out)
-    return grad.out.mul(o)
-  },
-  tanh: (grad) => {
-    return sm.scalar(1).sub(grad.out.mul(grad.out))
-  },
-  mean: (grad) => {
-    const num = sm.scalar(grad.in[0].elements)
-    return grad.grad_in.tile(grad.in[0].shape).div(num)
-  },
-  maximum: (grad) => {
-    const a_idx = grad.idx
-    const b_idx = 1 - grad.idx
-    const mask = grad.in[a_idx].greaterThan(grad.in[b_idx])
-    return mask.mul(grad.grad_in)
-  },
-  matmul: (grad) => {
+  matmul: (grad: Grad) => {
     if (grad.idx === 0) {
       const yT = grad.in[1].transpose([1, 0])
       return grad.grad_in.matmul(yT)
@@ -72,6 +54,35 @@ const impls = {
       const xT = grad.in[0].transpose([1, 0])
       return xT.matmul(grad.grad_in)
     }
+  },
+  maximum: (grad: Grad) => {
+    const a_idx = grad.idx
+    const b_idx = 1 - grad.idx
+    const mask = grad.in[a_idx].greaterThan(grad.in[b_idx])
+    return mask.mul(grad.grad_in)
+  },
+  mean: (grad: Grad) => {
+    const num = sm.scalar(grad.in[0].elements)
+    return grad.grad_in.tile(grad.in[0].shape).div(num)
+  },
+  mul: (grad: Grad) => {
+    return possiblyReduce(grad.in[1 - grad.idx].mul(grad.grad_in), grad)
+  },
+  sigmoid: (grad: Grad) => {
+    const o = sm.scalar(1).sub(grad.out)
+    return grad.out.mul(o)
+  },
+  sub: (grad: Grad) => {
+    if (grad.idx) {
+      return possiblyReduce(grad.grad_in.negative(), grad)
+    }
+    return possiblyReduce(grad.grad_in, grad)
+  },
+  sum: (grad: Grad) => {
+    return grad.grad_in.tile(grad.in[0].shape)
+  },
+  tanh: (grad: Grad) => {
+    return sm.scalar(1).sub(grad.out.mul(grad.out))
   }
 }
 
