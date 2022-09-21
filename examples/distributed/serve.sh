@@ -11,10 +11,10 @@ killgroup(){
   kill $MODELB_PID
 }
 
-bun $SCRIPT_DIR/model.ts &
+bun $SCRIPT_DIR/model.ts a &
 MODEL_PID=$!
-bun $SCRIPT_DIR/model_a.ts &
+bun $SCRIPT_DIR/model_a.ts a &
 MODELA_PID=$!
-bun $SCRIPT_DIR/model_b.ts &
+bun $SCRIPT_DIR/model_b.ts a &
 MODELB_PID=$!
 wait

@@ -6,7 +6,7 @@ const model_ref = (t) => {
   return t.mul(m_ref).add(b_ref)
 }
 
-const url = 'localhost:3000'
+const url = '0.0.0.0:3000'
 const model = sm.io.remote_model(url)
 
 for (const _ of sm.util.viter(200)) {
