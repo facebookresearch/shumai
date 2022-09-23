@@ -40,6 +40,13 @@ uint32_t axisArg(int32_t axis, bool reverse, int ndim) {
 
 static std::atomic<size_t> g_bytes_used = 0;
 static std::atomic<bool> g_row_major = true;
+static std::mutex g_op_mutex;
+
+#if 0
+#define LOCK_GUARD std::lock_guard<std::mutex> guard(g_op_mutex);
+#else
+#define LOCK_GUARD
+#endif
 
 extern "C" {
 
@@ -52,6 +59,7 @@ size_t bytesUsed() {
 }
 
 void* createTensor(void* shape_ptr, int64_t shape_len) {
+  LOCK_GUARD
   static_assert(sizeof(long long) == sizeof(int64_t));
   auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
   auto* t = new fl::Tensor(fl::Shape(shape));
@@ -60,6 +68,7 @@ void* createTensor(void* shape_ptr, int64_t shape_len) {
 }
 
 void* tensorFromBuffer(int64_t numel, void* ptr) {
+  LOCK_GUARD
   auto* t = new fl::Tensor(
       fl::Tensor::fromBuffer({numel}, (float*)ptr, fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
@@ -67,6 +76,7 @@ void* tensorFromBuffer(int64_t numel, void* ptr) {
 }
 
 void destroyTensor(void* t, void* /*ignore*/) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   g_bytes_used -= tensor->bytes();
   delete tensor;
@@ -96,21 +106,25 @@ bool isColMajor() {
 }
 
 void _eval(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   fl::eval(*tensor);
 }
 
 size_t _elements(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   return tensor->elements();
 }
 
 size_t _bytes(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   return tensor->bytes();
 }
 
 int _shape(void* t, void* out, int out_len) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   if (out_len != tensor->ndim()) {
     return -1;
@@ -123,16 +137,19 @@ int _shape(void* t, void* out, int out_len) {
 }
 
 int _ndim(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   return tensor->ndim();
 }
 
 float* _buffer(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   return tensor->astype(fl::dtype::f32).host<float>();
 }
 
 float _scalar(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   return tensor->scalar<float>();
 }
@@ -144,6 +161,7 @@ void* _index(void* t,
              int64_t ends_len,
              void* strides,
              int64_t strides_len) {
+  LOCK_GUARD
   auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
   auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
   auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
@@ -173,6 +191,7 @@ void* _indexedAssign(void* t,
                      int64_t ends_len,
                      void* strides,
                      int64_t strides_len) {
+  LOCK_GUARD
   auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
   auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
   auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
@@ -199,6 +218,7 @@ void* _indexedAssign(void* t,
 }
 
 void* _flatten(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   auto* new_tensor = new fl::Tensor(tensor->flatten());
   g_bytes_used += new_tensor->bytes();
@@ -206,6 +226,7 @@ void* _flatten(void* t) {
 }
 
 void* _asContiguousTensor(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   auto* new_tensor = new fl::Tensor(tensor->asContiguousTensor());
   g_bytes_used += new_tensor->bytes();
@@ -213,6 +234,7 @@ void* _asContiguousTensor(void* t) {
 }
 
 void* _copy(void* t) {
+  LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   auto* new_tensor = new fl::Tensor(tensor->copy());
   g_bytes_used += new_tensor->bytes();

@@ -1,5 +1,7 @@
 
 void* _rand(void* shape_ptr, int64_t shape_len) {
+  LOCK_GUARD
+
   auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
   auto t = fl::rand(fl::Shape(shape));
   g_bytes_used += t.bytes();
@@ -7,6 +9,8 @@ void* _rand(void* shape_ptr, int64_t shape_len) {
 }
 
 void* _randn(void* shape_ptr, int64_t shape_len) {
+  LOCK_GUARD
+
   auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
   auto t = fl::randn(fl::Shape(shape));
   g_bytes_used += t.bytes();
@@ -14,6 +18,8 @@ void* _randn(void* shape_ptr, int64_t shape_len) {
 }
 
 void* _full(void* shape_ptr, int64_t shape_len, float val) {
+  LOCK_GUARD
+
   auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
   auto t = fl::full(fl::Shape(shape), val);
   g_bytes_used += t.bytes();
@@ -21,12 +27,16 @@ void* _full(void* shape_ptr, int64_t shape_len, float val) {
 }
 
 void* _identity(int64_t dim) {
+  LOCK_GUARD
+
   auto t = fl::identity(dim);
   g_bytes_used += t.bytes();
   return new fl::Tensor(t);
 }
 
 void* _arange(float start, float end, float step) {
+  LOCK_GUARD
+
   auto t = fl::arange(start, end, step);
   g_bytes_used += t.bytes();
   return new fl::Tensor(t);
@@ -36,6 +46,8 @@ void* _iota(void* dims_ptr,
             int64_t dims_len,
             void* tileDims_ptr,
             int64_t tileDims_len) {
+  LOCK_GUARD
+
   auto dims = arrayArg<long long>(dims_ptr, dims_len, g_row_major, false);
   auto tileDims =
       arrayArg<long long>(tileDims_ptr, tileDims_len, g_row_major, false);
@@ -45,6 +57,8 @@ void* _iota(void* dims_ptr,
 }
 
 void* _reshape(void* tensor, void* shape_ptr, int64_t shape_len) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
   auto t = fl::reshape(*tensor_ptr, fl::Shape(shape));
@@ -53,6 +67,8 @@ void* _reshape(void* tensor, void* shape_ptr, int64_t shape_len) {
 }
 
 void* _transpose(void* tensor, void* axes_ptr, int64_t axes_len) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<long long>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -62,6 +78,8 @@ void* _transpose(void* tensor, void* axes_ptr, int64_t axes_len) {
 }
 
 void* _tile(void* tensor, void* shape_ptr, int64_t shape_len) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
   auto t = fl::tile(*tensor_ptr, fl::Shape(shape));
@@ -70,6 +88,8 @@ void* _tile(void* tensor, void* shape_ptr, int64_t shape_len) {
 }
 
 void* _nonzero(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::nonzero(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -77,6 +97,8 @@ void* _nonzero(void* tensor) {
 }
 
 void* _negative(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::negative(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -84,6 +106,8 @@ void* _negative(void* tensor) {
 }
 
 void* _logicalNot(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::logicalNot(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -91,6 +115,8 @@ void* _logicalNot(void* tensor) {
 }
 
 void* _exp(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::exp(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -98,6 +124,8 @@ void* _exp(void* tensor) {
 }
 
 void* _log(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::log(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -105,6 +133,8 @@ void* _log(void* tensor) {
 }
 
 void* _log1p(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::log1p(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -112,6 +142,8 @@ void* _log1p(void* tensor) {
 }
 
 void* _sin(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::sin(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -119,6 +151,8 @@ void* _sin(void* tensor) {
 }
 
 void* _cos(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::cos(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -126,6 +160,8 @@ void* _cos(void* tensor) {
 }
 
 void* _sqrt(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::sqrt(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -133,6 +169,8 @@ void* _sqrt(void* tensor) {
 }
 
 void* _tanh(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::tanh(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -140,6 +178,8 @@ void* _tanh(void* tensor) {
 }
 
 void* _floor(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::floor(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -147,6 +187,8 @@ void* _floor(void* tensor) {
 }
 
 void* _ceil(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::ceil(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -154,6 +196,8 @@ void* _ceil(void* tensor) {
 }
 
 void* _rint(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::rint(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -161,6 +205,8 @@ void* _rint(void* tensor) {
 }
 
 void* _absolute(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::absolute(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -168,6 +214,8 @@ void* _absolute(void* tensor) {
 }
 
 void* _abs(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::abs(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -175,6 +223,8 @@ void* _abs(void* tensor) {
 }
 
 void* _sigmoid(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::sigmoid(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -182,6 +232,8 @@ void* _sigmoid(void* tensor) {
 }
 
 void* _erf(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::erf(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -189,6 +241,8 @@ void* _erf(void* tensor) {
 }
 
 void* _flip(void* tensor, uint32_t dim) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::flip(*tensor_ptr, dim);
   g_bytes_used += t.bytes();
@@ -196,6 +250,8 @@ void* _flip(void* tensor, uint32_t dim) {
 }
 
 void* _clip(void* tensor, void* low, void* high) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* low_ptr = reinterpret_cast<fl::Tensor*>(low);
   auto* high_ptr = reinterpret_cast<fl::Tensor*>(high);
@@ -205,6 +261,8 @@ void* _clip(void* tensor, void* low, void* high) {
 }
 
 void* _roll(void* tensor, int shift, int32_t axis) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto used_axis = axisArg(axis, g_row_major, tensor_ptr->ndim());
   auto t = fl::roll(*tensor_ptr, shift, used_axis);
@@ -213,6 +271,8 @@ void* _roll(void* tensor, int shift, int32_t axis) {
 }
 
 void* _isnan(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::isnan(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -220,6 +280,8 @@ void* _isnan(void* tensor) {
 }
 
 void* _isinf(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::isinf(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -227,6 +289,8 @@ void* _isinf(void* tensor) {
 }
 
 void* _sign(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::sign(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -234,6 +298,8 @@ void* _sign(void* tensor) {
 }
 
 void* _tril(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::tril(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -241,6 +307,8 @@ void* _tril(void* tensor) {
 }
 
 void* _triu(void* tensor) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::triu(*tensor_ptr);
   g_bytes_used += t.bytes();
@@ -248,6 +316,8 @@ void* _triu(void* tensor) {
 }
 
 void* _where(void* cond, void* x, void* y) {
+  LOCK_GUARD
+
   auto* cond_ptr = reinterpret_cast<fl::Tensor*>(cond);
   auto* x_ptr = reinterpret_cast<fl::Tensor*>(x);
   auto* y_ptr = reinterpret_cast<fl::Tensor*>(y);
@@ -257,6 +327,8 @@ void* _where(void* cond, void* x, void* y) {
 }
 
 void* _sort(void* tensor, uint32_t dim) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto t = fl::sort(*tensor_ptr, dim);
   g_bytes_used += t.bytes();
@@ -264,6 +336,8 @@ void* _sort(void* tensor, uint32_t dim) {
 }
 
 void* _add(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::add(*tensor_ptr, *other_ptr);
@@ -272,6 +346,8 @@ void* _add(void* tensor, void* other) {
 }
 
 void* _sub(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::sub(*tensor_ptr, *other_ptr);
@@ -280,6 +356,8 @@ void* _sub(void* tensor, void* other) {
 }
 
 void* _mul(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::mul(*tensor_ptr, *other_ptr);
@@ -288,6 +366,8 @@ void* _mul(void* tensor, void* other) {
 }
 
 void* _div(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::div(*tensor_ptr, *other_ptr);
@@ -296,6 +376,8 @@ void* _div(void* tensor, void* other) {
 }
 
 void* _eq(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::eq(*tensor_ptr, *other_ptr);
@@ -304,6 +386,8 @@ void* _eq(void* tensor, void* other) {
 }
 
 void* _neq(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::neq(*tensor_ptr, *other_ptr);
@@ -312,6 +396,8 @@ void* _neq(void* tensor, void* other) {
 }
 
 void* _lessThan(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::lessThan(*tensor_ptr, *other_ptr);
@@ -320,6 +406,8 @@ void* _lessThan(void* tensor, void* other) {
 }
 
 void* _lessThanEqual(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::lessThanEqual(*tensor_ptr, *other_ptr);
@@ -328,6 +416,8 @@ void* _lessThanEqual(void* tensor, void* other) {
 }
 
 void* _greaterThan(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::greaterThan(*tensor_ptr, *other_ptr);
@@ -336,6 +426,8 @@ void* _greaterThan(void* tensor, void* other) {
 }
 
 void* _greaterThanEqual(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::greaterThanEqual(*tensor_ptr, *other_ptr);
@@ -344,6 +436,8 @@ void* _greaterThanEqual(void* tensor, void* other) {
 }
 
 void* _logicalOr(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::logicalOr(*tensor_ptr, *other_ptr);
@@ -352,6 +446,8 @@ void* _logicalOr(void* tensor, void* other) {
 }
 
 void* _logicalAnd(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::logicalAnd(*tensor_ptr, *other_ptr);
@@ -360,6 +456,8 @@ void* _logicalAnd(void* tensor, void* other) {
 }
 
 void* _mod(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::mod(*tensor_ptr, *other_ptr);
@@ -368,6 +466,8 @@ void* _mod(void* tensor, void* other) {
 }
 
 void* _bitwiseAnd(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::bitwiseAnd(*tensor_ptr, *other_ptr);
@@ -376,6 +476,8 @@ void* _bitwiseAnd(void* tensor, void* other) {
 }
 
 void* _bitwiseOr(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::bitwiseOr(*tensor_ptr, *other_ptr);
@@ -384,6 +486,8 @@ void* _bitwiseOr(void* tensor, void* other) {
 }
 
 void* _bitwiseXor(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::bitwiseXor(*tensor_ptr, *other_ptr);
@@ -392,6 +496,8 @@ void* _bitwiseXor(void* tensor, void* other) {
 }
 
 void* _lShift(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::lShift(*tensor_ptr, *other_ptr);
@@ -400,6 +506,8 @@ void* _lShift(void* tensor, void* other) {
 }
 
 void* _rShift(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::rShift(*tensor_ptr, *other_ptr);
@@ -408,6 +516,8 @@ void* _rShift(void* tensor, void* other) {
 }
 
 void* _minimum(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::minimum(*tensor_ptr, *other_ptr);
@@ -416,6 +526,8 @@ void* _minimum(void* tensor, void* other) {
 }
 
 void* _maximum(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::maximum(*tensor_ptr, *other_ptr);
@@ -424,6 +536,8 @@ void* _maximum(void* tensor, void* other) {
 }
 
 void* _power(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   auto t = fl::power(*tensor_ptr, *other_ptr);
@@ -432,6 +546,8 @@ void* _power(void* tensor, void* other) {
 }
 
 void* _matmul(void* tensor, void* other) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto* other_ptr = reinterpret_cast<fl::Tensor*>(other);
   if (g_row_major) {
@@ -446,6 +562,8 @@ void* _matmul(void* tensor, void* other) {
 }
 
 void* _amin(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -472,6 +590,8 @@ void* _amin(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
 }
 
 void* _amax(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -498,6 +618,8 @@ void* _amax(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
 }
 
 void* _argmin(void* tensor, int32_t axis, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto used_axis = axisArg(axis, g_row_major, tensor_ptr->ndim());
   auto t = fl::argmin(*tensor_ptr, used_axis, keep_dims);
@@ -522,6 +644,8 @@ void* _argmin(void* tensor, int32_t axis, bool keep_dims) {
 }
 
 void* _argmax(void* tensor, int32_t axis, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto used_axis = axisArg(axis, g_row_major, tensor_ptr->ndim());
   auto t = fl::argmax(*tensor_ptr, used_axis, keep_dims);
@@ -546,6 +670,8 @@ void* _argmax(void* tensor, int32_t axis, bool keep_dims) {
 }
 
 void* _sum(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -572,6 +698,8 @@ void* _sum(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
 }
 
 void* _cumsum(void* tensor, int32_t axis) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto used_axis = axisArg(axis, g_row_major, tensor_ptr->ndim());
   auto t = fl::cumsum(*tensor_ptr, used_axis);
@@ -580,6 +708,8 @@ void* _cumsum(void* tensor, int32_t axis) {
 }
 
 void* _mean(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -606,6 +736,8 @@ void* _mean(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
 }
 
 void* _median(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -636,6 +768,8 @@ void* _var(void* tensor,
            int64_t axes_len,
            bool bias,
            bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -662,6 +796,8 @@ void* _var(void* tensor,
 }
 
 void* _std(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -692,6 +828,8 @@ void* _norm(void* tensor,
             int64_t axes_len,
             double p,
             bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -726,6 +864,8 @@ void* _countNonzero(void* tensor,
                     void* axes_ptr,
                     int64_t axes_len,
                     bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -752,6 +892,8 @@ void* _countNonzero(void* tensor,
 }
 
 void* _any(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());
@@ -778,6 +920,8 @@ void* _any(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
 }
 
 void* _all(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
+  LOCK_GUARD
+
   auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
   auto axes =
       arrayArg<int>(axes_ptr, axes_len, g_row_major, tensor_ptr->ndim());

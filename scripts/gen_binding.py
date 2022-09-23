@@ -265,7 +265,7 @@ for op, args, ret in op_list:
     js_impl = []
     js_args = []
     js_arg_types = []
-    c_impl = []
+    c_impl = ["LOCK_GUARD\n"]
     c_op_args = []
     t_count = 0
 
