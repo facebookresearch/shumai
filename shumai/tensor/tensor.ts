@@ -73,7 +73,7 @@ function traverse_gradients(sorted_traversal, jacobian) {
     if (t.requires_grad && !all_grads_dict[t.ptr]) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
     }
-    if (!gradient_functions[t.op]) {
+    if (t.deps.length && !gradient_functions[t.op]) {
       throw `Cannot differentiate ${t.op}. The gradient function is not defined!`
     }
     let idx = -1
@@ -108,7 +108,7 @@ async function async_traverse_gradients(sorted_traversal, jacobian) {
     if (t.requires_grad && !all_grads_dict[t.ptr]) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
     }
-    if (!gradient_functions[t.op] && !t.grad_callback_async) {
+    if (t.deps.length && !gradient_functions[t.op] && !t.grad_callback_async) {
       throw `Cannot differentiate ${t.op}. The gradient function is not defined!`
     }
     let idx = -1
@@ -168,7 +168,7 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
   }
 
   frontier = [base_t]
-  const sorted_traversal = base_t.deps.length ? [base_t] : []
+  const sorted_traversal = [base_t]
   let need_async = false
   while (frontier.length) {
     const new_frontier: Tensor[] = []
