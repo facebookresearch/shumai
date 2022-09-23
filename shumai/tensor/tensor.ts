@@ -302,10 +302,7 @@ export class Tensor {
   }
 
   toString() {
-    if (this.elements == 1) {
-      return this.toFloat32().toString()
-    }
-    return this.toFloat32Array().toString()
+    return `Tensor[id=${this.ptr}]`
   }
 
   valueOf() {
