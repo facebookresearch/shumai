@@ -281,7 +281,7 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
     }
 
     if (ret && ret instanceof sm.Tensor) {
-      if (ret.stats !== undefined) {
+      if (ret.stats !== null) {
         op_stats = ret.stats
       }
       return new Response(encode(ret))
