@@ -36,7 +36,7 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = sm.bytesUsed() - b0
-    const s = stack().slice(1)[0]
+    const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db

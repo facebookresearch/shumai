@@ -1,7 +1,11 @@
 /** @private */
 export const getStack = () => {
   const e = new Error('')
-  return e.stack.split('\n').slice(1)
+  const slice_idx = e.stack.indexOf('\n')
+  if (slice_idx < 0) {
+    return e.stack
+  }
+  return e.stack.slice(slice_idx)
 }
 
 /** @private */

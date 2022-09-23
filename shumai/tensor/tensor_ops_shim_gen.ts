@@ -26,7 +26,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -66,7 +66,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -106,7 +106,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -145,7 +145,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -184,7 +184,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -223,7 +223,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -262,7 +262,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -301,7 +301,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -340,7 +340,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -379,7 +379,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -418,7 +418,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -457,7 +457,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -496,7 +496,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -535,7 +535,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -574,7 +574,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -613,7 +613,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -652,7 +652,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -691,7 +691,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -730,7 +730,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -769,7 +769,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -808,7 +808,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -849,7 +849,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -888,7 +888,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -927,7 +927,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -966,7 +966,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1005,7 +1005,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1044,7 +1044,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1083,7 +1083,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1122,7 +1122,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1161,7 +1161,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1202,7 +1202,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1241,7 +1241,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1280,7 +1280,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1319,7 +1319,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1358,7 +1358,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1397,7 +1397,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1436,7 +1436,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1475,7 +1475,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1514,7 +1514,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1553,7 +1553,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1592,7 +1592,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1631,7 +1631,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1670,7 +1670,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1709,7 +1709,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1748,7 +1748,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1787,7 +1787,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1826,7 +1826,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1865,7 +1865,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1904,7 +1904,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1943,7 +1943,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -1982,7 +1982,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2021,7 +2021,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2061,7 +2061,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2101,7 +2101,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2140,7 +2140,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2179,7 +2179,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2219,7 +2219,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2258,7 +2258,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2298,7 +2298,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2338,7 +2338,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2378,7 +2378,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2418,7 +2418,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2464,7 +2464,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2506,7 +2506,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2546,7 +2546,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
@@ -2586,7 +2586,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed() - b0
-        const s = getStack().slice(1)[0]
+        const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
