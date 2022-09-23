@@ -65,10 +65,12 @@ export function scalar(s: number): Tensor {
   return full([], s)
 }
 
-function traverse_gradients(sorted_traversal) {
-  const all_grads_dict: Record<number, Tensor> = {}
+function traverse_gradients(sorted_traversal, jacobian) {
+  const all_grads_dict: Record<number, [Tensor, Tensor]> = {}
+  const base_t = sorted_traversal[0]
+  all_grads_dict[base_t.ptr] = [base_t, jacobian]
   for (const t of sorted_traversal) {
-    if (t.requires_grad && !t.grad) {
+    if (t.requires_grad && !all_grads_dict[t.ptr]) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
     }
     if (!gradient_functions[t.op]) {
@@ -84,26 +86,26 @@ function traverse_gradients(sorted_traversal) {
         idx: idx,
         in: t.deps,
         out: t,
-        grad_in: t.grad
+        grad_in: all_grads_dict[t.ptr][1]
       }
       const g = gradient_functions[t.op](grad_arg)
-      if (dep.grad) {
-        dep.grad = dep.grad.add(g)
+      if (dep.ptr in all_grads_dict) {
+        const [t, prev_g] = all_grads_dict[dep.ptr]
+        all_grads_dict[dep.ptr] = [t, prev_g.add(g)]
       } else {
-        dep.grad = g
-      }
-      if (!(dep.ptr in all_grads_dict)) {
-        all_grads_dict[dep.ptr] = dep
+        all_grads_dict[dep.ptr] = [dep, g]
       }
     }
   }
   return all_grads_dict
 }
 
-async function async_traverse_gradients(sorted_traversal) {
-  const all_grads_dict: Record<number, Tensor> = {}
+async function async_traverse_gradients(sorted_traversal, jacobian) {
+  const all_grads_dict: Record<number, [Tensor, Tensor]> = {}
+  const base_t = sorted_traversal[0]
+  all_grads_dict[base_t.ptr] = [base_t, jacobian]
   for (const t of sorted_traversal) {
-    if (t.requires_grad && !t.grad) {
+    if (t.requires_grad && !all_grads_dict[t.ptr]) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
     }
     if (!gradient_functions[t.op] && !t.grad_callback_async) {
@@ -119,7 +121,7 @@ async function async_traverse_gradients(sorted_traversal) {
         idx: idx,
         in: t.deps,
         out: t,
-        grad_in: t.grad
+        grad_in: all_grads_dict[t.ptr][1]
       }
       let g
       if (t.grad_callback_async) {
@@ -127,13 +129,11 @@ async function async_traverse_gradients(sorted_traversal) {
       } else {
         g = gradient_functions[t.op](grad_arg)
       }
-      if (dep.grad) {
-        dep.grad = dep.grad.add(g)
+      if (dep.ptr in all_grads_dict) {
+        const [t, prev_g] = all_grads_dict[dep.ptr]
+        all_grads_dict[dep.ptr] = [t, prev_g.add(g)]
       } else {
-        dep.grad = g
-      }
-      if (!(dep.ptr in all_grads_dict)) {
-        all_grads_dict[dep.ptr] = dep
+        all_grads_dict[dep.ptr] = [dep, g]
       }
     }
   }
@@ -188,24 +188,29 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
     frontier = new_frontier
   }
 
-  base_t.grad = jacobian
-
+  // NB: can't easily embed this in the traverse functions
+  // (or else references are stale)
   const calc_grads = (all_grads_dict) => {
-    const all_grads: Tensor[] = []
+    const all_grads: Record<string, { grad: Tensor; tensor: Tensor }> = {}
     for (const key in all_grads_dict) {
-      const t = all_grads_dict[key]
-      all_grads.push(t)
+      const [t, g] = all_grads_dict[key]
+      // NB: not really safe in parallel, but convenient for stateful API
+      t.grad = g
+      all_grads[t] = {
+        tensor: t,
+        grad: g
+      }
     }
     return all_grads
   }
 
   if (need_async) {
     return (async () => {
-      return calc_grads(await async_traverse_gradients(sorted_traversal))
+      return calc_grads(await async_traverse_gradients(sorted_traversal, jacobian))
     })()
   }
 
-  return calc_grads(traverse_gradients(sorted_traversal))
+  return calc_grads(traverse_gradients(sorted_traversal, jacobian))
 }
 
 export class Tensor {

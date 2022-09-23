@@ -1,10 +1,14 @@
 import * as sm from '../tensor'
 
-export function sgd(tensors: sm.Tensor[], learning_rate = 1e-2) {
+export function sgd(
+  grads: Record<string, { grad: sm.Tensor; tensor: sm.Tensor }>,
+  learning_rate = 1e-2
+) {
   const lr = sm.scalar(-learning_rate)
-  for (const t of tensors) {
+  for (const k of Object.keys(grads)) {
+    const { tensor: t, grad: g } = grads[k]
     if (t.requires_grad) {
-      t.update(t.detach().add(t.grad.detach().mul(lr)))
+      t.update(t.detach().add(g.detach().mul(lr)))
     }
     t.grad = null
   }
