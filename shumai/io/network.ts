@@ -12,14 +12,16 @@ const _unique_id = crypto
 export function encode(tensor: sm.Tensor): ArrayBuffer {
   const shape = tensor.shape64
   const provenance = tensor.provenance ? BigInt('0x' + tensor.provenance) : BigInt(0xffffffff)
-  const shape_len = new BigInt64Array([BigInt(shape.length), provenance])
-  const shape_len_buf = new Uint8Array(shape_len.buffer)
+  const flags = (tensor.requires_grad & 0x1) | ((tensor.requires_stats & 0x1) << 1)
+  // meta_data: ndim, provenance, flags
+  const meta_data = new BigInt64Array([BigInt(shape.length), provenance, BigInt(flags)])
+  const meta_data_buf = new Uint8Array(meta_data.buffer)
   const shape_buf = new Uint8Array(new BigInt64Array(shape).buffer)
   const tensor_buf = new Uint8Array(tensor.toFloat32Array().buffer)
-  const buf = new Uint8Array(shape_len_buf.length + shape_buf.length + tensor_buf.length)
-  buf.set(shape_len_buf)
-  buf.set(shape_buf, shape_len_buf.length)
-  buf.set(tensor_buf, shape_len_buf.length + shape_buf.length)
+  const buf = new Uint8Array(meta_data_buf.length + shape_buf.length + tensor_buf.length)
+  buf.set(meta_data_buf)
+  buf.set(shape_buf, meta_data_buf.length)
+  buf.set(tensor_buf, meta_data_buf.length + shape_buf.length)
   return buf.buffer
 }
 
@@ -28,16 +30,23 @@ export function decodeBuffer(buf: ArrayBuffer) {
   if (buf.byteLength < 16) {
     throw 'buffer cannot be decoded'
   }
-  const meta_data = new BigInt64Array(buf, 0, 2)
+  // meta_data: ndim, provenance, flags
+  const meta_data_len = 3
+  const meta_data = new BigInt64Array(buf, 0, meta_data_len)
   const shape_len = Number(meta_data[0])
   const provenance = meta_data[1].toString(16)
+  const flags = Number(meta_data[2])
+  const requires_grad = flags & 0x1
+  const requires_stats = !!(flags & 0x2)
   if (shape_len > buf.byteLength) {
     throw 'buffer cannot be decoded'
   }
-  const shape = new BigInt64Array(buf, 16, shape_len)
-  const t = sm.tensor(new Float32Array(buf, 16 + 8 * shape_len)).reshape(shape)
+  const shape = new BigInt64Array(buf, 8 * meta_data_len, shape_len)
+  const t = sm.tensor(new Float32Array(buf, 8 * meta_data_len + 8 * shape_len)).reshape(shape)
   t.op = 'network'
   t.provenance = provenance ? provenance : null
+  t.requires_grad = requires_grad
+  t.requires_stats = requires_stats
   return t
 }
 
