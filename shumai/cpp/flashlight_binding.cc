@@ -10,6 +10,17 @@
 #include "flashlight/fl/tensor/Init.h"
 #include "flashlight/fl/tensor/Random.h"
 
+#if 0
+#include <mutex>
+static std::mutex g_op_mutex;
+#define LOCK_GUARD std::lock_guard<std::mutex> guard(g_op_mutex);
+#else
+#define LOCK_GUARD
+#endif
+
+static std::atomic<size_t> g_bytes_used = 0;
+static std::atomic<bool> g_row_major = true;
+
 template <typename T>
 std::vector<T> arrayArg(void* ptr, int len, bool reverse, int invert) {
   std::vector<T> out;
@@ -37,16 +48,6 @@ uint32_t axisArg(int32_t axis, bool reverse, int ndim) {
     return static_cast<uint32_t>(-axis - 1);
   }
 }
-
-static std::atomic<size_t> g_bytes_used = 0;
-static std::atomic<bool> g_row_major = true;
-static std::mutex g_op_mutex;
-
-#if 0
-#define LOCK_GUARD std::lock_guard<std::mutex> guard(g_op_mutex);
-#else
-#define LOCK_GUARD
-#endif
 
 extern "C" {
 
