@@ -102,7 +102,7 @@ export async function tfetch(
   url: string,
   tensor?: sm.Tensor,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: { id?: string; grad_fn?: (grad?: any) => Promise<sm.Tensor> }
+  options?: { id?: string; grad_fn?: (grad?: any) => Promise<void | sm.Tensor> }
 ): Promise<sm.Tensor> {
   let id = _unique_id
   if (options && options.id) {
@@ -206,6 +206,11 @@ export type RouteStats = {
   seconds: number
 }
 
+export type OpStats = {
+  bytes: bigint
+  time: number
+}
+
 /**
  * Spawn an HTTP server to handle tensor input and output requests.
  *
@@ -244,14 +249,15 @@ export type RouteStats = {
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics: Record<string, RouteStats> = {}
+  let op_stats: Record<string, OpStats> = undefined
 
   const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
     if (sub_stat_fn) {
       const s = await sub_stat_fn(u)
-      return { ...s, statistics, bytes_used: sm.bytesUsed() }
+      return { ...s, statistics, bytes_used: sm.bytesUsed(), op_stats }
     }
-    return { statistics, bytes_used: sm.bytesUsed() }
+    return { statistics, bytes_used: sm.bytesUsed(), op_stats }
   }
 
   const get_user_data = (t) => {
@@ -273,7 +279,11 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
     } else {
       ret = await fn()
     }
-    if (ret && ret.constructor === sm.Tensor) {
+
+    if (ret && ret instanceof sm.Tensor) {
+      if (ret.stats !== undefined) {
+        op_stats = ret.stats
+      }
       return new Response(encode(ret))
     } else if (ret && ret.constructor === Object) {
       const headers = new Headers([['Content-Type', 'application/json']])
