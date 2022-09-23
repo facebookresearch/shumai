@@ -426,20 +426,51 @@ for op, args, ret in op_list:
     js_ptr_result = f"const _ptr = fl._{op}({', '.join(js_ptr_args)})"
     js_requires_grad_args = '||'.join([f"{arg[0]}.requires_grad" for arg in wrap_args if arg[1] == "tensor"])
     js_requires_grad_args = 'false' if len(js_requires_grad_args) == 0 else js_requires_grad_args
+    js_requires_stats_args = ', '.join([f"{arg[0]}" for arg in wrap_args if arg[1] == "tensor"])
+    js_requires_stats = '||'.join([f"{arg[0]}.requires_stats" for arg in wrap_args if arg[1] == "tensor"])
+    js_requires_stats = 'false' if len(js_requires_stats) == 0 else js_requires_stats
     js_requires_grad_var = f"const requires_grad = {js_requires_grad_args}"
     js_grad_args = (['this'] if methods_only else []) + js_args
     js_deps = f"const deps = requires_grad ? [{', '.join(js_grad_args)}] : []"
     js_tensor_call = '_Tensor' if methods_only else 'Tensor'
     js_tensor_construct = f"const t = new {js_tensor_call}({{_ptr: _ptr, _deps: deps}})";
-    js_requires_grad = f"t.requires_grad = requires_grad"
     js = f"""\
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
   {js_impl_full}
+  const requires_stats = {js_requires_stats}
+
+  let stats = null
+  let recorded_stat = null
+  if (requires_stats) {{
+    stats = collectStats([{js_requires_stats_args}])
+  }}
+  if (requires_stats) {{
+    recorded_stat = [performance.now(), fl.bytesUsed()]
+  }}
+
   {js_ptr_result}
+
+  if (requires_stats) {{
+    const [t0, b0] = recorded_stat
+    const dt = performance.now() - t0
+    const db = fl.bytesUsed() - b0
+    const s = getStack().slice(1)[0]
+    if (s in stats) {{
+      stats[s].time += dt
+      stats[s].bytes += db
+    }} else {{
+      stats[s] = {{ time: dt, bytes: db }}
+    }}
+  }}
+
   {js_requires_grad_var}
   {js_deps}
   {js_tensor_construct}
-  {js_requires_grad}
+  t.requires_grad = requires_grad
+  if (requires_stats) {{
+    t.requires_stats = true
+    t.stats = stats
+  }}
   t.op = "{op}";
   return t;
 }}{',' if methods_only else ''}"""
@@ -484,7 +515,9 @@ if sys.argv[1] in ["js", "js_methods"]:
 import {{ FFIType }} from 'bun:ffi'
 import {{ arrayArg }} from '../ffi/ffi_bind_utils'
 import {{ fl }} from '../ffi/ffi_flashlight'
+import {{ getStack, collectStats }} from './stats'
 import type {{ Tensor }} from './tensor'
+
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {{
   return {{{full_js}
   }};
@@ -497,6 +530,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
 import {{ FFIType }} from "bun:ffi"
 import {{ arrayArg }} from "../ffi/ffi_bind_utils"
 import {{ fl }} from "../ffi/ffi_flashlight"
+import {{ getStack, collectStats }} from './stats'
 import {{ Tensor }} from "./tensor"
 
 {full_js}"""

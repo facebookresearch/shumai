@@ -18,13 +18,19 @@ for (let i = 0; i < iters; ++i) {
 
 function foo() {
   let X = sm.randn([N, N])
+  let zero = sm.full([1, N], 0)
+  X.requires_stats = true
   const t0 = performance.now()
   for (let i = 0; i < iters; ++i) {
     for (let w of ws) {
       X = sm.matmul(X, w)
+      X = X.add(zero)
     }
   }
   const t1 = performance.now()
+  for (let key of Object.keys(X.stats)) {
+    console.log(key, X.stats[key])
+  }
   console.log((D * Math.pow(N, 3) * 2 * iters) / (t1 - t0) / 1e6, 'gflops')
 }
 

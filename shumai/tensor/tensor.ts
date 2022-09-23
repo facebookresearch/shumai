@@ -4,6 +4,7 @@ import { arrayArg } from '../ffi/ffi_bind_utils'
 import { TensorOpsInterface } from './tensor_ops_interface_gen'
 import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
+import { getStack, collectStats } from './stats'
 
 fl.init.native()
 /** @private */
@@ -17,7 +18,33 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
     }
     return x
   })
+
+  const requires_stats = args.some((x) => (x as Tensor).requires_stats)
+
+  let stats = null
+  let recorded_stat = null
+  if (requires_stats) {
+    stats = collectStats(args.filter((arg) => arg.constructor === Tensor))
+  }
+  if (requires_stats) {
+    recorded_stat = [performance.now(), sm.bytesUsed()]
+  }
+
   const _ptr = closure(...ptr_args)
+
+  if (requires_stats) {
+    const [t0, b0] = recorded_stat
+    const dt = performance.now() - t0
+    const db = sm.bytesUsed() - b0
+    const s = stack().slice(1)[0]
+    if (s in stats) {
+      stats[s].time += dt
+      stats[s].bytes += db
+    } else {
+      stats[s] = { time: dt, bytes: db }
+    }
+  }
+
   const requires_grad = args.some((x) => (x as Tensor).requires_grad)
   const deps: Tensor[] = requires_grad ? <Tensor[]>args.filter((x) => x instanceof Tensor) : []
   const t = new Tensor({
@@ -25,6 +52,10 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
     _deps: deps
   })
   t.requires_grad = requires_grad
+  if (requires_stats) {
+    t.requires_stats = true
+    t.stats = stats
+  }
   return t
 }
 
