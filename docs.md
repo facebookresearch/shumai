@@ -1,11 +1,25 @@
-
 Welcome to the Shumai docs!  To get started, install Shumai:
 
 ```bash
 bun add @shumai/shumai
 ```
 
-Then, in a new TypeScript file:
+You may also need to [install `arrayfire`](https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire):
+
+```bash
+brew install arrayfire
+# sudo apt install arrayfire-cuda3-cuda-11-6
+```
+
+### Where to start?
+
+If you're looking to play around and get ramped up quickly, follow along with the examples below!
+
+<br>
+
+#### N-dimensional Math
+
+Shumai has various standard arithmetic utilities. Often, there are both static and method based versions of the same functions.
 
 ```javascript
 import * as sm from '@shumai/shumai'
@@ -26,7 +40,11 @@ console.log(shape)
 console.log(data[4]) // 4th element of the flattened array
 ```
 
-What about gradients?
+<br>
+
+#### Gradients galore!
+
+Many arithmetic operations can have their gradients automatically calculated.  The {@link Tensor.backward} function returns a map of Tensors to gradients as well as populates all the differentiated Tensors with a `.grad` attribute.
 
 ```javascript
 const W = sm.randn([128, 128])
@@ -47,4 +65,35 @@ const delta = W.grad.mul(sm.scalar(-1e2))
 const Y = W.detach()
 Y.sum().backward() // nothing changes
 ```
+<br>
 
+#### Networked Tensors
+
+Shumai comes with a plethora of network oriented utilities.
+
+In a server file:
+```javascript
+const W = sm.rand([128, 128]).requireGrad()
+
+function my_model(x) {
+  return sm.matmul(x, W)
+}
+
+sm.io.serve_model(my_model, sm.optim.sgd) // we'll immediately use sgd on backprop
+```
+
+Then, in a client:
+
+```javascript
+const model = sm.io.remote_model('0.0.0.0:3000')
+for (const i of sm.util.viter(300)) {
+  const input = sm.randn([1, 128])
+  const out_ref = input // we'll learn the identity matrix
+
+  const out = await model(input) // network call, have to await
+  const l = sm.loss.mse(out, out_ref)
+  await l.backward() // another network call, this time with autograd!
+}
+```
+
+For a detailed walk-through of lower-level primitives, see the {@link io | io namespace }.

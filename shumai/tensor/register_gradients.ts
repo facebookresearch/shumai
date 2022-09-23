@@ -7,7 +7,7 @@ export interface Grad {
   idx: number
   in: Tensor[]
   grad_in: Tensor
-  out: Tensor[]
+  out: Tensor
 }
 
 function possiblyReduce(grad_out: Tensor, grad: Grad) {
@@ -40,7 +40,7 @@ const impls = {
     if (grad.idx === 0) {
       return possiblyReduce(go, grad)
     } else if (grad.idx === 1) {
-      return possiblyReduce(go.negate().mul(recip), grad)
+      return possiblyReduce(go.negative().mul(recip), grad)
     }
   },
   exp: (grad: Grad) => {

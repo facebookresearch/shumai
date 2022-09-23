@@ -12,7 +12,7 @@ const _unique_id = crypto
 export function encode(tensor: sm.Tensor): ArrayBuffer {
   const shape = tensor.shape64
   const provenance = tensor.provenance ? BigInt('0x' + tensor.provenance) : BigInt(0xffffffff)
-  const flags = (tensor.requires_grad & 0x1) | ((tensor.requires_stats & 0x1) << 1)
+  const flags = (Number(tensor.requires_grad) & 0x1) | ((Number(tensor.requires_stats) & 0x1) << 1)
   // meta_data: ndim, provenance, flags
   const meta_data = new BigInt64Array([BigInt(shape.length), provenance, BigInt(flags)])
   const meta_data_buf = new Uint8Array(meta_data.buffer)
@@ -45,8 +45,8 @@ export function decodeBuffer(buf: ArrayBuffer) {
   const t = sm.tensor(new Float32Array(buf, 8 * meta_data_len + 8 * shape_len)).reshape(shape)
   t.op = 'network'
   t.provenance = provenance ? provenance : null
-  t.requires_grad = requires_grad
-  t.requires_stats = requires_stats
+  t.requires_grad = !!requires_grad
+  t.requires_stats = !!requires_stats
   return t
 }
 
@@ -102,7 +102,7 @@ export async function tfetch(
   url: string,
   tensor?: sm.Tensor,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: { id?: string; grad_fn?: (grad?: any) => Promise<void> }
+  options?: { id?: string; grad_fn?: (grad?: any) => Promise<sm.Tensor> }
 ): Promise<sm.Tensor> {
   let id = _unique_id
   if (options && options.id) {
