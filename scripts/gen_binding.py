@@ -424,12 +424,12 @@ for op, args, ret in op_list:
         wrap_args = [('this', 'tensor')] + wrap_args
     js_ptr_args = [x[0] if x[1] != "tensor" else f"{x[0]}.ptr" for x in wrap_args]
     js_ptr_result = f"const _ptr = fl._{op}({', '.join(js_ptr_args)})"
-    js_requires_grad_args = '||'.join([f"{arg[0]}.requires_grad" for arg in wrap_args if arg[1] == "tensor"])
+    js_tensor_args = [f"{arg[0]}" for arg in wrap_args if arg[1] == "tensor"]
+    js_provenance_args = '||'.join([f"{t}.provenance" for t in js_tensor_args])
+    js_requires_grad_args = '||'.join([f"{t}.requires_grad" for t in js_tensor_args])
     js_requires_grad_args = 'false' if len(js_requires_grad_args) == 0 else js_requires_grad_args
-    js_requires_stats_args = ', '.join([f"{arg[0]}" for arg in wrap_args if arg[1] == "tensor"])
-    js_requires_stats = '||'.join([f"{arg[0]}.requires_stats" for arg in wrap_args if arg[1] == "tensor"])
+    js_requires_stats = '||'.join([f"{t}.requires_stats" for t in js_tensor_args])
     js_requires_stats = 'false' if len(js_requires_stats) == 0 else js_requires_stats
-    js_requires_grad_var = f"const requires_grad = {js_requires_grad_args}"
     js_grad_args = (['this'] if methods_only else []) + js_args
     js_deps = f"const deps = requires_grad ? [{', '.join(js_grad_args)}] : []"
     js_tensor_call = '_Tensor' if methods_only else 'Tensor'
@@ -442,7 +442,7 @@ for op, args, ret in op_list:
   let stats = null
   let recorded_stat = null
   if (requires_stats) {{
-    stats = collectStats([{js_requires_stats_args}])
+    stats = collectStats([{','.join(js_tensor_args)}])
   }}
   if (requires_stats) {{
     recorded_stat = [performance.now(), fl.bytesUsed()]
@@ -463,9 +463,10 @@ for op, args, ret in op_list:
     }}
   }}
 
-  {js_requires_grad_var}
+  const requires_grad = {js_requires_grad_args}
   {js_deps}
   {js_tensor_construct}
+  t.provenance = {js_provenance_args}
   t.requires_grad = requires_grad
   if (requires_stats) {{
     t.requires_stats = true

@@ -1,7 +1,7 @@
 import * as sm from '@shumai/shumai'
 
 // remote identity function
-const model = sm.io.remote_model('localhost:3000')
+const model = sm.io.remote_model('0.0.0.0:3000')
 
 const val = sm.scalar(1).requireGrad()
 

@@ -11,7 +11,8 @@ const _unique_id = crypto
 /** @private */
 export function encode(tensor: sm.Tensor): ArrayBuffer {
   const shape = tensor.shape64
-  const shape_len = new Int32Array([shape.length, 0])
+  const provenance = tensor.provenance ? BigInt('0x' + tensor.provenance) : BigInt(0xffffffff)
+  const shape_len = new BigInt64Array([BigInt(shape.length), provenance])
   const shape_len_buf = new Uint8Array(shape_len.buffer)
   const shape_buf = new Uint8Array(new BigInt64Array(shape).buffer)
   const tensor_buf = new Uint8Array(tensor.toFloat32Array().buffer)
@@ -24,18 +25,20 @@ export function encode(tensor: sm.Tensor): ArrayBuffer {
 
 /** @private */
 export function decodeBuffer(buf: ArrayBuffer) {
-  if (buf.byteLength < 8) {
+  if (buf.byteLength < 16) {
     throw 'buffer cannot be decoded'
   }
-  const shape_len = new Int32Array(buf, 0, 2)[0]
+  const meta_data = new BigInt64Array(buf, 0, 2)
+  const shape_len = Number(meta_data[0])
+  const provenance = meta_data[1].toString(16)
   if (shape_len > buf.byteLength) {
     throw 'buffer cannot be decoded'
   }
-  const shape = new BigInt64Array(buf, 8 /* 8 byte offset mandated alignement */, shape_len)
-  const t = sm.tensor(new Float32Array(buf, 8 + 8 * shape_len))
-  const reshaped = t.reshape(shape)
-  reshaped.op = 'network'
-  return reshaped
+  const shape = new BigInt64Array(buf, 16, shape_len)
+  const t = sm.tensor(new Float32Array(buf, 16 + 8 * shape_len)).reshape(shape)
+  t.op = 'network'
+  t.provenance = provenance ? provenance : null
+  return t
 }
 
 /** @private */
@@ -98,15 +101,16 @@ export async function tfetch(
   }
   const response = await (() => {
     if (tensor) {
+      if (!tensor.provenance) {
+        tensor.provenance = _unique_id
+      }
       return fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/octet-stream', 'X-Request-ID': id },
+        headers: { 'Content-Type': 'application/octet-stream' },
         body: encode(tensor)
       })
     } else {
-      return fetch(url, {
-        headers: { 'X-Request-ID': id }
-      })
+      return fetch(url)
     }
   })()
   const buff = await response.arrayBuffer()
@@ -240,17 +244,26 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
     }
     return { statistics, bytes_used: sm.bytesUsed() }
   }
-  /* TODO: specify a better type than any as its a function */
-  const serve_request = async (req: Request, fn: any) => {
-    // fix for bug in bun
-    const user_id = String(req.headers.get('X-Request-ID')).slice(0) + '='
+
+  const get_user_data = (t) => {
+    const user_id = t.provenance
     if (user_data[user_id] === undefined) {
       user_data[user_id] = { id: user_id }
     }
+    return user_data[user_id]
+  }
+
+  /* TODO: specify a better type than any as its a function */
+  const serve_request = async (req: Request, fn: any) => {
     const buf = await req.arrayBuffer()
-    const ret = await (buf.byteLength
-      ? fn(user_data[user_id], await decode(buf))
-      : fn(user_data[user_id]))
+    let ret = null
+    if (buf.byteLength) {
+      const t = await decode(buf)
+      ret = await fn(get_user_data(t), t)
+      ret.provenance = t.provenance
+    } else {
+      ret = await fn()
+    }
     if (ret && ret.constructor === sm.Tensor) {
       return new Response(encode(ret))
     } else if (ret && ret.constructor === Object) {
@@ -360,7 +373,13 @@ export function serve_model(
         ret = grad.detach()
       }
       if (grad_update) {
-        await grad_update(ts)
+        try {
+          await grad_update(ts)
+        } catch (e) {
+          console.warn(
+            'warning: conflict during gradient propagation, likely due to multiple trainers.  This is being fixed: see https://github.com/facebookresearch/shumai/issues/47'
+          )
+        }
       }
       return ret
     }

@@ -52,6 +52,8 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
     _deps: deps
   })
   t.requires_grad = requires_grad
+
+  t.provenance = args.reduce((a, b) => (a ? a.provenance : null) || (b ? b.provenance : null), null)
   if (requires_stats) {
     t.requires_stats = true
     t.stats = stats
@@ -210,6 +212,8 @@ export class Tensor {
   underlying: ArrayBuffer
   deps: Array<Tensor> = []
   requires_grad = false
+  requires_stats = false
+  provenance = null
   grad: Tensor = null
   op = 'constant'
 

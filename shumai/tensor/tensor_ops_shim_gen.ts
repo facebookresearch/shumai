@@ -38,6 +38,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, shape_ptr, shape_len] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -78,6 +79,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -118,6 +120,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, shape_ptr, shape_len] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -157,6 +160,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -196,6 +200,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -235,6 +240,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -274,6 +280,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -313,6 +320,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -352,6 +360,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -391,6 +400,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -430,6 +440,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -469,6 +480,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -508,6 +520,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -547,6 +560,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -586,6 +600,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -625,6 +640,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -664,6 +680,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -703,6 +720,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -742,6 +760,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -781,6 +800,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -822,6 +842,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         ? [this, dim <= 0 ? 0 : dim >= 0xffffffff ? 0xffffffff : +dim || 0]
         : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -861,6 +882,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || low.requires_grad || high.requires_grad
       const deps = requires_grad ? [this, low, high] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || low.provenance || high.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -900,6 +922,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, shift | 0, axis | 0] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -939,6 +962,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -978,6 +1002,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1017,6 +1042,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1056,6 +1082,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1095,6 +1122,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1134,6 +1162,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || x.requires_grad || y.requires_grad
       const deps = requires_grad ? [this, x, y] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || x.provenance || y.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1175,6 +1204,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         ? [this, dim <= 0 ? 0 : dim >= 0xffffffff ? 0xffffffff : +dim || 0]
         : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1214,6 +1244,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1253,6 +1284,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1292,6 +1324,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1331,6 +1364,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1370,6 +1404,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1409,6 +1444,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1448,6 +1484,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1487,6 +1524,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1526,6 +1564,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1565,6 +1604,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1604,6 +1644,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1643,6 +1684,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1682,6 +1724,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1721,6 +1764,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1760,6 +1804,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1799,6 +1844,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1838,6 +1884,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1877,6 +1924,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1916,6 +1964,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1955,6 +2004,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -1994,6 +2044,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2033,6 +2084,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad || tensor.requires_grad
       const deps = requires_grad ? [this, tensor] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || tensor.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2073,6 +2125,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2113,6 +2166,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2152,6 +2206,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axis | 0, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2191,6 +2246,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axis | 0, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2231,6 +2287,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2270,6 +2327,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axis | 0] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2310,6 +2368,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2350,6 +2409,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2390,6 +2450,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!bias, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2430,6 +2491,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2478,6 +2540,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         ? [this, axes_ptr, axes_len, p + 0.00000000000001 - 0.00000000000001, !!keep_dims]
         : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2518,6 +2581,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2558,6 +2622,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true
@@ -2598,6 +2663,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_grad = this.requires_grad
       const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true

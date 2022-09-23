@@ -9,7 +9,7 @@ const model_ref = (t) => {
 const url = '0.0.0.0:3000'
 const model = sm.io.remote_model(url)
 
-for (const _ of sm.util.viter(200)) {
+for (const _ of sm.util.viter(100)) {
   const input = sm.randn([128])
   const out_ref = model_ref(input)
 
