@@ -5,6 +5,7 @@ import { TensorOpsInterface } from './tensor_ops_interface_gen'
 import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 import { getStack, collectStats } from './stats'
+import type { OpStats } from '../io'
 
 fl.init.native()
 /** @private */
@@ -221,7 +222,7 @@ export class Tensor {
   deps: Array<Tensor> = []
   requires_grad = false
   requires_stats = false
-  stats: Record<string, { time: number; bytes: bigint }> = null
+  stats: OpStats = null
   provenance = null
   grad: Tensor = null
   op = 'constant'

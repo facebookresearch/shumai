@@ -201,15 +201,17 @@ export type ServeOpts = {
   ) => Response | Promise<Response> | undefined | Promise<undefined>
 }
 
-export type RouteStats = {
-  hits: number
-  seconds: number
-  op_stats?: Record<string, { time: number; bytes: bigint }>
-}
-
 export type OpStats = {
   bytes: bigint
   time: number
+}
+
+export type TensorOpStats = Record<string, OpStats>
+
+export type RouteStats = {
+  hits: number
+  seconds: number
+  op_stats?: OpStats
 }
 
 /**
@@ -250,7 +252,7 @@ export type OpStats = {
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics: Record<string, RouteStats> = {}
-  const op_stats: Record<string, OpStats> = undefined
+  const op_stats: TensorOpStats = undefined
 
   const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
@@ -286,13 +288,7 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
         const segments = req.url.split('/')
         const last_seg = segments[segments.length - 1]
         const route = last_seg in request_dict ? last_seg : 'default'
-        if (!(route in statistics)) {
-          statistics[route] = {
-            hits: 0,
-            seconds: 0
-          }
-        }
-        statistics[route].op_stats = ret.stats
+        op_stats[route] = ret.stats
       }
       return new Response(encode(ret))
     } else if (ret && ret.constructor === Object) {
@@ -325,6 +321,7 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
             seconds: 0
           }
         }
+        statistics[route].op_stats = op_stats[route]
         statistics[route].hits += 1
         statistics[route].seconds += (t1 - t0) / 1e3
         return res
