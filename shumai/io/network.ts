@@ -252,7 +252,7 @@ export type RouteStats = {
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics: Record<string, RouteStats> = {}
-  const op_stats: TensorOpStats = undefined
+  const op_stats: TensorOpStats = {}
 
   const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
