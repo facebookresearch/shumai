@@ -5,6 +5,7 @@ import { TensorOpsInterface } from './tensor_ops_interface_gen'
 import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 import { getStack, collectStats } from './stats'
+import type { OpStats } from '../io'
 
 fl.init.native()
 /** @private */
@@ -24,7 +25,7 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
   let stats = null
   let recorded_stat = null
   if (requires_stats) {
-    stats = collectStats(args.filter((arg) => arg.constructor === Tensor))
+    stats = collectStats(<Tensor[]>args.filter((arg) => arg instanceof Tensor))
   }
   if (requires_stats) {
     recorded_stat = [performance.now(), fl.bytesUsed()]
@@ -53,7 +54,10 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
   })
   t.requires_grad = requires_grad
 
-  t.provenance = args.reduce((a, b) => (a ? (a as Tensor).provenance : null) || (b ? (b as Tensor).provenance : null), null)
+  t.provenance = args.reduce(
+    (a, b) => (a ? (a as Tensor).provenance : null) || (b ? (b as Tensor).provenance : null),
+    null
+  )
   if (requires_stats) {
     t.requires_stats = true
     t.stats = stats
@@ -216,14 +220,14 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
 export class Tensor {
   underlying: ArrayBuffer
   deps: Array<Tensor> = []
-  requires_grad:boolean = false
-  requires_stats:boolean = false
-  stats = null
+  requires_grad = false
+  requires_stats = false
+  stats: OpStats = null
   provenance = null
   grad: Tensor = null
   op = 'constant'
 
-  grad_callback_async?: (grad?: any) => Promise<Tensor>
+  grad_callback_async?: (grad?: any) => Promise<void | Tensor>
 
   /** @private */
   _injest_ptr(_ptr) {

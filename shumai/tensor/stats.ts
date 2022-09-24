@@ -1,3 +1,4 @@
+import type { Tensor } from './tensor'
 /** @private */
 export const getStack = () => {
   const e = new Error('')
@@ -9,7 +10,7 @@ export const getStack = () => {
 }
 
 /** @private */
-export function collectStats(tensors) {
+export function collectStats(tensors: Tensor[]) {
   const stats = {}
   for (const t of tensors) {
     if (!t.stats) {

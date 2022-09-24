@@ -11,6 +11,7 @@ const model = sm.io.remote_model(url)
 
 for (const _ of sm.util.viter(100)) {
   const input = sm.randn([128])
+  input.requires_stats = true
   const out_ref = model_ref(input)
 
   const out = await model(input)

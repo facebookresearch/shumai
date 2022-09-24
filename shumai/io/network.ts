@@ -102,7 +102,7 @@ export async function tfetch(
   url: string,
   tensor?: sm.Tensor,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: { id?: string; grad_fn?: (grad?: any) => Promise<sm.Tensor> }
+  options?: { id?: string; grad_fn?: (grad?: any) => Promise<void | sm.Tensor> }
 ): Promise<sm.Tensor> {
   let id = _unique_id
   if (options && options.id) {
@@ -201,9 +201,17 @@ export type ServeOpts = {
   ) => Response | Promise<Response> | undefined | Promise<undefined>
 }
 
+export type OpStats = {
+  bytes: bigint
+  time: number
+}
+
+export type TensorOpStats = Record<string, OpStats>
+
 export type RouteStats = {
   hits: number
   seconds: number
+  op_stats?: OpStats
 }
 
 /**
@@ -244,6 +252,7 @@ export type RouteStats = {
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics: Record<string, RouteStats> = {}
+  const op_stats: TensorOpStats = {}
 
   const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
@@ -273,7 +282,14 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
     } else {
       ret = await fn()
     }
-    if (ret && ret.constructor === sm.Tensor) {
+
+    if (ret && ret instanceof sm.Tensor) {
+      if (ret.stats !== null) {
+        const segments = req.url.split('/')
+        const last_seg = segments[segments.length - 1]
+        const route = last_seg in request_dict ? last_seg : 'default'
+        op_stats[route] = ret.stats
+      }
       return new Response(encode(ret))
     } else if (ret && ret.constructor === Object) {
       const headers = new Headers([['Content-Type', 'application/json']])
@@ -305,6 +321,7 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
             seconds: 0
           }
         }
+        statistics[route].op_stats = op_stats[route]
         statistics[route].hits += 1
         statistics[route].seconds += (t1 - t0) / 1e3
         return res
