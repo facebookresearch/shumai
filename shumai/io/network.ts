@@ -204,6 +204,7 @@ export type ServeOpts = {
 export type RouteStats = {
   hits: number
   seconds: number
+  op_stats?: Record<string, { time: number; bytes: bigint }>
 }
 
 export type OpStats = {
@@ -249,15 +250,15 @@ export type OpStats = {
 export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   const user_data = {}
   const statistics: Record<string, RouteStats> = {}
-  let op_stats: Record<string, OpStats> = undefined
+  const op_stats: Record<string, OpStats> = undefined
 
   const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
   request_dict.statistics = async (u) => {
     if (sub_stat_fn) {
       const s = await sub_stat_fn(u)
-      return { ...s, statistics, bytes_used: sm.bytesUsed(), op_stats }
+      return { ...s, statistics, bytes_used: sm.bytesUsed() }
     }
-    return { statistics, bytes_used: sm.bytesUsed(), op_stats }
+    return { statistics, bytes_used: sm.bytesUsed() }
   }
 
   const get_user_data = (t) => {
@@ -282,7 +283,16 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
 
     if (ret && ret instanceof sm.Tensor) {
       if (ret.stats !== null) {
-        op_stats = ret.stats
+        const segments = req.url.split('/')
+        const last_seg = segments[segments.length - 1]
+        const route = last_seg in request_dict ? last_seg : 'default'
+        if (!(route in statistics)) {
+          statistics[route] = {
+            hits: 0,
+            seconds: 0
+          }
+        }
+        statistics[route].op_stats = ret.stats
       }
       return new Response(encode(ret))
     } else if (ret && ret.constructor === Object) {

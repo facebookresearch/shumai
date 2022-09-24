@@ -221,7 +221,7 @@ export class Tensor {
   deps: Array<Tensor> = []
   requires_grad = false
   requires_stats = false
-  stats = null
+  stats: Record<string, { time: number; bytes: bigint }> = null
   provenance = null
   grad: Tensor = null
   op = 'constant'
