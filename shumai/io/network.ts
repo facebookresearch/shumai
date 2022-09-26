@@ -278,7 +278,9 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
     if (buf.byteLength) {
       const t = await decode(buf)
       ret = await fn(get_user_data(t), t)
-      ret.provenance = t.provenance
+      if (ret) {
+        ret.provenance = t.provenance
+      }
     } else {
       ret = await fn()
     }

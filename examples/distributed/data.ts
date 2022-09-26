@@ -3,23 +3,29 @@ import * as sm from '@shumai/shumai'
 const m_ref = sm.scalar(4)
 const b_ref = sm.scalar(-7)
 const model_ref = (t) => {
-  return t.mul(m_ref).add(b_ref)
+  return t.mul(m_ref).add(b_ref).maximum(sm.scalar(0))
 }
 
 const url = '0.0.0.0:3000'
 const model = sm.io.remote_model(url)
 
-for (const _ of sm.util.viter(100)) {
-  const input = sm.randn([128])
+let loss = null
+const loss_print = () => {
+  if (loss) {
+    return ` ${loss.toFloat32()}`
+  }
+}
+
+for (const _ of sm.util.viter(10000, loss_print)) {
+  const input = sm.randn([1, 8])
   input.requires_stats = true
   const out_ref = model_ref(input)
 
   const out = await model(input)
 
-  const loss = sm.loss.mse(out_ref, out)
+  loss = sm.loss.mse(out_ref, out)
   await loss.backward()
 }
 
 const res = await fetch(`${url}/statistics`)
 const stat = await res.json()
-console.log(`${stat.m.weight} x + ${stat.b.weight}`)
