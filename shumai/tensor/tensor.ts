@@ -276,6 +276,7 @@ export class Tensor {
   update(tensor: Tensor) {
     this.underlying = tensor.underlying
     this.deps = tensor.deps
+    this.eval()
   }
 
   eval() {

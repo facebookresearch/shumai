@@ -28,7 +28,7 @@ export function encode(tensor: sm.Tensor): ArrayBuffer {
 /** @private */
 export function decodeBuffer(buf: ArrayBuffer) {
   if (buf.byteLength < 16) {
-    throw 'buffer cannot be decoded'
+    throw 'buffer cannot be decoded, too short to parse'
   }
   // meta_data: ndim, provenance, flags
   const meta_data_len = 3
@@ -39,7 +39,7 @@ export function decodeBuffer(buf: ArrayBuffer) {
   const requires_grad = flags & 0x1
   const requires_stats = !!(flags & 0x2)
   if (shape_len > buf.byteLength) {
-    throw 'buffer cannot be decoded'
+    throw `buffer cannot be decoded, invalid shape length: ${shape_len}`
   }
   const shape = new BigInt64Array(buf, 8 * meta_data_len, shape_len)
   const t = sm.tensor(new Float32Array(buf, 8 * meta_data_len + 8 * shape_len)).reshape(shape)
