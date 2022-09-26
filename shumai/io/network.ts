@@ -403,7 +403,7 @@ export function serve_model(
           await grad_update(ts)
         } catch (e) {
           console.warn(
-            'warning: conflict during gradient propagation, likely due to multiple trainers.  This is being fixed: see https://github.com/facebookresearch/shumai/issues/47'
+            `warning: conflict during gradient propagation (${e}), likely due to multiple trainers.  This is being fixed: see https://github.com/facebookresearch/shumai/issues/47`
           )
         }
       }

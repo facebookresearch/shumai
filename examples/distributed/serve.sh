@@ -18,3 +18,4 @@ MODELA_PID=$!
 bun $SCRIPT_DIR/model_b.ts a &
 MODELB_PID=$!
 wait
+

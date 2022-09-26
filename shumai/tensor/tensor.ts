@@ -277,6 +277,10 @@ export class Tensor {
     this.underlying = tensor.underlying
     this.deps = tensor.deps
     this.eval()
+    // TODO do this only when necessary from C++
+    if (fl.bytesUsed() > 10e6 /* 10MB */) {
+      Bun.gc(true)
+    }
   }
 
   eval() {
