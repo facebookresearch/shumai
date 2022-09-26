@@ -149,6 +149,7 @@ async function async_traverse_gradients(sorted_traversal, jacobian) {
 export function backward(base_t: Tensor, jacobian: Tensor) {
   if (!jacobian) {
     jacobian = full([], 1)
+    jacobian.requires_stats = base_t.requires_stats
   }
   let frontier: Tensor[] = [base_t]
   const incoming_count: Record<number, number> = {}
@@ -251,6 +252,8 @@ export class Tensor {
       this.underlying = obj.underlying
       this.deps = obj.deps
       this.requires_grad = obj.requires_grad
+      this.requires_stats = obj.requires_stats
+      this.stats = obj.stats
       this.grad = obj.grad
       this.op = obj.op
       return
