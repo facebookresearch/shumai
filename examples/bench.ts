@@ -14,6 +14,7 @@ function bench(description, f, iters = 1000) {
       Math.round(t.amin().toFloat32()) / 1e3
     }us, max: ${Math.round(t.amax().toFloat32()) / 1e3}us)`
   )
+  Bun.gc(true)
 }
 
 for (const N of [10, 1000, 100000]) {
