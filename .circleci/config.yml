@@ -147,20 +147,27 @@ jobs:
     steps:
       - setup_arrayfire_apt
       - run:
-          name: "Install ArrayFire CUDA backend with CUDA 11.6 runtime"
-          command: hello && sudo apt install arrayfire-cuda3-cuda-11-6 arrayfire-cuda-dev
+          # Using an older CUDA version to CircleCI's GPU executor CUDA driver versions being ancient
+          name: "Install ArrayFire CUDA backend with CUDA 10.2 runtime"
+          command: sudo apt install arrayfire-cuda3-cuda-10.2 arrayfire-cuda-dev
       - run:
-          name: "Install CUDA Toolkit 11.6"
-          # Use the Ubuntu 18.04 repo per ArrayFire
+          name: "Install CUDA Toolkit 10.2"
           command: |
             cd /tmp
             wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb
             sudo dpkg -i cuda-keyring_1.0-1_all.deb
             sudo apt update
-            sudo apt install cuda-toolkit-11-6
-            sudo rm /usr/local/cuda # may point to other non-11.6 CUDA libs
-            sudo ln -s /usr/local/cuda-11.6 /usr/local/cuda
+            sudo apt install cuda-toolkit-10-2
+            sudo rm /usr/local/cuda # may point to other non-10.2 CUDA libs
+            sudo ln -s /usr/local/cuda-10.2 /usr/local/cuda
             echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> $BASH_ENV
+      - run:
+          name: "Install gcc 8"
+          # CUDA 10.2's nvcc won't work with gcc >= 9
+          command: |
+            sudo apt-get -y install gcc-8 g++-8
+            sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8
+            sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
       - install_flashlight:
           arrayfire_backend: "CUDA"
       - checkout
