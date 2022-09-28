@@ -9,7 +9,7 @@ version: 2.1
 gpu: &gpu
   machine:
     image: ubuntu-2004-cuda-11.4:202110-01
-  resource_class: gpu.nvidia.medium
+  resource_class: gpu.nvidia.large
 
 orbs:
   node: circleci/node@5.0.2
