@@ -8,7 +8,7 @@ const pkgname = `@shumai/${process.platform}_${process.arch}_shumai_flashlight`
 const BINDING_NAME_PREFIX = 'libflashlight_binding'
 const path = (() => {
   // If we find libflashlight_binding in the project root, use that instead of
-  // an installed library ostensibly
+  // an installed version of the library
   const local_path = `${cwd()}/${BINDING_NAME_PREFIX}.${suffix}`
   if (existsSync(local_path)) {
     return local_path
