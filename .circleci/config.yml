@@ -149,7 +149,7 @@ jobs:
       - run:
           # Using an older CUDA version to CircleCI's GPU executor CUDA driver versions being ancient
           name: "Install ArrayFire CUDA backend with CUDA 10.2 runtime"
-          command: sudo apt install arrayfire-cuda3-cuda-10.2 arrayfire-cuda-dev
+          command: sudo apt install arrayfire-cuda3-cuda-10-2 arrayfire-cuda-dev
       - run:
           name: "Install CUDA Toolkit 10.2"
           command: |
