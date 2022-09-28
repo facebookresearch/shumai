@@ -9,7 +9,7 @@ version: 2.1
 gpu: &gpu
   machine:
     image: ubuntu-2004-cuda-11.4:202110-01
-  resource_class: gpu.nvidia.medium
+  resource_class: gpu.nvidia.large
 
 orbs:
   node: circleci/node@5.0.2
@@ -36,6 +36,39 @@ commands:
             sudo apt-key adv --fetch-key https://repo.arrayfire.com/GPG-PUB-KEY-ARRAYFIRE-2020.PUB
             echo "deb [arch=amd64] https://repo.arrayfire.com/debian all main" | sudo tee /etc/apt/sources.list.d/arrayfire.list
             sudo apt update
+  install_flashlight:
+    parameters:
+      arrayfire_backend:
+        type: string
+    steps:
+      - run:
+          name: "Build Flashlight"
+          command: |
+            cd /tmp
+            git clone https://github.com/flashlight/flashlight
+            cd flashlight
+            mkdir -p build
+            cmake -S . -B build \
+              -DBUILD_SHARED_LIBS=ON \
+              -DCMAKE_BUILD_TYPE=Debug \
+              -DCMAKE_INSTALL_PREFIX=$HOME/usr \
+              -DFL_USE_ARRAYFIRE=ON \
+              -DFL_ARRAYFIRE_USE_<< parameters.arrayfire_backend >>=ON \
+              -DFL_USE_ONEDNN=OFF \
+              -DFL_BUILD_DISTRIBUTED=OFF \
+              -DFL_BUILD_TESTS=OFF \
+              -DFL_BUILD_EXAMPLES=OFF
+            cmake --build build --parallel
+            cmake --install build
+  build_flashlight_bindings:
+    steps:
+      - run:
+          name: "Build Shumai Flashlight bindings"
+          command: |
+            mkdir -p build
+            cmake -S . -B build \
+              -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake
+            cmake --build build --parallel
   install_bun:
     steps:
       - run:
@@ -67,7 +100,10 @@ jobs:
           condition:
             equal: [macos, << parameters.os >>]
           steps:
-            - run: brew install arrayfire
+            - run:
+                name: "Install ArrayFire and CMake"
+                command: |
+                  brew install arrayfire cmake
       - when:
           condition:
             equal: [linux, << parameters.os >>]
@@ -75,18 +111,27 @@ jobs:
             - setup_arrayfire_apt
             - run:
                 name: "Install ArrayFire CPU backend with OpenBLAS runtime"
-                command: sudo apt install arrayfire-cpu3-openblas
-            - run:
-                name: "Update package.json and ffi interface to pull in Linux CPU libs"
-                command: |
-                  # TODO: remove me when we have robust multibackend in Flashlight
-                  sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
-                  sed -i "s/_shumai_flashlight/_shumai_flashlight_cpu/g" shumai/ffi/ffi_flashlight.ts
+                command: sudo apt install arrayfire-cpu3-openblas arrayfire-cpu-dev
+            # For now, since we're building bindings from source, don't pull anything in.
+            # - run:
+            #     name: "Update package.json and ffi interface to pull in Linux CPU libs"
+            #     command: |
+            #       # TODO: remove me when we have robust multibackend in Flashlight
+            #       sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
+            #       sed -i "s/_shumai_flashlight/_shumai_flashlight_cpu/g" shumai/ffi/ffi_flashlight.ts
+      - install_flashlight:
+          arrayfire_backend: "CPU"
+      - build_flashlight_bindings
       - node/install:
           node-version: "16.9.0"
       - run:
           name: "Install native lib dependencies"
           command: npm install
+      - run:
+          name: "Remove installed shumai packages"
+          command: |
+            # ensure only locally-built libs are used
+            rm -rf node_modules/@shumai
       - install_bun
       - run:
           name: "Verify Bun version"
@@ -96,33 +141,60 @@ jobs:
           name: "Run all tests"
           command: bun wiptest
 
-#   # Linux only
-#   test-arrayfire-gpu:
-#     <<: *gpu
-#     steps:
-#       - setup_arrayfire_apt
-#       - run:
-#           name: "Install ArrayFire CUDA backend with CUDA 11.6 runtime"
-#           command: sudo apt install arrayfire-cuda3-cuda-11-6
-#       - node/install:
-#           node-version: "16.9.0"
-#       - checkout
-#       - run:
-#           name: "Install native lib dependencies"
-#           command: npm install
-#       - install_bun
-#       - run:
-#           name: "Verify Bun version"
-#           command: bun --version
-#       - run:
-#           name: "Test library loading - dlopen"
-#           command: |
-#             g++ .circleci/dlopen.cpp -ldl -o dlopen
-#             find . -type f -name "libflashlight_binding*" | xargs ./dlopen
-#       - test_library_dlopen
-#       - run:
-#           name: "Run all tests"
-#           command: bun wiptest
+  # Linux only
+  test-arrayfire-gpu-linux:
+    <<: *gpu
+    steps:
+      - setup_arrayfire_apt
+      - run:
+          # Using an older CUDA version to CircleCI's GPU executor CUDA driver versions being ancient
+          name: "Install ArrayFire CUDA backend with CUDA 10.2 runtime"
+          command: sudo apt install arrayfire-cuda3-cuda-10-2 arrayfire-cuda-dev
+      - run:
+          name: "Install CUDA Toolkit 10.2"
+          command: |
+            cd /tmp
+            wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb
+            sudo dpkg -i cuda-keyring_1.0-1_all.deb
+            sudo apt update
+            sudo apt install cuda-toolkit-10-2
+            sudo rm /usr/local/cuda # may point to other non-10.2 CUDA libs
+            sudo ln -s /usr/local/cuda-10.2 /usr/local/cuda
+            echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> $BASH_ENV
+      - run:
+          name: "Install gcc 8"
+          # CUDA 10.2's nvcc won't work with gcc >= 9
+          command: |
+            sudo apt-get -y install gcc-8 g++-8
+            sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8
+            sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
+      - install_flashlight:
+          arrayfire_backend: "CUDA"
+      - checkout
+      - build_flashlight_bindings
+      - node/install:
+          node-version: "16.9.0"
+      - run:
+          name: "Install native lib dependencies"
+          command: npm install
+      - run:
+          name: "Remove installed shumai packages"
+          command: |
+            # ensure only locally-built libs are used
+            rm -rf node_modules/@shumai
+      - install_bun
+      - run:
+          name: "Verify Bun version"
+          command: bun --version
+      - run:
+          name: "Test library loading - dlopen"
+          command: |
+            g++ .circleci/dlopen.cpp -ldl -o dlopen
+            find . -type f -name "libflashlight_binding*" | xargs ./dlopen
+      - test_library_dlopen
+      - run:
+          name: "Run all tests"
+          command: bun wiptest
 
 workflows:
   version: 2
@@ -132,4 +204,4 @@ workflows:
           matrix:
             parameters:
               os: [linux, macos]
-      #- test-arrayfire-gpu
+      - test-arrayfire-gpu-linux
