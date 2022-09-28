@@ -148,7 +148,7 @@ jobs:
       - setup_arrayfire_apt
       - run:
           name: "Install ArrayFire CUDA backend with CUDA 11.6 runtime"
-          command: sudo apt install arrayfire-cuda3-cuda-11-6 arrayfire-cuda-dev
+          command: hello && sudo apt install arrayfire-cuda3-cuda-11-6 arrayfire-cuda-dev
       - run:
           name: "Install CUDA Toolkit 11.6"
           # Use the Ubuntu 18.04 repo per ArrayFire
