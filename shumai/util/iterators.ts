@@ -20,6 +20,11 @@ export function* range(
 }
 
 const chars = ['⡆', '⠇', '⠋', '⠙', '⠸', '⢰', '⣠', '⣄']
+export function tuiLoad(str: string) {
+  const t = Math.floor(performance.now() / 100)
+  console.log(`\u001b[2K${chars[t % chars.length]}${str}\u001b[A`)
+}
+
 export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number) => string) {
   let len: number,
     is_num = false
@@ -33,11 +38,10 @@ export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number
     throw `Cannot yet viter over unbounded iterables. Please file an issue!`
   }
   for (let i = 0; i < len; ++i) {
-    const t = Math.floor(performance.now() / 100)
-    console.log(
-      `\u001b[2K${chars[t % chars.length]}${Math.floor((100 * i) / len)
+    tuiLoad(
+      `${Math.floor((100 * i) / len)
         .toString()
-        .padStart(2)}% (${i + 1}/${len})${callback ? callback(i) : ''}\u001b[A`
+        .padStart(2)}% (${i + 1}/${len})${callback ? callback(i) : ''}`
     )
     yield is_num ? i : arrayLike[i]
   }
