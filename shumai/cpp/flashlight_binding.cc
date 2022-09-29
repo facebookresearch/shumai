@@ -106,6 +106,23 @@ bool isColMajor() {
   return !g_row_major;
 }
 
+void _save(void* t, char* cstr) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  auto filename = std::string(cstr);
+  fl::save(filename, *tensor);
+}
+
+void* load(char* cstr) {
+  LOCK_GUARD
+  auto filename = std::string(cstr);
+  fl::Tensor tensor;
+  fl::load(filename, tensor);
+  auto* t = new fl::Tensor(tensor);
+  g_bytes_used += t->bytes();
+  return t;
+}
+
 void _eval(void* t) {
   LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);

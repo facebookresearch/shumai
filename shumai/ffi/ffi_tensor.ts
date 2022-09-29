@@ -27,6 +27,13 @@ const ffi_tensor = {
     args: [FFIType.i64, FFIType.ptr],
     returns: FFIType.ptr
   },
+  load: {
+    args: [FFIType.cstring],
+    returns: FFIType.ptr
+  },
+  _save: {
+    args: [FFIType.ptr, FFIType.cstring]
+  },
   _eval: {
     args: [FFIType.ptr]
   },

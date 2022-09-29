@@ -263,6 +263,10 @@ export class Tensor {
       this.deps = obj._deps
       return
     }
+    if (obj.constructor === String) {
+      this._injest_ptr(fl.load(new TextEncoder().encode(obj)))
+      return
+    }
     if (obj.constructor === Float32Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
@@ -284,6 +288,10 @@ export class Tensor {
     if (fl.bytesUsed() > 10e6 /* 10MB */) {
       Bun.gc(true)
     }
+  }
+
+  save(filename) {
+    return fl._save(this.ptr, new TextEncoder().encode(filename))
   }
 
   eval() {
