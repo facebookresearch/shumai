@@ -561,6 +561,27 @@ void* _matmul(void* tensor, void* other) {
   }
 }
 
+void* _conv2d(void* tensor,
+              void* weights,
+              void* bias,
+              int32_t sx,
+              int32_t sy,
+              int32_t px,
+              int32_t py,
+              int32_t dx,
+              int32_t dy,
+              int32_t groups) {
+  LOCK_GUARD
+
+  auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
+  auto* weights_ptr = reinterpret_cast<fl::Tensor*>(weights);
+  auto* bias_ptr = reinterpret_cast<fl::Tensor*>(bias);
+  auto t = fl::conv2d(*tensor_ptr, *weights_ptr, *bias_ptr, sx, sy, px, py, dx,
+                      dy, groups);
+  g_bytes_used += t.bytes();
+  return new fl::Tensor(t);
+}
+
 void* _amin(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
   LOCK_GUARD
 

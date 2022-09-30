@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "flashlight/fl/autograd/Functions.h"
+#include "flashlight/fl/autograd/tensor/AutogradOps.h"
 #include "flashlight/fl/nn/Init.h"
 #include "flashlight/fl/runtime/Device.h"
 #include "flashlight/fl/runtime/Stream.h"

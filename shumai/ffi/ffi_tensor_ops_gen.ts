@@ -233,6 +233,21 @@ const ffi_tensor_ops = {
     args: [FFIType.ptr, FFIType.ptr],
     returns: FFIType.ptr
   },
+  _conv2d: {
+    args: [
+      FFIType.ptr,
+      FFIType.ptr,
+      FFIType.ptr,
+      FFIType.i32,
+      FFIType.i32,
+      FFIType.i32,
+      FFIType.i32,
+      FFIType.i32,
+      FFIType.i32,
+      FFIType.i32
+    ],
+    returns: FFIType.ptr
+  },
   _amin: {
     args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.bool],
     returns: FFIType.ptr

@@ -114,6 +114,11 @@ op_list = [
     ("maximum", ["Tensor", "Tensor"], "Tensor"),
     ("power", ["Tensor", "Tensor"], "Tensor"),
     ("matmul", ["Tensor", "Tensor"], "Tensor"),
+    ("conv2d", ["Tensor", ("Tensor", "weights"), ("Tensor", "bias"),
+        ("int32_t", "sx"), ("int32_t", "sy"),
+        ("int32_t", "px"), ("int32_t", "py"),
+        ("int32_t", "dx"), ("int32_t", "dy"),
+        ("int32_t", "groups")], "Tensor"),
     (
         "amin",
         ["Tensor", ("Axes", "axes", "[]"), ("bool", "keep_dims", "false")],

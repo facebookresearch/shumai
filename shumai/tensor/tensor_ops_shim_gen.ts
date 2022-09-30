@@ -2094,6 +2094,69 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
+    conv2d(
+      weights: Tensor,
+      bias: Tensor,
+      sx: number,
+      sy: number,
+      px: number,
+      py: number,
+      dx: number,
+      dy: number,
+      groups: number
+    ) {
+      const requires_stats = this.requires_stats || weights.requires_stats || bias.requires_stats
+
+      let stats = null
+      let recorded_stat = null
+      if (requires_stats) {
+        stats = collectStats([this, weights, bias])
+      }
+      if (requires_stats) {
+        recorded_stat = [performance.now(), fl.bytesUsed()]
+      }
+
+      const _ptr = fl._conv2d(
+        this.ptr,
+        weights.ptr,
+        bias.ptr,
+        sx | 0,
+        sy | 0,
+        px | 0,
+        py | 0,
+        dx | 0,
+        dy | 0,
+        groups | 0
+      )
+
+      if (requires_stats) {
+        const [t0, b0] = recorded_stat
+        const dt = performance.now() - t0
+        const db = fl.bytesUsed() - b0
+        const s = getStack()
+        if (s in stats) {
+          stats[s].time += dt
+          stats[s].bytes += db
+        } else {
+          stats[s] = { time: dt, bytes: db }
+        }
+      }
+
+      const requires_grad = this.requires_grad || weights.requires_grad || bias.requires_grad
+      const deps = requires_grad
+        ? [this, weights, bias, sx | 0, sy | 0, px | 0, py | 0, dx | 0, dy | 0, groups | 0]
+        : []
+      const t = new _Tensor({ _ptr: _ptr, _deps: deps })
+      t.provenance = this.provenance || weights.provenance || bias.provenance
+      t.requires_grad = requires_grad
+      if (requires_stats) {
+        t.requires_stats = true
+        t.stats = stats
+      }
+      t.op = 'conv2d'
+      return t
+    },
+
     amin(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const requires_stats = this.requires_stats

@@ -432,6 +432,17 @@ interface TensorOpsInterface {
   maximum(other: Tensor): Tensor
   power(other: Tensor): Tensor
   matmul(other: Tensor): Tensor
+  conv2d(
+    weights: Tensor,
+    bias: Tensor,
+    sx: number,
+    sy: number,
+    px: number,
+    py: number,
+    dx: number,
+    dy: number,
+    groups: number
+  ): Tensor
   amin(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   amax(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   argmin(axis: number, keep_dims?: boolean): Tensor

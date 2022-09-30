@@ -2,10 +2,9 @@ import * as sm from '@shumai/shumai'
 
 const t0 = performance.now()
 const x = sm.randn([8, 128, 128])
-for (let i of sm.util.viter(1000)) {
+for (const i of sm.util.viter(1000)) {
   x.save('/tmp/tensor.sm')
   const y = sm.tensor('/tmp/tensor.sm')
 }
 const t1 = performance.now()
 console.log((t1 - t0) / 1e3)
-
