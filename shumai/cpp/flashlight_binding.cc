@@ -496,11 +496,6 @@ void* _conv2dBackwardData(void* grad_in,
   auto* used_in = reinterpret_cast<fl::Tensor*>(in);
   auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
 
-  auto grad_in_shape = used_grad_in->shape();
-  auto bs_shape = used_bs->shape();
-  auto in_shape = used_in->shape();
-  auto wt_shape = used_wt->shape();
-
   auto payload = std::make_shared<fl::detail::AutogradPayload>();
   std::shared_ptr<fl::DynamicBenchmark> dataBench;
   auto result =
