@@ -1,8 +1,12 @@
+
 #include <atomic>
 #include <cstdlib>
 #include <iostream>
 #include "flashlight/fl/autograd/Functions.h"
+#include "flashlight/fl/autograd/tensor/AutogradExtension.h"
+#include "flashlight/fl/autograd/tensor/AutogradExtensionBackends.h"
 #include "flashlight/fl/autograd/tensor/AutogradOps.h"
+#include "flashlight/fl/common/DynamicBenchmark.h"
 #include "flashlight/fl/nn/Init.h"
 #include "flashlight/fl/runtime/Device.h"
 #include "flashlight/fl/runtime/Stream.h"
@@ -161,6 +165,34 @@ typedef void (*JSTypedArrayBytesDeallocator)(void* bytes,
 
 JSTypedArrayBytesDeallocator genTensorDestroyer() {
   return destroyTensor;
+}
+
+// `grad_in` is Shumai equivalent for Flashlight `gradOutput`
+void* conv2dBackwardData(void* grad_in,
+                         void* in,
+                         void* wt,
+                         void* bs,
+                         int sx,
+                         int sy,
+                         int px,
+                         int py,
+                         int dx,
+                         int dy,
+                         int groups) {
+  LOCK_GUARD
+  auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
+  auto* used_bs = reinterpret_cast<fl::Tensor*>(bs);
+  auto* used_in = reinterpret_cast<fl::Tensor*>(in);
+  auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
+
+  auto payload = std::make_shared<fl::detail::AutogradPayload>();
+  std::shared_ptr<fl::DynamicBenchmark> dataBench;
+  auto result =
+      used_in->backend()
+          .getExtension<fl::AutogradExtension>()
+          .conv2dBackwardData(*used_grad_in, *used_in, *used_wt, sx, sy, px, py,
+                              dx, dy, groups, dataBench, payload);
+  return new fl::Tensor(result);
 }
 
 void setRowMajor() {
