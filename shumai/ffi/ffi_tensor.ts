@@ -96,7 +96,11 @@ const ffi_tensor = {
     args: [FFIType.i64, FFIType.ptr],
     returns: FFIType.ptr
   },
-  conv2dBackwardData: {
+  load: {
+    args: [FFIType.cstring],
+    returns: FFIType.ptr
+  },
+  _conv2dBackwardData: {
     args: [
       FFIType.ptr,
       FFIType.ptr,

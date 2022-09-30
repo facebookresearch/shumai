@@ -167,34 +167,6 @@ JSTypedArrayBytesDeallocator genTensorDestroyer() {
   return destroyTensor;
 }
 
-// `grad_in` is Shumai equivalent for Flashlight `gradOutput`
-void* conv2dBackwardData(void* grad_in,
-                         void* in,
-                         void* wt,
-                         void* bs,
-                         int sx,
-                         int sy,
-                         int px,
-                         int py,
-                         int dx,
-                         int dy,
-                         int groups) {
-  LOCK_GUARD
-  auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
-  auto* used_bs = reinterpret_cast<fl::Tensor*>(bs);
-  auto* used_in = reinterpret_cast<fl::Tensor*>(in);
-  auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
-
-  auto payload = std::make_shared<fl::detail::AutogradPayload>();
-  std::shared_ptr<fl::DynamicBenchmark> dataBench;
-  auto result =
-      used_in->backend()
-          .getExtension<fl::AutogradExtension>()
-          .conv2dBackwardData(*used_grad_in, *used_in, *used_wt, sx, sy, px, py,
-                              dx, dy, groups, dataBench, payload);
-  return new fl::Tensor(result);
-}
-
 void setRowMajor() {
   g_row_major = true;
 }
@@ -504,6 +476,41 @@ void* _pad(void* t,
   auto* new_tensor = new fl::Tensor(fl::pad(*tensor, pair_vec));
   g_bytes_used += new_tensor->bytes();
   return new_tensor;
+}
+
+// `grad_in` is Shumai equivalent to Flashlight `gradOutput`
+void* _conv2dBackwardData(void* grad_in,
+                          void* in,
+                          void* wt,
+                          void* bs,
+                          int sx,
+                          int sy,
+                          int px,
+                          int py,
+                          int dx,
+                          int dy,
+                          int groups) {
+  LOCK_GUARD
+  auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
+  auto* used_bs = reinterpret_cast<fl::Tensor*>(bs);
+  auto* used_in = reinterpret_cast<fl::Tensor*>(in);
+  auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
+
+  auto grad_in_shape = used_grad_in->shape();
+  auto bs_shape = used_bs->shape();
+  auto in_shape = used_in->shape();
+  auto wt_shape = used_wt->shape();
+
+  auto payload = std::make_shared<fl::detail::AutogradPayload>();
+  std::shared_ptr<fl::DynamicBenchmark> dataBench;
+  auto result =
+      used_in->backend()
+          .getExtension<fl::AutogradExtension>()
+          .conv2dBackwardData(*used_grad_in, *used_in, *used_wt, sx, sy, px, py,
+                              dx, dy, groups, dataBench, payload);
+
+  g_bytes_used += result.bytes();
+  return new fl::Tensor(result);
 }
 
 #include "binding_gen.inl"
