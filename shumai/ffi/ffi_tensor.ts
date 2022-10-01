@@ -37,7 +37,43 @@ const ffi_tensor = {
   _eval: {
     args: [FFIType.ptr]
   },
-  _buffer: {
+  _float16Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _float32Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _float64Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _int16Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _int32Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _int64Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _uint8Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _uint16Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _uint32Buffer: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  _uint64Buffer: {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },

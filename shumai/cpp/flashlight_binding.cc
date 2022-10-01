@@ -161,10 +161,64 @@ int _ndim(void* t) {
   return tensor->ndim();
 }
 
-float* _buffer(void* t) {
+float* _float16Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::f16).host<float>();
+}
+
+float* _float32Buffer(void* t) {
   LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   return tensor->astype(fl::dtype::f32).host<float>();
+}
+
+float* _float64Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::f64).host<float>();
+}
+
+int* _int16Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::s16).host<int>();
+}
+
+int* _int32Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::s32).host<int>();
+}
+
+int* _int64Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::s64).host<int>();
+}
+
+unsigned* _uint8Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::u8).host<unsigned>();
+}
+
+unsigned* _uint16Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::u16).host<unsigned>();
+}
+
+unsigned* _uint32Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::u32).host<unsigned>();
+}
+
+unsigned* _uint64Buffer(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->astype(fl::dtype::u64).host<unsigned>();
 }
 
 float _scalar(void* t) {
