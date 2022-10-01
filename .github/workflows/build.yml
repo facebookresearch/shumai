@@ -29,6 +29,7 @@ jobs:
         # TODO: remove this from-source build and pull in (1) headers and (2) a lib from HEAD
         # or just bite the pullet and get a dpkg port going already
         run: |
+          rm -rf flashlight/
           git clone https://github.com/flashlight/flashlight
           cd flashlight
           cmake . \
@@ -76,9 +77,8 @@ jobs:
           - label: shumai-flashlight-linux-amd64
             runner: ubuntu-20.04
             arch: "x64"
-          # TODO: linux + arm
           # - label: shumai-flashlight-linux-arm64
-          #   runner: linux-arm64
+          #   runner: self-hosted
           #   arch: "arm64"
     steps:
       - name: "Install ArrayFire CUDA backend with CUDA 11.6"
@@ -87,14 +87,14 @@ jobs:
           sudo apt-key adv --fetch-key https://repo.arrayfire.com/GPG-PUB-KEY-ARRAYFIRE-2020.PUB
           echo "deb [arch=amd64] https://repo.arrayfire.com/debian all main" | sudo tee /etc/apt/sources.list.d/arrayfire.list
           sudo apt update
-          sudo apt install arrayfire-cuda3-dev
+          sudo apt install -y arrayfire-cuda3-dev
       - name: "Install CUDA Toolkit 11.6"
         # Use the Ubuntu 18.04 repo per ArrayFire
         run: |
           wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb
           sudo dpkg -i cuda-keyring_1.0-1_all.deb
           sudo apt update
-          sudo apt install cuda-toolkit-11-6
+          sudo apt install -y cuda-toolkit-11-6
           echo "/usr/local/cuda/bin" >> $GITHUB_PATH
       - name: "Install CMake and Ninja"
         run: sudo apt install cmake ninja-build
@@ -102,6 +102,7 @@ jobs:
         # TODO: remove this from-source build and pull in (1) headers and (2) a lib from HEAD
         # or just bite the pullet and get a dpkg port going already
         run: |
+          rm -rf flashlight/
           git clone https://github.com/flashlight/flashlight
           cd flashlight
           cmake . \
@@ -152,28 +153,25 @@ jobs:
           - label: shumai-flashlight-linux-amd64-cpu
             runner: ubuntu-20.04
             arch: "x64"
-          # TODO: linux + arm
-          # - label: shumai-flashlight-linux-arm64-cpu
-          #   runner: linux-arm64
-          #   arch: "arm64"
+          - label: shumai-flashlight-linux-arm64-cpu
+            runner: linux-arm64
+            arch: "arm64"
     steps:
+      - name: "Checkout Shumai source"
+        uses: actions/checkout@v3
       - name: "Install ArrayFire CPU backend with OpenBLAS runtime"
         run: |
-          sudo apt install -y gnupg2 ca-certificates
-          sudo apt-key adv --fetch-key https://repo.arrayfire.com/GPG-PUB-KEY-ARRAYFIRE-2020.PUB
-          echo "deb [arch=amd64] https://repo.arrayfire.com/debian all main" | sudo tee /etc/apt/sources.list.d/arrayfire.list
-          sudo apt update
-          sudo apt install arrayfire-cpu3-dev arrayfire-cpu3-openblas
+          bash .github/scripts/install_arrayfire-${{ matrix.label }}.sh
       - name: "Install CMake and Ninja"
-        run: sudo apt install cmake ninja-build
+        run: sudo apt install -y cmake ninja-build
       - name: "Build and install Flashlight with the Arrayfire CPU Backend"
         # TODO: remove this from-source build and pull in (1) headers and (2) a lib from HEAD
         # or just bite the pullet and get a dpkg port going already
         run: |
+          rm -rf flashlight/
           git clone https://github.com/flashlight/flashlight
           cd flashlight
           cmake . \
-            -G Ninja \
             -DBUILD_SHARED_LIBS=ON \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=$HOME/usr \
@@ -183,10 +181,7 @@ jobs:
             -DFL_BUILD_DISTRIBUTED=OFF \
             -DFL_BUILD_TESTS=OFF \
             -DFL_BUILD_EXAMPLES=OFF
-          ninja
-          ninja install
-      - name: "Checkout Shumai source"
-        uses: actions/checkout@v3
+          make -j1 install
       - name: "Build Shumai bindings"
         run: |
           cmake -S . -B . -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake
@@ -229,10 +224,10 @@ jobs:
         with:
           name: shumai-flashlight-linux-amd64-cpu
           path: ${{ runner.temp }}
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: shumai-flashlight-linux-arm64
-      #     path: ${{ runner.temp }}
+      - uses: actions/download-artifact@v3
+        with:
+          name: shumai-flashlight-linux-arm64-cpu
+          path: ${{ runner.temp }}
       - uses: actions/download-artifact@v3
         with:
           name: shumai-flashlight-macos-amd64
@@ -258,12 +253,11 @@ jobs:
           cd shumai_bindings
           npm publish --access=public
 
-          # TODO: linux arm
-          # cd ${{ runner.temp }}
-          # rm -rf shumai_bindings
-          # tar -xzf shumai-flashlight-linux-arm64.tar.gz
-          # cd shumai_bindings
-          # npm publish --access=public
+          cd ${{ runner.temp }}
+          rm -rf shumai_bindings
+          tar -xzf shumai-flashlight-linux-arm64-cpu.tar.gz
+          cd shumai_bindings
+          npm publish --access=public
 
           cd ${{ runner.temp }}
           rm -rf shumai_bindings
