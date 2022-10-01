@@ -368,10 +368,72 @@ export class Tensor {
     return Number(fl._elements.native(this.ptr))
   }
 
+  /* TODO: https://github.com/facebookresearch/shumai/issues/54
+    toFloat16Array() {
+      const contig = this.asContiguousTensor()
+      const elems = contig.elements
+      return new Float32Array(toArrayBuffer(fl._float16Buffer.native(contig.ptr), 0, elems * 2))
+    }
+  */
+
   toFloat32Array() {
     const contig = this.asContiguousTensor()
     const elems = contig.elements
-    return new Float32Array(toArrayBuffer(fl._buffer.native(contig.ptr), 0, elems * 4))
+    return new Float32Array(toArrayBuffer(fl._float32Buffer.native(contig.ptr), 0, elems * 4))
+  }
+
+  toFloat64Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Float64Array(toArrayBuffer(fl._float64Buffer.native(contig.ptr), 0, elems * 8))
+  }
+
+  toBool8Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Int8Array(toArrayBuffer(fl._bool8Buffer.native(contig.ptr), 0, elems))
+  }
+
+  toInt16Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Int16Array(toArrayBuffer(fl._int16Buffer.native(contig.ptr), 0, elems * 2))
+  }
+
+  toInt32Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Int32Array(toArrayBuffer(fl._int32Buffer.native(contig.ptr), 0, elems * 4))
+  }
+
+  toInt64Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new BigInt64Array(toArrayBuffer(fl._int64Buffer.native(contig.ptr), 0, elems * 8))
+  }
+
+  toUint8Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Uint8Array(toArrayBuffer(fl._uint8Buffer.native(contig.ptr), 0, elems))
+  }
+
+  toUint16Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Uint16Array(toArrayBuffer(fl._uint16Buffer.native(contig.ptr), 0, elems * 2))
+  }
+
+  toUint32Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Uint32Array(toArrayBuffer(fl._uint32Buffer.native(contig.ptr), 0, elems * 4))
+  }
+
+  toUint64Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new BigUint64Array(toArrayBuffer(fl._uint64Buffer.native(contig.ptr), 0, elems * 8))
   }
 
   toFloat32(): number {
