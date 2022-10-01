@@ -406,7 +406,7 @@ export class Tensor {
     return new Int32Array(toArrayBuffer(fl._int32Buffer.native(contig.ptr), 0, elems * 4))
   }
 
-  toInt64Array() {
+  toBigInt64Array() {
     const contig = this.asContiguousTensor()
     const elems = contig.elements
     return new BigInt64Array(toArrayBuffer(fl._int64Buffer.native(contig.ptr), 0, elems * 8))
@@ -430,7 +430,7 @@ export class Tensor {
     return new Uint32Array(toArrayBuffer(fl._uint32Buffer.native(contig.ptr), 0, elems * 4))
   }
 
-  toUint64Array() {
+  toBigUint64Array() {
     const contig = this.asContiguousTensor()
     const elems = contig.elements
     return new BigUint64Array(toArrayBuffer(fl._uint64Buffer.native(contig.ptr), 0, elems * 8))
