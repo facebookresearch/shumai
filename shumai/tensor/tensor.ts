@@ -388,12 +388,6 @@ export class Tensor {
     return new Float64Array(toArrayBuffer(fl._float64Buffer.native(contig.ptr), 0, elems * 8))
   }
 
-  toBool8Array() {
-    const contig = this.asContiguousTensor()
-    const elems = contig.elements
-    return new Int8Array(toArrayBuffer(fl._bool8Buffer.native(contig.ptr), 0, elems))
-  }
-
   toInt16Array() {
     const contig = this.asContiguousTensor()
     const elems = contig.elements

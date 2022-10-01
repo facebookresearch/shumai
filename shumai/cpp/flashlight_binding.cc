@@ -179,12 +179,6 @@ float* _float64Buffer(void* t) {
   return tensor->astype(fl::dtype::f64).host<float>();
 }
 
-int* _bool8Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::b8).host<int>();
-}
-
 int* _int16Buffer(void* t) {
   LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);

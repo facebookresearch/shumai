@@ -49,10 +49,6 @@ const ffi_tensor = {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
-  _bool8Buffer: {
-    args: [FFIType.ptr],
-    returns: FFIType.ptr
-  },
   _int16Buffer: {
     args: [FFIType.ptr],
     returns: FFIType.ptr
