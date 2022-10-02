@@ -2094,23 +2094,13 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
-    conv2d(
-      weights: Tensor,
-      bias: Tensor,
-      sx: number,
-      sy: number,
-      px: number,
-      py: number,
-      dx: number,
-      dy: number,
-      groups: number
-    ) {
-      const requires_stats = this.requires_stats || weights.requires_stats || bias.requires_stats
+    conv2d(weights: Tensor, sx = 1, sy = 1, px = 0, py = 0, dx = 1, dy = 1, groups = 1) {
+      const requires_stats = this.requires_stats || weights.requires_stats
 
       let stats = null
       let recorded_stat = null
       if (requires_stats) {
-        stats = collectStats([this, weights, bias])
+        stats = collectStats([this, weights])
       }
       if (requires_stats) {
         recorded_stat = [performance.now(), fl.bytesUsed()]
@@ -2119,7 +2109,6 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const _ptr = fl._conv2d(
         this.ptr,
         weights.ptr,
-        bias.ptr,
         sx | 0,
         sy | 0,
         px | 0,
@@ -2142,12 +2131,12 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         }
       }
 
-      const requires_grad = this.requires_grad || weights.requires_grad || bias.requires_grad
+      const requires_grad = this.requires_grad || weights.requires_grad
       const deps = requires_grad
-        ? [this, weights, bias, sx | 0, sy | 0, px | 0, py | 0, dx | 0, dy | 0, groups | 0]
+        ? [this, weights, sx | 0, sy | 0, px | 0, py | 0, dx | 0, dy | 0, groups | 0]
         : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
-      t.provenance = this.provenance || weights.provenance || bias.provenance
+      t.provenance = this.provenance || weights.provenance
       t.requires_grad = requires_grad
       if (requires_stats) {
         t.requires_stats = true

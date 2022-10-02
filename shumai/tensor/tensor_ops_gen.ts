@@ -2803,21 +2803,20 @@ export function matmul(tensor: Tensor, other: Tensor) {
 export function conv2d(
   tensor: Tensor,
   weights: Tensor,
-  bias: Tensor,
-  sx: number,
-  sy: number,
-  px: number,
-  py: number,
-  dx: number,
-  dy: number,
-  groups: number
+  sx = 1,
+  sy = 1,
+  px = 0,
+  py = 0,
+  dx = 1,
+  dy = 1,
+  groups = 1
 ) {
-  const requires_stats = tensor.requires_stats || weights.requires_stats || bias.requires_stats
+  const requires_stats = tensor.requires_stats || weights.requires_stats
 
   let stats = null
   let recorded_stat = null
   if (requires_stats) {
-    stats = collectStats([tensor, weights, bias])
+    stats = collectStats([tensor, weights])
   }
   if (requires_stats) {
     recorded_stat = [performance.now(), fl.bytesUsed()]
@@ -2826,7 +2825,6 @@ export function conv2d(
   const _ptr = fl._conv2d(
     tensor.ptr,
     weights.ptr,
-    bias.ptr,
     sx | 0,
     sy | 0,
     px | 0,
@@ -2849,12 +2847,12 @@ export function conv2d(
     }
   }
 
-  const requires_grad = tensor.requires_grad || weights.requires_grad || bias.requires_grad
+  const requires_grad = tensor.requires_grad || weights.requires_grad
   const deps = requires_grad
-    ? [tensor, weights, bias, sx | 0, sy | 0, px | 0, py | 0, dx | 0, dy | 0, groups | 0]
+    ? [tensor, weights, sx | 0, sy | 0, px | 0, py | 0, dx | 0, dy | 0, groups | 0]
     : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
-  t.provenance = tensor.provenance || weights.provenance || bias.provenance
+  t.provenance = tensor.provenance || weights.provenance
   t.requires_grad = requires_grad
   if (requires_stats) {
     t.requires_stats = true

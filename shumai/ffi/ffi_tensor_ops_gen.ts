@@ -237,7 +237,6 @@ const ffi_tensor_ops = {
     args: [
       FFIType.ptr,
       FFIType.ptr,
-      FFIType.ptr,
       FFIType.i32,
       FFIType.i32,
       FFIType.i32,

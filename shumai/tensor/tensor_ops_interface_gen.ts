@@ -434,14 +434,13 @@ interface TensorOpsInterface {
   matmul(other: Tensor): Tensor
   conv2d(
     weights: Tensor,
-    bias: Tensor,
-    sx: number,
-    sy: number,
-    px: number,
-    py: number,
-    dx: number,
-    dy: number,
-    groups: number
+    sx?: number,
+    sy?: number,
+    px?: number,
+    py?: number,
+    dx?: number,
+    dy?: number,
+    groups?: number
   ): Tensor
   amin(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   amax(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
