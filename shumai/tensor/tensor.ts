@@ -10,19 +10,19 @@ import type { OpStats } from '../io'
 fl.init.native()
 
 export enum dtype {
-  Float16 = fl.dtypeFloat16.native(),
-  Float32 = fl.dtypeFloat32.native(),
-  Float64 = fl.dtypeFloat64.native(),
-  BoolInt8 = fl.dtypeBoolInt8.native(),
-  Int16 = fl.dtypeInt16.native(),
-  Int32 = fl.dtypeInt32.native(),
-  Int64 = fl.dtypeInt64.native(),
-  BigInt64 = fl.dtypeInt64.native(),
-  Uint8 = fl.dtypeUint8.native(),
-  Uint16 = fl.dtypeUint16.native(),
-  Uint32 = fl.dtypeUint32.native(),
-  Uint64 = fl.dtypeUint64.native(),
-  BigUint64 = fl.dtypeUint64.native()
+  Float16 = Number(fl.dtypeFloat16.native()),
+  Float32 = Number(fl.dtypeFloat32.native()),
+  Float64 = Number(fl.dtypeFloat64.native()),
+  BoolInt8 = Number(fl.dtypeBoolInt8.native()),
+  Int16 = Number(fl.dtypeInt16.native()),
+  Int32 = Number(fl.dtypeInt32.native()),
+  Int64 = Number(fl.dtypeInt64.native()),
+  BigInt64 = Number(fl.dtypeInt64.native()),
+  Uint8 = Number(fl.dtypeUint8.native()),
+  Uint16 = Number(fl.dtypeUint16.native()),
+  Uint32 = Number(fl.dtypeUint32.native()),
+  Uint64 = Number(fl.dtypeUint64.native()),
+  BigUint64 = Number(fl.dtypeUint64.native())
 }
 /** @private */
 export const gradient_functions: { [key: string]: CallableFunction } = {}
@@ -311,7 +311,7 @@ export class Tensor {
   }
 
   asType(dtype: dtype) {
-    return wrapFLTensor(fl._astype.native, this.ptr, dtype)
+    return wrapFLTensor(fl._astype, this.ptr, dtype)
   }
 
   eval() {

@@ -176,48 +176,58 @@ int _dtype(void* t) {
   return dtype;
 }
 
-fl::dtype dtypeFloat16() {
-  return fl::dtype::f16;
+int dtypeFloat16() {
+  int dtype = static_cast<int>(fl::dtype::f16);
+  return dtype;
 }
 
-fl::dtype dtypeFloat32() {
-  return fl::dtype::f32;
+int dtypeFloat32() {
+  int dtype = static_cast<int>(fl::dtype::f32);
+  return dtype;
+}
+int dtypeFloat64() {
+  int dtype = static_cast<int>(fl::dtype::f64);
+  return dtype;
 }
 
-fl::dtype dtypeFloat64() {
-  return fl::dtype::f64;
+int dtypeBoolInt8() {
+  int dtype = static_cast<int>(fl::dtype::b8);
+  return dtype;
 }
 
-fl::dtype dtypeBoolInt8() {
-  return fl::dtype::b8;
+int dtypeInt16() {
+  int dtype = static_cast<int>(fl::dtype::s16);
+  return dtype;
 }
 
-fl::dtype dtypeInt16() {
-  return fl::dtype::s16;
+int dtypeInt32() {
+  int dtype = static_cast<int>(fl::dtype::s32);
+  return dtype;
 }
 
-fl::dtype dtypeInt32() {
-  return fl::dtype::s32;
+int dtypeInt64() {
+  int dtype = static_cast<int>(fl::dtype::s64);
+  return dtype;
 }
 
-fl::dtype dtypeInt64() {
-  return fl::dtype::s64;
+int dtypeUint8() {
+  int dtype = static_cast<int>(fl::dtype::u8);
+  return dtype;
 }
 
-fl::dtype dtypeUint8() {
-  return fl::dtype::u8;
+int dtypeUint16() {
+  int dtype = static_cast<int>(fl::dtype::u16);
+  return dtype;
 }
 
-fl::dtype dtypeUint16() {
-  return fl::dtype::u16;
+int dtypeUint32() {
+  int dtype = static_cast<int>(fl::dtype::u32);
+  return dtype;
 }
 
-fl::dtype dtypeUint32() {
-  return fl::dtype::u32;
-}
-
-fl::dtype dtypeUint64() {
-  return fl::dtype::u64;
+int dtypeUint64() {
+  int dtype = static_cast<int>(fl::dtype::u64);
+  return dtype;
 }
 
 float* _float16Buffer(void* t) {
