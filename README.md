@@ -78,7 +78,7 @@ console.log(Y.shape)
 ```javascript
 const data : Float32Array = new Float32Array(128)
 for (let i = 0; i < 128; ++i) {
-  data = Math.random()
+  data[i] = Math.random()
 }
 
 const X : Tensor = sm.tensor(data)
