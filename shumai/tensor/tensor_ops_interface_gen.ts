@@ -345,25 +345,6 @@ interface TensorOpsInterface {
   absolute(): Tensor
   /**
    *
-   *   Calculate the absolute value for every element in a {@link Tensor}. There is a static function version of this method: {@link abs}.
-   *
-   *   $$|x| : \forall x \in T$$
-   *
-   *   @example
-   *
-   *   ```javascript
-   *   const t = sm.randn([128, 128])
-   *
-   *   // equivalent calls
-   *   const a = t.abs()
-   *   const b = sm.abs(t)
-   *   ```
-   *
-   *   @returns - A new {@link Tensor}
-   */
-  abs(): Tensor
-  /**
-   *
    *   Calculate the sigmoid (logistic function) for each element in a {@link Tensor}. There is a static function version of this method: {@link sigmoid}.
    *
    *   $$\frac\{1\}\{1 + e^\{-x\}\} : \forall x \in T$$

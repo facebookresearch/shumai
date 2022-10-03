@@ -226,6 +226,14 @@ import { Tensor } from './tensor'
   return t
 }
 
+export function ident(dim: number) {
+  return identity(dim)
+}
+
+export function eye(dim: number) {
+  return identity(dim)
+}
+
 /**
  *
  *   Create a {@link Tensor} of evenly-spaced values in a given interval.
@@ -637,6 +645,10 @@ import { Tensor } from './tensor'
   }
   t.op = 'negative'
   return t
+}
+
+export function negate(tensor: Tensor) {
+  return negative(tensor)
 }
 
 /**
@@ -1342,62 +1354,8 @@ import { Tensor } from './tensor'
   return t
 }
 
-/**
- *
- *   Calculate the absolute value for every element in a {@link Tensor}. There is a method version of this static function: {@link Tensor.abs | Tensor.abs }.
- *
- *   $$|x| : \forall x \in T$$
- *
- *   @example
- *
- *   ```javascript
- *   const t = sm.randn([128, 128])
- *
- *   // equivalent calls
- *   const a = t.abs()
- *   const b = sm.abs(t)
- *   ```
- *
- *   @param tensor - {@link Tensor} whose values will have their absolute value calculated
- *   @returns - A new {@link Tensor}
- */ export function abs(tensor: Tensor) {
-  const requires_stats = tensor.requires_stats
-
-  let stats = null
-  let recorded_stat = null
-  if (requires_stats) {
-    stats = collectStats([tensor])
-  }
-  if (requires_stats) {
-    recorded_stat = [performance.now(), fl.bytesUsed()]
-  }
-
-  const _ptr = fl._abs(tensor.ptr)
-
-  if (requires_stats) {
-    const [t0, b0] = recorded_stat
-    const dt = performance.now() - t0
-    const db = fl.bytesUsed() - b0
-    const s = getStack()
-    if (s in stats) {
-      stats[s].time += dt
-      stats[s].bytes += db
-    } else {
-      stats[s] = { time: dt, bytes: db }
-    }
-  }
-
-  const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor] : []
-  const t = new Tensor({ _ptr: _ptr, _deps: deps })
-  t.provenance = tensor.provenance
-  t.requires_grad = requires_grad
-  if (requires_stats) {
-    t.requires_stats = true
-    t.stats = stats
-  }
-  t.op = 'abs'
-  return t
+export function abs(tensor: Tensor) {
+  return absolute(tensor)
 }
 
 /**
@@ -2200,6 +2158,10 @@ export function lessThan(tensor: Tensor, other: Tensor) {
   return t
 }
 
+export function lt(tensor: Tensor, other: Tensor) {
+  return lessThan(tensor, other)
+}
+
 export function lessThanEqual(tensor: Tensor, other: Tensor) {
   const requires_stats = tensor.requires_stats || other.requires_stats
 
@@ -2238,6 +2200,10 @@ export function lessThanEqual(tensor: Tensor, other: Tensor) {
   }
   t.op = 'lessThanEqual'
   return t
+}
+
+export function lte(tensor: Tensor, other: Tensor) {
+  return lessThanEqual(tensor, other)
 }
 
 export function greaterThan(tensor: Tensor, other: Tensor) {
@@ -2280,6 +2246,10 @@ export function greaterThan(tensor: Tensor, other: Tensor) {
   return t
 }
 
+export function gt(tensor: Tensor, other: Tensor) {
+  return greaterThan(tensor, other)
+}
+
 export function greaterThanEqual(tensor: Tensor, other: Tensor) {
   const requires_stats = tensor.requires_stats || other.requires_stats
 
@@ -2318,6 +2288,10 @@ export function greaterThanEqual(tensor: Tensor, other: Tensor) {
   }
   t.op = 'greaterThanEqual'
   return t
+}
+
+export function gte(tensor: Tensor, other: Tensor) {
+  return greaterThanEqual(tensor, other)
 }
 
 export function logicalOr(tensor: Tensor, other: Tensor) {
@@ -2800,6 +2774,10 @@ export function matmul(tensor: Tensor, other: Tensor) {
   return t
 }
 
+export function mm(tensor: Tensor, other: Tensor) {
+  return matmul(tensor, other)
+}
+
 export function conv2d(
   tensor: Tensor,
   weights: Tensor,
@@ -3233,6 +3211,15 @@ export function _var(
   return t
 }
 
+export function variance(
+  tensor: Tensor,
+  axes: BigInt64Array | number[] = [],
+  bias = false,
+  keep_dims = false
+) {
+  return _var(tensor, axes, bias, keep_dims)
+}
+
 export function std(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
   const requires_stats = tensor.requires_stats
@@ -3326,6 +3313,15 @@ export function norm(
   }
   t.op = 'norm'
   return t
+}
+
+export function normalize(
+  tensor: Tensor,
+  axes: BigInt64Array | number[] = [],
+  p = 2,
+  keep_dims = false
+) {
+  return norm(tensor, axes, p, keep_dims)
 }
 
 export function countNonzero(

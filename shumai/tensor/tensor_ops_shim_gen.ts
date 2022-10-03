@@ -210,6 +210,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
+    negate() {
+      return this.negative()
+    },
+
     logicalNot() {
       const requires_stats = this.requires_stats
 
@@ -691,43 +695,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     abs() {
-      const requires_stats = this.requires_stats
-
-      let stats = null
-      let recorded_stat = null
-      if (requires_stats) {
-        stats = collectStats([this])
-      }
-      if (requires_stats) {
-        recorded_stat = [performance.now(), fl.bytesUsed()]
-      }
-
-      const _ptr = fl._abs(this.ptr)
-
-      if (requires_stats) {
-        const [t0, b0] = recorded_stat
-        const dt = performance.now() - t0
-        const db = fl.bytesUsed() - b0
-        const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-        } else {
-          stats[s] = { time: dt, bytes: db }
-        }
-      }
-
-      const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this] : []
-      const t = new _Tensor({ _ptr: _ptr, _deps: deps })
-      t.provenance = this.provenance
-      t.requires_grad = requires_grad
-      if (requires_stats) {
-        t.requires_stats = true
-        t.stats = stats
-      }
-      t.op = 'abs'
-      return t
+      return this.absolute()
     },
 
     sigmoid() {
@@ -1494,6 +1462,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
+    lt(tensor: Tensor) {
+      return this.lessThan(tensor)
+    },
+
     lessThanEqual(tensor: Tensor) {
       const requires_stats = this.requires_stats || tensor.requires_stats
 
@@ -1532,6 +1504,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
       t.op = 'lessThanEqual'
       return t
+    },
+
+    lte(tensor: Tensor) {
+      return this.lessThanEqual(tensor)
     },
 
     greaterThan(tensor: Tensor) {
@@ -1574,6 +1550,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
+    gt(tensor: Tensor) {
+      return this.greaterThan(tensor)
+    },
+
     greaterThanEqual(tensor: Tensor) {
       const requires_stats = this.requires_stats || tensor.requires_stats
 
@@ -1612,6 +1592,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
       t.op = 'greaterThanEqual'
       return t
+    },
+
+    gte(tensor: Tensor) {
+      return this.greaterThanEqual(tensor)
     },
 
     logicalOr(tensor: Tensor) {
@@ -2094,6 +2078,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
+    mm(tensor: Tensor) {
+      return this.matmul(tensor)
+    },
+
     conv2d(weights: Tensor, sx = 1, sy = 1, px = 0, py = 0, dx = 1, dy = 1, groups = 1) {
       const requires_stats = this.requires_stats || weights.requires_stats
 
@@ -2512,6 +2500,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
+    variance(axes: BigInt64Array | number[] = [], bias = false, keep_dims = false) {
+      return this._var(axes, bias, keep_dims)
+    },
+
     std(axes: BigInt64Array | number[] = [], keep_dims = false) {
       const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
       const requires_stats = this.requires_stats
@@ -2600,6 +2592,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
       t.op = 'norm'
       return t
+    },
+
+    normalize(axes: BigInt64Array | number[] = [], p = 2, keep_dims = false) {
+      return this.norm(axes, p, keep_dims)
     },
 
     countNonzero(axes: BigInt64Array | number[] = [], keep_dims = false) {

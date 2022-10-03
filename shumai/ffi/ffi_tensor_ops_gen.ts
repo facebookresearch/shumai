@@ -93,10 +93,6 @@ const ffi_tensor_ops = {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
-  _abs: {
-    args: [FFIType.ptr],
-    returns: FFIType.ptr
-  },
   _sigmoid: {
     args: [FFIType.ptr],
     returns: FFIType.ptr

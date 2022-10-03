@@ -213,15 +213,6 @@ void* _absolute(void* tensor) {
   return new fl::Tensor(t);
 }
 
-void* _abs(void* tensor) {
-  LOCK_GUARD
-
-  auto* tensor_ptr = reinterpret_cast<fl::Tensor*>(tensor);
-  auto t = fl::abs(*tensor_ptr);
-  g_bytes_used += t.bytes();
-  return new fl::Tensor(t);
-}
-
 void* _sigmoid(void* tensor) {
   LOCK_GUARD
 

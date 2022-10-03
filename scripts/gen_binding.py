@@ -78,7 +78,7 @@ op_list = [
     ("ceil", ["Tensor"], "Tensor"),
     ("rint", ["Tensor"], "Tensor"),
     ("absolute", ["Tensor"], "Tensor"),
-    ("abs", ["Tensor"], "Tensor"),
+    #("abs", ["Tensor"], "Tensor"),
     ("sigmoid", ["Tensor"], "Tensor"),
     ("erf", ["Tensor"], "Tensor"),
     ("flip", ["Tensor", ("uint32_t", "dim")], "Tensor"),
@@ -199,6 +199,19 @@ op_list = [
     ),
 ]
 
+op_aliases = {
+  "matmul": ["mm"],
+  "absolute": ["abs"],
+  "identity": ["ident", "eye"],
+  "negative": ["negate"],
+  "lessThan": ["lt"],
+  "lessThanEqual": ["lte"],
+  "greaterThan": ["gt"],
+  "greaterThanEqual": ["gte"],
+  "var": ["variance"],
+  "norm": ["normalize"]
+}
+
 # ops that need inputs transposed to work correctly
 # if g_row_major == true
 reverse_args_row_major = [
@@ -266,6 +279,7 @@ for op, args, ret in op_list:
     c_sig = []
     ffi_sig = []
     js_sig = []
+    js_sig_names = []
     ts_sig = []
     js_impl = []
     js_args = []
@@ -361,9 +375,11 @@ for op, args, ret in op_list:
             else "Tensor"
         )
         if d:
+            js_sig_names.append(n)
             js_sig.append(n + ": " + js_arg_type + " = " + d)
             ts_sig.append(n + "?: " + js_arg_type)
         else:
+            js_sig_names.append(n)
             js_sig.append(n + ": " + js_arg_type)
             ts_sig.append(n + ": " + js_arg_type)
 
@@ -492,6 +508,15 @@ for op, args, ret in op_list:
 {c_impl_str}
 }}"""
     full_js.append(js)
+    if op in op_aliases:
+        for alias in op_aliases[op]:
+            alias_js = f"""\
+{'export function ' if not methods_only else ''}{alias}({', '.join(js_sig)}) {{
+  return {'this.' if methods_only else ''}{valid_js(op)}({', '.join(js_sig_names)})
+}}{',' if methods_only else ''}
+"""
+            alias_js = textwrap.indent(alias_js, "    ") if methods_only else alias_js
+            full_js.append(alias_js)
     if supports_method:
         if op in comments:
             full_js_types.append(comments[op][1])
