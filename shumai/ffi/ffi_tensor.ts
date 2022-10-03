@@ -5,6 +5,39 @@ const ffi_tensor = {
   bytesUsed: {
     returns: FFIType.u64
   },
+  dtypeFloat16: {
+    returns: FFIType.int
+  },
+  dtypeFloat32: {
+    returns: FFIType.int
+  },
+  dtypeFloat64: {
+    returns: FFIType.int
+  },
+  dtypeBoolInt8: {
+    returns: FFIType.int
+  },
+  dtypeInt16: {
+    returns: FFIType.int
+  },
+  dtypeInt32: {
+    returns: FFIType.int
+  },
+  dtypeInt64: {
+    returns: FFIType.int
+  },
+  dtypeUint8: {
+    returns: FFIType.int
+  },
+  dtypeUint16: {
+    returns: FFIType.int
+  },
+  dtypeUint32: {
+    returns: FFIType.int
+  },
+  dtypeUint64: {
+    returns: FFIType.int
+  },
   setRowMajor: {},
   setColMajor: {},
   isRowMajor: {
@@ -29,6 +62,10 @@ const ffi_tensor = {
   },
   load: {
     args: [FFIType.cstring],
+    returns: FFIType.ptr
+  },
+  _astype: {
+    args: [FFIType.ptr, FFIType.int],
     returns: FFIType.ptr
   },
   _save: {
@@ -131,6 +168,10 @@ const ffi_tensor = {
     returns: FFIType.u64
   },
   _ndim: {
+    args: [FFIType.ptr],
+    returns: FFIType.i32
+  },
+  _dtype: {
     args: [FFIType.ptr],
     returns: FFIType.i32
   },

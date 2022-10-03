@@ -161,6 +161,75 @@ int _ndim(void* t) {
   return tensor->ndim();
 }
 
+void* _astype(void* t, int type) {
+  LOCK_GUARD
+  auto dtype = static_cast<fl::dtype>(type);
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  auto new_tensor = tensor->astype(dtype);
+  g_bytes_used += new_tensor.bytes();
+  return new fl::Tensor(new_tensor);
+}
+
+int _dtype(void* t) {
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  auto dtype = static_cast<int>(tensor->type());
+  return dtype;
+}
+
+int dtypeFloat16() {
+  int dtype = static_cast<int>(fl::dtype::f16);
+  return dtype;
+}
+
+int dtypeFloat32() {
+  int dtype = static_cast<int>(fl::dtype::f32);
+  return dtype;
+}
+int dtypeFloat64() {
+  int dtype = static_cast<int>(fl::dtype::f64);
+  return dtype;
+}
+
+int dtypeBoolInt8() {
+  int dtype = static_cast<int>(fl::dtype::b8);
+  return dtype;
+}
+
+int dtypeInt16() {
+  int dtype = static_cast<int>(fl::dtype::s16);
+  return dtype;
+}
+
+int dtypeInt32() {
+  int dtype = static_cast<int>(fl::dtype::s32);
+  return dtype;
+}
+
+int dtypeInt64() {
+  int dtype = static_cast<int>(fl::dtype::s64);
+  return dtype;
+}
+
+int dtypeUint8() {
+  int dtype = static_cast<int>(fl::dtype::u8);
+  return dtype;
+}
+
+int dtypeUint16() {
+  int dtype = static_cast<int>(fl::dtype::u16);
+  return dtype;
+}
+
+int dtypeUint32() {
+  int dtype = static_cast<int>(fl::dtype::u32);
+  return dtype;
+}
+
+int dtypeUint64() {
+  int dtype = static_cast<int>(fl::dtype::u64);
+  return dtype;
+}
+
 float* _float16Buffer(void* t) {
   LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
