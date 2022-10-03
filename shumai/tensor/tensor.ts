@@ -310,7 +310,7 @@ export class Tensor {
     return fl._save(this.ptr, new TextEncoder().encode(filename))
   }
 
-  asType(dtype: dtype) {
+  astype(dtype: dtype) {
     return wrapFLTensor(fl._astype, this.ptr, dtype)
   }
 
@@ -326,7 +326,7 @@ export class Tensor {
     return Number(fl._ndim.native(this.ptr))
   }
 
-  get dType() {
+  get dtype() {
     return Number(fl._dtype.native(this.ptr))
   }
 
