@@ -165,9 +165,9 @@ void* _astype(void* t, int type) {
   LOCK_GUARD
   auto dtype = static_cast<fl::dtype>(type);
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  tensor->astype(dtype);
-  g_bytes_used += tensor->bytes();
-  return tensor;
+  auto new_tensor = tensor->astype(dtype);
+  g_bytes_used += new_tensor.bytes();
+  return new fl::Tensor(new_tensor);
 }
 
 int _dtype(void* t) {

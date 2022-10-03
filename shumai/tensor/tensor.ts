@@ -310,6 +310,10 @@ export class Tensor {
     return fl._save(this.ptr, new TextEncoder().encode(filename))
   }
 
+  asType(dtype: dtype) {
+    return wrapFLTensor(fl._astype.native, this.ptr, dtype)
+  }
+
   eval() {
     return fl._eval.native(this.ptr)
   }
