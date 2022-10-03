@@ -8,6 +8,22 @@ import { getStack, collectStats } from './stats'
 import type { OpStats } from '../io'
 
 fl.init.native()
+
+export enum dtype {
+  Float16 = fl.dtypeFloat16.native(),
+  Float32 = fl.dtypeFloat32.native(),
+  Float64 = fl.dtypeFloat64.native(),
+  BoolInt8 = fl.dtypeBoolInt8.native(),
+  Int16 = fl.dtypeInt16.native(),
+  Int32 = fl.dtypeInt32.native(),
+  Int64 = fl.dtypeInt64.native(),
+  BigInt64 = fl.dtypeInt64.native(),
+  Uint8 = fl.dtypeUint8.native(),
+  Uint16 = fl.dtypeUint16.native(),
+  Uint32 = fl.dtypeUint32.native(),
+  Uint64 = fl.dtypeUint64.native(),
+  BigUint64 = fl.dtypeUint64.native()
+}
 /** @private */
 export const gradient_functions: { [key: string]: CallableFunction } = {}
 
@@ -263,7 +279,7 @@ export class Tensor {
       this.deps = obj._deps
       return
     }
-    if (obj.constructor === String) {
+    if (typeof obj === 'string') {
       this._injest_ptr(fl.load(new TextEncoder().encode(obj)))
       return
     }
@@ -273,7 +289,7 @@ export class Tensor {
       this._injest_ptr(fl.tensorFromBuffer.native(len, ptr(obj)))
       return
     }
-    if (obj.constructor === Number) {
+    if (typeof obj === 'number') {
       obj = [obj]
     }
     this._injest_ptr(fl.createTensor.native(...arrayArg(obj, FFIType.i64)))
@@ -304,6 +320,10 @@ export class Tensor {
 
   get ndim() {
     return Number(fl._ndim.native(this.ptr))
+  }
+
+  get dType() {
+    return Number(fl._dtype.native(this.ptr))
   }
 
   get shape() {
@@ -511,25 +531,25 @@ export function tensor(obj) {
 /**
  * @returns The current number of bytes allocated and managed by Shumai.
  */
-export function bytesUsed() {
+export function bytesUsed(): bigint {
   return fl.bytesUsed.native()
 }
 
 export const layout = {
   /** Set the framework layout to be row major (default). */
   setRowMajor: () => {
-    fl.setRowMajor()
+    fl.setRowMajor.native()
   },
   /** Set the framework layout to be column major. */
   setColMajor: () => {
-    fl.setColMajor()
+    fl.setColMajor.native()
   },
   /** Return true if the framework is currently row major. */
   isRowMajor: (): boolean => {
-    return fl.isRowMajor()
+    return fl.isRowMajor.native()
   },
   /** Return true if the framework is currently column major. */
   isColMajor: (): boolean => {
-    return !fl.isRowMajor()
+    return !fl.isRowMajor.native()
   }
 }
