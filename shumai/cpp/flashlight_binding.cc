@@ -314,5 +314,24 @@ void* _copy(void* t) {
   return new_tensor;
 }
 
+void* _pad(void* t,
+           void* before,
+           int64_t before_len,
+           void* after,
+           int64_t after_len) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  auto before_vec = arrayArg<int64_t>(before, before_len, g_row_major, false);
+  auto after_vec = arrayArg<int64_t>(after, after_len, g_row_major, false);
+  std::vector<std::pair<int, int>> pair_vec;
+  pair_vec.reserve(after_vec.size());
+  for (auto i = 0; i < after_vec.size(); ++i) {
+    pair_vec.emplace_back(before_vec[i], after_vec[i]);
+  }
+  auto* new_tensor = new fl::Tensor(fl::pad(*tensor, pair_vec));
+  g_bytes_used += new_tensor->bytes();
+  return new_tensor;
+}
+
 #include "binding_gen.inl"
 };

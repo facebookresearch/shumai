@@ -350,6 +350,21 @@ export class Tensor {
     return wrapFLTensor(fl._copy.native, this.ptr)
   }
 
+  pad(paddings) {
+    const before_ = paddings.map((x) => {
+      return BigInt(x[0])
+    })
+    const after_ = paddings.map((x) => {
+      return BigInt(x[1])
+    })
+    return wrapFLTensor(
+      fl._pad.native,
+      this.ptr,
+      ...arrayArg(before_, FFIType.i64),
+      ...arrayArg(after_, FFIType.i64)
+    )
+  }
+
   requireGrad() {
     const t = this.copy()
     t.requires_grad = true

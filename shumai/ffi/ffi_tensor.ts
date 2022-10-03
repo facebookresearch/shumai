@@ -110,6 +110,10 @@ const ffi_tensor = {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
+  _pad: {
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64, FFIType.ptr, FFIType.i64],
+    returns: FFIType.ptr
+  },
   _copy: {
     args: [FFIType.ptr],
     returns: FFIType.ptr
