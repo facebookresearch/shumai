@@ -96,7 +96,7 @@ void* tensorFromInt8Buffer(int64_t numel, void* ptr) {
 void* tensorFromInt16Buffer(int64_t numel, void* ptr) {
   LOCK_GUARD
   auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (short*)ptr, fl::MemoryLocation::Host));
+      fl::Tensor::fromBuffer({numel}, (int16_t*)ptr, fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
   return t;
 }
@@ -104,15 +104,15 @@ void* tensorFromInt16Buffer(int64_t numel, void* ptr) {
 void* tensorFromInt32Buffer(int64_t numel, void* ptr) {
   LOCK_GUARD
   auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (int*)ptr, fl::MemoryLocation::Host));
+      fl::Tensor::fromBuffer({numel}, (int32_t*)ptr, fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
   return t;
 }
 
 void* tensorFromInt64Buffer(int64_t numel, void* ptr) {
   LOCK_GUARD
-  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (long long*)ptr,
-                                                  fl::MemoryLocation::Host));
+  auto* t = new fl::Tensor(
+      fl::Tensor::fromBuffer({numel}, (int64_t*)ptr, fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
   return t;
 }
@@ -120,14 +120,14 @@ void* tensorFromInt64Buffer(int64_t numel, void* ptr) {
 void* tensorFromUint8Buffer(int64_t numel, void* ptr) {
   LOCK_GUARD
   auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (bool*)ptr, fl::MemoryLocation::Host));
+      fl::Tensor::fromBuffer({numel}, (uint8_t*)ptr, fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
   return t;
 }
 
 void* tensorFromUint16Buffer(int64_t numel, void* ptr) {
   LOCK_GUARD
-  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (unsigned short*)ptr,
+  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint16_t*)ptr,
                                                   fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
   return t;
@@ -135,7 +135,7 @@ void* tensorFromUint16Buffer(int64_t numel, void* ptr) {
 
 void* tensorFromUint32Buffer(int64_t numel, void* ptr) {
   LOCK_GUARD
-  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (unsigned int*)ptr,
+  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint32_t*)ptr,
                                                   fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
   return t;
@@ -143,8 +143,8 @@ void* tensorFromUint32Buffer(int64_t numel, void* ptr) {
 
 void* tensorFromUint64Buffer(int64_t numel, void* ptr) {
   LOCK_GUARD
-  auto* t = new fl::Tensor(fl::Tensor::fromBuffer(
-      {numel}, (unsigned long long*)ptr, fl::MemoryLocation::Host));
+  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint64_t*)ptr,
+                                                  fl::MemoryLocation::Host));
   g_bytes_used += t->bytes();
   return t;
 }
