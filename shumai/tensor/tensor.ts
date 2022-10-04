@@ -594,6 +594,10 @@ export function bytesUsed(): bigint {
   return fl.bytesUsed.native()
 }
 
+export const conv2dBackwardData = (...args) => {
+  return wrapFLTensor(fl._conv2dBackwardData.native, ...args)
+}
+
 export const layout = {
   /** Set the framework layout to be row major (default). */
   setRowMajor: () => {
