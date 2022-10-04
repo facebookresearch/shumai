@@ -490,22 +490,26 @@ void* _conv2dBackwardData(void* grad_in,
                           int dx,
                           int dy,
                           int groups) {
-  LOCK_GUARD
-  auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
-  auto* used_bs = reinterpret_cast<fl::Tensor*>(bs);
-  auto* used_in = reinterpret_cast<fl::Tensor*>(in);
-  auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
+  try {
+    LOCK_GUARD
+    auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
+    auto* used_bs = reinterpret_cast<fl::Tensor*>(bs);
+    auto* used_in = reinterpret_cast<fl::Tensor*>(in);
+    auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
 
-  auto payload = std::make_shared<fl::detail::AutogradPayload>();
-  std::shared_ptr<fl::DynamicBenchmark> dataBench;
-  auto result =
-      used_in->backend()
-          .getExtension<fl::AutogradExtension>()
-          .conv2dBackwardData(*used_grad_in, *used_in, *used_wt, sx, sy, px, py,
-                              dx, dy, groups, dataBench, payload);
+    auto payload = std::make_shared<fl::detail::AutogradPayload>();
+    std::shared_ptr<fl::DynamicBenchmark> dataBench;
+    auto result =
+        used_in->backend()
+            .getExtension<fl::AutogradExtension>()
+            .conv2dBackwardData(*used_grad_in, *used_in, *used_wt, sx, sy, px,
+                                py, dx, dy, groups, dataBench, payload);
 
-  g_bytes_used += result.bytes();
-  return new fl::Tensor(result);
+    g_bytes_used += result.bytes();
+    return new fl::Tensor(result);
+  } catch (std::exception) {
+    return nullptr;
+  }
 }
 
 #include "binding_gen.inl"
