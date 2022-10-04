@@ -286,9 +286,64 @@ export class Tensor {
     if (obj.constructor === Float32Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
-      this._injest_ptr(fl.tensorFromBuffer.native(len, ptr(obj)))
+      this._injest_ptr(fl.tensorFromFloat32Buffer.native(len, ptr(obj)))
       return
     }
+    if (obj.constructor === Float64Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromFloat64Buffer.native(len, ptr(obj)))
+      return
+    }
+    if (obj.constructor === Int8Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromInt8Buffer.native(len, ptr(obj)))
+      return
+    }
+    if (obj.constructor === Int16Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromInt16Buffer.native(len, ptr(obj)))
+      return
+    }
+    if (obj.constructor === Int32Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromInt32Buffer.native(len, ptr(obj)))
+      return
+    }
+    if (obj.constructor === BigInt64Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromInt64Buffer.native(len, ptr(obj)))
+      return
+    }
+    if (obj.constructor === Uint8Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromUint8Buffer.native(len, ptr(obj)))
+      return
+    }
+    if (obj.constructor === Uint16Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromUint16Buffer.native(len, ptr(obj)))
+      return
+    }
+    if (obj.constructor === Uint32Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromUint32Buffer.native(len, ptr(obj)))
+      return
+    }
+    if (obj.constructor === BigUint64Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromUint64Buffer.native(len, ptr(obj)))
+      return
+    }
+
     if (typeof obj === 'number') {
       obj = [obj]
     }
