@@ -116,10 +116,6 @@ const ffi_tensor = {
     ],
     returns: FFIType.ptr
   },
-  load: {
-    args: [FFIType.cstring],
-    returns: FFIType.ptr
-  },
   _astype: {
     args: [FFIType.ptr, FFIType.int],
     returns: FFIType.ptr
