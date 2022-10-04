@@ -56,7 +56,43 @@ const ffi_tensor = {
   genTensorDestroyer: {
     returns: FFIType.ptr
   },
-  tensorFromBuffer: {
+  tensorFromFloat32Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromFloat64Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromInt8Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromInt16Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromInt32Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromInt64Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromUint8Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromUint16Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromUint32Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  tensorFromUint64Buffer: {
     args: [FFIType.i64, FFIType.ptr],
     returns: FFIType.ptr
   },
