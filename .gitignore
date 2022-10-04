@@ -27,6 +27,9 @@ cifar-100-binary
 [._]ss[a-gi-z]
 [._]sw[a-p]
 
+# VSCode Config
+.vscode/
+
 # macOS General
 .DS_Store
 .AppleDouble
