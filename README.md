@@ -31,13 +31,59 @@ A fast differentiable tensor library for research in TypeScript and JavaScript. 
 - [Supported operations](#supported-operations)
 
 ## Quickstart
-Install [Bun](https://bun.sh/) and [ArrayFire](https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire), then run:
+Install [Bun](https://bun.sh/) and [ArrayFire](https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire)
+
+<details><summary><strong>For MacOS users:</strong></summary>
+  
+You can use [Homebrew](https://brew.sh) to install ArrayFire:
+  
+```bash
+curl https://bun.sh/install | bash
+brew install arrayfire
+```
+  
+</details>
+
+<details><summary><strong>For Linux users:</strong></summary>
+  
+If you're running Ubuntu with **x86-64**, you can use the official distribution:
+  
+```bash
+curl https://bun.sh/install | bash
+sudo apt install -y gnupg2 ca-certificates
+sudo apt-key adv --fetch-key https://repo.arrayfire.com/GPG-PUB-KEY-ARRAYFIRE-2020.PUB
+echo "deb https://repo.arrayfire.com/debian all main" | sudo tee /etc/apt/sources.list.d/arrayfire.list
+sudo apt update
+sudo apt install -y arrayfire-cpu3-dev arrayfire-cpu3-openblas
+```
+  
+If you're running Ubuntu with **ARMv8**, you'll need to build from source:
+
+```bash
+curl https://bun.sh/install | bash
+sudo apt remove libarrayfire-dev libarrayfire-cpu3 libarrayfire-cpu-dev
+sudo apt install -y libblas-dev liblapack-dev liblapacke-dev libfftw3-dev libboost-all-dev cmake make g++
+cd /tmp
+sudo rm -rf arrayfire
+git clone https://github.com/arrayfire/arrayfire.git
+cd arrayfire
+cmake -Bbuild -DAF_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release -DAF_BUILD_UNIFIED=OFF -DAF_TEST_WITH_MTX_FILES=OFF -DBUILD_TESTING=OFF
+make -j4 -Cbuild
+sudo make install -Cbuild
+```
+  
+Otherwise, see the official [ArrayFire installation guide.](https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire)
+</details>
+
+then run:
 ```
 bun install @shumai/shumai
 ```
 Only macOS and Linux are supported. Linux installs default to GPU computation with CUDA, and macOS to CPU. Detailed install instructions [below](#install).
 
 *Install is work in progress*: [**please file an issue**](https://github.com/facebookresearch/shumai/issues) if you run into problems.
+
+
 
 ## Why build this?
 
