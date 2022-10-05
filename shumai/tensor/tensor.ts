@@ -6,6 +6,7 @@ import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 import { getStack, collectStats } from './stats'
 import type { OpStats } from '../io'
+export { NATIVE_FILE } from '../ffi/ffi_flashlight'
 
 fl.init.native()
 
