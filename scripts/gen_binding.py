@@ -323,7 +323,10 @@ for op, args, ret in op_list:
             c_impl.append(f"auto *{n}_ptr = reinterpret_cast<fl::Tensor*>({n});")
             if not first_tensor:
                 first_tensor = f"{n}_ptr"
-            c_op_args.append(f"*{n}_ptr")
+            if op == 'where' and n == 'cond':
+                c_op_args.append(f"{n}_ptr->astype(fl::dtype::b8)")
+            else:
+                c_op_args.append(f"*{n}_ptr")
         elif t == "Shape":
             if not n:
                 n = "shape"

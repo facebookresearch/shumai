@@ -312,7 +312,7 @@ void* _where(void* cond, void* x, void* y) {
   auto* cond_ptr = reinterpret_cast<fl::Tensor*>(cond);
   auto* x_ptr = reinterpret_cast<fl::Tensor*>(x);
   auto* y_ptr = reinterpret_cast<fl::Tensor*>(y);
-  auto t = fl::where(*cond_ptr, *x_ptr, *y_ptr);
+  auto t = fl::where(cond_ptr->astype(fl::dtype::b8), *x_ptr, *y_ptr);
   g_bytes_used += t.bytes();
   return new fl::Tensor(t);
 }
