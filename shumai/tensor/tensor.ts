@@ -275,7 +275,7 @@ export class Tensor {
       this.op = obj.op
       return
     }
-    if (obj._ptr) {
+    if (obj.hasOwnProperty('_ptr')) {
       this._injest_ptr(obj._ptr)
       this.deps = obj._deps
       return
