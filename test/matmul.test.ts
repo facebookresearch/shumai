@@ -51,7 +51,6 @@ describe('matmul', () => {
     expect(isShape(r, [4, 3, 1])).toBe(true)
     expectArraysClose(r.toFloat32Array(), [2.5, 4, 1.5, 3.5, 9.5, 8.5, 3, 5.5, 16, 1.5, 4, 1.5])
   })
-
   /* TODO: FIX - CURRENTLY FAILS (Throws C++ Exception)
     it('broadcast w unequal ranks', () => {
       const a = sm

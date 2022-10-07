@@ -21,6 +21,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._reshape(this.ptr, shape_ptr, shape_len)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `reshape` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -62,6 +66,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._transpose(this.ptr, axes_ptr, axes_len)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `transpose` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -103,6 +111,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._tile(this.ptr, shape_ptr, shape_len)
+      if (!_ptr)
+        throw new Error('Tensor returned from `tile` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -143,6 +153,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._nonzero(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `nonzero` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -183,6 +197,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._negative(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `negative` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -227,6 +245,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._logicalNot(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `logicalNot` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -267,6 +289,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._exp(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `exp` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -307,6 +331,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._log(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `log` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -347,6 +373,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._log1p(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `log1p` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -387,6 +417,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._sin(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `sin` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -427,6 +459,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._cos(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `cos` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -467,6 +501,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._sqrt(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `sqrt` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -507,6 +543,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._tanh(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `tanh` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -547,6 +585,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._floor(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `floor` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -587,6 +629,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._ceil(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `ceil` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -627,6 +671,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._rint(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `rint` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -667,6 +713,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._absolute(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `absolute` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -711,6 +761,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._sigmoid(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `sigmoid` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -751,6 +805,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._erf(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `erf` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -791,6 +847,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._flip(this.ptr, dim <= 0 ? 0 : dim >= 0xffffffff ? 0xffffffff : +dim || 0)
+      if (!_ptr)
+        throw new Error('Tensor returned from `flip` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -833,6 +891,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._clip(this.ptr, low.ptr, high.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `clip` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -873,6 +933,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._roll(this.ptr, shift | 0, axis | 0)
+      if (!_ptr)
+        throw new Error('Tensor returned from `roll` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -913,6 +975,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._isnan(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `isnan` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -953,6 +1019,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._isinf(this.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `isinf` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -993,6 +1063,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._sign(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `sign` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1033,6 +1105,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._tril(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `tril` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1073,6 +1147,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._triu(this.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `triu` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1113,6 +1189,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._where(this.ptr, x.ptr, y.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `where` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1153,6 +1233,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._sort(this.ptr, dim <= 0 ? 0 : dim >= 0xffffffff ? 0xffffffff : +dim || 0)
+      if (!_ptr)
+        throw new Error('Tensor returned from `sort` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1195,6 +1277,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._add(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `add` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1235,6 +1319,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._sub(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `sub` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1275,6 +1361,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._mul(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `mul` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1315,6 +1403,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._div(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `div` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1355,6 +1445,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._eq(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `eq` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1395,6 +1487,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._neq(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `neq` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1435,6 +1529,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._lessThan(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `lessThan` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1479,6 +1577,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._lessThanEqual(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `lessThanEqual` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1523,6 +1625,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._greaterThan(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `greaterThan` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1567,6 +1673,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._greaterThanEqual(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `greaterThanEqual` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1611,6 +1721,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._logicalOr(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `logicalOr` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1651,6 +1765,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._logicalAnd(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `logicalAnd` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1691,6 +1809,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._mod(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error('Tensor returned from `mod` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1731,6 +1851,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._bitwiseAnd(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `bitwiseAnd` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1771,6 +1895,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._bitwiseOr(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `bitwiseOr` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1811,6 +1939,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._bitwiseXor(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `bitwiseXor` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1851,6 +1983,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._lShift(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `lShift` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1891,6 +2027,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._rShift(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `rShift` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1931,6 +2071,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._minimum(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `minimum` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -1971,6 +2115,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._maximum(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `maximum` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2011,6 +2159,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._power(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `power` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2051,6 +2203,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._matmul(this.ptr, tensor.ptr)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `matmul` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2105,6 +2261,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         dy | 0,
         groups | 0
       )
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `conv2d` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2148,6 +2308,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._amin(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error('Tensor returned from `amin` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2189,6 +2351,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._amax(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error('Tensor returned from `amax` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2229,6 +2393,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._argmin(this.ptr, axis | 0, !!keep_dims)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `argmin` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2269,6 +2437,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._argmax(this.ptr, axis | 0, !!keep_dims)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `argmax` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2310,6 +2482,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._sum(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error('Tensor returned from `sum` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2350,6 +2524,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._cumsum(this.ptr, axis | 0)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `cumsum` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2391,6 +2569,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._mean(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error('Tensor returned from `mean` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2432,6 +2612,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._median(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `median` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2473,6 +2657,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._var(this.ptr, axes_ptr, axes_len, !!bias, !!keep_dims)
+      if (!_ptr)
+        throw new Error('Tensor returned from `_var` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2518,6 +2704,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._std(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error('Tensor returned from `std` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2565,6 +2753,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         p + 0.00000000000001 - 0.00000000000001,
         !!keep_dims
       )
+      if (!_ptr)
+        throw new Error('Tensor returned from `norm` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2612,6 +2802,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._countNonzero(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error(
+          'Tensor returned from `countNonzero` is null; native code likely threw an error...'
+        )
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2653,6 +2847,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._any(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error('Tensor returned from `any` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat
@@ -2694,6 +2890,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const _ptr = fl._all(this.ptr, axes_ptr, axes_len, !!keep_dims)
+      if (!_ptr)
+        throw new Error('Tensor returned from `all` is null; native code likely threw an error...')
 
       if (requires_stats) {
         const [t0, b0] = recorded_stat

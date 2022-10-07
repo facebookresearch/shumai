@@ -15,6 +15,9 @@
 #include "flashlight/fl/tensor/Init.h"
 #include "flashlight/fl/tensor/Random.h"
 
+#define FMT_RESET "\033[0m"
+#define FMT_RED "\033[31m"
+
 #if 0
 #include <mutex>
 static std::mutex g_op_mutex;
@@ -54,8 +57,13 @@ uint32_t axisArg(int32_t axis, bool reverse, int ndim) {
   }
 }
 
-extern "C" {
+std::nullptr_t handleError(std::exception const& e, const char* op_name) {
+  std::cerr << FMT_RED << "native code error" << FMT_RESET << ": " << op_name
+            << " - " << e.what() << std::endl;
+  return nullptr;
+}
 
+extern "C" {
 void init() {
   fl::init();
 }
@@ -507,8 +515,8 @@ void* _conv2dBackwardData(void* grad_in,
 
     g_bytes_used += result.bytes();
     return new fl::Tensor(result);
-  } catch (std::exception) {
-    return nullptr;
+  } catch (std::exception const& e) {
+    return handleError(e, "_conv2dBackwardData");
   }
 }
 

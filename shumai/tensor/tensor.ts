@@ -65,6 +65,8 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
 
   const requires_grad = args.some((x) => (x as Tensor).requires_grad)
   const deps: Tensor[] = requires_grad ? <Tensor[]>args.filter((x) => x instanceof Tensor) : []
+  if (!_ptr)
+    throw new Error(`Tensor returned from closure is null; native code likely threw an error...`)
   const t = new Tensor({
     _ptr: _ptr,
     _deps: deps
