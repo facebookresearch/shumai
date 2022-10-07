@@ -20,13 +20,17 @@
 #define FMT_GRAY "\033[90m"
 #define FMT_YELLOW "\033[33m"
 #define FMT_CYAN "\033[36m"
+#define FMT_BOLD_WHITE "\033[1m\033[97m"
+#define FMT_BOLD_ITALIC_WHITE "\033[1m\033[3m\033[97m"
 
 #define HANDLE_EXCEPTION(e, op_name)                                           \
   {                                                                            \
     std::cerr << FMT_RED << "native code error" << FMT_GRAY << ": "            \
-              << FMT_YELLOW << op_name << FMT_RESET << " - " << e.what()       \
-              << FMT_GRAY << "\n                  at " << FMT_CYAN << __FILE__ \
-              << FMT_GRAY << ":" << FMT_YELLOW << __LINE__ << std::endl;       \
+              << FMT_BOLD_WHITE << e.what() << FMT_RESET << FMT_GRAY           \
+              << "\n                  at " << FMT_BOLD_ITALIC_WHITE << op_name \
+              << FMT_RESET << FMT_GRAY << " (" << FMT_CYAN << __FILE__         \
+              << FMT_GRAY << ":" << FMT_YELLOW << __LINE__ << FMT_GRAY << ")"  \
+              << FMT_RESET << std::endl;                                       \
     return nullptr;                                                            \
   }
 
