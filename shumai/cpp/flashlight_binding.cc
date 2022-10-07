@@ -17,6 +17,18 @@
 
 #define FMT_RESET "\033[0m"
 #define FMT_RED "\033[31m"
+#define FMT_GRAY "\033[90m"
+#define FMT_YELLOW "\033[33m"
+#define FMT_CYAN "\033[36m"
+
+#define HANDLE_EXCEPTION(e, op_name)                                           \
+  {                                                                            \
+    std::cerr << FMT_RED << "native code error" << FMT_GRAY << ": "            \
+              << FMT_YELLOW << op_name << FMT_RESET << " - " << e.what()       \
+              << FMT_GRAY << "\n                  at " << FMT_CYAN << __FILE__ \
+              << FMT_GRAY << ":" << FMT_YELLOW << __LINE__ << std::endl;       \
+    return nullptr;                                                            \
+  }
 
 #if 0
 #include <mutex>
@@ -55,12 +67,6 @@ uint32_t axisArg(int32_t axis, bool reverse, int ndim) {
   } else {
     return static_cast<uint32_t>(-axis - 1);
   }
-}
-
-std::nullptr_t handleError(std::exception const& e, const char* op_name) {
-  std::cerr << FMT_RED << "native code error" << FMT_RESET << ": " << op_name
-            << " - " << e.what() << std::endl;
-  return nullptr;
 }
 
 extern "C" {
@@ -516,7 +522,7 @@ void* _conv2dBackwardData(void* grad_in,
     g_bytes_used += result.bytes();
     return new fl::Tensor(result);
   } catch (std::exception const& e) {
-    return handleError(e, "_conv2dBackwardData");
+    HANDLE_EXCEPTION(e, "_conv2dBackwardData");
   }
 }
 
