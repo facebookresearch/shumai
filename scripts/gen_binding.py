@@ -304,7 +304,6 @@ for op, args, ret in op_list:
     if methods_only:
         if not supports_method:
             continue
-
     for arg in args[methods_only:]:
         t, n, d = normalize_arg(arg)
         if t == "Tensor":
@@ -473,6 +472,7 @@ for op, args, ret in op_list:
   }}
 
   {js_ptr_result}
+  if(!_ptr) throw new Error('Tensor returned from `{valid_js(op)}` is null; native code likely threw an error...')
 
   if (requires_stats) {{
     const [t0, b0] = recorded_stat
@@ -504,11 +504,15 @@ for op, args, ret in op_list:
 
     js = textwrap.indent(js, "    ") if methods_only else js
     js += '\n'
-
+ 
     c_impl_str = textwrap.indent("\n".join(c_impl), "  ")
     c = f"""
 {c_ret} _{op}({', '.join(c_sig)}) {{
-{c_impl_str}
+  try {{
+    {c_impl_str}
+  }} catch (std::exception const& e) {{
+    HANDLE_EXCEPTION(e, "_{op}");
+  }}
 }}"""
     full_js.append(js)
     if op in op_aliases:

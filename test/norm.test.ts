@@ -8,7 +8,6 @@ describe('norm', () => {
     const norm = sm.norm(a)
     expect(norm.valueOf()).toBe(22)
   })
-  /* TODO: FIX - CURRENTLY FAILS (UNSUPPORTED) */
   it('vector inf norm', () => {
     const a = sm.tensor(new Float32Array([1, -2, 3, -4]))
     const norm = sm.norm(a, [0], Infinity)

@@ -12,12 +12,10 @@ describe('cos', () => {
       values.map((v) => Math.cos(v))
     )
   })
-
   it('propagates NaNs', () => {
     const a = sm.tensor(new Float32Array([4, NaN, 0]))
     const r = sm.cos(a)
     expectArraysClose(r.toFloat32Array(), [Math.cos(4), NaN, Math.cos(0)])
   })
-
   /* TODO: unit tests for gradients */
 })
