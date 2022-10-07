@@ -54,7 +54,6 @@ describe('sum', () => {
     expect(isShape(sum, [])).toBe(true)
     expectArraysClose(sum.toFloat32Array(), [7])
   })
-  /* TODO: FIX - CURRENTLY FAILS */
   it('4D, axis=[2, 2, 1]', () => {
     const t = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([1, 2, 2, 1])
     const sum = sm.sum(t, [0])

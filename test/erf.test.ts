@@ -13,7 +13,6 @@ describe('erf', () => {
     const r = sm.erf(t)
     expectArraysClose(r.toFloat32Array(), [-0.9522852, -0.999593, -0.9999883, -1])
   })
-
   it('scalar', () => {
     const t = sm.scalar(1)
     const r = sm.erf(t)
