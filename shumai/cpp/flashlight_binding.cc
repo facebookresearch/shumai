@@ -83,92 +83,136 @@ size_t bytesUsed() {
 }
 
 void* createTensor(void* shape_ptr, int64_t shape_len) {
-  LOCK_GUARD
-  static_assert(sizeof(long long) == sizeof(int64_t));
-  auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
-  auto* t = new fl::Tensor(fl::Shape(shape));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    static_assert(sizeof(long long) == sizeof(int64_t));
+    auto shape = arrayArg<long long>(shape_ptr, shape_len, g_row_major, false);
+    auto* t = new fl::Tensor(fl::Shape(shape));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "createTensor");
+  }
 }
 
 void* tensorFromFloat32Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (float*)ptr, fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(
+        fl::Tensor::fromBuffer({numel}, (float*)ptr, fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromFloat32Buffer");
+  }
 }
 
 void* tensorFromFloat64Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (double*)ptr, fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (double*)ptr,
+                                                    fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromFloat64Buffer");
+  }
 }
 
 void* tensorFromInt8Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (char*)ptr, fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(
+        fl::Tensor::fromBuffer({numel}, (char*)ptr, fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromInt8Buffer");
+  }
 }
 
 void* tensorFromInt16Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (int16_t*)ptr, fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (int16_t*)ptr,
+                                                    fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromInt16Buffer");
+  }
 }
 
 void* tensorFromInt32Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (int32_t*)ptr, fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (int32_t*)ptr,
+                                                    fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromInt32Buffer");
+  }
 }
 
 void* tensorFromInt64Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (int64_t*)ptr, fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (int64_t*)ptr,
+                                                    fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromInt64Buffer");
+  }
 }
 
 void* tensorFromUint8Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(
-      fl::Tensor::fromBuffer({numel}, (uint8_t*)ptr, fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint8_t*)ptr,
+                                                    fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromUint8Buffer");
+  }
 }
 
 void* tensorFromUint16Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint16_t*)ptr,
-                                                  fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint16_t*)ptr,
+                                                    fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromUint16Buffer");
+  }
 }
 
 void* tensorFromUint32Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint32_t*)ptr,
-                                                  fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint32_t*)ptr,
+                                                    fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromUint32Buffer");
+  }
 }
 
 void* tensorFromUint64Buffer(int64_t numel, void* ptr) {
-  LOCK_GUARD
-  auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint64_t*)ptr,
-                                                  fl::MemoryLocation::Host));
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(fl::Tensor::fromBuffer({numel}, (uint64_t*)ptr,
+                                                    fl::MemoryLocation::Host));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "tensorFromUint64Buffer");
+  }
 }
 
 void destroyTensor(void* t, void* /*ignore*/) {
@@ -209,13 +253,17 @@ void _save(void* t, char* cstr) {
 }
 
 void* load(char* cstr) {
-  LOCK_GUARD
-  auto filename = std::string(cstr);
-  fl::Tensor tensor;
-  fl::load(filename, tensor);
-  auto* t = new fl::Tensor(tensor);
-  g_bytes_used += t->bytes();
-  return t;
+  try {
+    LOCK_GUARD
+    auto filename = std::string(cstr);
+    fl::Tensor tensor;
+    fl::load(filename, tensor);
+    auto* t = new fl::Tensor(tensor);
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "load");
+  }
 }
 
 void _eval(void* t) {
@@ -256,12 +304,16 @@ int _ndim(void* t) {
 }
 
 void* _astype(void* t, int type) {
-  LOCK_GUARD
-  auto dtype = static_cast<fl::dtype>(type);
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  auto new_tensor = tensor->astype(dtype);
-  g_bytes_used += new_tensor.bytes();
-  return new fl::Tensor(new_tensor);
+  try {
+    LOCK_GUARD
+    auto dtype = static_cast<fl::dtype>(type);
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto new_tensor = tensor->astype(dtype);
+    g_bytes_used += new_tensor.bytes();
+    return new fl::Tensor(new_tensor);
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_astype");
+  }
 }
 
 int _dtype(void* t) {
@@ -325,63 +377,103 @@ int dtypeUint64() {
 }
 
 float* _float16Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::f16).host<float>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::f16).host<float>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_float16Buffer");
+  }
 }
 
 float* _float32Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::f32).host<float>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::f32).host<float>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_float32Buffer");
+  }
 }
 
 float* _float64Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::f64).host<float>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::f64).host<float>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_float64Buffer");
+  }
 }
 
 int* _int16Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::s16).host<int>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::s16).host<int>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_int16Buffer");
+  }
 }
 
 int* _int32Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::s32).host<int>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::s32).host<int>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_int32Buffer");
+  }
 }
 
 int* _int64Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::s64).host<int>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::s64).host<int>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_int64Buffer");
+  }
 }
 
 unsigned* _uint8Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::u8).host<unsigned>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::u8).host<unsigned>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_uint8Buffer");
+  }
 }
 
 unsigned* _uint16Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::u16).host<unsigned>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::u16).host<unsigned>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_uint16Buffer");
+  }
 }
 
 unsigned* _uint32Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::u32).host<unsigned>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::u32).host<unsigned>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_uint32Buffer");
+  }
 }
 
 unsigned* _uint64Buffer(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  return tensor->astype(fl::dtype::u64).host<unsigned>();
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::u64).host<unsigned>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_uint64Buffer");
+  }
 }
 
 float _scalar(void* t) {
@@ -397,26 +489,30 @@ void* _index(void* t,
              int64_t ends_len,
              void* strides,
              int64_t strides_len) {
-  LOCK_GUARD
-  auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
-  auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
-  auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
-  std::vector<fl::Index> indices;
-  indices.reserve(start.size());
-  for (auto i = 0; i < start.size(); ++i) {
-    if (start[i] == -1 && end[i] == -1) {
-      indices.emplace_back(fl::span);
-    } else if (start[i] + 1 == end[i]) {
-      indices.emplace_back(start[i]);
-    } else {
-      indices.emplace_back(
-          fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+  try {
+    LOCK_GUARD
+    auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
+    auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
+    auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
+    std::vector<fl::Index> indices;
+    indices.reserve(start.size());
+    for (auto i = 0; i < start.size(); ++i) {
+      if (start[i] == -1 && end[i] == -1) {
+        indices.emplace_back(fl::span);
+      } else if (start[i] + 1 == end[i]) {
+        indices.emplace_back(start[i]);
+      } else {
+        indices.emplace_back(
+            fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+      }
     }
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto* new_tensor = new fl::Tensor(tensor->operator()(indices));
+    g_bytes_used += new_tensor->bytes();
+    return new_tensor;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_index");
   }
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  auto* new_tensor = new fl::Tensor(tensor->operator()(indices));
-  g_bytes_used += new_tensor->bytes();
-  return new_tensor;
 }
 
 void* _indexedAssign(void* t,
@@ -427,54 +523,70 @@ void* _indexedAssign(void* t,
                      int64_t ends_len,
                      void* strides,
                      int64_t strides_len) {
-  LOCK_GUARD
-  auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
-  auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
-  auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
-  std::vector<fl::Index> indices;
-  indices.reserve(start.size());
-  for (auto i = 0; i < start.size(); ++i) {
-    if (start[i] == -1 && end[i] == -1) {
-      indices.emplace_back(fl::span);
-    } else if (start[i] + 1 == end[i]) {
-      indices.emplace_back(start[i]);
-    } else {
-      indices.emplace_back(
-          fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+  try {
+    LOCK_GUARD
+    auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
+    auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
+    auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
+    std::vector<fl::Index> indices;
+    indices.reserve(start.size());
+    for (auto i = 0; i < start.size(); ++i) {
+      if (start[i] == -1 && end[i] == -1) {
+        indices.emplace_back(fl::span);
+      } else if (start[i] + 1 == end[i]) {
+        indices.emplace_back(start[i]);
+      } else {
+        indices.emplace_back(
+            fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+      }
     }
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto new_t = tensor->copy();
+    auto* assign = reinterpret_cast<fl::Tensor*>(other);
+    new_t(indices) *= 0;
+    new_t(indices) += *assign;
+    auto* new_tensor = new fl::Tensor(new_t);
+    g_bytes_used += new_tensor->bytes();
+    return new_tensor;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_indexedAssign");
   }
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  auto new_t = tensor->copy();
-  auto* assign = reinterpret_cast<fl::Tensor*>(other);
-  new_t(indices) *= 0;
-  new_t(indices) += *assign;
-  auto* new_tensor = new fl::Tensor(new_t);
-  g_bytes_used += new_tensor->bytes();
-  return new_tensor;
 }
 
 void* _flatten(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  auto* new_tensor = new fl::Tensor(tensor->flatten());
-  g_bytes_used += new_tensor->bytes();
-  return new_tensor;
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto* new_tensor = new fl::Tensor(tensor->flatten());
+    g_bytes_used += new_tensor->bytes();
+    return new_tensor;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_flatten");
+  }
 }
 
 void* _asContiguousTensor(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  auto* new_tensor = new fl::Tensor(tensor->asContiguousTensor());
-  g_bytes_used += new_tensor->bytes();
-  return new_tensor;
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto* new_tensor = new fl::Tensor(tensor->asContiguousTensor());
+    g_bytes_used += new_tensor->bytes();
+    return new_tensor;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_asContiguousTensor");
+  }
 }
 
 void* _copy(void* t) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  auto* new_tensor = new fl::Tensor(tensor->copy());
-  g_bytes_used += new_tensor->bytes();
-  return new_tensor;
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto* new_tensor = new fl::Tensor(tensor->copy());
+    g_bytes_used += new_tensor->bytes();
+    return new_tensor;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_copy");
+  }
 }
 
 void* _pad(void* t,
@@ -482,18 +594,22 @@ void* _pad(void* t,
            int64_t before_len,
            void* after,
            int64_t after_len) {
-  LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  auto before_vec = arrayArg<int64_t>(before, before_len, g_row_major, false);
-  auto after_vec = arrayArg<int64_t>(after, after_len, g_row_major, false);
-  std::vector<std::pair<int, int>> pair_vec;
-  pair_vec.reserve(after_vec.size());
-  for (auto i = 0; i < after_vec.size(); ++i) {
-    pair_vec.emplace_back(before_vec[i], after_vec[i]);
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto before_vec = arrayArg<int64_t>(before, before_len, g_row_major, false);
+    auto after_vec = arrayArg<int64_t>(after, after_len, g_row_major, false);
+    std::vector<std::pair<int, int>> pair_vec;
+    pair_vec.reserve(after_vec.size());
+    for (auto i = 0; i < after_vec.size(); ++i) {
+      pair_vec.emplace_back(before_vec[i], after_vec[i]);
+    }
+    auto* new_tensor = new fl::Tensor(fl::pad(*tensor, pair_vec));
+    g_bytes_used += new_tensor->bytes();
+    return new_tensor;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e, "_pad");
   }
-  auto* new_tensor = new fl::Tensor(fl::pad(*tensor, pair_vec));
-  g_bytes_used += new_tensor->bytes();
-  return new_tensor;
 }
 
 // `grad_in` is Shumai equivalent to Flashlight `gradOutput`
