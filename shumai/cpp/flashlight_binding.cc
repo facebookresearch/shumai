@@ -23,15 +23,15 @@
 #define FMT_BOLD_WHITE "\033[1m\033[97m"
 #define FMT_BOLD_ITALIC_WHITE "\033[1m\033[3m\033[97m"
 
-#define HANDLE_EXCEPTION(e, op_name)                                           \
-  {                                                                            \
-    std::cerr << FMT_RED << "native code error" << FMT_GRAY << ": "            \
-              << FMT_BOLD_WHITE << e.what() << FMT_RESET << FMT_GRAY           \
-              << "\n                  at " << FMT_BOLD_ITALIC_WHITE << op_name \
-              << FMT_RESET << FMT_GRAY << " (" << FMT_CYAN << __FILE__         \
-              << FMT_GRAY << ":" << FMT_YELLOW << __LINE__ << FMT_GRAY << ")"  \
-              << FMT_RESET << std::endl;                                       \
-    return nullptr;                                                            \
+#define HANDLE_EXCEPTION(e)                                                \
+  {                                                                        \
+    std::cerr << FMT_RED << "native code error" << FMT_GRAY << ": "        \
+              << FMT_BOLD_WHITE << e.what() << FMT_RESET << FMT_GRAY       \
+              << "\n                  at " << FMT_BOLD_ITALIC_WHITE        \
+              << __FUNCTION__ << FMT_RESET << FMT_GRAY << " (" << FMT_CYAN \
+              << __FILE__ << FMT_GRAY << ":" << FMT_YELLOW << __LINE__     \
+              << FMT_GRAY << ")" << FMT_RESET << std::endl;                \
+    return nullptr;                                                        \
   }
 
 #if 0
@@ -91,7 +91,7 @@ void* createTensor(void* shape_ptr, int64_t shape_len) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "createTensor");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -103,7 +103,7 @@ void* tensorFromFloat32Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromFloat32Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -115,7 +115,7 @@ void* tensorFromFloat64Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromFloat64Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -127,7 +127,7 @@ void* tensorFromInt8Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromInt8Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -139,7 +139,7 @@ void* tensorFromInt16Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromInt16Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -151,7 +151,7 @@ void* tensorFromInt32Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromInt32Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -163,7 +163,7 @@ void* tensorFromInt64Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromInt64Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -175,7 +175,7 @@ void* tensorFromUint8Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromUint8Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -187,7 +187,7 @@ void* tensorFromUint16Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromUint16Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -199,7 +199,7 @@ void* tensorFromUint32Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromUint32Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -211,7 +211,7 @@ void* tensorFromUint64Buffer(int64_t numel, void* ptr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "tensorFromUint64Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -262,7 +262,7 @@ void* load(char* cstr) {
     g_bytes_used += t->bytes();
     return t;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "load");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -312,7 +312,7 @@ void* _astype(void* t, int type) {
     g_bytes_used += new_tensor.bytes();
     return new fl::Tensor(new_tensor);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_astype");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -382,7 +382,7 @@ float* _float16Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::f16).host<float>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_float16Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -392,7 +392,7 @@ float* _float32Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::f32).host<float>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_float32Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -402,7 +402,7 @@ float* _float64Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::f64).host<float>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_float64Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -412,7 +412,7 @@ int* _int16Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::s16).host<int>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_int16Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -422,7 +422,7 @@ int* _int32Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::s32).host<int>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_int32Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -432,7 +432,7 @@ int* _int64Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::s64).host<int>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_int64Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -442,7 +442,7 @@ unsigned* _uint8Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::u8).host<unsigned>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_uint8Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -452,7 +452,7 @@ unsigned* _uint16Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::u16).host<unsigned>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_uint16Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -462,7 +462,7 @@ unsigned* _uint32Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::u32).host<unsigned>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_uint32Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -472,7 +472,7 @@ unsigned* _uint64Buffer(void* t) {
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     return tensor->astype(fl::dtype::u64).host<unsigned>();
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_uint64Buffer");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -511,7 +511,7 @@ void* _index(void* t,
     g_bytes_used += new_tensor->bytes();
     return new_tensor;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_index");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -549,7 +549,7 @@ void* _indexedAssign(void* t,
     g_bytes_used += new_tensor->bytes();
     return new_tensor;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_indexedAssign");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -561,7 +561,7 @@ void* _flatten(void* t) {
     g_bytes_used += new_tensor->bytes();
     return new_tensor;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_flatten");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -573,7 +573,7 @@ void* _asContiguousTensor(void* t) {
     g_bytes_used += new_tensor->bytes();
     return new_tensor;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_asContiguousTensor");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -585,7 +585,7 @@ void* _copy(void* t) {
     g_bytes_used += new_tensor->bytes();
     return new_tensor;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_copy");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -608,7 +608,7 @@ void* _pad(void* t,
     g_bytes_used += new_tensor->bytes();
     return new_tensor;
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_pad");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -642,7 +642,7 @@ void* _conv2dBackwardData(void* grad_in,
     g_bytes_used += result.bytes();
     return new fl::Tensor(result);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_conv2dBackwardData");
+    HANDLE_EXCEPTION(e);
   }
 }
 
