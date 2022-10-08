@@ -36,6 +36,30 @@ export const areSameShape = (t1: Tensor, t2: Tensor) => {
   return true
 }
 
+export const expectThrows = (
+  fn: CallableFunction,
+  exp?: Error['message'] | RegExp | CallableFunction,
+  msg?: Error['message']
+) => {
+  let isErr = false
+  if (!msg && typeof exp === 'string') {
+    msg = exp
+    exp = null
+  }
+  try {
+    fn()
+  } catch (err) {
+    isErr = true
+
+    if (typeof exp === 'function') {
+      expect(exp(err)).toBe(true)
+    } else if (exp instanceof RegExp) {
+      expect(exp.test(err.message)).toBe(true)
+    }
+  }
+  return expect(isErr).toBe(true)
+}
+
 export const isClose = (actual: number | bigint, expected: number | bigint, error = 0.001) => {
   if (typeof actual !== typeof expected) return false
 
