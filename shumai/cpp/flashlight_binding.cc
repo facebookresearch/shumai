@@ -23,15 +23,15 @@
 #define FMT_BOLD_WHITE "\033[1m\033[97m"
 #define FMT_BOLD_ITALIC_WHITE "\033[1m\033[3m\033[97m"
 
-#define HANDLE_EXCEPTION(e)                                                \
-  {                                                                        \
-    std::cerr << FMT_RED << "native code error" << FMT_GRAY << ": "        \
-              << FMT_BOLD_WHITE << e.what() << FMT_RESET << FMT_GRAY       \
-              << "\n                  at " << FMT_BOLD_ITALIC_WHITE        \
-              << __FUNCTION__ << FMT_RESET << FMT_GRAY << " (" << FMT_CYAN \
-              << __FILE__ << FMT_GRAY << ":" << FMT_YELLOW << __LINE__     \
-              << FMT_GRAY << ")" << FMT_RESET << std::endl;                \
-    return nullptr;                                                        \
+#define HANDLE_EXCEPTION(e)                                            \
+  {                                                                    \
+    std::cerr << FMT_RED << "native code error" << FMT_GRAY << ": "    \
+              << FMT_BOLD_WHITE << e.what() << FMT_RESET << FMT_GRAY   \
+              << "\n                  at " << FMT_BOLD_ITALIC_WHITE    \
+              << __func__ << FMT_RESET << FMT_GRAY << " (" << FMT_CYAN \
+              << __FILE__ << FMT_GRAY << ":" << FMT_YELLOW << __LINE__ \
+              << FMT_GRAY << ")" << FMT_RESET << std::endl;            \
+    return nullptr;                                                    \
   }
 
 #if 0
