@@ -511,7 +511,7 @@ for op, args, ret in op_list:
   try {{
     {c_impl_str}
   }} catch (std::exception const& e) {{
-    HANDLE_EXCEPTION(e, "_{op}");
+    HANDLE_EXCEPTION(e);
   }}
 }}"""
     full_js.append(js)

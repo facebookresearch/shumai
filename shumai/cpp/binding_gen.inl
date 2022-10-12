@@ -8,7 +8,7 @@ void* _rand(void* shape_ptr, int64_t shape_len) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_rand");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -21,7 +21,7 @@ void* _randn(void* shape_ptr, int64_t shape_len) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_randn");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -34,7 +34,7 @@ void* _full(void* shape_ptr, int64_t shape_len, float val) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_full");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -46,7 +46,7 @@ void* _identity(int64_t dim) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_identity");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -58,7 +58,7 @@ void* _arange(float start, float end, float step) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_arange");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -76,7 +76,7 @@ void* _iota(void* dims_ptr,
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_iota");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -90,7 +90,7 @@ void* _reshape(void* tensor, void* shape_ptr, int64_t shape_len) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_reshape");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -105,7 +105,7 @@ void* _transpose(void* tensor, void* axes_ptr, int64_t axes_len) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_transpose");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -119,7 +119,7 @@ void* _tile(void* tensor, void* shape_ptr, int64_t shape_len) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_tile");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -132,7 +132,7 @@ void* _nonzero(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_nonzero");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -145,7 +145,7 @@ void* _negative(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_negative");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -158,7 +158,7 @@ void* _logicalNot(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_logicalNot");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -171,7 +171,7 @@ void* _exp(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_exp");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -184,7 +184,7 @@ void* _log(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_log");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -197,7 +197,7 @@ void* _log1p(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_log1p");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -210,7 +210,7 @@ void* _sin(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_sin");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -223,7 +223,7 @@ void* _cos(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_cos");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -236,7 +236,7 @@ void* _sqrt(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_sqrt");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -249,7 +249,7 @@ void* _tanh(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_tanh");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -262,7 +262,7 @@ void* _floor(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_floor");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -275,7 +275,7 @@ void* _ceil(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_ceil");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -288,7 +288,7 @@ void* _rint(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_rint");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -301,7 +301,7 @@ void* _absolute(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_absolute");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -314,7 +314,7 @@ void* _sigmoid(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_sigmoid");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -327,7 +327,7 @@ void* _erf(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_erf");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -340,7 +340,7 @@ void* _flip(void* tensor, uint32_t dim) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_flip");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -355,7 +355,7 @@ void* _clip(void* tensor, void* low, void* high) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_clip");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -369,7 +369,7 @@ void* _roll(void* tensor, int shift, int32_t axis) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_roll");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -382,7 +382,7 @@ void* _isnan(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_isnan");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -395,7 +395,7 @@ void* _isinf(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_isinf");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -408,7 +408,7 @@ void* _sign(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_sign");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -421,7 +421,7 @@ void* _tril(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_tril");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -434,7 +434,7 @@ void* _triu(void* tensor) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_triu");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -449,7 +449,7 @@ void* _where(void* cond, void* x, void* y) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_where");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -462,7 +462,7 @@ void* _sort(void* tensor, uint32_t dim) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_sort");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -476,7 +476,7 @@ void* _add(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_add");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -490,7 +490,7 @@ void* _sub(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_sub");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -504,7 +504,7 @@ void* _mul(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_mul");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -518,7 +518,7 @@ void* _div(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_div");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -532,7 +532,7 @@ void* _eq(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_eq");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -546,7 +546,7 @@ void* _neq(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_neq");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -560,7 +560,7 @@ void* _lessThan(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_lessThan");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -574,7 +574,7 @@ void* _lessThanEqual(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_lessThanEqual");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -588,7 +588,7 @@ void* _greaterThan(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_greaterThan");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -602,7 +602,7 @@ void* _greaterThanEqual(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_greaterThanEqual");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -616,7 +616,7 @@ void* _logicalOr(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_logicalOr");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -630,7 +630,7 @@ void* _logicalAnd(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_logicalAnd");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -644,7 +644,7 @@ void* _mod(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_mod");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -658,7 +658,7 @@ void* _bitwiseAnd(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_bitwiseAnd");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -672,7 +672,7 @@ void* _bitwiseOr(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_bitwiseOr");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -686,7 +686,7 @@ void* _bitwiseXor(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_bitwiseXor");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -700,7 +700,7 @@ void* _lShift(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_lShift");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -714,7 +714,7 @@ void* _rShift(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_rShift");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -728,7 +728,7 @@ void* _minimum(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_minimum");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -742,7 +742,7 @@ void* _maximum(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_maximum");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -756,7 +756,7 @@ void* _power(void* tensor, void* other) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_power");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -776,7 +776,7 @@ void* _matmul(void* tensor, void* other) {
       return new fl::Tensor(t);
     }
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_matmul");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -799,7 +799,7 @@ void* _conv2d(void* tensor,
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_conv2d");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -831,7 +831,7 @@ void* _amin(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_amin");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -863,7 +863,7 @@ void* _amax(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_amax");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -893,7 +893,7 @@ void* _argmin(void* tensor, int32_t axis, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_argmin");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -923,7 +923,7 @@ void* _argmax(void* tensor, int32_t axis, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_argmax");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -955,7 +955,7 @@ void* _sum(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_sum");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -969,7 +969,7 @@ void* _cumsum(void* tensor, int32_t axis) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_cumsum");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -1001,7 +1001,7 @@ void* _mean(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_mean");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -1033,7 +1033,7 @@ void* _median(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_median");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -1069,7 +1069,7 @@ void* _var(void* tensor,
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_var");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -1101,7 +1101,7 @@ void* _std(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_std");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -1142,7 +1142,7 @@ void* _norm(void* tensor,
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_norm");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -1177,7 +1177,7 @@ void* _countNonzero(void* tensor,
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_countNonzero");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -1209,7 +1209,7 @@ void* _any(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_any");
+    HANDLE_EXCEPTION(e);
   }
 }
 
@@ -1241,6 +1241,6 @@ void* _all(void* tensor, void* axes_ptr, int64_t axes_len, bool keep_dims) {
     g_bytes_used += t.bytes();
     return new fl::Tensor(t);
   } catch (std::exception const& e) {
-    HANDLE_EXCEPTION(e, "_all");
+    HANDLE_EXCEPTION(e);
   }
 }
