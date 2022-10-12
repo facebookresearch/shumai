@@ -186,6 +186,11 @@ bun install @shumai/shumai
 sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
 ```
 
+### Windows Support
+
+While not officially supported, Windows users have been successful leveraging [Docker](https://www.docker.com/) + [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) + Linux. Including CUDA support.
+
+
 ## Building Native Libraries from Source
 
 **Note:** *not required when developing TypeScript/Javascript library components locally.*
