@@ -55,11 +55,13 @@ const loss = sm.loss.mse(X, W)
 
 // backward returns a list of differentiated tensors
 const ts = loss.backward()
+
+// gradients are accessible from the original tensors
+// gradients are NOT available after optimizer
+const delta = W.grad.mul(sm.scalar(-1e-2))
+
 // we can optimize these tensors in place!
 sm.optim.sgd(ts, 1e-2)
-
-// gradients are also accessible from the original tensors
-const delta = W.grad.mul(sm.scalar(-1e2))
 
 // use `detach` to copy W without tracking gradients
 const Y = W.detach()
