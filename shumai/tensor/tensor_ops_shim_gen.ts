@@ -40,7 +40,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, shape_ptr, shape_len] : []
+      const deps = requires_grad ? [this, shape] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -85,7 +85,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len] : []
+      const deps = requires_grad ? [this, axes] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -128,7 +128,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, shape_ptr, shape_len] : []
+      const deps = requires_grad ? [this, shape] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2325,7 +2325,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2368,7 +2368,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2499,7 +2499,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2586,7 +2586,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2631,7 +2631,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2674,7 +2674,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!bias, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!bias, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2721,7 +2721,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2771,7 +2771,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
 
       const requires_grad = this.requires_grad
       const deps = requires_grad
-        ? [this, axes_ptr, axes_len, p + 0.00000000000001 - 0.00000000000001, !!keep_dims]
+        ? [this, axes, p + 0.00000000000001 - 0.00000000000001, !!keep_dims]
         : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
@@ -2821,7 +2821,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2864,7 +2864,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2907,7 +2907,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
