@@ -432,7 +432,7 @@ export class Tensor {
     return wrapFLTensor(fl._copy.native, this.ptr)
   }
 
-  pad(paddings) {
+  pad(paddings: Array<Array<number>>) {
     const before_ = paddings.map((x) => {
       return BigInt(x[0])
     })
@@ -442,8 +442,8 @@ export class Tensor {
     return wrapFLTensor(
       fl._pad.native,
       this.ptr,
-      ...arrayArg(before_, FFIType.i64),
-      ...arrayArg(after_, FFIType.i64)
+      ...arrayArg(new BigInt64Array(before_), FFIType.i64),
+      ...arrayArg(new BigInt64Array(after_), FFIType.i64)
     )
   }
 

@@ -46,18 +46,30 @@ static std::atomic<size_t> g_bytes_used = 0;
 static std::atomic<bool> g_row_major = true;
 
 template <typename T>
-std::vector<T> arrayArg(void* ptr, int len, bool reverse, int invert) {
+std::vector<T> arrayArg(const void* ptr, int len, bool reverse, int invert) {
   std::vector<T> out;
   out.reserve(len);
   for (auto i = 0; i < len; ++i) {
     const auto idx = reverse ? len - i - 1 : i;
-    auto v = reinterpret_cast<int64_t*>(ptr)[idx];
+    auto v = reinterpret_cast<const int64_t*>(ptr)[idx];
     if (invert && v < 0) {
       v = -v - 1;
     } else if (invert) {
       v = invert - v - 1;
     }
     out.emplace_back(v);
+  }
+  return out;
+}
+
+template <typename T>
+std::vector<T> ptrArrayArg(const void* ptr, int len) {
+  std::vector<T> out;
+  out.reserve(len);
+  for (auto i = 0; i < len; ++i) {
+    auto ptrAsInt = reinterpret_cast<const int64_t*>(ptr)[i];
+    auto ptr = reinterpret_cast<T*>(ptrAsInt);
+    out.emplace_back(*ptr);
   }
   return out;
 }

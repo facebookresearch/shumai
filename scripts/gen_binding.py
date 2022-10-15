@@ -258,6 +258,7 @@ to_ts = {
     "uint32_t": "number",
     "uint64_t": "number",
     "Tensor": "Tensor",
+    "TensorVector": "Array<Tensor>",
     "Shape": "BigInt64Array | number[]",
     "Axes": "BigInt64Array | number[]",
 }
@@ -315,21 +316,37 @@ for op, args, ret in op_list:
                 else:
                     n = f"other_{t_count - 1}"
                 t_count += 1
-            c_sig.append(f"void *{n}")
+            c_sig.append(f"void* {n}")
             ffi_sig.append("FFIType.ptr")
             js_args.append(f"{n}")
             js_arg_types.append("tensor")
-            c_impl.append(f"auto *{n}_ptr = reinterpret_cast<fl::Tensor*>({n});")
+            c_impl.append(f"auto* {n}_ptr = reinterpret_cast<fl::Tensor*>({n});")
             if not first_tensor:
                 first_tensor = f"{n}_ptr"
             if op == 'where' and n == 'cond':
                 c_op_args.append(f"{n}_ptr->astype(fl::dtype::b8)")
             else:
                 c_op_args.append(f"*{n}_ptr")
+        elif t == "TensorVector":
+            if not n:
+                n = "tensors"
+            c_sig.append(f"void* {n}_ptr")
+            c_sig.append(f"int64_t {n}_len")
+            c_impl.append(f"auto {n} = ptrArrayArg<fl::Tensor>({n}_ptr, {n}_len);")
+            c_op_args.append(f"{n}")
+            ffi_sig.append("FFIType.ptr")
+            ffi_sig.append("FFIType.i64")
+            js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n}, FFIType.i64);")
+            js_args.append(f"{n}_ptr")
+            js_args.append(f"{n}_len")
+            js_arg_types.append(f"tensors_ptr")
+            js_arg_types.append(f"tensors_len")
+            if not first_tensor:
+                first_tensor = f"(&{n}[0])"
         elif t == "Shape":
             if not n:
                 n = "shape"
-            c_sig.append(f"void *{n}_ptr")
+            c_sig.append(f"void* {n}_ptr")
             c_sig.append(f"int64_t {n}_len")
             if op == "transpose": # bug in flashlight
                 c_impl.append(f"auto {n} = arrayArg<long long>({n}_ptr, {n}_len, g_row_major, {first_tensor}->ndim());")
@@ -347,7 +364,7 @@ for op, args, ret in op_list:
             if not n:
                 n = "axes"
             first_axes = n
-            c_sig.append(f"void *{n}_ptr")
+            c_sig.append(f"void* {n}_ptr")
             c_sig.append(f"int64_t {n}_len")
             c_impl.append(f"auto {n} = arrayArg<int>({n}_ptr, {n}_len, g_row_major, {first_tensor}->ndim());")
             c_op_args.append(f"{n}")
@@ -504,7 +521,7 @@ for op, args, ret in op_list:
 
     js = textwrap.indent(js, "    ") if methods_only else js
     js += '\n'
- 
+
     c_impl_str = textwrap.indent("\n".join(c_impl), "  ")
     c = f"""
 {c_ret} _{op}({', '.join(c_sig)}) {{
