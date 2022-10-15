@@ -237,4 +237,44 @@ describe('concatenate', () => {
     expectArraysClose(concat1.toFloat32Array(), expectedArray1)
     expect(isShape(concat1, expectedShape1)).toBe(true)
   })
+  it('gradient', () => {
+    const a = sm
+      .tensor(new Float32Array([0, 1, 2, 3, 4, 5]))
+      .reshape([3, 2])
+      .requireGrad()
+    const b = sm
+      .tensor(new Float32Array([10, 11, 12, 13, 14, 15]))
+      .reshape([3, 2])
+      .requireGrad()
+
+    const out = sm.concatenate([a, b], 0)
+    out.backward()
+    const expectedGradShape = [3, 2]
+    const expectedGrad = sm.full(expectedGradShape, 1)
+    const expectedGradArray = expectedGrad.toFloat32Array()
+    expectArraysClose(a.grad.toFloat32Array(), expectedGradArray)
+    expectArraysClose(b.grad.toFloat32Array(), expectedGradArray)
+    expect(isShape(a.grad, expectedGradShape)).toBe(true)
+    expect(isShape(b.grad, expectedGradShape)).toBe(true)
+  })
+  it('gradient from mean', () => {
+    const a = sm
+      .tensor(new Float32Array([0, 1, 2, 3, 4, 5]))
+      .reshape([3, 2])
+      .requireGrad()
+    const b = sm
+      .tensor(new Float32Array([10, 11, 12, 13, 14, 15]))
+      .reshape([3, 2])
+      .requireGrad()
+
+    const out = sm.concatenate([a, b], 0).mean()
+    out.backward()
+    const expectedGradShape = [3, 2]
+    const expectedGrad = sm.full(expectedGradShape, 1 / 12)
+    const expectedGradArray = expectedGrad.toFloat32Array()
+    expectArraysClose(a.grad.toFloat32Array(), expectedGradArray)
+    expectArraysClose(b.grad.toFloat32Array(), expectedGradArray)
+    expect(isShape(a.grad, expectedGradShape)).toBe(true)
+    expect(isShape(b.grad, expectedGradShape)).toBe(true)
+  })
 })

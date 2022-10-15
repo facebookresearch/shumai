@@ -5,7 +5,7 @@ const sm = { ...base, ...ops }
 
 export interface Grad {
   idx: number
-  in: Tensor[]
+  in: any[]
   grad_in: Tensor
   out: Tensor
 }
@@ -138,6 +138,23 @@ const impls = {
   },
   tanh: (grad: Grad) => {
     return sm.scalar(1).sub(grad.out.mul(grad.out))
+  },
+  concatenate: (grad: Grad): Tensor => {
+    const axis: number = grad.in[grad.in.length - 1]
+    const idx = grad.idx
+    const prevTensors: Tensor[] = grad.in.slice(0, idx)
+    const start = prevTensors.reduce((r, t) => r + t.shape[axis], 0)
+    const end = start + (grad.in[idx] as Tensor).shape[axis]
+    const range = grad.out.shape.map((x, i) => ':')
+    range[axis] = start + ':' + end
+
+    // Expand input gradient tensor to match the shape of the forward output tensor
+    let backwardGradient = grad.grad_in
+    if (grad.grad_in.shape.length < grad.out.shape.length) {
+      backwardGradient = grad.grad_in.add(sm.full(grad.out.shape, 0))
+    }
+
+    return backwardGradient.index(range)
   }
 }
 
