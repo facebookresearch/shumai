@@ -550,6 +550,13 @@ export function eye(dim: number) {
 }
 
 export function concatenate(tensors: Array<Tensor>, axis: number) {
+  if (axis < 0) {
+    for (let i = 0; i < tensors.length; ++i) {
+      if (tensors[i].shape.length === 0) {
+        tensors[i] = tensors[i].reshape([1])
+      }
+    }
+  }
   const [tensors_ptr, tensors_len] = arrayArg(tensors, FFIType.i64)
   const requires_stats = false
 

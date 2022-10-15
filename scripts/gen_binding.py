@@ -336,6 +336,9 @@ for op, args, ret in op_list:
             c_op_args.append(f"{n}")
             ffi_sig.append("FFIType.ptr")
             ffi_sig.append("FFIType.i64")
+            if op == "concatenate":
+                # Strange behaviour in Flashlight where concatenating scalars with negative axis fails to expand, unlike with non-scalar tensors
+                js_impl.append(f"if (axis < 0) {{ for (let i = 0; i < {n}.length; ++i) {{ if ({n}[i].shape.length === 0) {{ {n}[i] = {n}[i].reshape([1]) }} }} }}")
             js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n}, FFIType.i64);")
             js_args.append(f"{n}_ptr")
             js_args.append(f"{n}_len")

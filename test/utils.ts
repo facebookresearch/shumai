@@ -2,6 +2,10 @@ import { expect } from 'bun:test'
 import type { Tensor } from '@shumai/shumai'
 import { util } from '@shumai/shumai'
 
+export const nativeError = new RegExp(
+  '^Tensor returned.*is null; native code likely threw an error'
+)
+
 export const calcSizeFromShape = (arr: number[]) =>
   arr.reduce((acc, val, i) => (i === 0 ? val : acc * val), 0)
 
