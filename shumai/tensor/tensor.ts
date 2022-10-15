@@ -534,7 +534,7 @@ export class Tensor {
   /** @private */
   _index_args(args) {
     if (this.ndim !== args.length) {
-      throw `Must specify index for every dimension! (expected ${this.ndim}, got ${args.length}`
+      throw `Must specify index for every dimension! (expected ${this.ndim}, got ${args.length})`
     }
     const start = []
     const end = []
