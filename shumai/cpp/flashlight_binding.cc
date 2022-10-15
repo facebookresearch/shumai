@@ -508,17 +508,26 @@ void* _index(void* t,
     auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
     std::vector<fl::Index> indices;
     indices.reserve(start.size());
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto shape = tensor->shape();
     for (auto i = 0; i < start.size(); ++i) {
       if (start[i] == -1 && end[i] == -1) {
         indices.emplace_back(fl::span);
-      } else if (start[i] + 1 == end[i]) {
-        indices.emplace_back(start[i]);
       } else {
-        indices.emplace_back(
-            fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+        if (start[i] == -1) {
+          start[i] = 0;
+        }
+        if (end[i] == -1) {
+          end[i] = shape[i];
+        }
+        if (start[i] + 1 == end[i]) {
+          indices.emplace_back(start[i]);
+        } else {
+          indices.emplace_back(
+              fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+        }
       }
     }
-    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     auto* new_tensor = new fl::Tensor(tensor->operator()(indices));
     g_bytes_used += new_tensor->bytes();
     return new_tensor;
