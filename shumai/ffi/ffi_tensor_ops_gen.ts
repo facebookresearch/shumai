@@ -37,6 +37,10 @@ const ffi_tensor_ops = {
     args: [FFIType.ptr, FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
+  _concatenate: {
+    args: [FFIType.ptr, FFIType.i64, FFIType.i32],
+    returns: FFIType.ptr
+  },
   _nonzero: {
     args: [FFIType.ptr],
     returns: FFIType.ptr

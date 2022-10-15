@@ -549,6 +549,50 @@ export function eye(dim: number) {
   return t
 }
 
+export function concatenate(tensors: Array<Tensor>, axis: number) {
+  const [tensors_ptr, tensors_len] = arrayArg(tensors, FFIType.i64)
+  const requires_stats = false
+
+  let stats = null
+  let recorded_stat = null
+  if (requires_stats) {
+    stats = collectStats([])
+  }
+  if (requires_stats) {
+    recorded_stat = [performance.now(), fl.bytesUsed()]
+  }
+
+  const _ptr = fl._concatenate(tensors_ptr, tensors_len, axis | 0)
+  if (!_ptr)
+    throw new Error(
+      'Tensor returned from `concatenate` is null; native code likely threw an error...'
+    )
+
+  if (requires_stats) {
+    const [t0, b0] = recorded_stat
+    const dt = performance.now() - t0
+    const db = fl.bytesUsed() - b0
+    const s = getStack()
+    if (s in stats) {
+      stats[s].time += dt
+      stats[s].bytes += db
+    } else {
+      stats[s] = { time: dt, bytes: db }
+    }
+  }
+
+  const requires_grad = false
+  const deps = requires_grad ? [tensors_ptr, tensors_len, axis | 0] : []
+  const t = new Tensor({ _ptr: _ptr, _deps: deps })
+  t.provenance = t.requires_grad = requires_grad
+  if (requires_stats) {
+    t.requires_stats = true
+    t.stats = stats
+  }
+  t.op = 'concatenate'
+  return t
+}
+
 /**
  *
  *   Determine the indices of elements that are non-zero. There is a method version of this static function: {@link Tensor.nonzero | Tensor.nonzero }.

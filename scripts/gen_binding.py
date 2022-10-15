@@ -62,7 +62,7 @@ op_list = [
     ("reshape", [("Tensor", "tensor"), "Shape"], "Tensor"),
     ("transpose", [("Tensor", "tensor"), ("Shape", "axes")], "Tensor"),
     ("tile", [("Tensor", "tensor"), "Shape"], "Tensor"),
-    # ("concatenate", ["TensorVector", ("int32_t", "axis")], "Tensor"),
+    ("concatenate", ["TensorVector", ("int32_t", "axis")], "Tensor"),
     ("nonzero", [("Tensor", "tensor")], "Tensor"),
     # ("pad", [("Tensor", "tensor"), "PairVector"], "Tensor"),
     ("negative", ["Tensor"], "Tensor"),
