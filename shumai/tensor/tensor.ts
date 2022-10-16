@@ -283,7 +283,7 @@ export class Tensor {
       return
     }
     if (typeof obj === 'string') {
-      this._injest_ptr(fl.load(new TextEncoder().encode(obj)))
+      this._injest_ptr(fl.load(new TextEncoder().encode(obj + '/0')))
       return
     }
     if (obj.constructor === Float32Array) {
