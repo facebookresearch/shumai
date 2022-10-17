@@ -62,7 +62,7 @@ op_list = [
     ("reshape", [("Tensor", "tensor"), "Shape"], "Tensor"),
     ("transpose", [("Tensor", "tensor"), ("Shape", "axes")], "Tensor"),
     ("tile", [("Tensor", "tensor"), "Shape"], "Tensor"),
-    # ("concatenate", ["TensorVector", ("int32_t", "axis")], "Tensor"),
+    ("concatenate", ["TensorVector", ("int32_t", "axis")], "Tensor"),
     ("nonzero", [("Tensor", "tensor")], "Tensor"),
     # ("pad", [("Tensor", "tensor"), "PairVector"], "Tensor"),
     ("negative", ["Tensor"], "Tensor"),
@@ -258,6 +258,7 @@ to_ts = {
     "uint32_t": "number",
     "uint64_t": "number",
     "Tensor": "Tensor",
+    "TensorVector": "Array<Tensor>",
     "Shape": "BigInt64Array | number[]",
     "Axes": "BigInt64Array | number[]",
 }
@@ -284,6 +285,10 @@ for op, args, ret in op_list:
     js_impl = []
     js_args = []
     js_arg_types = []
+    js_tensor_args = []
+    js_tensor_vector_args = []
+    js_grad_args = []
+    js_grad_arg_types = []
     c_impl = ["LOCK_GUARD\n"]
     c_op_args = []
     t_count = 0
@@ -315,21 +320,46 @@ for op, args, ret in op_list:
                 else:
                     n = f"other_{t_count - 1}"
                 t_count += 1
-            c_sig.append(f"void *{n}")
+            c_sig.append(f"void* {n}")
             ffi_sig.append("FFIType.ptr")
             js_args.append(f"{n}")
-            js_arg_types.append("tensor")
-            c_impl.append(f"auto *{n}_ptr = reinterpret_cast<fl::Tensor*>({n});")
+            js_arg_types.append(t)
+            js_grad_args.append(f"{n}")
+            js_grad_arg_types.append(t)
+            js_tensor_args.append(f"{n}")
+            c_impl.append(f"auto* {n}_ptr = reinterpret_cast<fl::Tensor*>({n});")
             if not first_tensor:
                 first_tensor = f"{n}_ptr"
             if op == 'where' and n == 'cond':
                 c_op_args.append(f"{n}_ptr->astype(fl::dtype::b8)")
             else:
                 c_op_args.append(f"*{n}_ptr")
+        elif t == "TensorVector":
+            if not n:
+                n = "tensors"
+            c_sig.append(f"void* {n}_ptr")
+            c_sig.append(f"int64_t {n}_len")
+            c_impl.append(f"auto {n} = ptrArrayArg<fl::Tensor>({n}_ptr, {n}_len);")
+            c_op_args.append(f"{n}")
+            ffi_sig.append("FFIType.ptr")
+            ffi_sig.append("FFIType.i64")
+            if op == "concatenate":
+                # Strange behaviour in Flashlight where concatenating scalars with negative axis fails to expand, unlike with non-scalar tensors
+                js_impl.append(f"if (axis < 0) {{ for (let i = 0; i < {n}.length; ++i) {{ if ({n}[i].shape.length === 0) {{ {n}[i] = {n}[i].reshape([1]) }} }} }}")
+            js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n});")
+            js_args.append(f"{n}_ptr")
+            js_args.append(f"{n}_len")
+            js_arg_types.append(f"TensorVector_ptr")
+            js_arg_types.append(f"TensorVector_len")
+            js_grad_args.append(f"{n}")
+            js_grad_arg_types.append(t)
+            js_tensor_vector_args.append(f"{n}")
+            if not first_tensor:
+                first_tensor = f"(&{n}[0])"
         elif t == "Shape":
             if not n:
                 n = "shape"
-            c_sig.append(f"void *{n}_ptr")
+            c_sig.append(f"void* {n}_ptr")
             c_sig.append(f"int64_t {n}_len")
             if op == "transpose": # bug in flashlight
                 c_impl.append(f"auto {n} = arrayArg<long long>({n}_ptr, {n}_len, g_row_major, {first_tensor}->ndim());")
@@ -338,26 +368,30 @@ for op, args, ret in op_list:
             c_op_args.append(f"fl::Shape({n})")
             ffi_sig.append("FFIType.ptr")
             ffi_sig.append("FFIType.i64")
-            js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n}, FFIType.i64);")
+            js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n});")
             js_args.append(f"{n}_ptr")
             js_args.append(f"{n}_len")
-            js_arg_types.append("shape_ptr")
-            js_arg_types.append("shape_len")
+            js_arg_types.append("Shape_ptr")
+            js_arg_types.append("Shape_len")
+            js_grad_args.append(f"{n}")
+            js_grad_arg_types.append(t)
         elif t == "Axes":
             if not n:
                 n = "axes"
             first_axes = n
-            c_sig.append(f"void *{n}_ptr")
+            c_sig.append(f"void* {n}_ptr")
             c_sig.append(f"int64_t {n}_len")
             c_impl.append(f"auto {n} = arrayArg<int>({n}_ptr, {n}_len, g_row_major, {first_tensor}->ndim());")
             c_op_args.append(f"{n}")
             ffi_sig.append("FFIType.ptr")
             ffi_sig.append("FFIType.i64")
-            js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n}, FFIType.i64);")
+            js_impl.append(f"const [{n}_ptr, {n}_len] = arrayArg({n});")
             js_args.append(f"{n}_ptr")
             js_args.append(f"{n}_len")
-            js_arg_types.append("axes_ptr")
-            js_arg_types.append("axes_len")
+            js_arg_types.append("Axes_ptr")
+            js_arg_types.append("Axes_len")
+            js_grad_args.append(f"{n}")
+            js_grad_arg_types.append(t)
         else:
             c_sig.append(f"{t} {n}")
             if n == "axis":
@@ -369,8 +403,11 @@ for op, args, ret in op_list:
             if n == "keep_dims":
                 fix_keep_dims = True
             ffi_sig.append(f"FFIType.{to_ffi[t]}")
-            js_args.append(coercion_rules[t].format(x=n))
+            coerced = coercion_rules[t].format(x=n)
+            js_args.append(coerced)
             js_arg_types.append(t)
+            js_grad_args.append(coerced)
+            js_grad_arg_types.append(t)
         js_arg_type = (
             to_ts[t]
             if t != "Tensor"
@@ -444,16 +481,16 @@ for op, args, ret in op_list:
     js_impl_full = "\n".join(js_impl)
     wrap_args = list(zip(js_args, js_arg_types))
     if methods_only:
-        wrap_args = [('this', 'tensor')] + wrap_args
-    js_ptr_args = [x[0] if x[1] != "tensor" else f"{x[0]}.ptr" for x in wrap_args]
+        wrap_args = [('this', 'Tensor')] + wrap_args
+        js_tensor_args = ["this"] + js_tensor_args
+    js_ptr_args = [x[0] if x[1] != "Tensor" else f"{x[0]}.ptr" for x in wrap_args]
     js_ptr_result = f"const _ptr = fl._{op}({', '.join(js_ptr_args)})"
-    js_tensor_args = [f"{arg[0]}" for arg in wrap_args if arg[1] == "tensor"]
-    js_provenance_args = '||'.join([f"{t}.provenance" for t in js_tensor_args])
-    js_requires_grad_args = '||'.join([f"{t}.requires_grad" for t in js_tensor_args])
+    js_provenance_args = '||'.join([f"{t}.provenance" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.provenance, 0)" for tv in js_tensor_vector_args])
+    js_requires_grad_args = '||'.join([f"{t}.requires_grad" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.requires_grad, false)" for tv in js_tensor_vector_args])
     js_requires_grad_args = 'false' if len(js_requires_grad_args) == 0 else js_requires_grad_args
-    js_requires_stats = '||'.join([f"{t}.requires_stats" for t in js_tensor_args])
+    js_requires_stats = '||'.join([f"{t}.requires_stats" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.requires_stats, false)" for tv in js_tensor_vector_args])
     js_requires_stats = 'false' if len(js_requires_stats) == 0 else js_requires_stats
-    js_grad_args = (['this'] if methods_only else []) + js_args
+    js_grad_args = (['this'] if methods_only else []) + [f"...{n}" if t == "TensorVector" else f"{n}" for n, t in zip(js_grad_args, js_grad_arg_types)]
     js_deps = f"const deps = requires_grad ? [{', '.join(js_grad_args)}] : []"
     js_tensor_call = '_Tensor' if methods_only else 'Tensor'
     js_tensor_construct = f"const t = new {js_tensor_call}({{_ptr: _ptr, _deps: deps}})";
@@ -504,7 +541,7 @@ for op, args, ret in op_list:
 
     js = textwrap.indent(js, "    ") if methods_only else js
     js += '\n'
- 
+
     c_impl_str = textwrap.indent("\n".join(c_impl), "  ")
     c = f"""
 {c_ret} _{op}({', '.join(c_sig)}) {{

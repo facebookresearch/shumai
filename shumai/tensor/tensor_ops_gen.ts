@@ -22,7 +22,7 @@ import { Tensor } from './tensor'
  *
  *   @returns A new {@link Tensor} of uniformly random values
  */ export function rand(shape: BigInt64Array | number[]) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = false
 
   let stats = null
@@ -52,7 +52,7 @@ import { Tensor } from './tensor'
   }
 
   const requires_grad = false
-  const deps = requires_grad ? [shape_ptr, shape_len] : []
+  const deps = requires_grad ? [shape] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
   if (requires_stats) {
@@ -80,7 +80,7 @@ import { Tensor } from './tensor'
  *
  *   @returns A new {@link Tensor} of random values sampled from a Gaussian distribution
  */ export function randn(shape: BigInt64Array | number[]) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = false
 
   let stats = null
@@ -110,7 +110,7 @@ import { Tensor } from './tensor'
   }
 
   const requires_grad = false
-  const deps = requires_grad ? [shape_ptr, shape_len] : []
+  const deps = requires_grad ? [shape] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
   if (requires_stats) {
@@ -136,7 +136,7 @@ import { Tensor } from './tensor'
  *
  *   @returns A new {@link Tensor} of a single user specified value.
  */ export function full(shape: BigInt64Array | number[], val: number) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = false
 
   let stats = null
@@ -166,7 +166,7 @@ import { Tensor } from './tensor'
   }
 
   const requires_grad = false
-  const deps = requires_grad ? [shape_ptr, shape_len, Math.fround(val)] : []
+  const deps = requires_grad ? [shape, Math.fround(val)] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
   if (requires_stats) {
@@ -313,8 +313,8 @@ export function eye(dim: number) {
  *   @param tileDims - How to tile the intermediate tensor.
  *   @returns A new {@link Tensor}
  */ export function iota(dims: BigInt64Array | number[], tileDims: BigInt64Array | number[] = [1]) {
-  const [dims_ptr, dims_len] = arrayArg(dims, FFIType.i64)
-  const [tileDims_ptr, tileDims_len] = arrayArg(tileDims, FFIType.i64)
+  const [dims_ptr, dims_len] = arrayArg(dims)
+  const [tileDims_ptr, tileDims_len] = arrayArg(tileDims)
   const requires_stats = false
 
   let stats = null
@@ -344,7 +344,7 @@ export function eye(dim: number) {
   }
 
   const requires_grad = false
-  const deps = requires_grad ? [dims_ptr, dims_len, tileDims_ptr, tileDims_len] : []
+  const deps = requires_grad ? [dims, tileDims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
   if (requires_stats) {
@@ -376,7 +376,7 @@ export function eye(dim: number) {
  *   @param tensor - {@link Tensor} to reshape
  *   @param shape - The shape of the output {@link Tensor}
  */ export function reshape(tensor: Tensor, shape: BigInt64Array | number[]) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -406,7 +406,7 @@ export function eye(dim: number) {
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, shape_ptr, shape_len] : []
+  const deps = requires_grad ? [tensor, shape] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -440,7 +440,7 @@ export function eye(dim: number) {
  *   @param axes - The new order of the indices of the current axes after tranposing
  *   @returns A new {@link Tensor}
  */ export function transpose(tensor: Tensor, axes: BigInt64Array | number[]) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -472,7 +472,7 @@ export function eye(dim: number) {
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len] : []
+  const deps = requires_grad ? [tensor, axes] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -507,7 +507,7 @@ export function eye(dim: number) {
  *   @param shape - A shape describing the number of iterations to tile each axis.
  *   @returns A new {@link Tensor}
  */ export function tile(tensor: Tensor, shape: BigInt64Array | number[]) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -537,7 +537,7 @@ export function eye(dim: number) {
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, shape_ptr, shape_len] : []
+  const deps = requires_grad ? [tensor, shape] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -546,6 +546,58 @@ export function eye(dim: number) {
     t.stats = stats
   }
   t.op = 'tile'
+  return t
+}
+
+export function concatenate(tensors: Array<Tensor>, axis: number) {
+  if (axis < 0) {
+    for (let i = 0; i < tensors.length; ++i) {
+      if (tensors[i].shape.length === 0) {
+        tensors[i] = tensors[i].reshape([1])
+      }
+    }
+  }
+  const [tensors_ptr, tensors_len] = arrayArg(tensors)
+  const requires_stats = tensors.reduce((r, c) => r || c.requires_stats, false)
+
+  let stats = null
+  let recorded_stat = null
+  if (requires_stats) {
+    stats = collectStats([])
+  }
+  if (requires_stats) {
+    recorded_stat = [performance.now(), fl.bytesUsed()]
+  }
+
+  const _ptr = fl._concatenate(tensors_ptr, tensors_len, axis | 0)
+  if (!_ptr)
+    throw new Error(
+      'Tensor returned from `concatenate` is null; native code likely threw an error...'
+    )
+
+  if (requires_stats) {
+    const [t0, b0] = recorded_stat
+    const dt = performance.now() - t0
+    const db = fl.bytesUsed() - b0
+    const s = getStack()
+    if (s in stats) {
+      stats[s].time += dt
+      stats[s].bytes += db
+    } else {
+      stats[s] = { time: dt, bytes: db }
+    }
+  }
+
+  const requires_grad = tensors.reduce((r, c) => r || c.requires_grad, false)
+  const deps = requires_grad ? [...tensors, axis | 0] : []
+  const t = new Tensor({ _ptr: _ptr, _deps: deps })
+  t.provenance = tensors.reduce((r, c) => r || c.provenance, 0)
+  t.requires_grad = requires_grad
+  if (requires_stats) {
+    t.requires_stats = true
+    t.stats = stats
+  }
+  t.op = 'concatenate'
   return t
 }
 
@@ -2977,7 +3029,7 @@ export function conv2d(
 }
 
 export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3007,7 +3059,7 @@ export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3020,7 +3072,7 @@ export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
 }
 
 export function amax(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3050,7 +3102,7 @@ export function amax(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3147,7 +3199,7 @@ export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
 }
 
 export function sum(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3177,7 +3229,7 @@ export function sum(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3232,7 +3284,7 @@ export function cumsum(tensor: Tensor, axis: number) {
 }
 
 export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3262,7 +3314,7 @@ export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3275,7 +3327,7 @@ export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
 }
 
 export function median(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3305,7 +3357,7 @@ export function median(tensor: Tensor, axes: BigInt64Array | number[] = [], keep
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3323,7 +3375,7 @@ export function _var(
   bias = false,
   keep_dims = false
 ) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3353,7 +3405,7 @@ export function _var(
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!bias, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!bias, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3375,7 +3427,7 @@ export function variance(
 }
 
 export function std(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3405,7 +3457,7 @@ export function std(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3423,7 +3475,7 @@ export function norm(
   p = 2,
   keep_dims = false
 ) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3460,7 +3512,7 @@ export function norm(
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad
-    ? [tensor, axes_ptr, axes_len, p + 0.00000000000001 - 0.00000000000001, !!keep_dims]
+    ? [tensor, axes, p + 0.00000000000001 - 0.00000000000001, !!keep_dims]
     : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
@@ -3487,7 +3539,7 @@ export function countNonzero(
   axes: BigInt64Array | number[] = [],
   keep_dims = false
 ) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3519,7 +3571,7 @@ export function countNonzero(
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3532,7 +3584,7 @@ export function countNonzero(
 }
 
 export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3562,7 +3614,7 @@ export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
@@ -3575,7 +3627,7 @@ export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
 }
 
 export function all(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3605,7 +3657,7 @@ export function all(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
   }
 
   const requires_grad = tensor.requires_grad
-  const deps = requires_grad ? [tensor, axes_ptr, axes_len, !!keep_dims] : []
+  const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad

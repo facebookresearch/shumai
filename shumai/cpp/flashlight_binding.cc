@@ -46,18 +46,30 @@ static std::atomic<size_t> g_bytes_used = 0;
 static std::atomic<bool> g_row_major = true;
 
 template <typename T>
-std::vector<T> arrayArg(void* ptr, int len, bool reverse, int invert) {
+std::vector<T> arrayArg(const void* ptr, int len, bool reverse, int invert) {
   std::vector<T> out;
   out.reserve(len);
   for (auto i = 0; i < len; ++i) {
     const auto idx = reverse ? len - i - 1 : i;
-    auto v = reinterpret_cast<int64_t*>(ptr)[idx];
+    auto v = reinterpret_cast<const int64_t*>(ptr)[idx];
     if (invert && v < 0) {
       v = -v - 1;
     } else if (invert) {
       v = invert - v - 1;
     }
     out.emplace_back(v);
+  }
+  return out;
+}
+
+template <typename T>
+std::vector<T> ptrArrayArg(const void* ptr, int len) {
+  std::vector<T> out;
+  out.reserve(len);
+  for (auto i = 0; i < len; ++i) {
+    auto ptrAsInt = reinterpret_cast<const int64_t*>(ptr)[i];
+    auto ptr = reinterpret_cast<T*>(ptrAsInt);
+    out.emplace_back(*ptr);
   }
   return out;
 }
@@ -496,17 +508,26 @@ void* _index(void* t,
     auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
     std::vector<fl::Index> indices;
     indices.reserve(start.size());
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    auto shape = tensor->shape();
     for (auto i = 0; i < start.size(); ++i) {
       if (start[i] == -1 && end[i] == -1) {
         indices.emplace_back(fl::span);
-      } else if (start[i] + 1 == end[i]) {
-        indices.emplace_back(start[i]);
       } else {
-        indices.emplace_back(
-            fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+        if (start[i] == -1) {
+          start[i] = 0;
+        }
+        if (end[i] == -1) {
+          end[i] = shape[i];
+        }
+        if (start[i] + 1 == end[i]) {
+          indices.emplace_back(start[i]);
+        } else {
+          indices.emplace_back(
+              fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+        }
       }
     }
-    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
     auto* new_tensor = new fl::Tensor(tensor->operator()(indices));
     g_bytes_used += new_tensor->bytes();
     return new_tensor;

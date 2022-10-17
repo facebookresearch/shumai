@@ -123,6 +123,20 @@ void* _tile(void* tensor, void* shape_ptr, int64_t shape_len) {
   }
 }
 
+void* _concatenate(void* tensors_ptr, int64_t tensors_len, int32_t axis) {
+  try {
+    LOCK_GUARD
+
+    auto tensors = ptrArrayArg<fl::Tensor>(tensors_ptr, tensors_len);
+    auto used_axis = axisArg(axis, g_row_major, (&tensors[0])->ndim());
+    auto t = fl::concatenate(tensors, used_axis);
+    g_bytes_used += t.bytes();
+    return new fl::Tensor(t);
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e);
+  }
+}
+
 void* _nonzero(void* tensor) {
   try {
     LOCK_GUARD

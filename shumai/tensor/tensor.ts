@@ -432,7 +432,7 @@ export class Tensor {
     return wrapFLTensor(fl._copy.native, this.ptr)
   }
 
-  pad(paddings) {
+  pad(paddings: Array<Array<number>>) {
     const before_ = paddings.map((x) => {
       return BigInt(x[0])
     })
@@ -442,8 +442,8 @@ export class Tensor {
     return wrapFLTensor(
       fl._pad.native,
       this.ptr,
-      ...arrayArg(before_, FFIType.i64),
-      ...arrayArg(after_, FFIType.i64)
+      ...arrayArg(new BigInt64Array(before_), FFIType.i64),
+      ...arrayArg(new BigInt64Array(after_), FFIType.i64)
     )
   }
 
@@ -540,9 +540,28 @@ export class Tensor {
     const end = []
     const stride = []
     for (const arg of args) {
-      if (arg == ':') {
-        start.push(-1)
-        end.push(-1)
+      if (typeof arg === 'string') {
+        const tokens = arg.split(':').map((x, i) => x.trim())
+        let start_idx = -1
+        let end_idx = -1
+        if (tokens.length >= 1) {
+          if (tokens[0] !== '' || tokens.length === 1) {
+            start_idx = parseInt(tokens[0]) // When length === 1, '' is parsed to NaN
+            end_idx = start_idx + 1
+          }
+        }
+        if (tokens.length >= 2) {
+          if (tokens[1] === '') {
+            end_idx = -1
+          } else {
+            end_idx = parseInt(tokens[1])
+          }
+        }
+        if (tokens.length >= 3 || start_idx === NaN || end_idx === NaN) {
+          throw `${arg} not yet supported.  Please file a bug with desired behavior!`
+        }
+        start.push(start_idx)
+        end.push(end_idx)
       } else if (typeof arg === 'number') {
         start.push(arg)
         end.push(arg + 1)

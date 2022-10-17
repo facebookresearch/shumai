@@ -8,7 +8,7 @@ import type { Tensor } from './tensor'
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {
   return {
     reshape(shape: BigInt64Array | number[]) {
-      const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+      const [shape_ptr, shape_len] = arrayArg(shape)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -40,7 +40,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, shape_ptr, shape_len] : []
+      const deps = requires_grad ? [this, shape] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -53,7 +53,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     transpose(axes: BigInt64Array | number[]) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -85,7 +85,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len] : []
+      const deps = requires_grad ? [this, axes] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -98,7 +98,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     tile(shape: BigInt64Array | number[]) {
-      const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+      const [shape_ptr, shape_len] = arrayArg(shape)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -128,7 +128,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, shape_ptr, shape_len] : []
+      const deps = requires_grad ? [this, shape] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2295,7 +2295,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     amin(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2325,7 +2325,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2338,7 +2338,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     amax(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2368,7 +2368,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2469,7 +2469,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     sum(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2499,7 +2499,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2556,7 +2556,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     mean(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2586,7 +2586,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2599,7 +2599,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     median(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2631,7 +2631,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2644,7 +2644,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     _var(axes: BigInt64Array | number[] = [], bias = false, keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2674,7 +2674,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!bias, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!bias, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2691,7 +2691,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     std(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2721,7 +2721,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2734,7 +2734,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     norm(axes: BigInt64Array | number[] = [], p = 2, keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2771,7 +2771,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
 
       const requires_grad = this.requires_grad
       const deps = requires_grad
-        ? [this, axes_ptr, axes_len, p + 0.00000000000001 - 0.00000000000001, !!keep_dims]
+        ? [this, axes, p + 0.00000000000001 - 0.00000000000001, !!keep_dims]
         : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
@@ -2789,7 +2789,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     countNonzero(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2821,7 +2821,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2834,7 +2834,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     any(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2864,7 +2864,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
@@ -2877,7 +2877,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
     },
 
     all(axes: BigInt64Array | number[] = [], keep_dims = false) {
-      const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+      const [axes_ptr, axes_len] = arrayArg(axes)
       const requires_stats = this.requires_stats
 
       let stats = null
@@ -2907,7 +2907,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       }
 
       const requires_grad = this.requires_grad
-      const deps = requires_grad ? [this, axes_ptr, axes_len, !!keep_dims] : []
+      const deps = requires_grad ? [this, axes, !!keep_dims] : []
       const t = new _Tensor({ _ptr: _ptr, _deps: deps })
       t.provenance = this.provenance
       t.requires_grad = requires_grad
