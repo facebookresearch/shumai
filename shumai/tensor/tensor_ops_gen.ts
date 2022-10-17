@@ -558,7 +558,7 @@ export function concatenate(tensors: Array<Tensor>, axis: number) {
     }
   }
   const [tensors_ptr, tensors_len] = arrayArg(tensors)
-  const requires_stats = tensors.some((t) => t.requires_stats)
+  const requires_stats = tensors.reduce((r, c) => r || c.requires_stats, false)
 
   let stats = null
   let recorded_stat = null
@@ -588,10 +588,10 @@ export function concatenate(tensors: Array<Tensor>, axis: number) {
     }
   }
 
-  const requires_grad = tensors.some((t) => t.requires_grad)
+  const requires_grad = tensors.reduce((r, c) => r || c.requires_grad, false)
   const deps = requires_grad ? [...tensors, axis | 0] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
-  t.provenance = tensors.some((t) => t.provenance)
+  t.provenance = tensors.reduce((r, c) => r || c.provenance, 0)
   t.requires_grad = requires_grad
   if (requires_stats) {
     t.requires_stats = true

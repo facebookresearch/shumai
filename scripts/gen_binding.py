@@ -485,10 +485,10 @@ for op, args, ret in op_list:
         js_tensor_args = ["this"] + js_tensor_args
     js_ptr_args = [x[0] if x[1] != "Tensor" else f"{x[0]}.ptr" for x in wrap_args]
     js_ptr_result = f"const _ptr = fl._{op}({', '.join(js_ptr_args)})"
-    js_provenance_args = '||'.join([f"{t}.provenance" for t in js_tensor_args] + [f"{tv}.some((t) => t.provenance)" for tv in js_tensor_vector_args])
-    js_requires_grad_args = '||'.join([f"{t}.requires_grad" for t in js_tensor_args] + [f"{tv}.some((t) => t.requires_grad)" for tv in js_tensor_vector_args])
+    js_provenance_args = '||'.join([f"{t}.provenance" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.provenance, 0)" for tv in js_tensor_vector_args])
+    js_requires_grad_args = '||'.join([f"{t}.requires_grad" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.requires_grad, false)" for tv in js_tensor_vector_args])
     js_requires_grad_args = 'false' if len(js_requires_grad_args) == 0 else js_requires_grad_args
-    js_requires_stats = '||'.join([f"{t}.requires_stats" for t in js_tensor_args] + [f"{tv}.some((t) => t.requires_stats)" for tv in js_tensor_vector_args])
+    js_requires_stats = '||'.join([f"{t}.requires_stats" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.requires_stats, false)" for tv in js_tensor_vector_args])
     js_requires_stats = 'false' if len(js_requires_stats) == 0 else js_requires_stats
     js_grad_args = (['this'] if methods_only else []) + [f"...{n}" if t == "TensorVector" else f"{n}" for n, t in zip(js_grad_args, js_grad_arg_types)]
     js_deps = f"const deps = requires_grad ? [{', '.join(js_grad_args)}] : []"
