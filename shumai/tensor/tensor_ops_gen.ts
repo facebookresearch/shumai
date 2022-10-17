@@ -22,7 +22,7 @@ import { Tensor } from './tensor'
  *
  *   @returns A new {@link Tensor} of uniformly random values
  */ export function rand(shape: BigInt64Array | number[]) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = false
 
   let stats = null
@@ -80,7 +80,7 @@ import { Tensor } from './tensor'
  *
  *   @returns A new {@link Tensor} of random values sampled from a Gaussian distribution
  */ export function randn(shape: BigInt64Array | number[]) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = false
 
   let stats = null
@@ -136,7 +136,7 @@ import { Tensor } from './tensor'
  *
  *   @returns A new {@link Tensor} of a single user specified value.
  */ export function full(shape: BigInt64Array | number[], val: number) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = false
 
   let stats = null
@@ -313,8 +313,8 @@ export function eye(dim: number) {
  *   @param tileDims - How to tile the intermediate tensor.
  *   @returns A new {@link Tensor}
  */ export function iota(dims: BigInt64Array | number[], tileDims: BigInt64Array | number[] = [1]) {
-  const [dims_ptr, dims_len] = arrayArg(dims, FFIType.i64)
-  const [tileDims_ptr, tileDims_len] = arrayArg(tileDims, FFIType.i64)
+  const [dims_ptr, dims_len] = arrayArg(dims)
+  const [tileDims_ptr, tileDims_len] = arrayArg(tileDims)
   const requires_stats = false
 
   let stats = null
@@ -376,7 +376,7 @@ export function eye(dim: number) {
  *   @param tensor - {@link Tensor} to reshape
  *   @param shape - The shape of the output {@link Tensor}
  */ export function reshape(tensor: Tensor, shape: BigInt64Array | number[]) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -440,7 +440,7 @@ export function eye(dim: number) {
  *   @param axes - The new order of the indices of the current axes after tranposing
  *   @returns A new {@link Tensor}
  */ export function transpose(tensor: Tensor, axes: BigInt64Array | number[]) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -507,7 +507,7 @@ export function eye(dim: number) {
  *   @param shape - A shape describing the number of iterations to tile each axis.
  *   @returns A new {@link Tensor}
  */ export function tile(tensor: Tensor, shape: BigInt64Array | number[]) {
-  const [shape_ptr, shape_len] = arrayArg(shape, FFIType.i64)
+  const [shape_ptr, shape_len] = arrayArg(shape)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -557,7 +557,7 @@ export function concatenate(tensors: Array<Tensor>, axis: number) {
       }
     }
   }
-  const [tensors_ptr, tensors_len] = arrayArg(tensors, FFIType.i64)
+  const [tensors_ptr, tensors_len] = arrayArg(tensors)
   const requires_stats = tensors.some((t) => t.requires_stats)
 
   let stats = null
@@ -3029,7 +3029,7 @@ export function conv2d(
 }
 
 export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3072,7 +3072,7 @@ export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
 }
 
 export function amax(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3199,7 +3199,7 @@ export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
 }
 
 export function sum(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3284,7 +3284,7 @@ export function cumsum(tensor: Tensor, axis: number) {
 }
 
 export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3327,7 +3327,7 @@ export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
 }
 
 export function median(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3375,7 +3375,7 @@ export function _var(
   bias = false,
   keep_dims = false
 ) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3427,7 +3427,7 @@ export function variance(
 }
 
 export function std(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3475,7 +3475,7 @@ export function norm(
   p = 2,
   keep_dims = false
 ) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3539,7 +3539,7 @@ export function countNonzero(
   axes: BigInt64Array | number[] = [],
   keep_dims = false
 ) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3584,7 +3584,7 @@ export function countNonzero(
 }
 
 export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
@@ -3627,7 +3627,7 @@ export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
 }
 
 export function all(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
-  const [axes_ptr, axes_len] = arrayArg(axes, FFIType.i64)
+  const [axes_ptr, axes_len] = arrayArg(axes)
   const requires_stats = tensor.requires_stats
 
   let stats = null
