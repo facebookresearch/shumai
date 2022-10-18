@@ -4,6 +4,7 @@ import { arrayArg } from '../ffi/ffi_bind_utils'
 import { TensorOpsInterface } from './tensor_ops_interface_gen'
 import { full } from './tensor_ops_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
+import * as ops from './tensor_ops'
 import { getStack, collectStats } from './stats'
 import type { OpStats } from '../io'
 export { NATIVE_FILE } from '../ffi/ffi_flashlight'
@@ -593,6 +594,10 @@ export class Tensor {
       ...arrayArg(end, FFIType.i64),
       ...arrayArg(stride, FFIType.i64)
     )
+  }
+
+  softmax(axis: number): Tensor {
+    return ops.softmax(this, axis)
   }
 }
 
