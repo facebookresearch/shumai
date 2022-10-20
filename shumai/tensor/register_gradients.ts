@@ -148,13 +148,7 @@ const impls = {
     const range = grad.out.shape.map((x, i) => ':')
     range[axis] = start + ':' + end
 
-    // Expand input gradient tensor to match the shape of the forward output tensor
-    let backwardGradient = grad.grad_in
-    if (grad.grad_in.shape.length < grad.out.shape.length) {
-      backwardGradient = grad.grad_in.add(sm.full(grad.out.shape, 0))
-    }
-
-    return backwardGradient.index(range)
+    return grad.grad_in.index(range)
   }
 }
 

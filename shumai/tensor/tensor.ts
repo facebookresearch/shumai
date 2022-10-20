@@ -168,6 +168,9 @@ async function async_traverse_gradients(sorted_traversal, jacobian) {
 // dependencies with requires_grad === True
 export function backward(base_t: Tensor, jacobian: Tensor) {
   if (!jacobian) {
+    if (base_t.elements !== 1) {
+      throw new Error(`Gradient can only be implicitly created for a scalar`)
+    }
     jacobian = full([], 1)
     jacobian.requires_stats = base_t.requires_stats
   }
