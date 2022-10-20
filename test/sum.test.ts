@@ -60,5 +60,44 @@ describe('sum', () => {
     expect(isShape(sum, [2, 2, 1])).toBe(true)
     expectArraysClose(sum.toFloat32Array(), [1, 2, 3, 4])
   })
-  /* TODO: unit tests for gradients */
+  it('gradient', () => {
+    const t = sm
+      .tensor(new Float32Array([1, 2, 3, 0, 0, 1]))
+      .reshape([3, 2])
+      .requireGrad()
+    const result = sm.sum(t)
+    result.backward()
+    expect(isShape(t.grad, t.shape)).toBe(true)
+    expectArraysClose(t.grad.toFloat32Array(), [1, 1, 1, 1, 1, 1])
+  })
+  it('gradient (keepDims = true)', () => {
+    const t = sm
+      .tensor(new Float32Array([1, 2, 3, 0, 0, 1]))
+      .reshape([3, 2])
+      .requireGrad()
+    const result = sm.sum(t, [], true)
+    result.backward()
+    expect(isShape(t.grad, t.shape)).toBe(true)
+    expectArraysClose(t.grad.toFloat32Array(), [1, 1, 1, 1, 1, 1])
+  })
+  it('gradient, axis=[1]', () => {
+    const t = sm
+      .tensor(new Float32Array([1, 2, 3, 0, 0, 1]))
+      .reshape([3, 2])
+      .requireGrad()
+    const result = sm.sum(t, [1]).mean()
+    result.backward()
+    expect(isShape(t.grad, t.shape)).toBe(true)
+    expectArraysClose(t.grad.toFloat32Array(), [1 / 3, 1 / 3, 1 / 3, 1 / 3, 1 / 3, 1 / 3])
+  })
+  it('gradient, axis=[1] (keepDims = true)', () => {
+    const t = sm
+      .tensor(new Float32Array([1, 2, 3, 0, 0, 1]))
+      .reshape([3, 2])
+      .requireGrad()
+    const result = sm.sum(t, [1], true).mean()
+    result.backward()
+    expect(isShape(t.grad, t.shape)).toBe(true)
+    expectArraysClose(t.grad.toFloat32Array(), [1 / 3, 1 / 3, 1 / 3, 1 / 3, 1 / 3, 1 / 3])
+  })
 })
