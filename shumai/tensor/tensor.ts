@@ -370,7 +370,7 @@ export class Tensor {
     if (typeof obj === 'number') {
       obj = [obj]
     }
-    this._injest_ptr(fl.createTensor.native(...arrayArg(obj, FFIType.i64)))
+    this._injest_ptr(fl.createTensor.native(...arrayArg(obj)))
     return
   }
 
@@ -462,8 +462,8 @@ export class Tensor {
     return wrapFLTensor(
       fl._pad.native,
       this.ptr,
-      ...arrayArg(new BigInt64Array(before_), FFIType.i64),
-      ...arrayArg(new BigInt64Array(after_), FFIType.i64)
+      ...arrayArg(new BigInt64Array(before_)),
+      ...arrayArg(new BigInt64Array(after_))
     )
   }
 
@@ -597,9 +597,9 @@ export class Tensor {
     return wrapFLTensor(
       fl._index.native,
       this,
-      ...arrayArg(start, FFIType.i64),
-      ...arrayArg(end, FFIType.i64),
-      ...arrayArg(stride, FFIType.i64)
+      ...arrayArg(start),
+      ...arrayArg(end),
+      ...arrayArg(stride)
     )
   }
 
@@ -609,9 +609,9 @@ export class Tensor {
       fl._indexedAssign.native,
       this,
       t,
-      ...arrayArg(start, FFIType.i64),
-      ...arrayArg(end, FFIType.i64),
-      ...arrayArg(stride, FFIType.i64)
+      ...arrayArg(start),
+      ...arrayArg(end),
+      ...arrayArg(stride)
     )
   }
 
