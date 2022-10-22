@@ -1,12 +1,23 @@
 import * as sm from '@shumai/shumai'
 import { it, expect, describe } from 'bun:test'
-import { areSameShape, expectArraysClose } from './utils'
+import { areSameShape, expectArraysClose, isShape } from './utils'
 
 describe('ops', () => {
   it('should reshape', () => {
     const a = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 2])
     const b = sm.tensor(new Float32Array([1, 2, 3, 4])).reshape([2, 2])
     expect(areSameShape(a, b)).toBe(true)
+  })
+  it('should reshape with gradient', () => {
+    const tensor = sm.tensor(new Float32Array([1, 2, 3, 4])).requireGrad()
+    expect(isShape(tensor, [4])).toBe(true)
+    const reshaped = tensor.reshape([2, 2])
+    const final = reshaped.sum()
+    final.backward()
+    expect(isShape(reshaped.grad, [2, 2])).toBe(true)
+    expectArraysClose(reshaped.grad.toFloat32Array(), [1, 1, 1, 1])
+    expect(isShape(tensor.grad, [4])).toBe(true)
+    expectArraysClose(tensor.grad.toFloat32Array(), [1, 1, 1, 1])
   })
   it('should work for negative', () => {
     const a = sm.tensor(new Float32Array([1, -3, 2, 7, -4]))

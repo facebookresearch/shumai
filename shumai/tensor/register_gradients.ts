@@ -184,6 +184,10 @@ const impls = {
       reverseAxes[forwardAxes[i]] = i
     } // If forwardAxes === [], reverseAxes === []
     return grad.grad_in.transpose(reverseAxes)
+  },
+  reshape: (grad: Grad): Tensor => {
+    const inShape = (grad.in[0] as Tensor).shape
+    return grad.grad_in.reshape(inShape)
   }
 }
 
