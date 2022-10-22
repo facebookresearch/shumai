@@ -176,6 +176,14 @@ const impls = {
     range[axis] = start + ':' + end
 
     return grad.grad_in.index(range)
+  },
+  transpose: (grad: Grad): Tensor => {
+    const forwardAxes = grad.in[1] as number[]
+    const reverseAxes = [...forwardAxes]
+    for (let i = 0; i < forwardAxes.length; i++) {
+      reverseAxes[forwardAxes[i]] = i
+    } // If forwardAxes === [], reverseAxes === []
+    return grad.grad_in.transpose(reverseAxes)
   }
 }
 
