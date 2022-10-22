@@ -615,6 +615,13 @@ export class Tensor {
     )
   }
 
+  T(): Tensor {
+    const axes = this.shape.map((x, i) => i)
+    axes[axes.length - 1] = axes.length - 2
+    axes[axes.length - 2] = axes.length - 1
+    return this.transpose(axes)
+  }
+
   softmax(axis: number): Tensor {
     return ops.softmax(this, axis)
   }
