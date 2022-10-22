@@ -1,4 +1,4 @@
-import { ptr, toArrayBuffer, FFIType } from 'bun:ffi'
+import { ptr, toArrayBuffer } from 'bun:ffi'
 import { fl } from '../ffi/ffi_flashlight'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { TensorOpsInterface } from './tensor_ops_interface_gen'
@@ -351,7 +351,7 @@ export class Tensor {
     if (typeof obj === 'number') {
       obj = [obj]
     }
-    this._injest_ptr(fl.createTensor.native(...arrayArg(obj, FFIType.i64)))
+    this._injest_ptr(fl.createTensor.native(...arrayArg(obj)))
     return
   }
 
@@ -443,8 +443,8 @@ export class Tensor {
     return wrapFLTensor(
       fl._pad.native,
       this.ptr,
-      ...arrayArg(new BigInt64Array(before_), FFIType.i64),
-      ...arrayArg(new BigInt64Array(after_), FFIType.i64)
+      ...arrayArg(new BigInt64Array(before_)),
+      ...arrayArg(new BigInt64Array(after_))
     )
   }
 
@@ -558,7 +558,7 @@ export class Tensor {
             end_idx = parseInt(tokens[1])
           }
         }
-        if (tokens.length >= 3 || start_idx === NaN || end_idx === NaN) {
+        if (tokens.length >= 3 || Number.isNaN(start_idx) || Number.isNaN(end_idx)) {
           throw `${arg} not yet supported.  Please file a bug with desired behavior!`
         }
         start.push(start_idx)
@@ -578,9 +578,9 @@ export class Tensor {
     return wrapFLTensor(
       fl._index.native,
       this,
-      ...arrayArg(start, FFIType.i64),
-      ...arrayArg(end, FFIType.i64),
-      ...arrayArg(stride, FFIType.i64)
+      ...arrayArg(start),
+      ...arrayArg(end),
+      ...arrayArg(stride)
     )
   }
 
@@ -590,9 +590,9 @@ export class Tensor {
       fl._indexedAssign.native,
       this,
       t,
-      ...arrayArg(start, FFIType.i64),
-      ...arrayArg(end, FFIType.i64),
-      ...arrayArg(stride, FFIType.i64)
+      ...arrayArg(start),
+      ...arrayArg(end),
+      ...arrayArg(stride)
     )
   }
 

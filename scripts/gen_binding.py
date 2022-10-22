@@ -589,7 +589,6 @@ if sys.argv[1] in ["js", "js_methods"]:
         # js_methods
         full_js = f"""\
 /* GENERATED CODE (gen_binding.py) */
-import {{ FFIType }} from 'bun:ffi'
 import {{ arrayArg }} from '../ffi/ffi_bind_utils'
 import {{ fl }} from '../ffi/ffi_flashlight'
 import {{ getStack, collectStats }} from './stats'
@@ -604,7 +603,6 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         # js
         full_js = f"""\
 /* GENERATED CODE (gen_binding.py) */
-import {{ FFIType }} from "bun:ffi"
 import {{ arrayArg }} from "../ffi/ffi_bind_utils"
 import {{ fl }} from "../ffi/ffi_flashlight"
 import {{ getStack, collectStats }} from './stats'

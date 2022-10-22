@@ -1,5 +1,4 @@
 /* GENERATED CODE (gen_binding.py) */
-import { FFIType } from 'bun:ffi'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
 import { getStack, collectStats } from './stats'
