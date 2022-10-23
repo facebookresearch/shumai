@@ -10,6 +10,18 @@ export interface Grad {
   out: Tensor
 }
 
+function recoverShape(tensor: Tensor, originalShape: number[], lostAxes: number[]) {
+  const shapeForBroadcast = [...originalShape]
+  for (let axis of lostAxes) {
+    if (axis < 0) {
+      axis += originalShape.length
+    }
+    shapeForBroadcast[axis] = 1
+  }
+  const tensorForBroadcast = tensor.reshape(shapeForBroadcast)
+  return tensorForBroadcast.add(sm.full(originalShape, 0))
+}
+
 function possiblyReduce(grad_out: Tensor, grad: Grad) {
   const input = grad.in[grad.idx]
   const new_shape = input.shape
@@ -117,8 +129,18 @@ const impls = {
     return mask.mul(grad.grad_in)
   },
   mean: (grad: Grad) => {
-    const num = sm.scalar(grad.in[0].elements)
-    return grad.grad_in.tile(grad.in[0].shape).div(num)
+    const inShape = (grad.in[0] as Tensor).shape
+    let axes: number[] = grad.in[1]
+    if (axes.length === 0) {
+      axes = inShape.map((x, i) => i) // All axes
+    }
+
+    let num = 1
+    for (const axis of axes) {
+      num *= inShape[axis]
+    }
+
+    return recoverShape(grad.grad_in.div(sm.scalar(num)), inShape, axes)
   },
   mul: (grad: Grad) => {
     return possiblyReduce(grad.in[1 - grad.idx].mul(grad.grad_in), grad)
@@ -134,7 +156,12 @@ const impls = {
     return possiblyReduce(grad.grad_in, grad)
   },
   sum: (grad: Grad) => {
-    return grad.grad_in.tile(grad.in[0].shape)
+    const inShape = (grad.in[0] as Tensor).shape
+    let axes: number[] = grad.in[1]
+    if (axes.length === 0) {
+      axes = inShape.map((x, i) => i) // All axes
+    }
+    return recoverShape(grad.grad_in, inShape, axes)
   },
   tanh: (grad: Grad) => {
     return sm.scalar(1).sub(grad.out.mul(grad.out))
@@ -148,13 +175,7 @@ const impls = {
     const range = grad.out.shape.map((x, i) => ':')
     range[axis] = start + ':' + end
 
-    // Expand input gradient tensor to match the shape of the forward output tensor
-    let backwardGradient = grad.grad_in
-    if (grad.grad_in.shape.length < grad.out.shape.length) {
-      backwardGradient = grad.grad_in.add(sm.full(grad.out.shape, 0))
-    }
-
-    return backwardGradient.index(range)
+    return grad.grad_in.index(range)
   }
 }
 

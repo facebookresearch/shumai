@@ -89,7 +89,10 @@ export function scalar(s: number): Tensor {
   return full([], s)
 }
 
-function traverse_gradients(sorted_traversal, jacobian) {
+function traverse_gradients(
+  sorted_traversal: Tensor[],
+  jacobian: Tensor
+): Record<number, [Tensor, Tensor]> {
   const all_grads_dict: Record<number, [Tensor, Tensor]> = {}
   const base_t = sorted_traversal[0]
   all_grads_dict[base_t.ptr] = [base_t, jacobian]
@@ -112,10 +115,13 @@ function traverse_gradients(sorted_traversal, jacobian) {
         out: t,
         grad_in: all_grads_dict[t.ptr][1]
       }
-      const g = gradient_functions[t.op](grad_arg)
+      const g: Tensor = gradient_functions[t.op](grad_arg)
       if (dep.ptr in all_grads_dict) {
-        const [t, prev_g] = all_grads_dict[dep.ptr]
-        all_grads_dict[dep.ptr] = [t, prev_g.add(g)]
+        const [prev_dep, prev_g] = all_grads_dict[dep.ptr]
+        if (dep !== prev_dep) {
+          throw new Error(`Internal error: invalid all_grads_dict`)
+        }
+        all_grads_dict[dep.ptr] = [prev_dep, prev_g.add(g)]
       } else {
         all_grads_dict[dep.ptr] = [dep, g]
       }
@@ -124,7 +130,10 @@ function traverse_gradients(sorted_traversal, jacobian) {
   return all_grads_dict
 }
 
-async function async_traverse_gradients(sorted_traversal, jacobian) {
+async function async_traverse_gradients(
+  sorted_traversal: Tensor[],
+  jacobian: Tensor
+): Promise<Record<number, [Tensor, Tensor]>> {
   const all_grads_dict: Record<number, [Tensor, Tensor]> = {}
   const base_t = sorted_traversal[0]
   all_grads_dict[base_t.ptr] = [base_t, jacobian]
@@ -166,8 +175,16 @@ async function async_traverse_gradients(sorted_traversal, jacobian) {
 
 // differentiate t with respect to all
 // dependencies with requires_grad === True
-export function backward(base_t: Tensor, jacobian: Tensor) {
+export function backward(
+  base_t: Tensor,
+  jacobian: Tensor
+):
+  | Record<string, { grad: Tensor; tensor: Tensor }>
+  | Promise<Record<string, { grad: Tensor; tensor: Tensor }>> {
   if (!jacobian) {
+    if (base_t.elements !== 1) {
+      throw new Error(`Gradient can only be implicitly created for a scalar`)
+    }
     jacobian = full([], 1)
     jacobian.requires_stats = base_t.requires_stats
   }
@@ -215,13 +232,15 @@ export function backward(base_t: Tensor, jacobian: Tensor) {
 
   // NB: can't easily embed this in the traverse functions
   // (or else references are stale)
-  const calc_grads = (all_grads_dict) => {
+  const calc_grads = (
+    all_grads_dict: Record<number, [Tensor, Tensor]>
+  ): Record<string, { grad: Tensor; tensor: Tensor }> => {
     const all_grads: Record<string, { grad: Tensor; tensor: Tensor }> = {}
     for (const key in all_grads_dict) {
       const [t, g] = all_grads_dict[key]
       // NB: not really safe in parallel, but convenient for stateful API
       t.grad = g
-      all_grads[t] = {
+      all_grads[t.toString()] = {
         tensor: t,
         grad: g
       }
@@ -351,7 +370,7 @@ export class Tensor {
     if (typeof obj === 'number') {
       obj = [obj]
     }
-    this._injest_ptr(fl.createTensor.native(...arrayArg(obj, FFIType.i64)))
+    this._injest_ptr(fl.createTensor.native(...arrayArg(obj)))
     return
   }
 
@@ -443,8 +462,8 @@ export class Tensor {
     return wrapFLTensor(
       fl._pad.native,
       this.ptr,
-      ...arrayArg(new BigInt64Array(before_), FFIType.i64),
-      ...arrayArg(new BigInt64Array(after_), FFIType.i64)
+      ...arrayArg(new BigInt64Array(before_)),
+      ...arrayArg(new BigInt64Array(after_))
     )
   }
 
@@ -578,9 +597,9 @@ export class Tensor {
     return wrapFLTensor(
       fl._index.native,
       this,
-      ...arrayArg(start, FFIType.i64),
-      ...arrayArg(end, FFIType.i64),
-      ...arrayArg(stride, FFIType.i64)
+      ...arrayArg(start),
+      ...arrayArg(end),
+      ...arrayArg(stride)
     )
   }
 
@@ -590,9 +609,9 @@ export class Tensor {
       fl._indexedAssign.native,
       this,
       t,
-      ...arrayArg(start, FFIType.i64),
-      ...arrayArg(end, FFIType.i64),
-      ...arrayArg(stride, FFIType.i64)
+      ...arrayArg(start),
+      ...arrayArg(end),
+      ...arrayArg(stride)
     )
   }
 
