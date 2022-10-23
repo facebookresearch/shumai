@@ -1,4 +1,4 @@
-import { ptr, toArrayBuffer, FFIType } from 'bun:ffi'
+import { ptr, toArrayBuffer } from 'bun:ffi'
 import { fl } from '../ffi/ffi_flashlight'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { TensorOpsInterface } from './tensor_ops_interface_gen'
@@ -577,7 +577,7 @@ export class Tensor {
             end_idx = parseInt(tokens[1])
           }
         }
-        if (tokens.length >= 3 || start_idx === NaN || end_idx === NaN) {
+        if (tokens.length >= 3 || Number.isNaN(start_idx) || Number.isNaN(end_idx)) {
           throw `${arg} not yet supported.  Please file a bug with desired behavior!`
         }
         start.push(start_idx)
