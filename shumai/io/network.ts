@@ -111,7 +111,7 @@ export async function tfetch(
   const response = await (() => {
     if (tensor) {
       if (!tensor.provenance) {
-        tensor.provenance = _unique_id
+        tensor.provenance = id
       }
       return fetch(url, {
         method: 'POST',
@@ -249,7 +249,10 @@ export type RouteStats = {
  * @param request_dict - A map of endpoint names to the underlying (possibly async) function calls.
  * @param options - A set of options passed to the underlying Bun.serve call.
  */
-export function serve(request_dict: Record<string, any>, options: ServeOpts) {
+export function serve(
+  request_dict: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>,
+  options: ServeOpts
+) {
   const user_data = {}
   const statistics: Record<string, RouteStats> = {}
   const op_stats: TensorOpStats = {}
@@ -272,7 +275,10 @@ export function serve(request_dict: Record<string, any>, options: ServeOpts) {
   }
 
   /* TODO: specify a better type than any as its a function */
-  const serve_request = async (req: Request, fn: any) => {
+  const serve_request = async (
+    req: Request,
+    fn: (...args: unknown[]) => Promise<unknown> | unknown | void
+  ) => {
     const buf = await req.arrayBuffer()
     let ret = null
     if (buf.byteLength) {
@@ -382,7 +388,7 @@ export function serve_model(
   grad_update: OptimizerFn,
   options: ServeOpts,
   // TODO: pending further type refinement (requires a fn; same comments above)
-  req_map: Record<string, (...args: any[]) => any | Promise<any>>
+  req_map: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>
 ) {
   const base_req_map = {
     /* TODO: Refine type of param `u` */

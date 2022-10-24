@@ -8,7 +8,8 @@ export class Module extends Function {
     return self
   }
 
-  forward(...args: any[]): Tensor[] | Tensor {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  forward(...args: unknown[]): Tensor[] | Tensor {
     throw new Error('You must implement a `forward()` method in your module')
   }
 }

@@ -7,6 +7,7 @@ import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 import * as ops from './tensor_ops'
 import { getStack, collectStats } from './stats'
 import type { OpStats } from '../io'
+import { Grad } from './register_gradients'
 export { NATIVE_FILE } from '../ffi/ffi_flashlight'
 
 fl.init.native()
@@ -150,7 +151,7 @@ async function async_traverse_gradients(
       if (!dep.requires_grad) {
         continue
       }
-      const grad_arg = {
+      const grad_arg = <Grad>{
         idx: idx,
         in: t.deps,
         out: t,
@@ -267,7 +268,7 @@ export class Tensor {
   grad: Tensor = null
   op = 'constant'
 
-  grad_callback_async?: (grad?: any) => Promise<void | Tensor>
+  grad_callback_async?: (grad?: Grad) => Promise<void | Tensor>
 
   /** @private */
   _injest_ptr(_ptr) {
@@ -561,7 +562,7 @@ export class Tensor {
     const stride = []
     for (const arg of args) {
       if (typeof arg === 'string') {
-        const tokens = arg.split(':').map((x, i) => x.trim())
+        const tokens = arg.split(':').map((x) => x.trim())
         let start_idx = -1
         let end_idx = -1
         if (tokens.length >= 1) {

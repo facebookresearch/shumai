@@ -1,11 +1,11 @@
 import * as base from './tensor'
-import type { Tensor } from './tensor'
+import { Tensor } from './tensor'
 import * as ops from './tensor_ops_gen'
 const sm = { ...base, ...ops }
 
 export interface Grad {
   idx: number
-  in: any[]
+  in: [Tensor, Tensor | number[], ...number[]]
   grad_in: Tensor
   out: Tensor
 }
@@ -23,7 +23,7 @@ function recoverShape(tensor: Tensor, originalShape: number[], lostAxes: number[
 }
 
 function possiblyReduce(grad_out: Tensor, grad: Grad) {
-  const input = grad.in[grad.idx]
+  const input = <Tensor>grad.in[grad.idx]
   const new_shape = input.shape
   if (grad.grad_in.shape.length != input.shape.length) {
     for (let i = 0; i < grad.grad_in.shape.length - input.shape.length; ++i) {
@@ -47,17 +47,28 @@ const impls = {
     return possiblyReduce(grad.grad_in, grad)
   },
   conv2d: (grad: Grad) => {
-    const [x, w, sx, sy, px, py, dx, dy, g] = grad.in
+    const [x, w, sx, sy, px, py, dx, dy, g] = <
+      [Tensor, Tensor, number, number, number, number, number, number, number]
+    >grad.in
     if (dx !== 1 || dy !== 1) {
-      throw `cannot differentiate convolution with dilation (${dx}, ${dy}), please file an issue.`
+      throw new Error(
+        `cannot differentiate convolution with dilation (${dx}, ${dy}), please file an issue.`
+      )
     } else if (sx !== sy) {
-      throw `cannot differentiate convolution with stride (${sx}, ${sy}), please file an issue.`
+      throw new Error(
+        `cannot differentiate convolution with stride (${sx}, ${sy}), please file an issue.`
+      )
     } else if (px !== py) {
-      throw `cannot differentiate convolution with padding (${px}, ${py}), please file an issue.`
+      throw new Error(
+        `cannot differentiate convolution with padding (${px}, ${py}), please file an issue.`
+      )
     }
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const batch = x.shape[0]
     const channel_out = grad.grad_in.shape[1]
     const channel_in = x.shape[1]
+    /* eslint-enable @typescript-eslint/no-unused-vars */
+
     const k = w.shape[2]
     if (grad.idx === 0) {
       const padding = k - 1 - (sx - 1) - px
@@ -85,24 +96,24 @@ const impls = {
       if (g > 1) {
         dxw = dxw.reshape([g, dxw.shape[0] / g].concat(dxw.shape.slice(1)))
         dxw = dxw.transpose([0, 2])
-        dxw = dwx.reshape([dxw.shape[0] * dxw.shape[1]].concat(dxw.shape.slice(2)))
+        dxw = dxw.reshape([dxw.shape[0] * dxw.shape[1]].concat(dxw.shape.slice(2)))
       } else {
         dxw = dxw.transpose([1, 0, 2, 3])
       }
       return sm.conv2d(dxgrad, dxw, 1, 1, padding, padding, 1, 1, g)
     }
 
-    const dwgrad = grad.grad_in.tranpose(0, 1)
+    const dwgrad = grad.grad_in.transpose([0, 1])
     let dwx = x.transpose([0, 1])
     if (g > 1) {
       dwx = x.reshape([x.shape[0], g, x.shape[1] / g].concat(x.shape.slice(2)))
-      dwx = dwx.tranpose([0, 2])
+      dwx = dwx.transpose([0, 2])
       dwx = dwx.reshape([dwx.shape[0], dwx.shape[1] * dwx.shape[2]].concat(dwx.shape.slice(3)))
     }
     return sm.conv2d(dwx, dwgrad, 1, 1, px, px, sx, sx, g)
   },
   div: (grad: Grad) => {
-    const recip = sm.scalar(1).div(grad.in[1])
+    const recip = sm.scalar(1).div(<Tensor>grad.in[1])
     const go = grad.grad_in.mul(recip)
     if (grad.idx === 0) {
       return possiblyReduce(go, grad)
@@ -115,10 +126,10 @@ const impls = {
   },
   matmul: (grad: Grad) => {
     if (grad.idx === 0) {
-      const yT = (grad.in[1] as Tensor).T()
+      const yT = (<Tensor>grad.in[1]).T()
       return grad.grad_in.matmul(yT)
     } else if (grad.idx === 1) {
-      const xT = (grad.in[0] as Tensor).T()
+      const xT = (<Tensor>grad.in[0]).T()
       return xT.matmul(grad.grad_in)
     } else {
       throw new Error(`Invalid Grad argument`)
@@ -126,13 +137,13 @@ const impls = {
   },
   maximum: (grad: Grad) => {
     const a_idx = grad.idx
-    const b_idx = 1 - grad.idx
-    const mask = grad.in[a_idx].greaterThan(grad.in[b_idx])
+    const b_idx = <0 | 1>(1 - grad.idx)
+    const mask = (<Tensor>grad.in[a_idx]).greaterThan(<Tensor>grad.in[b_idx])
     return mask.mul(grad.grad_in)
   },
   mean: (grad: Grad) => {
-    const inShape = (grad.in[0] as Tensor).shape
-    let axes: number[] = grad.in[1]
+    const inShape = (<Tensor>grad.in[0]).shape
+    let axes = <number[]>grad.in[1]
     if (axes.length === 0) {
       axes = inShape.map((x, i) => i) // All axes
     }
@@ -145,7 +156,8 @@ const impls = {
     return recoverShape(grad.grad_in.div(sm.scalar(num)), inShape, axes)
   },
   mul: (grad: Grad) => {
-    return possiblyReduce(grad.in[1 - grad.idx].mul(grad.grad_in), grad)
+    const grad_idx = <0 | 1>(1 - grad.idx)
+    return possiblyReduce((<Tensor>grad.in[grad_idx]).mul(grad.grad_in), grad)
   },
   sigmoid: (grad: Grad) => {
     const o = sm.scalar(1).sub(grad.out)
@@ -158,8 +170,8 @@ const impls = {
     return possiblyReduce(grad.grad_in, grad)
   },
   sum: (grad: Grad) => {
-    const inShape = (grad.in[0] as Tensor).shape
-    let axes: number[] = grad.in[1]
+    const inShape = grad.in[0].shape
+    let axes = <number[]>grad.in[1]
     if (axes.length === 0) {
       axes = inShape.map((x, i) => i) // All axes
     }
@@ -169,18 +181,18 @@ const impls = {
     return sm.scalar(1).sub(grad.out.mul(grad.out))
   },
   concatenate: (grad: Grad): Tensor => {
-    const axis: number = grad.in[grad.in.length - 1]
+    const axis = <number>grad.in[grad.in.length - 1]
     const idx = grad.idx
-    const prevTensors: Tensor[] = grad.in.slice(0, idx)
+    const prevTensors = <Tensor[]>grad.in.slice(0, idx)
     const start = prevTensors.reduce((r, t) => r + t.shape[axis], 0)
-    const end = start + (grad.in[idx] as Tensor).shape[axis]
-    const range = grad.out.shape.map((x, i) => ':')
+    const end = start + (<Tensor>grad.in[idx]).shape[axis]
+    const range = grad.out.shape.map(() => ':')
     range[axis] = start + ':' + end
 
     return grad.grad_in.index(range)
   },
   transpose: (grad: Grad): Tensor => {
-    const forwardAxes = grad.in[1] as number[]
+    const forwardAxes = <number[]>grad.in[1]
     const reverseAxes = [...forwardAxes]
     for (let i = 0; i < forwardAxes.length; i++) {
       reverseAxes[forwardAxes[i]] = i
@@ -188,7 +200,7 @@ const impls = {
     return grad.grad_in.transpose(reverseAxes)
   },
   reshape: (grad: Grad): Tensor => {
-    const inShape = (grad.in[0] as Tensor).shape
+    const inShape = (<Tensor>grad.in[0]).shape
     return grad.grad_in.reshape(inShape)
   }
 }
