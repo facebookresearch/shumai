@@ -16,7 +16,7 @@
  * @param buffer_len - The size of the buffer to read into before flushing to the user
  * @returns A generator of each line in the file
  */
-export async function* readlines(filename: string, utfLabel = 'utf-8', buffer_len = 16) {
+export async function* readlines(filename: string, utfLabel: Encoding = 'utf-8', buffer_len = 16) {
   const stream = Bun.file(filename).stream()
   const reader = stream.getReader()
   const td = new TextDecoder(utfLabel)

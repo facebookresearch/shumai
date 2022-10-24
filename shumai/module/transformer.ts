@@ -1,12 +1,12 @@
 import * as ops from '../tensor/tensor_ops'
 import * as tensor from '../tensor/tensor'
-import * as module from './index'
 import * as util from '../util'
 
 import { Module } from './module'
+import { Linear } from './linear'
 import type { Tensor } from '../tensor'
 
-const sm = { ...ops, ...tensor, module, util }
+const sm = { ...ops, ...tensor, util }
 
 export class TransformerDotProductAttention extends Module {
   private dim: number
@@ -51,11 +51,11 @@ export class TransformerMultiheadAttention extends Module {
   private dim: number
   private heads: number
   private attn_dim: number
-  private query_embed: sm.module.Linear
-  private key_embed: sm.module.Linear
-  private value_embed: sm.module.Linear
+  private query_embed: Linear
+  private key_embed: Linear
+  private value_embed: Linear
   private attention: TransformerDotProductAttention
-  private concat_embed: sm.module.Linear
+  private concat_embed: Linear
 
   constructor(dim: number, heads: number, attn_dim?: number) {
     super()
@@ -73,11 +73,11 @@ export class TransformerMultiheadAttention extends Module {
     } else {
       this.attn_dim = attn_dim
     }
-    this.query_embed = new sm.module.Linear(dim, this.attn_dim * heads)
-    this.key_embed = new sm.module.Linear(dim, this.attn_dim * heads)
-    this.value_embed = new sm.module.Linear(dim, this.attn_dim * heads)
+    this.query_embed = new Linear(dim, this.attn_dim * heads)
+    this.key_embed = new Linear(dim, this.attn_dim * heads)
+    this.value_embed = new Linear(dim, this.attn_dim * heads)
     this.attention = new TransformerDotProductAttention(this.attn_dim)
-    this.concat_embed = new sm.module.Linear(this.attn_dim * heads, dim)
+    this.concat_embed = new Linear(this.attn_dim * heads, dim)
   }
 
   forward(queries: Tensor, keys: Tensor, values: Tensor): Tensor {

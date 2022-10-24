@@ -4,13 +4,10 @@ import { spawn } from 'bun'
 export function run(...args) {
   const procs = []
   for (const arg of args) {
-    procs.push(
-      new Response(
-        spawn(arg.split(' '), {
-          stdout: 'inherit'
-        }).stdout
-      ).text()
-    )
+    const s = <ReadableStream>spawn(arg.split(' '), {
+      stdout: 'inherit'
+    }).stdout
+    procs.push(new Response(s).text())
   }
   return Promise.all(procs)
 }
