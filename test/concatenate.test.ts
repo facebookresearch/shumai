@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 import * as sm from '@shumai/shumai'
-import { expectArraysClose, expectThrows, nativeError, isClose, isShape } from './utils'
+import { expectArraysClose, expectThrows, nativeError, isShape } from './utils'
 
 describe('concatenate', () => {
   it('scalar tensors invalid dims', () => {

@@ -20,6 +20,7 @@ export function sleep(ms: number) {
  * ```
  *
  * */
-export function all(...args: Promise<any>[]) {
-  return Promise.all(args)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function all<T extends any[]>(...args: Promise<T[number]>[]): Promise<Awaited<T>[]> {
+  return Promise.all<T>(args)
 }
