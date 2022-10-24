@@ -115,11 +115,13 @@ const impls = {
   },
   matmul: (grad: Grad) => {
     if (grad.idx === 0) {
-      const yT = grad.in[1].transpose([1, 0])
+      const yT = (grad.in[1] as Tensor).T()
       return grad.grad_in.matmul(yT)
     } else if (grad.idx === 1) {
-      const xT = grad.in[0].transpose([1, 0])
+      const xT = (grad.in[0] as Tensor).T()
       return xT.matmul(grad.grad_in)
+    } else {
+      throw new Error(`Invalid Grad argument`)
     }
   },
   maximum: (grad: Grad) => {
