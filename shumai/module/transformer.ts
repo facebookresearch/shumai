@@ -1,4 +1,4 @@
-import * as ops from '../tensor/tensor_ops_gen'
+import * as ops from '../tensor/tensor_ops'
 import * as tensor from '../tensor/tensor'
 import * as module from './index'
 import * as util from '../util'

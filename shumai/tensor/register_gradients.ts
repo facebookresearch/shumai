@@ -1,6 +1,6 @@
 import * as base from './tensor'
 import type { Tensor } from './tensor'
-import * as ops from './tensor_ops_gen'
+import * as ops from './tensor_ops'
 const sm = { ...base, ...ops }
 
 export interface Grad {
