@@ -121,6 +121,9 @@ const impls = {
       return possiblyReduce(go.negative().mul(recip), grad)
     }
   },
+  sqrt: (grad: Grad): Tensor => {
+    return grad.grad_in.div(grad.out.mul(sm.scalar(2)))
+  },
   exp: (grad: Grad) => {
     return sm.exp(grad.in[0])
   },
