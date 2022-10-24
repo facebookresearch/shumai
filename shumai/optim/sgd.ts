@@ -5,7 +5,7 @@ export function sgd(
   learning_rate = 1e-3
 ) {
   const lr = sm.scalar(-learning_rate)
-  for (const [k, v] of Object.entries(grads)) {
+  for (const [, v] of Object.entries(grads)) {
     const { tensor: t, grad: g } = v
     if (t.requires_grad) {
       t.update(t.detach().add(g.detach().mul(lr)))

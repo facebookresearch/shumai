@@ -5,7 +5,7 @@ const model = sm.io.remote_model('0.0.0.0:3000')
 
 const val = sm.scalar(1).requireGrad()
 
-for (const i of sm.util.range(300)) {
+for (const _i of sm.util.range(300)) {
   const input = sm.randn([1])
   const out_ref = input.mul(sm.scalar(2))
   const out = await model(input.mul(val))

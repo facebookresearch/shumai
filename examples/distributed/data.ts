@@ -9,7 +9,7 @@ const model_ref = (t) => {
 const url = '0.0.0.0:3000'
 const model = sm.io.remote_model(url)
 
-let loss = null
+let loss: sm.Tensor = null
 const loss_print = () => {
   if (loss) {
     return ` ${loss.toFloat32()}`
@@ -28,4 +28,5 @@ for (const _ of sm.util.viter(10000, loss_print)) {
 }
 
 const res = await fetch(`${url}/statistics`)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stat = await res.json()

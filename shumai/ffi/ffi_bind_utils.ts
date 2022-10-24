@@ -1,4 +1,4 @@
-import { ptr, FFIType } from 'bun:ffi'
+import { ptr } from 'bun:ffi'
 import { Tensor } from '@shumai/shumai'
 
 function arrayArg(arg: number | number[] | Tensor[] | BigInt64Array) {
