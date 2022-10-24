@@ -561,7 +561,7 @@ export class Tensor {
     const stride = []
     for (const arg of args) {
       if (typeof arg === 'string') {
-        const tokens = arg.split(':').map((x, i) => x.trim())
+        const tokens = arg.split(':').map((x) => x.trim())
         let start_idx = -1
         let end_idx = -1
         if (tokens.length >= 1) {

@@ -174,7 +174,7 @@ const impls = {
     const prevTensors: Tensor[] = grad.in.slice(0, idx)
     const start = prevTensors.reduce((r, t) => r + t.shape[axis], 0)
     const end = start + (grad.in[idx] as Tensor).shape[axis]
-    const range = grad.out.shape.map((x, i) => ':')
+    const range = grad.out.shape.map(() => ':')
     range[axis] = start + ':' + end
 
     return grad.grad_in.index(range)
