@@ -1,5 +1,5 @@
 import type { Tensor } from '../tensor'
-import * as ops from '../tensor/tensor_ops_gen'
+import * as ops from '../tensor/tensor_ops'
 const sm = { ...ops }
 import { Module } from './module'
 
