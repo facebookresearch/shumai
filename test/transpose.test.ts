@@ -155,5 +155,36 @@ describe('transpose', () => {
       )
     })
   */
-  /* TODO: unit tests for gradients */
+  it('gradient', () => {
+    const t = sm
+      .tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44]))
+      .reshape([2, 4])
+      .requireGrad()
+    const gradProduct = sm.tensor(new Float32Array([2, 3]))
+    const result = t.transpose([1, 0]).mul(gradProduct).sum()
+    result.backward()
+    expect(isShape(t.grad, [2, 4])).toBe(true)
+    expectArraysClose(t.grad.toFloat32Array(), [2, 2, 2, 2, 3, 3, 3, 3])
+  })
+  it('gradient (no change)', () => {
+    const t = sm
+      .tensor(new Float32Array([1, 11, 2, 22, 3, 33, 4, 44]))
+      .reshape([2, 4])
+      .requireGrad()
+    const gradProduct = sm.tensor(new Float32Array([2, 3, 4, 5]))
+    const result = t.transpose([0, 1]).mul(gradProduct).sum()
+    result.backward()
+    expect(isShape(t.grad, [2, 4])).toBe(true)
+    expectArraysClose(t.grad.toFloat32Array(), [2, 3, 4, 5, 2, 3, 4, 5])
+  })
+  it('gradient; shape has ones', () => {
+    const t = sm
+      .tensor(new Float32Array([1, 2, 3, 4]))
+      .reshape([1, 4])
+      .requireGrad()
+    const result = t.transpose([1, 0]).sum()
+    result.backward()
+    expect(isShape(t.grad, [1, 4])).toBe(true)
+    expectArraysClose(t.grad.toFloat32Array(), [1, 1, 1, 1])
+  })
 })
