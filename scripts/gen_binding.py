@@ -209,7 +209,8 @@ op_aliases = {
   "greaterThan": ["gt"],
   "greaterThanEqual": ["gte"],
   "var": ["variance"],
-  "norm": ["normalize"]
+  "norm": ["normalize"],
+  "concatenate": ["concat"],
 }
 
 # ops that need inputs transposed to work correctly

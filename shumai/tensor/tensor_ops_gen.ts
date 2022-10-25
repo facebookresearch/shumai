@@ -600,6 +600,10 @@ export function concatenate(tensors: Array<Tensor>, axis: number) {
   return t
 }
 
+export function concat(tensors: Array<Tensor>, axis: number) {
+  return concatenate(tensors, axis)
+}
+
 /**
  *
  *   Determine the indices of elements that are non-zero. There is a method version of this static function: {@link Tensor.nonzero | Tensor.nonzero }.
