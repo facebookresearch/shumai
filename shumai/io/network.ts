@@ -2,6 +2,7 @@ import * as sm from '../tensor'
 import * as crypto from 'crypto'
 import type { Errorlike, Server } from 'bun'
 import { OptimizerFn } from '../optim'
+import { sleep } from '../util'
 const _unique_id = crypto
   .createHash('sha256')
   .update('' + process.pid + performance.now())
@@ -59,6 +60,30 @@ export async function decode(obj: Response | ArrayBuffer) {
     return decodeBuffer(obj)
   } else {
     throw new Error(`Could not decode object: ${obj}`)
+  }
+}
+
+/** @private */
+async function backoff(callback, error_handler?) {
+  let err = null
+  // 1 second of exponential backoff before error
+  for (let i = 0; i < 10; ++i) {
+    if (i) {
+      await sleep(Math.pow(2, i))
+    }
+    try {
+      return await callback()
+    } catch (e) {
+      err = e
+      if (!e.toString().includes('Connection')) {
+        break
+      }
+    }
+  }
+  if (error_handler) {
+    await error_handler(err)
+  } else {
+    throw `Error found after 10 attempts: ${err}`
   }
 }
 
@@ -171,7 +196,7 @@ export async function tfetch(
  * @param url - The location of the remote model (must be running {@link io.serve_model | `io.serve_model`}).
  * @returns An asynchronous function that can be invoked with an input tensor.
  */
-export function remote_model(url: string, backward_url?: string) {
+export function remote_model(url: string, backward_url?: string, error_handler?) {
   let forward_url = `${url}/forward`
   if (!backward_url) {
     backward_url = `${url}/optimize`
@@ -179,11 +204,15 @@ export function remote_model(url: string, backward_url?: string) {
     forward_url = `${url}`
   }
   const backward = async (grad) => {
-    const jacobian = await tfetch(backward_url, grad.grad_in)
+    const jacobian = await backoff(async () => {
+      return await tfetch(backward_url, grad.grad_in)
+    }, error_handler)
     return jacobian
   }
   async function forward(t: sm.Tensor) {
-    return await tfetch(forward_url, t, { grad_fn: backward })
+    return await backoff(async () => {
+      return await tfetch(forward_url, t, { grad_fn: backward })
+    }, error_handler)
   }
   return forward
 }
@@ -418,6 +447,7 @@ export function serve_model(
       return ret
     }
   }
+  console.log('serving...')
   serve(
     {
       ...base_req_map,
