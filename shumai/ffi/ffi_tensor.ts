@@ -207,9 +207,45 @@ const ffi_tensor = {
     args: [FFIType.ptr],
     returns: FFIType.ptr
   },
-  _scalar: {
+  _float32Scalar: {
     args: [FFIType.ptr],
     returns: FFIType.f32
+  },
+  _float64Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.f64
+  },
+  _boolInt8Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.i8
+  },
+  _int16Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.i16
+  },
+  _int32Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.i32
+  },
+  _int64Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.i64
+  },
+  _uint8Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.u8
+  },
+  _uint16Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.u16
+  },
+  _uint32Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.u32
+  },
+  _uint64Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.u64
   },
   _elements: {
     args: [FFIType.ptr],

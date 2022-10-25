@@ -435,10 +435,30 @@ export class Tensor {
   }
 
   valueOf() {
-    if (this.elements == 1) {
-      return this.toFloat32()
+    switch (this.dtype) {
+      case dtype.Float32:
+        return this.elements == 1 ? this.toFloat32() : this.toFloat32Array()
+      case dtype.Float64:
+        return this.elements == 1 ? this.toFloat64() : this.toFloat64Array()
+      case dtype.BoolInt8:
+        return this.elements == 1 ? this.toBoolInt8() : this.toBoolInt8Array()
+      case dtype.Int16:
+        return this.elements == 1 ? this.toInt16() : this.toInt16Array()
+      case dtype.Int32:
+        return this.elements == 1 ? this.toInt32() : this.toInt32Array()
+      case dtype.Int64:
+        return this.elements == 1 ? this.toBigInt64() : this.toBigInt64Array()
+      case dtype.Uint8:
+        return this.elements == 1 ? this.toUint8() : this.toUint8Array()
+      case dtype.Uint16:
+        return this.elements == 1 ? this.toUint16() : this.toUint16Array()
+      case dtype.Uint32:
+        return this.elements == 1 ? this.toUint32() : this.toUint32Array()
+      case dtype.Uint64:
+        return this.elements == 1 ? this.toBigUint64() : this.toBigUint64Array()
+      default:
+        throw new Error(`dtype "${dtype[this.dtype]}" unhandled, please file an issue`)
     }
-    return this.toFloat32Array()
   }
 
   asContiguousTensor() {
@@ -506,6 +526,12 @@ export class Tensor {
     return new Float64Array(toArrayBuffer(fl._float64Buffer.native(contig.ptr), 0, elems * 8))
   }
 
+  toBoolInt8Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Int8Array(toArrayBuffer(fl._boolInt8Buffer.native(contig.ptr), 0, elems))
+  }
+
   toInt16Array() {
     const contig = this.asContiguousTensor()
     const elems = contig.elements
@@ -549,7 +575,43 @@ export class Tensor {
   }
 
   toFloat32(): number {
-    return fl._scalar.native(this.ptr)
+    return fl._float32Scalar.native(this.ptr)
+  }
+
+  toFloat64(): number {
+    return fl._float64Scalar.native(this.ptr)
+  }
+
+  toBoolInt8(): number {
+    return fl._boolInt8Scalar.native(this.ptr)
+  }
+
+  toInt16(): number {
+    return fl._int16Scalar.native(this.ptr)
+  }
+
+  toInt32(): number {
+    return fl._int32Scalar.native(this.ptr)
+  }
+
+  toBigInt64(): bigint {
+    return fl._int64Scalar.native(this.ptr)
+  }
+
+  toUint8(): number {
+    return fl._uint8Scalar.native(this.ptr)
+  }
+
+  toUint16(): number {
+    return fl._uint16Scalar.native(this.ptr)
+  }
+
+  toUint32(): number {
+    return fl._uint32Scalar.native(this.ptr)
+  }
+
+  toBigUint64(): bigint {
+    return fl._uint64Scalar.native(this.ptr)
   }
 
   /** @private */
