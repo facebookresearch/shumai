@@ -209,7 +209,8 @@ op_aliases = {
   "greaterThan": ["gt"],
   "greaterThanEqual": ["gte"],
   "var": ["variance"],
-  "norm": ["normalize"]
+  "norm": ["normalize"],
+  "concatenate": ["concat"],
 }
 
 # ops that need inputs transposed to work correctly
@@ -566,7 +567,10 @@ for op, args, ret in op_list:
     if supports_method:
         if op in comments:
             full_js_types.append(comments[op][1])
-        full_js_types.append(f"  {op}({', '.join(ts_sig[1:])}) : {to_ts[ret]};")
+        full_js_types.append(f"  {valid_js(op)}({', '.join(ts_sig[1:])}) : {to_ts[ret]};")
+        if op in op_aliases:
+            for alias in op_aliases[op]:
+                full_js_types.append(f"  {valid_js(alias)}({', '.join(ts_sig[1:])}) : {to_ts[ret]};")
     full_ffi.append(ffi)
     full_c.append(c)
 

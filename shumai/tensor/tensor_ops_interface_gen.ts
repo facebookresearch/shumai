@@ -108,6 +108,7 @@ interface TensorOpsInterface {
    *   @returns - A new {@link Tensor}
    */
   negative(): Tensor
+  negate(): Tensor
   /**
    *
    *   Take the logical `not` of every element in a tensor. There is a static function version of this method: {@link logicalNot}.
@@ -343,6 +344,7 @@ interface TensorOpsInterface {
    *   @returns - A new {@link Tensor}
    */
   absolute(): Tensor
+  abs(): Tensor
   /**
    *
    *   Calculate the sigmoid (logistic function) for each element in a {@link Tensor}. There is a static function version of this method: {@link sigmoid}.
@@ -398,9 +400,13 @@ interface TensorOpsInterface {
   eq(other: Tensor): Tensor
   neq(other: Tensor): Tensor
   lessThan(other: Tensor): Tensor
+  lt(other: Tensor): Tensor
   lessThanEqual(other: Tensor): Tensor
+  lte(other: Tensor): Tensor
   greaterThan(other: Tensor): Tensor
+  gt(other: Tensor): Tensor
   greaterThanEqual(other: Tensor): Tensor
+  gte(other: Tensor): Tensor
   logicalOr(other: Tensor): Tensor
   logicalAnd(other: Tensor): Tensor
   mod(other: Tensor): Tensor
@@ -413,6 +419,7 @@ interface TensorOpsInterface {
   maximum(other: Tensor): Tensor
   power(other: Tensor): Tensor
   matmul(other: Tensor): Tensor
+  mm(other: Tensor): Tensor
   conv2d(
     weights: Tensor,
     sx?: number,
@@ -431,9 +438,11 @@ interface TensorOpsInterface {
   cumsum(axis: number): Tensor
   mean(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   median(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
-  var(axes?: BigInt64Array | number[], bias?: boolean, keep_dims?: boolean): Tensor
+  _var(axes?: BigInt64Array | number[], bias?: boolean, keep_dims?: boolean): Tensor
+  variance(axes?: BigInt64Array | number[], bias?: boolean, keep_dims?: boolean): Tensor
   std(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   norm(axes?: BigInt64Array | number[], p?: number, keep_dims?: boolean): Tensor
+  normalize(axes?: BigInt64Array | number[], p?: number, keep_dims?: boolean): Tensor
   countNonzero(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   any(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
   all(axes?: BigInt64Array | number[], keep_dims?: boolean): Tensor
