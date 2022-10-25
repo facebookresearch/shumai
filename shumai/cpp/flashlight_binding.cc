@@ -450,6 +450,18 @@ float* _float64Buffer(void* t) {
   }
 }
 
+int* _boolInt8Buffer(void* t) {
+  try {
+    LOCK_GUARD
+    auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+    return tensor->astype(fl::dtype::b8).host<int>();
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e.what());
+  } catch (...) {
+    HANDLE_EXCEPTION("[unknown]");
+  }
+}
+
 int* _int16Buffer(void* t) {
   try {
     LOCK_GUARD
@@ -534,10 +546,64 @@ unsigned* _uint64Buffer(void* t) {
   }
 }
 
-float _scalar(void* t) {
+float _float32Scalar(void* t) {
   LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
   return tensor->scalar<float>();
+}
+
+float _float64Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<float>();
+}
+
+char _boolInt8Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<char>();
+}
+
+int16_t _int16Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<int16_t>();
+}
+
+int32_t _int32Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<int32_t>();
+}
+
+int64_t _int64Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<int64_t>();
+}
+
+uint8_t _uint8Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<uint8_t>();
+}
+
+uint16_t _uint16Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<uint16_t>();
+}
+
+uint32_t _uint32Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<uint32_t>();
+}
+
+uint64_t _uint64Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->scalar<uint64_t>();
 }
 
 void* _index(void* t,
