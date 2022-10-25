@@ -36,11 +36,11 @@ export function remote_runner(url) {
 
     logs: get_logs,
 
-    async load(file) {
+    async import(file) {
       const bundled = await run(
         `esbuild --target=esnext --format=esm --platform=node --external:bun* --external:@shumai* --bundle ${file}`
       )
-      await fetch(`${url}/load`, {
+      await fetch(`${url}/import`, {
         method: 'POST',
         body: bundled
       })
@@ -60,7 +60,7 @@ export function serve_runner() {
       const cmd = await req.text()
       return new Response((await run(cmd))[0])
     },
-    async load(req: Request) {
+    async import(req: Request) {
       if (bg_run) {
         console.log(`killing old server, pid=${bg_run.pid}`)
         try {
@@ -72,8 +72,16 @@ export function serve_runner() {
       }
       const file = await req.text()
       await Bun.write(`entry.ts`, file)
+      await Bun.write(
+        `runner.ts`,
+        `
+import * as sm from '@shumai/shumai'
+const m = await import('./entry.ts')
+sm.io.serve_model(m.default, m.backward, m.options)
+`
+      )
       console.log('receieved new server file')
-      bg_run = spawn(['bun', 'entry.ts'], {
+      bg_run = spawn(['bun', 'runner.ts'], {
         stdout: Bun.file('stdout.log'),
         stderr: Bun.file('stderr.log')
       })

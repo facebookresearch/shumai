@@ -447,7 +447,8 @@ export function serve_model(
       return ret
     }
   }
-  console.log('serving...')
+  const port = options && options.port ? options.port : 3000
+  console.log(`serving on port ${port}`)
   serve(
     {
       ...base_req_map,

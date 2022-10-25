@@ -1,9 +1,12 @@
 import * as sm from '@shumai/shumai'
 
-const w = sm.randn([128]).requireGrad()
+const w = sm.full([128, 128], 4).requireGrad()
 
-const f = (x) => {
-  return x.mul(w)
+function f(x) {
+  return x.matmul(w).maximum(sm.scalar(0))
 }
 
-sm.io.serve_model(f, sm.optim.sgd, { port: 3001 })
+const options = { port: 3001 }
+const backward = sm.optim.sgd
+
+export { f as default, backward, options }

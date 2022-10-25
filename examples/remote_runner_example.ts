@@ -3,10 +3,13 @@ import * as sm from '@shumai/shumai'
 const rr = sm.util.remote_runner('127.0.0.1:3113')
 
 const $ = rr.shell
+console.log(await $`hostname`)
 console.log(await $`pwd`)
+console.log(await $`ls -lah`)
 
-const f = await rr.load('./model.ts')
+const f = await rr.import('./examples/model.ts')
 const x = sm.full([128], 1)
+x.requires_stats = true
 let y = await f(x)
 
 const log = () => {
