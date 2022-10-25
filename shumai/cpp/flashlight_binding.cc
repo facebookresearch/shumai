@@ -4,7 +4,6 @@
 #include <iostream>
 #include "flashlight/fl/autograd/Functions.h"
 #include "flashlight/fl/autograd/tensor/AutogradExtension.h"
-#include "flashlight/fl/autograd/tensor/AutogradExtensionBackends.h"
 #include "flashlight/fl/autograd/tensor/AutogradOps.h"
 #include "flashlight/fl/common/DynamicBenchmark.h"
 #include "flashlight/fl/nn/Init.h"
@@ -712,11 +711,9 @@ void* _conv2dBackwardData(void* grad_in,
 
     auto payload = std::make_shared<fl::detail::AutogradPayload>();
     std::shared_ptr<fl::DynamicBenchmark> dataBench;
-    auto result =
-        used_in->backend()
-            .getExtension<fl::AutogradExtension>()
-            .conv2dBackwardData(*used_grad_in, *used_in, *used_wt, sx, sy, px,
-                                py, dx, dy, groups, dataBench, payload);
+    auto result = fl::detail::conv2dBackwardData(
+        *used_grad_in, *used_in, *used_wt, sx, sy, px, py, dx, dy, groups,
+        dataBench, payload);
 
     g_bytes_used += result.bytes();
     return new fl::Tensor(result);
