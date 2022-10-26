@@ -7,6 +7,75 @@ import { Module } from './module'
 
 const sm = { ...ops, ...tensor, util }
 
+export class TransformerPositionalEncoding extends Module {
+  static readonly DEFAULT_SEQUENCE_LENGTH = 256
+  static readonly ENCODING_BASE = 10000
+
+  private dim: number
+  private sequenceLength: number
+  private encodingFactors: Tensor
+  private encoding: Tensor
+
+  constructor(dim: number, sequenceLength?: number) {
+    super()
+
+    if (dim <= 0) {
+      throw new Error(`Module dimension must be > 0: got ${dim}`)
+    }
+
+    this.dim = dim
+    if (sequenceLength === undefined) {
+      this.sequenceLength = TransformerPositionalEncoding.DEFAULT_SEQUENCE_LENGTH
+    } else if (sequenceLength <= 0) {
+      throw new Error(`Initial sequenceLength must be > 0: got ${sequenceLength}`)
+    } else {
+      this.sequenceLength = sequenceLength
+    }
+
+    // base and numerator must be full([1], x) instead of scalar(x)
+    // Otherwise, if the other operand has shape [1], the result will be reduced to scalar
+    const base = sm.full([1], TransformerPositionalEncoding.ENCODING_BASE)
+    const numerator = sm.full([1], 1)
+    const denominator = sm.scalar(this.dim)
+    const evenDims = sm.arange(0, this.dim + 1, 2)
+    this.encodingFactors = numerator.div(base.power(evenDims.div(denominator))) // shape [floor((dim + 1) / 2)]
+
+    this.encoding = this.calculate(0, this.sequenceLength) // shape [sequenceLength, dim]
+  }
+
+  calculate(start: number, end: number): Tensor {
+    const length = end - start
+    const pairedDim = this.encodingFactors.shape[0]
+    const pos = sm.arange(start, end).reshape([length, 1])
+
+    const evenEncoding = sm.sin(pos.mul(this.encodingFactors)).reshape([length, pairedDim, 1])
+    const oddEncoding = sm.cos(pos.mul(this.encodingFactors)).reshape([length, pairedDim, 1])
+    let encoding = sm.concatenate([evenEncoding, oddEncoding], -1) // shape [length, pairedDim, 2]
+    encoding = encoding.reshape([length, pairedDim * 2])
+
+    if (this.dim % 2 !== 0) {
+      encoding = encoding.index([':', `:${this.dim}`]).reshape([length, this.dim])
+      // reshape is necessary to preserve the last axis if this.dim is 1
+    }
+
+    return encoding
+  }
+
+  forward(sequenceLength: number): Tensor {
+    if (sequenceLength > this.sequenceLength) {
+      const extension = this.calculate(this.sequenceLength, sequenceLength)
+      this.encoding = sm.concatenate([this.encoding, extension], 0)
+      this.sequenceLength = sequenceLength
+    }
+
+    if (sequenceLength === this.sequenceLength) {
+      return this.encoding
+    } else {
+      return this.encoding.index([`:${sequenceLength}`, ':'])
+    }
+  }
+}
+
 function checkAttentionInputs(
   attentionDim: number,
   queries: Tensor,
