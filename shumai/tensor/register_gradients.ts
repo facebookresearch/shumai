@@ -3,9 +3,11 @@ import type { Tensor } from './tensor'
 import * as ops from './tensor_ops'
 const sm = { ...base, ...ops }
 
+type ArgType = Tensor | number | number[] | BigInt64Array | boolean
+
 export interface Grad {
   idx: number
-  in: [Tensor, Tensor | number[], ...number[]]
+  in: [Tensor, ...ArgType[]]
   grad_in: Tensor
   out: Tensor
 }
@@ -121,6 +123,9 @@ const impls = {
       return possiblyReduce(go.negative().mul(recip), grad)
     }
   },
+  sqrt: (grad: Grad): Tensor => {
+    return grad.grad_in.div(grad.out.mul(sm.scalar(2)))
+  },
   exp: (grad: Grad) => {
     return sm.exp(grad.in[0])
   },
@@ -154,6 +159,28 @@ const impls = {
     }
 
     return recoverShape(grad.grad_in.div(sm.scalar(num)), inShape, axes)
+  },
+  var: (grad: Grad) => {
+    const input = <Tensor>grad.in[0]
+    const inShape = input.shape
+    let axes = <number[]>grad.in[1]
+    if (axes.length === 0) {
+      axes = inShape.map((x, i) => i)
+    }
+
+    const bias = <boolean>grad.in[2]
+    let num = 1
+    for (const axis of axes) {
+      num *= inShape[axis]
+    }
+    if (bias) {
+      num -= 1
+    }
+
+    const expandedGradIn = recoverShape(grad.grad_in, inShape, axes)
+    const expandedMean = recoverShape(input.mean(axes), inShape, axes)
+
+    return expandedGradIn.mul(sm.scalar(2 / num)).mul(input.sub(expandedMean))
   },
   mul: (grad: Grad) => {
     const grad_idx = <0 | 1>(1 - grad.idx)

@@ -1,6 +1,6 @@
 import * as sm from '@shumai/shumai'
 
-const url = '0.0.0.0:3000'
+const url = '127.0.0.1:3001'
 const model = sm.io.remote_model(url)
 
 const ref_weight = sm.full([128, 8], 1)
