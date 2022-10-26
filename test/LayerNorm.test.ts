@@ -1,5 +1,5 @@
-import { expect, describe, it } from 'bun:test'
 import * as sm from '@shumai/shumai'
+import { describe, expect, it } from 'bun:test'
 import { areSameShape, expectArraysClose, expectThrows } from './utils'
 
 function stddev(vals: number[]): number {

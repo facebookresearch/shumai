@@ -20,16 +20,17 @@
     "ai"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
-    "bun-types": "^0.2.0",
-    "eslint": "^8.25.0",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "bun-types": "^0.2.1",
+    "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "prettier": "^2.7.1",
-    "typescript": "^4.8.4",
     "typedoc": "^0.23.14",
-    "typedoc-plugin-katex": "^0.1.2"
+    "typedoc-plugin-katex": "^0.1.2",
+    "typescript": "^4.8.4"
   },
   "optionalDependencies": {
     "@shumai/darwin_arm64_shumai_flashlight": "latest",

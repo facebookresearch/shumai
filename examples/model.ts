@@ -9,4 +9,4 @@ function f(x) {
 const options = { port: 3001 }
 const backward = sm.optim.sgd
 
-export { f as default, backward, options }
+export { backward, f as default, options }

@@ -1,6 +1,6 @@
 import * as sm from '@shumai/shumai'
-import { it, expect, describe } from 'bun:test'
-import { isShape, isClose, areSameShape } from './utils'
+import { describe, expect, it } from 'bun:test'
+import { areSameShape, isClose, isShape } from './utils'
 
 describe('index', () => {
   it('single element 1D', () => {

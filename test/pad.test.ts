@@ -1,6 +1,6 @@
 import * as sm from '@shumai/shumai'
-import { it, expect, describe } from 'bun:test'
-import { isShape, expectArraysClose } from './utils'
+import { describe, expect, it } from 'bun:test'
+import { expectArraysClose, isShape } from './utils'
 
 describe('pad', () => {
   it('basic', () => {

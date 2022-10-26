@@ -1,6 +1,6 @@
-import { expect, describe, it } from 'bun:test'
 import * as sm from '@shumai/shumai'
-import { expectArraysClose, expectThrows, nativeError, isClose, isShape } from './utils'
+import { describe, expect, it } from 'bun:test'
+import { expectArraysClose, expectThrows, isClose, isShape, nativeError } from './utils'
 
 describe('softmax', () => {
   it('scalar positive any axis', () => {

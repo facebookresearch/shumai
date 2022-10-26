@@ -1,5 +1,5 @@
-import { ptr } from 'bun:ffi'
 import { Tensor } from '@shumai/shumai'
+import { ptr } from 'bun:ffi'
 
 function arrayArg(arg: number | number[] | Tensor[] | BigInt64Array) {
   if (typeof arg === 'number') arg = [arg]

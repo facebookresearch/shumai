@@ -1,10 +1,9 @@
-import * as ops from '../tensor/tensor_ops'
-import * as tensor from '../tensor/tensor'
-import * as util from '../util'
-
-import { Module } from './module'
-import { Linear } from './linear'
 import type { Tensor } from '../tensor'
+import * as tensor from '../tensor/tensor'
+import * as ops from '../tensor/tensor_ops'
+import * as util from '../util'
+import { Linear } from './linear'
+import { Module } from './module'
 
 const sm = { ...ops, ...tensor, util }
 
