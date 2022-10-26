@@ -677,6 +677,11 @@ export class Tensor {
   }
 
   T(): Tensor {
+    if (this.shape.length === 0) {
+      return this
+    } else if (this.shape.length === 1) {
+      return this.reshape([this.shape[0], 1])
+    }
     const axes = this.shape.map((x, i) => i)
     axes[axes.length - 1] = axes.length - 2
     axes[axes.length - 2] = axes.length - 1
