@@ -16,7 +16,7 @@ const loss_print = () => {
   }
 }
 
-for (const _ of sm.util.viter(1000000, loss_print)) {
+for (const _ of sm.util.viter(10000, loss_print)) {
   const input = sm.randn([1, 8])
   input.requires_stats = true
   const out_ref = model_ref(input)
