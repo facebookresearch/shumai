@@ -1,6 +1,6 @@
 {
   "name": "@shumai/shumai",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "module": "shumai/index.ts",
   "type": "module",
   "scripts": {
@@ -34,6 +34,8 @@
   "optionalDependencies": {
     "@shumai/darwin_arm64_shumai_flashlight": "latest",
     "@shumai/darwin_x64_shumai_flashlight": "latest",
-    "@shumai/linux_x64_shumai_flashlight": "latest"
+    "@shumai/linux_arm64_shumai_flashlight_cpu": "latest",
+    "@shumai/linux_x64_shumai_flashlight": "latest",
+    "@shumai/linux_x64_shumai_flashlight_cpu": "latest"
   }
 }
