@@ -1,6 +1,6 @@
-import { it, describe, expect } from 'bun:test'
+import { it, describe } from 'bun:test'
 import * as sm from '@shumai/shumai'
-import { expectArraysClose, isShape } from './utils'
+import { expectArraysClose } from './utils'
 
 describe('activations', () => {
   it('relu negative', () => {

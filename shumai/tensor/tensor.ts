@@ -8,6 +8,7 @@ import * as ops from './tensor_ops'
 import { getStack, collectStats } from './stats'
 import type { OpStats } from '../io'
 import { Grad } from './register_gradients'
+import { Float16Array } from '../util'
 export { NATIVE_FILE } from '../ffi/ffi_flashlight'
 
 fl.init.native()
@@ -304,6 +305,12 @@ export class Tensor {
       this._injest_ptr(fl.load(cstr_buffer, cstr_buffer.length))
       return
     }
+    if (obj instanceof Float16Array) {
+      const len_ = obj.length
+      const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
+      this._injest_ptr(fl.tensorFromFloat16Buffer.native(len, ptr(obj)))
+      return
+    }
     if (obj.constructor === Float32Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
@@ -434,6 +441,11 @@ export class Tensor {
 
   valueOf() {
     switch (this.dtype) {
+      case dtype.Float16:
+        console.warn(
+          'Float16Arrays are not natively supported by Bun, this will be polyfilled with a Float32Array'
+        )
+        return this.elements == 1 ? this.toFloat16() : this.toFloat16Array()
       case dtype.Float32:
         return this.elements == 1 ? this.toFloat32() : this.toFloat32Array()
       case dtype.Float64:
@@ -504,13 +516,11 @@ export class Tensor {
     return Number(fl._elements.native(this.ptr))
   }
 
-  /* TODO: https://github.com/facebookresearch/shumai/issues/54
-    toFloat16Array() {
-      const contig = this.asContiguousTensor()
-      const elems = contig.elements
-      return new Float32Array(toArrayBuffer(fl._float16Buffer.native(contig.ptr), 0, elems * 2))
-    }
-  */
+  toFloat16Array() {
+    const contig = this.asContiguousTensor()
+    const elems = contig.elements
+    return new Float16Array(toArrayBuffer(fl._float16Buffer.native(contig.ptr), 0, elems * 4))
+  }
 
   toFloat32Array() {
     const contig = this.asContiguousTensor()
@@ -570,6 +580,10 @@ export class Tensor {
     const contig = this.asContiguousTensor()
     const elems = contig.elements
     return new BigUint64Array(toArrayBuffer(fl._uint64Buffer.native(contig.ptr), 0, elems * 8))
+  }
+
+  toFloat16() {
+    return fl._float16Scalar.native(this.ptr)
   }
 
   toFloat32(): number {

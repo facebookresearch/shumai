@@ -56,6 +56,10 @@ const ffi_tensor = {
   genTensorDestroyer: {
     returns: FFIType.ptr
   },
+  tensorFromFloat16Buffer: {
+    args: [FFIType.i64, FFIType.ptr],
+    returns: FFIType.ptr
+  },
   tensorFromFloat32Buffer: {
     args: [FFIType.i64, FFIType.ptr],
     returns: FFIType.ptr
@@ -206,6 +210,10 @@ const ffi_tensor = {
   _copy: {
     args: [FFIType.ptr],
     returns: FFIType.ptr
+  },
+  _float16Scalar: {
+    args: [FFIType.ptr],
+    returns: FFIType.float
   },
   _float32Scalar: {
     args: [FFIType.ptr],
