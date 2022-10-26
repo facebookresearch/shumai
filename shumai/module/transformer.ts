@@ -4,6 +4,8 @@ import * as ops from '../tensor/tensor_ops'
 import * as util from '../util'
 import { Linear } from './linear'
 import { Module } from './module'
+import { LayerNorm } from './norm'
+import { Sequential } from './sequential'
 
 const sm = { ...ops, ...tensor, util }
 
@@ -253,6 +255,108 @@ class FeedForward extends Module {
     // shape [..., dim]
     let output = this.affineIn(input).relu() // shape [..., hiddenDim]
     output = this.affineOut(output) // shape [..., dim]
+    return output
+  }
+}
+
+export class TransformerEncoderLayer extends Module {
+  private dim: number
+  private heads: number
+  private attentionDim: number
+  private feedForwardDim: number
+  private mha: TransformerMultiheadAttention
+  private mhaNorm: LayerNorm
+  private ff: FeedForward
+  private ffNorm: LayerNorm
+
+  constructor(dim: number, heads: number, attentionDim?: number, feedForwardDim?: number) {
+    super()
+
+    this.dim = dim
+    this.heads = heads
+    if (attentionDim === undefined) {
+      this.attentionDim = dim
+    } else {
+      this.attentionDim = attentionDim
+    }
+    if (feedForwardDim === undefined) {
+      this.feedForwardDim = dim
+    } else {
+      this.feedForwardDim = feedForwardDim
+    }
+
+    this.mha = new TransformerMultiheadAttention(this.dim, this.heads, this.attentionDim)
+    this.mhaNorm = new LayerNorm([this.dim])
+    this.ff = new FeedForward(this.dim, this.feedForwardDim)
+    this.ffNorm = new LayerNorm([this.dim])
+  }
+
+  forward(input: Tensor): Tensor {
+    // shape [..., tokens, dim]
+    let mhaOutput = this.mha(input, input, input) // shape [..., tokens, dim]
+    mhaOutput = this.mhaNorm(input.add(mhaOutput))
+
+    let ffOutput = this.ff(mhaOutput) // shape [..., tokens, dim]
+    ffOutput = this.ffNorm(mhaOutput.add(ffOutput))
+
+    return ffOutput
+  }
+}
+
+export class TransformerEncoder extends Module {
+  private dim: number
+  private heads: number
+  private depth: number
+  private attentionDim: number
+  private feedForwardDim: number
+  private positional: TransformerPositionalEncoding
+  private layers: Sequential
+
+  constructor(
+    dim: number,
+    heads: number,
+    depth: number,
+    attentionDim?: number,
+    feedForwardDim?: number,
+    initSequenceLength?: number
+  ) {
+    super()
+
+    this.dim = dim
+    this.heads = heads
+    this.depth = depth
+    if (attentionDim === undefined) {
+      this.attentionDim = dim
+    } else {
+      this.attentionDim = attentionDim
+    }
+    if (feedForwardDim === undefined) {
+      this.feedForwardDim = dim
+    } else {
+      this.feedForwardDim = feedForwardDim
+    }
+
+    if (feedForwardDim === undefined) {
+      this.positional = new TransformerPositionalEncoding(this.dim)
+    } else {
+      this.positional = new TransformerPositionalEncoding(this.dim, initSequenceLength)
+    }
+
+    const layers: TransformerEncoderLayer[] = []
+    for (let i = 0; i < this.depth; i++) {
+      layers.push(
+        new TransformerEncoderLayer(this.dim, this.heads, this.attentionDim, this.feedForwardDim)
+      )
+    }
+    this.layers = new Sequential(...layers)
+  }
+
+  forward(input: Tensor): Tensor {
+    // shape [..., tokens, dim]
+    const positionalEncoding = this.positional(input.shape[input.shape.length - 2]) // shape [tokens, dim]
+
+    let output = input.add(positionalEncoding) // shape [..., tokens, dim]
+    output = this.layers(output) // shape [..., tokens, dim]
     return output
   }
 }
