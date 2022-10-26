@@ -10,7 +10,7 @@ export class Linear extends Module {
   constructor(inp_dim: number, out_dim: number) {
     super()
     this.weight = sm.randn([inp_dim, out_dim])
-    this.bias = sm.randn([1, out_dim])
+    this.bias = sm.randn([out_dim])
     this.weight.requires_grad = true
     this.bias.requires_grad = true
   }
