@@ -108,6 +108,21 @@ void* createTensor(void* shape_ptr, int64_t shape_len) {
   }
 }
 
+void* tensorFromFloat16Buffer(int64_t numel, void* ptr) {
+  try {
+    LOCK_GUARD
+    auto* t = new fl::Tensor(
+        fl::Tensor::fromBuffer({numel}, (float*)ptr, fl::MemoryLocation::Host)
+            .astype(fl::dtype::f16));
+    g_bytes_used += t->bytes();
+    return t;
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e.what());
+  } catch (...) {
+    HANDLE_EXCEPTION("[unknown]");
+  }
+}
+
 void* tensorFromFloat32Buffer(int64_t numel, void* ptr) {
   try {
     LOCK_GUARD
@@ -419,7 +434,7 @@ float* _float16Buffer(void* t) {
   try {
     LOCK_GUARD
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-    return tensor->astype(fl::dtype::f16).host<float>();
+    return tensor->astype(fl::dtype::f32).host<float>();
   } catch (std::exception const& e) {
     HANDLE_EXCEPTION(e.what());
   } catch (...) {
@@ -545,6 +560,12 @@ unsigned* _uint64Buffer(void* t) {
   } catch (...) {
     HANDLE_EXCEPTION("[unknown]");
   }
+}
+
+float _float16Scalar(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  return tensor->asScalar<float>();
 }
 
 float _float32Scalar(void* t) {
