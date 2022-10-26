@@ -86,10 +86,6 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
   return t
 }
 
-export function scalar(s: number): Tensor {
-  return full([], s)
-}
-
 function traverse_gradients(
   sorted_traversal: Tensor[],
   jacobian: Tensor
@@ -689,6 +685,14 @@ export class Tensor {
 
   softmax(axis: number): Tensor {
     return ops.softmax(this, axis)
+  }
+
+  relu(): Tensor {
+    return ops.relu(this)
+  }
+
+  leakyRelu(negative_slope: number): Tensor {
+    return ops.leakyRelu(this, negative_slope)
   }
 }
 
