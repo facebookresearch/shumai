@@ -1,6 +1,117 @@
 import * as sm from '@shumai/shumai'
 import { describe, expect, it } from 'bun:test'
-import { areSameShape, expectArraysClose, expectThrows } from './utils'
+import { areSameShape, expectArraysClose, expectThrows, isShape } from './utils'
+
+describe('TransformerPositionalEncoding', () => {
+  it('dim=1', () => {
+    const module = new sm.module.TransformerPositionalEncoding(1)
+
+    const result = module(3)
+    const expected = [0, 1, 2].map((x) => Math.sin(x))
+    expect(isShape(result, [3, 1])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('dim=2', () => {
+    const module = new sm.module.TransformerPositionalEncoding(2)
+
+    const result = module(3)
+    const expected = [0, 0, 1, 1, 2, 2].map((x, i) => (i % 2 ? Math.cos(x) : Math.sin(x)))
+    expect(isShape(result, [3, 2])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('dim=3', () => {
+    const dim = 3
+    const module = new sm.module.TransformerPositionalEncoding(dim)
+
+    const result = module(3)
+    const expected = [0, 0, 0, 1, 1, 1, 2, 2, 2].map((x, i) =>
+      ((i % dim) % 2 ? Math.cos : Math.sin)(
+        x /
+          Math.pow(
+            sm.module.TransformerPositionalEncoding.ENCODING_BASE,
+            ((i % dim) - ((i % dim) % 2 ? 1 : 0)) / dim
+          )
+      )
+    )
+    expect(isShape(result, [3, dim])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('dim=4', () => {
+    const dim = 4
+    const module = new sm.module.TransformerPositionalEncoding(dim)
+
+    const result = module(3)
+    const expected = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2].map((x, i) =>
+      ((i % dim) % 2 ? Math.cos : Math.sin)(
+        x /
+          Math.pow(
+            sm.module.TransformerPositionalEncoding.ENCODING_BASE,
+            ((i % dim) - ((i % dim) % 2 ? 1 : 0)) / dim
+          )
+      )
+    )
+    expect(isShape(result, [3, dim])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('init sequence length, dim=4', () => {
+    const dim = 4
+    const module = new sm.module.TransformerPositionalEncoding(dim, dim)
+
+    const result = module(3)
+    const expected = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2].map((x, i) =>
+      ((i % dim) % 2 ? Math.cos : Math.sin)(
+        x /
+          Math.pow(
+            sm.module.TransformerPositionalEncoding.ENCODING_BASE,
+            ((i % dim) - ((i % dim) % 2 ? 1 : 0)) / dim
+          )
+      )
+    )
+    expect(isShape(result, [3, dim])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('extends sequence length, dim=4', () => {
+    const dim = 4
+    const module = new sm.module.TransformerPositionalEncoding(dim, 2)
+
+    const result = module(3)
+    const expected = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2].map((x, i) =>
+      ((i % dim) % 2 ? Math.cos : Math.sin)(
+        x /
+          Math.pow(
+            sm.module.TransformerPositionalEncoding.ENCODING_BASE,
+            ((i % dim) - ((i % dim) % 2 ? 1 : 0)) / dim
+          )
+      )
+    )
+    expect(isShape(result, [3, dim])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('dim=0 is invalid', () => {
+    expectThrows(
+      () => new sm.module.TransformerPositionalEncoding(0),
+      new RegExp('dimension must be > 0')
+    )
+  })
+  it('dim=-1 is invalid', () => {
+    expectThrows(
+      () => new sm.module.TransformerPositionalEncoding(-1),
+      new RegExp('dimension must be > 0')
+    )
+  })
+  it('0 init sequenceLength is invalid', () => {
+    expectThrows(
+      () => new sm.module.TransformerPositionalEncoding(3, 0),
+      new RegExp('sequenceLength must be > 0')
+    )
+  })
+  it('-1 init sequenceLength is invalid', () => {
+    expectThrows(
+      () => new sm.module.TransformerPositionalEncoding(3, -1),
+      new RegExp('sequenceLength must be > 0')
+    )
+  })
+})
 
 describe('TransformerDotProductAttention', () => {
   it('single matching token', () => {
