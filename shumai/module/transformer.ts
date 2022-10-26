@@ -230,3 +230,29 @@ export class TransformerMultiheadAttention extends Module {
     return output
   }
 }
+
+class FeedForward extends Module {
+  private dim: number
+  private hiddenDim: number
+  private affineIn: Linear
+  private affineOut: Linear
+
+  constructor(dim: number, hiddenDim?: number) {
+    super()
+    this.dim = dim
+    if (hiddenDim === undefined) {
+      this.hiddenDim = dim
+    } else {
+      this.hiddenDim = hiddenDim
+    }
+    this.affineIn = new Linear(this.dim, this.hiddenDim)
+    this.affineOut = new Linear(this.hiddenDim, this.dim)
+  }
+
+  forward(input: Tensor): Tensor {
+    // shape [..., dim]
+    let output = this.affineIn(input).relu() // shape [..., hiddenDim]
+    output = this.affineOut(output) // shape [..., dim]
+    return output
+  }
+}
