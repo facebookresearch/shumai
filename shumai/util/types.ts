@@ -10,3 +10,5 @@ export type ArrayLike =
   | Uint32Array
   | BigUint64Array
   | number[]
+
+export class Float16Array extends Float32Array {}

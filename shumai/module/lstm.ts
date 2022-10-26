@@ -20,16 +20,16 @@ export class LSTM extends Module {
     super()
     this.W_f = sm.randn([inp_dim, out_dim])
     this.U_f = sm.randn([out_dim, out_dim])
-    this.b_f = sm.randn([1, out_dim])
+    this.b_f = sm.randn([out_dim])
     this.W_i = sm.randn([inp_dim, out_dim])
     this.U_i = sm.randn([out_dim, out_dim])
-    this.b_i = sm.randn([1, out_dim])
+    this.b_i = sm.randn([out_dim])
     this.W_o = sm.randn([inp_dim, out_dim])
     this.U_o = sm.randn([out_dim, out_dim])
-    this.b_o = sm.randn([1, out_dim])
+    this.b_o = sm.randn([out_dim])
     this.W_c = sm.randn([inp_dim, out_dim])
     this.U_c = sm.randn([out_dim, out_dim])
-    this.b_c = sm.randn([1, out_dim])
+    this.b_c = sm.randn([out_dim])
   }
 
   forward(x: Tensor, h: Tensor, c: Tensor): [Tensor, Tensor] {
