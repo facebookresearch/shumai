@@ -131,11 +131,23 @@ const impls = {
   },
   matmul: (grad: Grad) => {
     if (grad.idx === 0) {
-      const yT = (<Tensor>grad.in[1]).T()
-      return grad.grad_in.matmul(yT)
+      const y = <Tensor>grad.in[1]
+      if (grad.grad_in.shape.length === 1 && y.shape.length === 1) {
+        // grad_in and y are 1D column vectors
+        const expandedGradIn = grad.grad_in.reshape([grad.grad_in.shape[0], 1])
+        const expandedY = y.reshape([y.shape[0], 1])
+        return expandedGradIn.matmul(expandedY.T())
+      }
+      return grad.grad_in.matmul(y.T()) // this is 1D if grad_in is a 1D row vector
     } else if (grad.idx === 1) {
-      const xT = (<Tensor>grad.in[0]).T()
-      return xT.matmul(grad.grad_in)
+      const x = <Tensor>grad.in[0]
+      if (grad.grad_in.shape.length === 1 && x.shape.length === 1) {
+        // grad_in and x are 1D row vectors
+        const expandedGradIn = grad.grad_in.reshape([1, grad.grad_in.shape[0]])
+        const expandedX = x.reshape([1, x.shape[0]])
+        return expandedX.T().matmul(expandedGradIn)
+      }
+      return x.T().matmul(grad.grad_in) // this is 1D if grad_in is a 1D column vector
     } else {
       throw new Error(`Invalid Grad argument`)
     }
