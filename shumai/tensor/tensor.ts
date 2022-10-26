@@ -442,6 +442,9 @@ export class Tensor {
   valueOf() {
     switch (this.dtype) {
       case dtype.Float16:
+        console.warn(
+          'Float16Arrays are not natively supported by Bun, this will be polyfilled with a Float32Array'
+        )
         return this.elements == 1 ? this.toFloat16() : this.toFloat16Array()
       case dtype.Float32:
         return this.elements == 1 ? this.toFloat32() : this.toFloat32Array()
