@@ -304,7 +304,8 @@ export class Tensor {
       return
     }
     if (typeof obj === 'string') {
-      this._injest_ptr(fl.load(new TextEncoder().encode(obj)))
+      const cstr_buffer = new TextEncoder().encode(obj)
+      this._injest_ptr(fl.load(cstr_buffer, cstr_buffer.length))
       return
     }
     if (obj.constructor === Float32Array) {
@@ -386,7 +387,8 @@ export class Tensor {
   }
 
   save(filename) {
-    return fl._save(this.ptr, new TextEncoder().encode(filename))
+    const cstr_buffer = new TextEncoder().encode(filename)
+    return fl._save(this.ptr, cstr_buffer, cstr_buffer.length)
   }
 
   astype(dtype: dtype) {
