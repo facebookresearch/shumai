@@ -68,20 +68,25 @@ export const isClose = (actual: number | bigint, expected: number | bigint, erro
   if (typeof actual !== typeof expected) return false
 
   if (typeof actual === 'bigint' && typeof expected === 'bigint') {
+    const factor = BigInt(10)
+    while (error.toString().includes('.')) {
+      error *= 10
+      actual *= factor
+      expected *= factor
+    }
     const upper = expected + BigInt(error),
       lower = expected - BigInt(error)
     if (actual < lower || actual > upper) {
       return false
     }
-    return true
   } else if (typeof actual === 'number' && typeof expected === 'number') {
     const upper = (expected as number) + error,
       lower = expected - error
     if (actual < lower || actual > upper) {
       return false
     }
-    return true
   }
+  return true
 }
 
 /* validates that actual && expected array are close (all values w/i given tolerance) */
