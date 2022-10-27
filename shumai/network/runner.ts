@@ -1,4 +1,4 @@
-import { run } from '../util'
+import { run, all } from '../util'
 import { remote_model } from './model'
 
 export function remote_runner(url) {
@@ -22,16 +22,16 @@ export function remote_runner(url) {
 
     logs: get_logs,
 
-    async import(file) {
+    async serve_model(file, port=3000) {
       const bundled = await run(
         `esbuild --target=esnext --format=esm --platform=node --external:bun* --external:@shumai* --bundle ${file}`
       )
-      await fetch(`${url}/import`, {
+      await fetch(`${url}/serve_model`, {
         method: 'POST',
         body: bundled
       })
       const chunks = url.split(':')
-      return remote_model(`${chunks[0]}:3001`, null, async (e) => {
+      return remote_model(`${chunks[0]}:${port}`, null, async (e) => {
         const logs = await get_logs()
         throw `Error using remote runner: ${e}, logs below:\n${logs.stderr}`
       })
@@ -46,7 +46,7 @@ export function serve_runner() {
       const cmd = await req.text()
       return new Response((await run(cmd))[0])
     },
-    async import(req: Request) {
+    async serve_model(req: Request) {
       if (bg_run) {
         console.log(`killing old server, pid=${bg_run.pid}`)
         try {
@@ -58,16 +58,9 @@ export function serve_runner() {
       }
       const file = await req.text()
       await Bun.write(`entry.ts`, file)
-      await Bun.write(
-        `runner.ts`,
-        `
-import * as sm from '@shumai/shumai'
-const m = await import('./entry.ts')
-sm.network.serve_model(m.default, m.backward, m.options)
-`
-      )
       console.log('receieved new server file')
-      bg_run = Bun.spawn(['bun', 'runner.ts'], {
+      // TODO find cleaner way to call `shumai serve_model`
+      bg_run = Bun.spawn(['bun', `${__dirname}/../run.ts`, 'serve_model', 'entry.ts'], {
         stdout: Bun.file('stdout.log'),
         stderr: Bun.file('stderr.log')
       })

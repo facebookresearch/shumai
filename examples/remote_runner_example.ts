@@ -7,7 +7,7 @@ console.log(await $`hostname`)
 console.log(await $`pwd`)
 console.log(await $`ls -lah`)
 
-const f = await rr.import('./examples/model.ts')
+const f = await rr.serve_model('./examples/model.ts')
 const x = sm.full([128], 1)
 x.requires_stats = true
 let y = await f(x)
