@@ -84,12 +84,12 @@ describe('Sequential', () => {
     expectArraysClose(result.toFloat32Array(), expected.toFloat32Array())
   })
   it('invalid number of args', () => {
-    const module = new sm.module.Linear(5, 3)
+    const module = new sm.module.LSTM(5, 3)
     const seq = new sm.module.Sequential(module)
     const tensor = sm.rand([5])
 
-    expectThrows(() => seq(), new RegExp('Module at index 0 expects .* arguments'))
-    expectThrows(() => seq(tensor, tensor), new RegExp('Module at index 0 expects .* arguments'))
+    expectThrows(() => seq())
+    expectThrows(() => seq(tensor))
   })
   it('invalid number of args between modules', () => {
     const module0 = new sm.module.Linear(5, 3)
@@ -97,7 +97,7 @@ describe('Sequential', () => {
     const seq = new sm.module.Sequential(module0, module1)
     const tensor = sm.rand([5])
 
-    expectThrows(() => seq(tensor), new RegExp('Module at index 1 expects .* arguments'))
+    expectThrows(() => seq(tensor))
   })
   it('invalid input tensor shape', () => {
     const module = new sm.module.Linear(5, 3)
