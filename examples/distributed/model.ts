@@ -1,7 +1,7 @@
 import * as sm from '@shumai/shumai'
 
-const model_a = sm.io.remote_model('0.0.0.0:3001')
-const model_b = sm.io.remote_model('0.0.0.0:3002')
+const model_a = sm.network.remote_model('0.0.0.0:3001')
+const model_b = sm.network.remote_model('0.0.0.0:3002')
 
 const model = async (t: sm.Tensor) => {
   t = await model_a(t)
@@ -9,7 +9,7 @@ const model = async (t: sm.Tensor) => {
   return t
 }
 
-sm.io.serve_model(
+sm.network.serve_model(
   model,
   sm.optim.sgd,
   { port: 3000 },

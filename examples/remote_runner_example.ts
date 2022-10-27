@@ -1,6 +1,6 @@
 import * as sm from '@shumai/shumai'
 
-const rr = sm.util.remote_runner('127.0.0.1:3113')
+const rr = sm.network.remote_runner('127.0.0.1:3113')
 
 const $ = rr.shell
 console.log(await $`hostname`)

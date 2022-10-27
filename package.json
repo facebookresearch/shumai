@@ -6,6 +6,9 @@
   "scripts": {
     "format": "eslint '**/*.{js,ts}' '*.{js,ts,cjs}' package.json --fix"
   },
+  "bin": {
+    "shumai": "./shumai/run.ts"
+  },
   "files": [
     "shumai/**/*.ts"
   ],

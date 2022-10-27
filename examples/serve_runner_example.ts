@@ -1,3 +1,3 @@
 import * as sm from '@shumai/shumai'
 
-sm.util.serve_runner()
+sm.network.serve_runner()

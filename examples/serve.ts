@@ -5,4 +5,4 @@ const model = (x) => {
   return x.matmul(W)
 }
 
-sm.io.serve_model(model, sm.optim.sgd)
+sm.network.serve_model(model, sm.optim.sgd)

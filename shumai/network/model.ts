@@ -1,181 +1,20 @@
 import type { Errorlike, Server } from 'bun'
 import * as crypto from 'crypto'
 import { OptimizerFn } from '../optim'
-import * as sm from '../tensor'
-import { sleep } from '../util'
-const _unique_id = crypto
-  .createHash('sha256')
-  .update('' + process.pid + performance.now())
-  .digest('hex')
-  .slice(0, 8)
-
-/** @private */
-export function encode(tensor: sm.Tensor): ArrayBuffer {
-  const shape = tensor.shape64
-  const provenance = tensor.provenance ? BigInt('0x' + tensor.provenance) : BigInt(0xffffffff)
-  const flags = (Number(tensor.requires_grad) & 0x1) | ((Number(tensor.requires_stats) & 0x1) << 1)
-  // meta_data: ndim, provenance, flags
-  const meta_data = new BigInt64Array([BigInt(shape.length), provenance, BigInt(flags)])
-  const meta_data_buf = new Uint8Array(meta_data.buffer)
-  const shape_buf = new Uint8Array(new BigInt64Array(shape).buffer)
-  const tensor_buf = new Uint8Array(tensor.toFloat32Array().buffer)
-  const buf = new Uint8Array(meta_data_buf.length + shape_buf.length + tensor_buf.length)
-  buf.set(meta_data_buf)
-  buf.set(shape_buf, meta_data_buf.length)
-  buf.set(tensor_buf, meta_data_buf.length + shape_buf.length)
-  return buf.buffer
-}
-
-/** @private */
-export function decodeBuffer(buf: ArrayBuffer) {
-  if (buf.byteLength < 16) {
-    throw 'buffer cannot be decoded, too short to parse'
-  }
-  // meta_data: ndim, provenance, flags
-  const meta_data_len = 3
-  const meta_data = new BigInt64Array(buf, 0, meta_data_len)
-  const shape_len = Number(meta_data[0])
-  const provenance = meta_data[1].toString(16)
-  const flags = Number(meta_data[2])
-  const requires_grad = flags & 0x1
-  const requires_stats = !!(flags & 0x2)
-  if (shape_len > buf.byteLength) {
-    throw `buffer cannot be decoded, invalid shape length: ${shape_len}`
-  }
-  const shape = new BigInt64Array(buf, 8 * meta_data_len, shape_len)
-  const t = sm.tensor(new Float32Array(buf, 8 * meta_data_len + 8 * shape_len)).reshape(shape)
-  t.op = 'network'
-  t.provenance = provenance ? provenance : null
-  t.requires_grad = !!requires_grad
-  t.requires_stats = !!requires_stats
-  return t
-}
-
-/** @private */
-export async function decode(obj: Response | ArrayBuffer) {
-  if (obj.constructor === Response || obj.constructor === Request) {
-    const buf = await obj.arrayBuffer()
-    return decodeBuffer(buf)
-  } else if (obj.constructor === ArrayBuffer) {
-    return decodeBuffer(obj)
-  } else {
-    throw new Error(`Could not decode object: ${obj}`)
-  }
-}
-
-/** @private */
-async function backoff(callback, error_handler?) {
-  let err = null
-  // 1 second of exponential backoff before error
-  for (let i = 0; i < 10; ++i) {
-    if (i) {
-      await sleep(Math.pow(2, i))
-    }
-    try {
-      return await callback()
-    } catch (e) {
-      err = e
-      if (!e.toString().includes('Connection')) {
-        break
-      }
-    }
-  }
-  if (error_handler) {
-    await error_handler(err)
-  } else {
-    throw `Error found after 10 attempts: ${err}`
-  }
-}
-
-/**
- * Similar to the Web standard {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch | fetch} API, this function enables asynchronous transfer of remote tensors.
- *
- * @example
- *
- * The function can be used with the `await` keyword:
- *
- * ```javascript
- * // input and output at once
- * const i = sm.randn([128])
- * const t = await sm.io.tfetch('localhost:3000', i)
- *
- * // no expected return value
- * await sm.io.tfetch('localhost:3000', i)
- *
- * // no input
- * const t = await sm.io.tfetch('localhost:3000')
- * ```
- *
- * or with a chained callbacks:
- *
- * ```javascript
- * sm.io.tfetch('localhost:3000', i).then((t) => {
- *   // t is a tensor or null
- *   if (t) {
- *     console.log(t.shape)
- *   }
- * }).catch((err) => {
- *   console.log('hit an error retrieving this tensor...')
- * })
- * ```
- *
- * @param url - The location to either send or request the tensor from.
- * @param tensor - An optional tensor that will be sent to the remote location.
- * @returns A tensor from the remote location or null (if the response is empty)
- */
-export async function tfetch(
-  url: string,
-  tensor?: sm.Tensor,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: { id?: string; grad_fn?: (grad?: any) => Promise<void | sm.Tensor> }
-): Promise<sm.Tensor> {
-  let id = _unique_id
-  if (options && options.id) {
-    id = options.id
-  }
-  const response = await (() => {
-    if (tensor) {
-      if (!tensor.provenance) {
-        tensor.provenance = id
-      }
-      return fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/octet-stream' },
-        body: encode(tensor)
-      })
-    } else {
-      return fetch(url)
-    }
-  })()
-  const buff = await response.arrayBuffer()
-  if (buff.byteLength) {
-    const t = await decode(buff).catch((err) => {
-      throw `tfetched result invalid: ${err}`
-    })
-    if (options && options.grad_fn) {
-      t.requires_grad = true
-      tensor.requires_grad = true
-      t.deps = [tensor]
-      t.grad_callback_async = options.grad_fn
-    }
-    return t
-  }
-  return null
-}
 
 /**
  * Connect to a remote model as if it were a local differentiable function.
  *
  * @remarks
  *
- * This function assumes a server running {@link io.serve_model | `io.serve_model`}.
+ * This function assumes a server running {@link network.serve_model | `network.serve_model`}.
  *
  * @example
  *
- * Similar to {@link io.tfetch | `io.tfetch`}, the `await` keyword may be used:
+ * Similar to {@link network.tfetch | `network.tfetch`}, the `await` keyword may be used:
  *
  * ```javascript
- * const model = sm.io.remote_model('localhost:3000')
+ * const model = sm.network.remote_model('localhost:3000')
  * const input = sm.randn([128])
  * // await is necessary, as model invocation is asynchronous
  * const output = await model(input)
@@ -193,7 +32,7 @@ export async function tfetch(
  * })
  * ```
  *
- * @param url - The location of the remote model (must be running {@link io.serve_model | `io.serve_model`}).
+ * @param url - The location of the remote model (must be running {@link network.serve_model | `network.serve_model`}).
  * @returns An asynchronous function that can be invoked with an input tensor.
  */
 export function remote_model(url: string, backward_url?: string, error_handler?) {
@@ -259,20 +98,20 @@ export type RouteStats = {
  *
  * // async functions can be served as well
  * async function talkToServer() {
- *   const t = await sm.io.tfetch(different_server)
+ *   const t = await sm.network.tfetch(different_server)
  *   return t.mul(sm.rand([128]))
  * }
  *
- * sm.io.serve({
+ * sm.network.serve({
  *   genRandTensor: genRandTensor,
  *   remoteCall: talkToServer
  * })
  * ```
  *
- * The above functions are accessible from a different process with {@link io.tfetch | `io.tfetch`}:
+ * The above functions are accessible from a different process with {@link network.tfetch | `network.tfetch`}:
  * ```javascript
- * const t0 = await sm.io.tfetch(`${host}:3000/genRandTensor`)
- * const t1 = await sm.io.tfetch(`${host}:3000/remoteCall`)
+ * const t0 = await sm.network.tfetch(`${host}:3000/genRandTensor`)
+ * const t1 = await sm.network.tfetch(`${host}:3000/remoteCall`)
  * ```
  *
  * @param request_dict - A map of endpoint names to the underlying (possibly async) function calls.
@@ -376,7 +215,7 @@ export function serve(
  *
  * @remarks
  *
- * This server is to be used with {@link io.remote_model | `io.remote_model`}.
+ * This server is to be used with {@link network.remote_model | `network.remote_model`}.
  * The function does not return.
  *
  * @example
@@ -392,16 +231,16 @@ export function serve(
  *     t.update(t.add(t.grad.mul(sm.scalar(1e-3))))
  *   }
  * }
- * sm.io.serve_model(model, optimize)
+ * sm.network.serve_model(model, optimize)
  * ```
  *
- * Additional functions can also be served (as in {@link io.serve | `io.serve`}):
+ * Additional functions can also be served (as in {@link network.serve | `network.serve`}):
  *
  * ```javascript
  * function extraMethod() {
  *   return sm.identity(7)
  * }
- * sm.io.serve_model(model, sm.optim.sgd, {port:3000}, {
+ * sm.network.serve_model(model, sm.optim.sgd, {port:3000}, {
  *   ident: extraMethod
  * })
  * ```
@@ -409,7 +248,7 @@ export function serve(
  * @param fn - A function that will run on forward calls
  * @param grad_update - A function that will run on backward calls, with a list of differentiated tensors passed in
  * @param options - An optional list of options passed to the underlying Bun.serve call
- * @param req_map - An optional map of additional handlers passed to the underlying {@link io.serve | `io.serve`} call
+ * @param req_map - An optional map of additional handlers passed to the underlying {@link network.serve | `network.serve`} call
  *
  */
 export function serve_model(

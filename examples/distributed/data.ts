@@ -7,7 +7,7 @@ const model_ref = (t) => {
 }
 
 const url = '0.0.0.0:3000'
-const model = sm.io.remote_model(url)
+const model = sm.network.remote_model(url)
 
 let loss: sm.Tensor = null
 const loss_print = () => {

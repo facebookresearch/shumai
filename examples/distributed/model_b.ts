@@ -18,4 +18,4 @@ class MLP extends sm.module.Module {
 
 const model = new MLP()
 
-sm.io.serve_model(model, (ts) => sm.optim.sgd(ts, 1e-4), { port: 3002 })
+sm.network.serve_model(model, (ts) => sm.optim.sgd(ts, 1e-4), { port: 3002 })
