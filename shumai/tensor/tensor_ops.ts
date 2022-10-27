@@ -1,5 +1,5 @@
 import type { Tensor } from './tensor'
-import { _var, full, sigmoid, erf } from './tensor_ops_gen'
+import { _var, erf, full, sigmoid } from './tensor_ops_gen'
 
 export * from './tensor_ops_gen'
 
@@ -22,17 +22,17 @@ export function leakyRelu(tensor: Tensor, negative_slope: number): Tensor {
   return rhs.add(lhs)
 }
 
-export function swish(tensor: Tensor, beta: number = 1e-3): Tensor {
-  return tensor.mul(sigmoid(scalar(beta).mul(tensor)));
+export function swish(tensor: Tensor, beta = 1e-3): Tensor {
+  return tensor.mul(sigmoid(scalar(beta).mul(tensor)))
 }
 
-export function elu(tensor: Tensor, alpha: number = 1): Tensor {
-  const mask = tensor.gte(scalar(0));
-  const notMask = mask.logicalNot();
+export function elu(tensor: Tensor, alpha = 1): Tensor {
+  const mask = tensor.gte(scalar(0))
+  const notMask = mask.logicalNot()
   return mask.mul(tensor).add(notMask.mul(scalar(alpha)).mul(tensor.exp().sub(scalar(1))))
 }
 
-export function thresholdRelu(tensor: Tensor, threshold: number = 1): Tensor {
+export function thresholdRelu(tensor: Tensor, threshold = 1): Tensor {
   const mask = tensor.gte(scalar(threshold))
-  return tensor.mul(mask);
+  return tensor.mul(mask)
 }
