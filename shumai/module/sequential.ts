@@ -2,43 +2,23 @@ import type { Tensor } from '../tensor'
 import { Module } from './module'
 
 export class Sequential extends Module {
-  private modules: Module[]
+  private _modules: Module[]
 
   constructor(...modules: Module[]) {
     super()
-    this.modules = modules
+    this._modules = modules
   }
 
   get length(): number {
-    return this.modules.length
+    return this._modules.length
   }
 
-  at(index: number): Module {
-    return this.modules.at(index)
-  }
-
-  push(module: Module): number {
-    return this.modules.push(module)
-  }
-
-  pop(): Module {
-    return this.modules.pop()
-  }
-
-  shift(): Module {
-    return this.modules.shift()
-  }
-
-  unshift(module: Module): number {
-    return this.modules.unshift(module)
-  }
-
-  reverse() {
-    this.modules.reverse() // in-place
+  get modules(): Module[] {
+    return this._modules
   }
 
   forward(...inputs: Tensor[]): Tensor | Tensor[] {
-    if (this.modules.length === 0) {
+    if (this._modules.length === 0) {
       if (inputs.length === 0) {
         return null
       } else if (inputs.length === 1) {
@@ -48,28 +28,28 @@ export class Sequential extends Module {
       }
     }
 
-    if (inputs.length !== this.modules[0].forward.length) {
+    if (inputs.length !== this._modules[0].forward.length) {
       throw new Error(
-        `Module at index 0 expects ${this.modules[0].forward.length} arguments: got ${inputs.length}`
+        `Module at index 0 expects ${this._modules[0].forward.length} arguments: got ${inputs.length}`
       )
     }
 
-    let output: Tensor | Tensor[] = this.modules[0](...inputs)
-    for (let i = 1; i < this.modules.length; i++) {
+    let output: Tensor | Tensor[] = this._modules[0](...inputs)
+    for (let i = 1; i < this._modules.length; i++) {
       if (output instanceof Array) {
-        if (output.length !== this.modules[i].forward.length) {
+        if (output.length !== this._modules[i].forward.length) {
           throw new Error(
-            `Module at index ${i} expects ${this.modules[i].forward.length} arguments: got ${output.length}`
+            `Module at index ${i} expects ${this._modules[i].forward.length} arguments: got ${output.length}`
           )
         }
-        output = this.modules[i](...output)
+        output = this._modules[i](...output)
       } else {
-        if (this.modules[i].forward.length !== 1) {
+        if (this._modules[i].forward.length !== 1) {
           throw new Error(
-            `Module at index ${i} expects ${this.modules[i].forward.length} arguments: got 1`
+            `Module at index ${i} expects ${this._modules[i].forward.length} arguments: got 1`
           )
         }
-        output = this.modules[i](output)
+        output = this._modules[i](output)
       }
     }
 
