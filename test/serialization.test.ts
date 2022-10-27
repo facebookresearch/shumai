@@ -1,6 +1,6 @@
-import { it, describe, expect } from 'bun:test'
 import * as sm from '@shumai/shumai'
-import { expectArraysClose, areSameShape, isClose } from './utils'
+import { describe, expect, it } from 'bun:test'
+import { areSameShape, expectArraysClose, isClose } from './utils'
 
 describe('serialization', () => {
   it('1D Tensor', () => {

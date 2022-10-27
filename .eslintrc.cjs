@@ -7,6 +7,7 @@ module.exports = {
       jsx: false // Allows for the parsing of JSX
     }
   },
+  plugins: ['simple-import-sort'],
   ignorePatterns: ['dist', 'global.d.ts'],
   extends: [
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
@@ -16,6 +17,13 @@ module.exports = {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     'no-unused-vars': 'off',
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [['^\\u0000', '^@?\\w', '^[^.]', '^\\.']]
+      }
+    ],
+    'simple-import-sort/exports': 'error',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {

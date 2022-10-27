@@ -1,4 +1,4 @@
-import { Tensor, rand } from '@shumai/shumai'
+import { rand, Tensor } from '@shumai/shumai'
 
 function bench(description, f, iters = 1000) {
   const hist = new Float32Array(iters)

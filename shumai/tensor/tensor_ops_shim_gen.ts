@@ -1,7 +1,7 @@
 /* GENERATED CODE (gen_binding.py) */
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
-import { getStack, collectStats } from './stats'
+import { collectStats, getStack } from './stats'
 import type { Tensor } from './tensor'
 
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {

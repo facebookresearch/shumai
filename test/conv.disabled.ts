@@ -1,5 +1,5 @@
 import * as sm from '@shumai/shumai'
-import { it, describe, expect } from 'bun:test'
+import { describe, expect, it } from 'bun:test'
 import { expectArraysClose, isShape } from './utils'
 
 describe('conv', () => {

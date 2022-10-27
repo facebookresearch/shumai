@@ -167,5 +167,5 @@
  * ```
  * @module
  */
-export * from './network'
 export * from './file'
+export * from './network'

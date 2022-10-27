@@ -1,5 +1,5 @@
 import * as sm from '@shumai/shumai'
-import { it, expect, describe } from 'bun:test'
+import { describe, expect, it } from 'bun:test'
 
 describe('range', () => {
   it('basic', () => {

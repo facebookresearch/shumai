@@ -1,5 +1,5 @@
-import { expect, it, describe } from 'bun:test'
 import * as sm from '@shumai/shumai'
+import { describe, expect, it } from 'bun:test'
 import { expectArraysClose, isClose, isShape } from './utils'
 
 describe('mean', () => {

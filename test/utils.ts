@@ -1,6 +1,6 @@
-import { expect } from 'bun:test'
 import type { Tensor } from '@shumai/shumai'
 import { util } from '@shumai/shumai'
+import { expect } from 'bun:test'
 
 export const nativeError = new RegExp(
   '^Tensor returned.*is null; native code likely threw an error'

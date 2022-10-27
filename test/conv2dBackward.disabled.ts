@@ -1,5 +1,5 @@
 import * as sm from '@shumai/shumai'
-import { it, describe } from 'bun:test'
+import { describe, it } from 'bun:test'
 import { expectArraysClose } from './utils'
 
 describe('conv2dBackwardData', () => {

@@ -1,6 +1,6 @@
 import * as sm from '@shumai/shumai'
-import { it, expect, describe } from 'bun:test'
-import { expectArraysClose, isShape, calcSizeFromShape } from './utils'
+import { describe, expect, it } from 'bun:test'
+import { calcSizeFromShape, expectArraysClose, isShape } from './utils'
 const MATMUL_SHARED_DIM_THRESHOLD = 1000
 
 describe('matmul', () => {
