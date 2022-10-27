@@ -4,7 +4,6 @@ import { expectArraysClose } from './utils'
 
 describe('activations', () => {
   it('relu negative', () => {
-    console.log(sm.relu(sm.scalar(-10)).toFloat32Array())
     expectArraysClose(sm.relu(sm.scalar(-10)).toFloat32Array(), [0])
   })
   it('relu positive', () => {
@@ -15,5 +14,23 @@ describe('activations', () => {
   })
   it('leakyRelu positive', () => {
     expectArraysClose(sm.leakyRelu(sm.scalar(11), 0.1).toFloat32Array(), [11])
+  })
+  it('swish negative', () => {
+    expectArraysClose(sm.swish(sm.scalar(-10)).toFloat32Array(), [-4.975])
+  })
+  it('swish positive', () => {
+    expectArraysClose(sm.swish(sm.scalar(10)).toFloat32Array(), [5.025])
+  })
+  it('elu negative', () => {
+    expectArraysClose(sm.elu(sm.scalar(-10)).toFloat32Array(), [-1])
+  })
+  it('elu positive', () => {
+    expectArraysClose(sm.elu(sm.scalar(10)).toFloat32Array(), [10])
+  })
+  it('thresholdRelu negative', () => {
+    expectArraysClose(sm.thresholdRelu(sm.scalar(-5)).toFloat32Array(), [0])
+  })
+  it('thresholdRelu positive', () => {
+    expectArraysClose(sm.thresholdRelu(sm.scalar(5)).toFloat32Array(), [5])
   })
 })

@@ -198,6 +198,14 @@ const impls = {
     const grad_idx = <0 | 1>(1 - grad.idx)
     return possiblyReduce((<Tensor>grad.in[grad_idx]).mul(grad.grad_in), grad)
   },
+  greaterThanEqual: (grad: Grad) => {
+    const o = sm.scalar(1).sub(grad.out)
+    return grad.out.mul(o)
+  },
+  logicalNot: (grad: Grad) => {
+    const o = sm.scalar(1).sub(grad.out)
+    return grad.out.mul(o)
+  },
   sigmoid: (grad: Grad) => {
     const o = sm.scalar(1).sub(grad.out)
     return grad.out.mul(o)
