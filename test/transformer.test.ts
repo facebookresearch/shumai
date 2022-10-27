@@ -58,6 +58,23 @@ describe('TransformerDotProductAttention', () => {
     // Result 0 is more value 1 than value 0
     expect(result.index([0, 1]).toFloat32() > result.index([0, 0]).toFloat32()).toBe(true)
   })
+  it('two tokens, one masked', () => {
+    const module = new sm.module.TransformerDotProductAttention(3)
+
+    const queries = sm.tensor(new Float32Array([0, 0, 1, 0, 1, 0])).reshape([2, 3])
+    const keys = sm.tensor(new Float32Array([0, 1, 0.25, 0, 0.5, 1])).reshape([2, 3])
+    const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0])).reshape([2, 3])
+    const mask = sm.tensor(new Int8Array([0, 1, 0, 0])).reshape([2, 2])
+
+    const result = module(queries, keys, values, mask)
+    areSameShape(result, queries)
+
+    // Result 0 is value 0 only
+    expectArraysClose(result.index([0, ':']).toFloat32Array(), [1, 0, 0])
+
+    // Result 1 is more value 0 than value 1
+    expect(result.index([1, 0]).toFloat32() > result.index([1, 1]).toFloat32()).toBe(true)
+  })
   it('batch samples are independent', () => {
     const module = new sm.module.TransformerDotProductAttention(3)
 

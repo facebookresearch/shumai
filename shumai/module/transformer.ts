@@ -7,7 +7,13 @@ import { Module } from './module'
 
 const sm = { ...ops, ...tensor, util }
 
-function checkAttentionInputs(attentionDim: number, queries: Tensor, keys: Tensor, values: Tensor) {
+function checkAttentionInputs(
+  attentionDim: number,
+  queries: Tensor,
+  keys: Tensor,
+  values: Tensor,
+  mask?: Tensor
+) {
   const shape = queries.shape
 
   if (keys.shape.length !== shape.length || values.shape.length !== shape.length) {
@@ -36,6 +42,21 @@ function checkAttentionInputs(attentionDim: number, queries: Tensor, keys: Tenso
       `Last axis of input tensors (${dim}) must match attention dimension (${attentionDim})`
     )
   }
+
+  if (mask !== undefined) {
+    const maskShape = mask.shape
+    if (
+      maskShape.length !== 2 ||
+      maskShape[0] !== shape[shape.length - 2] ||
+      maskShape[1] !== keys.shape[keys.shape.length - 2]
+    ) {
+      throw new Error(
+        `Mask shape (${maskShape}) must match sequence lengths of queries and keys: must be [${
+          shape[shape.length - 2]
+        }, ${keys.shape[keys.shape.length - 2]}]`
+      )
+    }
+  }
 }
 
 export class TransformerDotProductAttention extends Module {
@@ -52,12 +73,19 @@ export class TransformerDotProductAttention extends Module {
     return tensor.mul(this.scaleFactor)
   }
 
-  forward(queries: Tensor, keys: Tensor, values: Tensor): Tensor {
+  forward(queries: Tensor, keys: Tensor, values: Tensor, mask?: Tensor): Tensor {
     // queries shape [..., queryTokens, dim]
     // keys and values shape [..., keyTokens, dim]
-    checkAttentionInputs(this.dim, queries, keys, values)
+    // mask shape [queryTokens, keyTokens]
+    checkAttentionInputs(this.dim, queries, keys, values, mask)
 
     let output = queries.matmul(keys.T()) // shape [..., queryTokens, keyTokens]
+
+    if (mask !== undefined) {
+      const negativeInfinities = sm.full([1], -Infinity).tile(output.shape)
+      output = sm.where(mask, negativeInfinities, output)
+    }
+
     output = this.scale(output).softmax(-1)
     output = output.matmul(values) // shape [..., queryTokens, dim]
     return output
