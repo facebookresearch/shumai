@@ -1,3 +1,4 @@
+import { run } from '../util'
 import { remote_model } from './model'
 
 export function remote_runner(url) {
@@ -66,7 +67,7 @@ sm.network.serve_model(m.default, m.backward, m.options)
 `
       )
       console.log('receieved new server file')
-      bg_run = spawn(['bun', 'runner.ts'], {
+      bg_run = Bun.spawn(['bun', 'runner.ts'], {
         stdout: Bun.file('stdout.log'),
         stderr: Bun.file('stderr.log')
       })

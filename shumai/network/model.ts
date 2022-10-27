@@ -1,6 +1,8 @@
 import type { Errorlike, Server } from 'bun'
 import * as crypto from 'crypto'
 import { OptimizerFn } from '../optim'
+import * as sm from '../tensor'
+import { backoff, decode, encode, tfetch } from './tensor'
 
 /**
  * Connect to a remote model as if it were a local differentiable function.

@@ -1,5 +1,5 @@
-import * as sm from '../tensor'
 import * as crypto from 'crypto'
+import * as sm from '../tensor'
 import { sleep } from '../util'
 
 const _unique_id = crypto
@@ -63,7 +63,7 @@ export async function decode(obj: Response | ArrayBuffer) {
 }
 
 /** @private */
-async function backoff(callback, error_handler?) {
+export async function backoff(callback, error_handler?) {
   let err = null
   // 1 second of exponential backoff before error
   for (let i = 0; i < 10; ++i) {
