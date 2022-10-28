@@ -69,7 +69,7 @@ export const isClose = (actual: number | bigint, expected: number | bigint, erro
 
   if (typeof actual === 'bigint' && typeof expected === 'bigint') {
     const factor = BigInt(10)
-    while (error.toString().includes('.')) {
+    while (error % 1 !== 0) {
       error *= 10
       actual *= factor
       expected *= factor
