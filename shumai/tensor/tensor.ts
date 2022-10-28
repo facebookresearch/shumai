@@ -1,8 +1,9 @@
 import { ptr, toArrayBuffer } from 'bun:ffi'
+import { existsSync } from 'fs'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
 import type { OpStats } from '../io'
-import { Float16Array } from '../util'
+import { cyrb53, Float16Array } from '../util'
 import { Grad } from './register_gradients'
 import { collectStats, getStack } from './stats'
 import { full } from './tensor_ops'
@@ -387,6 +388,34 @@ export class Tensor {
     if (fl.bytesUsed() > 10e6 /* 10MB */) {
       Bun.gc(true)
     }
+    if (this._checkpoint_file) {
+      if (this._checkpoint_callback()) {
+        this.save(this._checkpoint_file)
+      }
+    }
+  }
+
+  checkpoint(file?, callback?) {
+    if (typeof file === 'function') {
+      callback = file
+      file = undefined
+    }
+    if (file === undefined) {
+      this._checkpoint_file = `tensor_${cyrb53(getStack())}.fl`
+    } else {
+      this._checkpoint_file = file.toString()
+    }
+    if (callback !== undefined) {
+      this._checkpoint_callback = callback
+    } else {
+      this._checkpoint_callback = () => true
+    }
+    if (existsSync(this._checkpoint_file)) {
+      this.update(new Tensor(this._checkpoint_file))
+    } else {
+      this.save(this._checkpoint_file)
+    }
+    return this
   }
 
   save(filename) {

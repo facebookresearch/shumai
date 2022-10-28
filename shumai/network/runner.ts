@@ -1,4 +1,4 @@
-import { run, all } from '../util'
+import { all, run } from '../util'
 import { remote_model } from './model'
 
 export function remote_runner(url) {
@@ -22,7 +22,7 @@ export function remote_runner(url) {
 
     logs: get_logs,
 
-    async serve_model(file, port=3000) {
+    async serve_model(file, port = 3000) {
       const bundled = await run(
         `esbuild --target=esnext --format=esm --platform=node --external:bun* --external:@shumai* --bundle ${file}`
       )
