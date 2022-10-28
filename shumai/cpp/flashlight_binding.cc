@@ -43,6 +43,7 @@ static std::mutex g_op_mutex;
 
 static std::atomic<size_t> g_bytes_used = 0;
 static std::atomic<bool> g_row_major = true;
+static std::unordered_set<const fl::Tensor*> alreadyDestroyed;
 
 template <typename T>
 std::vector<T> arrayArg(const void* ptr, int len, bool reverse, int invert) {
@@ -266,6 +267,24 @@ void* tensorFromUint64Buffer(int64_t numel, void* ptr) {
 void destroyTensor(void* t, void* /*ignore*/) {
   LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  if (alreadyDestroyed.find(tensor) == alreadyDestroyed.end()) {
+    // std::cout << t << " was not found in `alreadyDestroyed`" << std::endl;
+    g_bytes_used -= tensor->bytes();
+    delete tensor;
+  } else {
+    // std::cout << "found " << t << " in `alreadyDestroyed`" << std::endl;
+    alreadyDestroyed.erase(alreadyDestroyed.find(tensor));
+  }
+}
+
+void* deallocationCtx() {
+  return &alreadyDestroyed;
+}
+
+void dispose(void* t) {
+  LOCK_GUARD
+  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
+  alreadyDestroyed.insert(tensor);
   g_bytes_used -= tensor->bytes();
   delete tensor;
 }

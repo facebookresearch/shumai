@@ -2,7 +2,7 @@ import { ptr, toArrayBuffer } from 'bun:ffi'
 import { existsSync } from 'fs'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
-import type { OpStats } from '../io'
+import type { OpStats } from '../network'
 import { cyrb53, Float16Array } from '../util'
 import { Grad } from './register_gradients'
 import { collectStats, getStack } from './stats'
@@ -429,6 +429,10 @@ export class Tensor {
 
   eval() {
     return fl._eval.native(this.ptr)
+  }
+
+  dispose() {
+    fl.dispose.native(this.ptr)
   }
 
   get ptr() {
