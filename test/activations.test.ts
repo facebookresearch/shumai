@@ -33,4 +33,16 @@ describe('activations', () => {
   it('thresholdRelu positive', () => {
     expectArraysClose(sm.thresholdRelu(sm.scalar(5)).toFloat32Array(), [5])
   })
+  it('relu6 negative', () => {
+    expectArraysClose(sm.relu6(sm.scalar(-5)).toFloat32Array(), [0]);
+  })
+  it('relu6 positive', () => {
+    expectArraysClose(sm.relu6(sm.scalar(5)).toFloat32Array(), [5])
+  })
+  it('hardTanh negative', () => {
+    expectArraysClose(sm.hardTanh(sm.scalar(-5)).toFloat32Array(), [-1]);
+  })
+  it('hardTanh positive', () => {
+    expectArraysClose(sm.hardTanh(sm.scalar(5)).toFloat32Array(), [1])
+  })
 })

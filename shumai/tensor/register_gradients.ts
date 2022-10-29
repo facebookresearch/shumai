@@ -210,6 +210,18 @@ const impls = {
     const o = sm.scalar(1).sub(grad.out)
     return grad.out.mul(o)
   },
+  clip: (grad: Grad) => {
+    const result = <Tensor>grad.in[0]
+    const low = <Tensor>grad.in[1]
+    const high = <Tensor>grad.in[2]
+
+    const lowMask = result.greaterThan(low);
+    const highMask = result.lessThan(high);
+    const lowHighMask = lowMask.bitwiseAnd(highMask);
+    const gradMask = sm.where(lowHighMask, grad.out, sm.full(grad.out.shape, 0))
+
+    return gradMask
+  },
   sub: (grad: Grad) => {
     if (grad.idx) {
       return possiblyReduce(grad.grad_in.negative(), grad)
