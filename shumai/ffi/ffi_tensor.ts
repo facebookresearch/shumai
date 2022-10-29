@@ -56,9 +56,6 @@ const ffi_tensor = {
   genTensorDestroyer: {
     returns: FFIType.ptr
   },
-  deallocationCtx: {
-    returns: FFIType.ptr
-  },
   dispose: {
     args: [FFIType.ptr]
   },

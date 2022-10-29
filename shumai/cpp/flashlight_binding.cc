@@ -13,6 +13,7 @@
 #include "flashlight/fl/tensor/Index.h"
 #include "flashlight/fl/tensor/Init.h"
 #include "flashlight/fl/tensor/Random.h"
+#include "flashlight/fl/tensor/TensorAdapter.h"
 
 #define FMT_RESET "\033[0m"
 #define FMT_RED "\033[31m"
@@ -267,26 +268,21 @@ void* tensorFromUint64Buffer(int64_t numel, void* ptr) {
 void destroyTensor(void* t, void* /*ignore*/) {
   LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  if (alreadyDestroyed.find(tensor) == alreadyDestroyed.end()) {
-    // std::cout << t << " was not found in `alreadyDestroyed`" << std::endl;
+  auto tensor_loc = alreadyDestroyed.find(tensor);
+  if (tensor_loc == alreadyDestroyed.end()) {
     g_bytes_used -= tensor->bytes();
     delete tensor;
   } else {
-    // std::cout << "found " << t << " in `alreadyDestroyed`" << std::endl;
-    alreadyDestroyed.erase(alreadyDestroyed.find(tensor));
+    alreadyDestroyed.erase(tensor_loc);
   }
-}
-
-void* deallocationCtx() {
-  return &alreadyDestroyed;
 }
 
 void dispose(void* t) {
   LOCK_GUARD
-  auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  alreadyDestroyed.insert(tensor);
-  g_bytes_used -= tensor->bytes();
-  delete tensor;
+  auto& tensor = *reinterpret_cast<fl::Tensor*>(t);
+  alreadyDestroyed.insert(&tensor);
+  g_bytes_used -= tensor.bytes();
+  fl::detail::releaseAdapterUnsafe(tensor);
 }
 
 typedef void (*JSTypedArrayBytesDeallocator)(void* bytes,

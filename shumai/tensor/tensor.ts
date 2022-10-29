@@ -418,7 +418,7 @@ export class Tensor {
     return this
   }
 
-  save(filename) {
+  save(filename: string) {
     const cstr_buffer = new TextEncoder().encode(filename)
     return fl._save(this.ptr, cstr_buffer, cstr_buffer.length)
   }
