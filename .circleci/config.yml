@@ -103,7 +103,7 @@ jobs:
             - run:
                 name: "Install ArrayFire and CMake"
                 command: |
-                  brew install arrayfire cmake
+                  brew install arrayfire@3.8.2 cmake
       - when:
           condition:
             equal: [linux, << parameters.os >>]
