@@ -632,6 +632,7 @@ describe('TransformerEncoder', () => {
       .requireGrad()
 
     const result = module(input).sum()
+    result.eval()
     result.backward()
     expect(!!input.grad).toBe(true)
   })
