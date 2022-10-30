@@ -22,8 +22,6 @@ executors:
     macos:
       xcode: 13.4.1
     resource_class: large
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: "1"
 
 commands:
   setup_arrayfire_apt:
@@ -103,7 +101,7 @@ jobs:
             - run:
                 name: "Install ArrayFire and CMake"
                 command: |
-                  brew install arrayfire@3.8.2 cmake
+                  brew install cmake
       - when:
           condition:
             equal: [linux, << parameters.os >>]
