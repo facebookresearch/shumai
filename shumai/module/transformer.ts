@@ -7,41 +7,87 @@ import { Module } from './module'
 
 const sm = { ...ops, ...tensor, util }
 
+function checkAttentionInputs(
+  attentionDim: number,
+  queries: Tensor,
+  keys: Tensor,
+  values: Tensor,
+  mask?: Tensor
+) {
+  const shape = queries.shape
+
+  if (keys.shape.length !== shape.length || values.shape.length !== shape.length) {
+    throw new Error(
+      `Input tensors must have the same shape, except the 2nd last axis: queries shape ${shape}, keys shape ${keys.shape}, values shape ${values.shape}`
+    )
+  }
+
+  for (let i = 0; i < shape.length; i++) {
+    if (shape[i] !== keys.shape[i] || shape[i] !== values.shape[i]) {
+      if (i !== shape.length - 2) {
+        throw new Error(
+          `Input tensors must have the same shape, except the 2nd last axis: queries shape ${shape}, keys shape ${keys.shape}, values shape ${values.shape}`
+        )
+      } else if (keys.shape[i] !== values.shape[i]) {
+        throw new Error(
+          `Tensors keys and values must have the same shape: keys shape ${keys.shape}, values shape ${values.shape}`
+        )
+      }
+    }
+  }
+
+  const dim = shape[shape.length - 1]
+  if (dim !== attentionDim) {
+    throw new Error(
+      `Last axis of input tensors (${dim}) must match attention dimension (${attentionDim})`
+    )
+  }
+
+  if (mask !== undefined) {
+    const maskShape = mask.shape
+    if (
+      maskShape.length !== 2 ||
+      maskShape[0] !== shape[shape.length - 2] ||
+      maskShape[1] !== keys.shape[keys.shape.length - 2]
+    ) {
+      throw new Error(
+        `Mask shape (${maskShape}) must match sequence lengths of queries and keys: must be [${
+          shape[shape.length - 2]
+        }, ${keys.shape[keys.shape.length - 2]}]`
+      )
+    }
+  }
+}
+
 export class TransformerDotProductAttention extends Module {
   private dim: number
-  private scale_factor: Tensor
+  private scaleFactor: Tensor
 
   constructor(dim: number) {
     super()
     this.dim = dim
-    this.scale_factor = sm.scalar(1 / Math.sqrt(dim))
+    this.scaleFactor = sm.scalar(1 / Math.sqrt(dim))
   }
 
   protected scale(tensor: Tensor): Tensor {
-    return tensor.mul(this.scale_factor)
+    return tensor.mul(this.scaleFactor)
   }
 
-  forward(queries: Tensor, keys: Tensor, values: Tensor): Tensor {
-    // shape [..., tokens, dim]
-    const shape = queries.shape
-    for (let i = 0; i < shape.length; i++) {
-      if (shape[i] !== keys.shape[i] || shape[i] !== values.shape[i]) {
-        throw new Error(
-          `Input tensors should have the same shape: queries shape ${shape}, keys shape ${keys.shape}, values shape ${values.shape}`
-        )
-      }
+  forward(queries: Tensor, keys: Tensor, values: Tensor, mask?: Tensor): Tensor {
+    // queries shape [..., queryTokens, dim]
+    // keys and values shape [..., keyTokens, dim]
+    // mask shape [queryTokens, keyTokens]
+    checkAttentionInputs(this.dim, queries, keys, values, mask)
+
+    let output = queries.matmul(keys.T()) // shape [..., queryTokens, keyTokens]
+
+    if (mask !== undefined) {
+      const negativeInfinities = sm.full([1], -Infinity).tile(output.shape)
+      output = sm.where(mask, negativeInfinities, output)
     }
 
-    const dim = shape[shape.length - 1]
-    if (dim !== this.dim) {
-      throw new Error(
-        `Last axis of input tensors (shape ${shape}) must match module dimensions (${this.dim})`
-      )
-    }
-
-    let output = queries.matmul(keys.T()) // shape [..., tokens, tokens]
     output = this.scale(output).softmax(-1)
-    output = output.matmul(values) // shape [..., tokens, dim]
+    output = output.matmul(values) // shape [..., queryTokens, dim]
     return output
   }
 }
@@ -49,14 +95,14 @@ export class TransformerDotProductAttention extends Module {
 export class TransformerMultiheadAttention extends Module {
   private dim: number
   private heads: number
-  private attn_dim: number
-  private query_embed: Linear
-  private key_embed: Linear
-  private value_embed: Linear
+  private attentionDim: number
+  private queryEmbed: Linear
+  private keyEmbed: Linear
+  private valueEmbed: Linear
   private attention: TransformerDotProductAttention
-  private concat_embed: Linear
+  private concatEmbed: Linear
 
-  constructor(dim: number, heads: number, attn_dim?: number) {
+  constructor(dim: number, heads: number, attentionDim?: number) {
     super()
 
     if (dim % heads !== 0) {
@@ -67,60 +113,50 @@ export class TransformerMultiheadAttention extends Module {
 
     this.dim = dim
     this.heads = heads
-    if (attn_dim === undefined) {
-      this.attn_dim = dim / heads
+    if (attentionDim === undefined) {
+      this.attentionDim = dim / heads
     } else {
-      this.attn_dim = attn_dim
+      this.attentionDim = attentionDim
     }
-    this.query_embed = new Linear(dim, this.attn_dim * heads)
-    this.key_embed = new Linear(dim, this.attn_dim * heads)
-    this.value_embed = new Linear(dim, this.attn_dim * heads)
-    this.attention = new TransformerDotProductAttention(this.attn_dim)
-    this.concat_embed = new Linear(this.attn_dim * heads, dim)
+    this.queryEmbed = new Linear(dim, this.attentionDim * heads)
+    this.keyEmbed = new Linear(dim, this.attentionDim * heads)
+    this.valueEmbed = new Linear(dim, this.attentionDim * heads)
+    this.attention = new TransformerDotProductAttention(this.attentionDim)
+    this.concatEmbed = new Linear(this.attentionDim * heads, dim)
   }
 
   forward(queries: Tensor, keys: Tensor, values: Tensor): Tensor {
-    // shape [..., tokens, dim]
-    const shape = queries.shape
-    for (let i = 0; i < shape.length; i++) {
-      if (shape[i] !== keys.shape[i] || shape[i] !== values.shape[i]) {
-        throw new Error(
-          `Input tensors should have the same shape: queries shape ${shape}, keys shape ${keys.shape}, values shape ${values.shape}`
-        )
-      }
-    }
+    // queries shape [..., queryTokens, dim]
+    // keys and values shape [..., keyTokens, dim]
+    checkAttentionInputs(this.dim, queries, keys, values)
+    const originalShape = queries.shape
 
-    const dim = shape[shape.length - 1]
-    if (dim !== this.dim) {
-      throw new Error(
-        `Last axis of input tensors (shape ${shape}) must match module dimensions (${this.dim})`
-      )
-    }
-
-    const reshape = [...shape] // [..., tokens, dim]
-    reshape[reshape.length - 1] = this.heads
-    reshape.push(this.attn_dim) // [..., tokens, heads, attn_dim]
+    const queriesReshape = [...originalShape] // shape [..., queryTokens, dim]
+    queriesReshape[queriesReshape.length - 1] = this.heads
+    queriesReshape.push(this.attentionDim) // shape [..., queryTokens, heads, attentionDim]
+    const keysValuesReshape = [...queriesReshape]
+    keysValuesReshape[keysValuesReshape.length - 3] = keys.shape[keys.shape.length - 2] // shape [..., keyTokens, heads, attentionDim]
 
     // Swap 2nd and 3rd last axes
-    const transpose = Array.from(sm.util.range(reshape.length))
+    const transpose = Array.from(sm.util.range(queriesReshape.length))
     transpose[transpose.length - 3] = transpose.length - 2
     transpose[transpose.length - 2] = transpose.length - 3
 
-    queries = this.query_embed(queries).reshape(reshape).transpose(transpose)
-    keys = this.key_embed(keys).reshape(reshape).transpose(transpose)
-    values = this.value_embed(values).reshape(reshape).transpose(transpose)
-    // embed shape [..., tokens, heads * attn_dim]
-    // reshape shape [..., tokens, heads, attn_dim]
-    // transpose shape [..., heads, tokens, attn_dim]
+    queries = this.queryEmbed(queries).reshape(queriesReshape).transpose(transpose)
+    keys = this.keyEmbed(keys).reshape(keysValuesReshape).transpose(transpose)
+    values = this.valueEmbed(values).reshape(keysValuesReshape).transpose(transpose)
+    // embed shape [..., {key|query}Tokens, heads * attentionDim]
+    // reshape shape [..., {key|query}Tokens, heads, attentionDim]
+    // transpose shape [..., heads, {key|query}Tokens, attentionDim]
 
     const reverseTranspose = transpose
-    const reverseReshape = [...shape]
-    reverseReshape[reverseReshape.length - 1] = this.heads * this.attn_dim
+    const reverseReshape = [...originalShape]
+    reverseReshape[reverseReshape.length - 1] = this.heads * this.attentionDim
 
-    let output = this.attention(queries, keys, values) // shape [..., heads, tokens, attn_dim]
-    output = output.transpose(reverseTranspose) // shape [..., tokens, heads, attn_dim]
-    output = output.reshape(reverseReshape) // shape [..., tokens, heads * attn_dim]
-    output = this.concat_embed(output) // shape [batch, tokens, dim]
+    let output = this.attention(queries, keys, values) // shape [..., heads, queryTokens, attentionDim]
+    output = output.transpose(reverseTranspose) // shape [..., queryTokens, heads, attentionDim]
+    output = output.reshape(reverseReshape) // shape [..., queryTokens, heads * attentionDim]
+    output = this.concatEmbed(output) // shape [..., queryTokens, dim]
 
     return output
   }

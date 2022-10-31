@@ -45,6 +45,36 @@ describe('TransformerDotProductAttention', () => {
     expect(result.index([0, 1]).toFloat32() > result.index([1, 0]).toFloat32()).toBe(true)
     expect(result.index([0, 0]).toFloat32() < result.index([1, 1]).toFloat32()).toBe(true)
   })
+  it('single query token, two key tokens', () => {
+    const module = new sm.module.TransformerDotProductAttention(3)
+
+    const queries = sm.tensor(new Float32Array([0, 0, 1])).reshape([1, 3])
+    const keys = sm.tensor(new Float32Array([0, 1, 0.25, 0, 0.5, 1])).reshape([2, 3])
+    const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0])).reshape([2, 3])
+
+    const result = module(queries, keys, values)
+    areSameShape(result, queries)
+
+    // Result 0 is more value 1 than value 0
+    expect(result.index([0, 1]).toFloat32() > result.index([0, 0]).toFloat32()).toBe(true)
+  })
+  it('two tokens, one masked', () => {
+    const module = new sm.module.TransformerDotProductAttention(3)
+
+    const queries = sm.tensor(new Float32Array([0, 0, 1, 0, 1, 0])).reshape([2, 3])
+    const keys = sm.tensor(new Float32Array([0, 1, 0.25, 0, 0.5, 1])).reshape([2, 3])
+    const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0])).reshape([2, 3])
+    const mask = sm.tensor(new Int8Array([0, 1, 0, 0])).reshape([2, 2])
+
+    const result = module(queries, keys, values, mask)
+    areSameShape(result, queries)
+
+    // Result 0 is value 0 only
+    expectArraysClose(result.index([0, ':']).toFloat32Array(), [1, 0, 0])
+
+    // Result 1 is more value 0 than value 1
+    expect(result.index([1, 0]).toFloat32() > result.index([1, 1]).toFloat32()).toBe(true)
+  })
   it('batch samples are independent', () => {
     const module = new sm.module.TransformerDotProductAttention(3)
 
@@ -105,14 +135,25 @@ describe('TransformerDotProductAttention', () => {
     )
     areSameShape(batchResult.index([0, ':', ':']), singleResult)
   })
-  it('differing shapes are invalid', () => {
+  it('differing shapes (except 2nd last axis) are invalid', () => {
     const module = new sm.module.TransformerDotProductAttention(3)
 
-    const queries = sm.tensor(new Float32Array([0, 0, 1, 0, 1, 0])).reshape([2, 3])
+    const queries = sm
+      .tensor(new Float32Array([0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0]))
+      .reshape([2, 2, 3])
+    const keys = sm.tensor(new Float32Array([0, 1, 0.25, 0, 0.5, 1])).reshape([1, 2, 3])
+    const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0])).reshape([1, 2, 3])
+
+    expectThrows(() => module(queries, keys, values), new RegExp('must have the same shape'))
+  })
+  it('differing shapes (incl 2nd last axis) in keys and values are invalid', () => {
+    const module = new sm.module.TransformerDotProductAttention(3)
+
+    const queries = sm.tensor(new Float32Array([0, 1, 0])).reshape([1, 3])
     const keys = sm.tensor(new Float32Array([0, 1, 0.25])).reshape([1, 3])
     const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0])).reshape([2, 3])
 
-    expectThrows(() => module(queries, keys, values), new RegExp('should have the same shape'))
+    expectThrows(() => module(queries, keys, values), new RegExp('must have the same shape'))
   })
   it('differing dimensionalities are invalid', () => {
     const module = new sm.module.TransformerDotProductAttention(3)
@@ -121,7 +162,7 @@ describe('TransformerDotProductAttention', () => {
     const keys = sm.tensor(new Float32Array([0, 1, 0.25, 0, 0.5, 1])).reshape([2, 3])
     const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0])).reshape([1, 2, 3])
 
-    expectThrows(() => module(queries, keys, values), new RegExp('should have the same shape'))
+    expectThrows(() => module(queries, keys, values), new RegExp('must have the same shape'))
   })
   it('invalid dimensions', () => {
     const module = new sm.module.TransformerDotProductAttention(4)
@@ -130,7 +171,7 @@ describe('TransformerDotProductAttention', () => {
     const keys = sm.tensor(new Float32Array([0, 1, 0.25, 0, 0.5, 1])).reshape([2, 3])
     const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0])).reshape([2, 3])
 
-    expectThrows(() => module(queries, keys, values), new RegExp('must match module dimensions'))
+    expectThrows(() => module(queries, keys, values), new RegExp('must match attention dimension'))
   })
   it('calculates gradient', () => {
     const module = new sm.module.TransformerDotProductAttention(3)
@@ -166,7 +207,7 @@ describe('TransformerMultiheadAttention', () => {
     const result = module(queries, keys, values)
     areSameShape(result, queries)
   })
-  it('single token, single head (attn_dim)', () => {
+  it('single token, single head (attentionDim)', () => {
     const module = new sm.module.TransformerMultiheadAttention(3, 1, 7)
     const queries = sm.tensor(new Float32Array([0, 0, 1])).reshape([1, 3])
     const keys = sm.tensor(new Float32Array([0, 0, 0.5])).reshape([1, 3])
@@ -184,7 +225,7 @@ describe('TransformerMultiheadAttention', () => {
     const result = module(queries, keys, values)
     areSameShape(result, queries)
   })
-  it('single token, two heads (attn_dim)', () => {
+  it('single token, two heads (attentionDim)', () => {
     const module = new sm.module.TransformerMultiheadAttention(6, 2, 7)
     const queries = sm.tensor(new Float32Array([0, 0, 1, 0, 1, 0])).reshape([1, 6])
     const keys = sm.tensor(new Float32Array([0, 0, 0.5, 0.25, 1, 0])).reshape([1, 6])
@@ -272,7 +313,23 @@ describe('TransformerMultiheadAttention', () => {
       new RegExp('must be divisible by the number of heads')
     )
   })
-  it('differing shapes are invalid', () => {
+  it('differing shapes (except 2nd last axis) are invalid', () => {
+    const module = new sm.module.TransformerMultiheadAttention(6, 2)
+    const queries = sm
+      .tensor(
+        new Float32Array([0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1])
+      )
+      .reshape([2, 2, 6])
+    const keys = sm
+      .tensor(new Float32Array([1, 2, 3, 4, 5, 6, 0, 0, 0.5, 0.25, 1, 0]))
+      .reshape([1, 2, 6])
+    const values = sm
+      .tensor(new Float32Array([1, 0, 0, 0, 1, 0, 3, 3, 3, 0, 0, 3]))
+      .reshape([1, 2, 6])
+
+    expectThrows(() => module(queries, keys, values), new RegExp('must have the same shape'))
+  })
+  it('differing shapes (incl 2nd last axis) in keys and values are invalid', () => {
     const module = new sm.module.TransformerMultiheadAttention(6, 2)
     const queries = sm
       .tensor(new Float32Array([0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1]))
@@ -280,7 +337,7 @@ describe('TransformerMultiheadAttention', () => {
     const keys = sm.tensor(new Float32Array([0, 0, 0.5, 0.25, 1, 0])).reshape([1, 6])
     const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0, 3, 3, 3, 0, 0, 3])).reshape([2, 6])
 
-    expectThrows(() => module(queries, keys, values), new RegExp('should have the same shape'))
+    expectThrows(() => module(queries, keys, values), new RegExp('must have the same shape'))
   })
   it('differing dimensionalities are invalid', () => {
     const module = new sm.module.TransformerMultiheadAttention(6, 2)
@@ -292,7 +349,7 @@ describe('TransformerMultiheadAttention', () => {
       .reshape([1, 2, 6])
     const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0, 3, 3, 3, 0, 0, 3])).reshape([2, 6])
 
-    expectThrows(() => module(queries, keys, values), new RegExp('should have the same shape'))
+    expectThrows(() => module(queries, keys, values), new RegExp('must have the same shape'))
   })
   it('invalid dimensions', () => {
     const module = new sm.module.TransformerMultiheadAttention(8, 2)
@@ -304,7 +361,7 @@ describe('TransformerMultiheadAttention', () => {
       .reshape([2, 6])
     const values = sm.tensor(new Float32Array([1, 0, 0, 0, 1, 0, 3, 3, 3, 0, 0, 3])).reshape([2, 6])
 
-    expectThrows(() => module(queries, keys, values), new RegExp('must match module dimensions'))
+    expectThrows(() => module(queries, keys, values), new RegExp('must match attention dimension'))
   })
   it('calculates gradient', () => {
     const module = new sm.module.TransformerMultiheadAttention(6, 2)
