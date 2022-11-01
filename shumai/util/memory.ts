@@ -30,12 +30,12 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
       return
     }
 
-    if (Array.isArray(result)) {
+    if (result instanceof Array) {
       // array
       const length = result.length
       for (let i = 0; i < length; i++) {
         if (result[i] instanceof Tensor) {
-          creationTracker.delete(result[i])
+          creationTracker.delete(result[i].ptr)
         } else {
           parseTidyRet(result[i])
         }
@@ -43,7 +43,7 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
       return
     }
 
-    if (typeof result === 'object') {
+    if (result instanceof Object) {
       // Object
       const stringified = JSON.stringify(result)
       if (!prev_seen.has(stringified)) {
@@ -61,6 +61,7 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
       return
     }
   }
+
   parseTidyRet(result)
 
   for (const [, tensor] of creationTracker) {

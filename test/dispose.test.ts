@@ -89,6 +89,85 @@ describe('dispose', () => {
     const o = sm.util.tidy(mm_pw_op)
     for (let i = 0; i < o.length; i++) {
       expect(o[i] instanceof sm.Tensor).toBe(true)
+      o[i].dispose()
+    }
+    expect(sm.bytesUsed()).toBe(start_bytes)
+    a.dispose()
+    b.dispose()
+    c.dispose()
+  })
+  // WIP: below currently fail
+  it('tidy => Record<string, Tensor>', () => {
+    const N = 64
+    const a = sm.randn([N, 64])
+    const b = sm.identity(N)
+    const c = sm.randn([N, 1])
+    const start_bytes = sm.bytesUsed()
+
+    const mm_pw_op = () => {
+      const out: Record<number, sm.Tensor> = {}
+      let iters = 0
+      while (iters < 4) {
+        let d = a
+        for (let i = 0; i < 32 * iters; i++) {
+          d = b.matmul(d)
+          for (let j = 0; j < 4 * iters; j++) {
+            d = d.add(c)
+          }
+        }
+        out[iters] = d.sum()
+        iters++
+      }
+      return out
+    }
+    const o = sm.util.tidy(mm_pw_op)
+    const o_keys = Object.keys(o)
+    for (let i = 0; i < o_keys.length; i++) {
+      expect(o[o_keys[i]] instanceof sm.Tensor).toBe(true)
+      if (o[o_keys[i]] instanceof sm.Tensor) o[o_keys[i]].dispose()
+    }
+    expect(sm.bytesUsed()).toBe(start_bytes)
+    a.dispose()
+    b.dispose()
+    c.dispose()
+  })
+
+  it('tidy => Record<string, Tensor>[]', () => {
+    const N = 64
+    const a = sm.randn([N, 64])
+    const b = sm.identity(N)
+    const c = sm.randn([N, 1])
+    const start_bytes = sm.bytesUsed()
+
+    const mm_pw_op = () => {
+      const out: Record<number, sm.Tensor>[] = []
+      for (let i = 0; i < 4; i++) {
+        let iters = 0
+        const record: Record<number, sm.Tensor> = {}
+        while (iters < 4) {
+          let d = a
+          for (let j = 0; j < 8 * iters; j++) {
+            d = b.matmul(d)
+            for (let k = 0; k < 1 * iters; k++) {
+              d = d.add(c)
+            }
+          }
+          record[d.ptr] = d.sum()
+          iters++
+        }
+        out.push(record)
+      }
+      return out
+    }
+    const o = sm.util.tidy(mm_pw_op)
+    console.log(o.length)
+    console.log(o)
+    for (let i = 0; i < o.length; i++) {
+      const keys = Object.keys(o[i])
+      for (let j = 0; j < keys.length; j++) {
+        expect(o[i][keys[j]] instanceof sm.Tensor).toBe(true)
+        if (o[i][keys[j]] instanceof sm.Tensor) o[i][keys[j]].dispose()
+      }
     }
     expect(sm.bytesUsed()).toBe(start_bytes)
     a.dispose()
