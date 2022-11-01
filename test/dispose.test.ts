@@ -11,7 +11,7 @@ describe('dispose', () => {
     }
     expect(sm.bytesUsed()).toBe(start_bytes)
   })
-  it('tidy', () => {
+  it('tidy - basic', () => {
     const N = 64
     const a = sm.randn([N, 64])
     const b = sm.identity(N)
@@ -20,9 +20,9 @@ describe('dispose', () => {
 
     const mm_pw_op = () => {
       let d = a
-      for (let i = 0; i < 1000; ++i) {
+      for (let i = 0; i < 128; i++) {
         d = b.matmul(d)
-        for (let j = 0; j < 10; ++j) {
+        for (let j = 0; j < 16; j++) {
           d = d.add(c)
         }
       }
@@ -32,5 +32,67 @@ describe('dispose', () => {
     const o = sm.util.tidy(mm_pw_op)
     expect(typeof o).toBe('number')
     expect(sm.bytesUsed()).toBe(start_bytes)
+    a.dispose()
+    b.dispose()
+    c.dispose()
+  })
+
+  it('tidy => Tensor', () => {
+    const N = 64
+    const a = sm.randn([N, 64])
+    const b = sm.identity(N)
+    const c = sm.randn([N, 1])
+    const start_bytes = sm.bytesUsed()
+
+    const mm_pw_op = () => {
+      let d = a
+      for (let i = 0; i < 128; i++) {
+        d = b.matmul(d)
+        for (let j = 0; j < 16; j++) {
+          d = d.add(c)
+        }
+      }
+      return d.sum()
+    }
+    const o = sm.util.tidy(mm_pw_op)
+    expect(o instanceof sm.Tensor).toBe(true)
+    o.dispose()
+    expect(sm.bytesUsed()).toBe(start_bytes)
+    a.dispose()
+    b.dispose()
+    c.dispose()
+  })
+
+  it('tidy => Tensor[]', () => {
+    const N = 64
+    const a = sm.randn([N, 64])
+    const b = sm.identity(N)
+    const c = sm.randn([N, 1])
+    const start_bytes = sm.bytesUsed()
+
+    const mm_pw_op = () => {
+      const out: sm.Tensor[] = []
+      let iters = 0
+      while (iters < 4) {
+        let d = a
+        for (let i = 0; i < 32 * iters; i++) {
+          d = b.matmul(d)
+          for (let j = 0; j < 4 * iters; j++) {
+            d = d.add(c)
+          }
+        }
+        out.push(d.sum())
+        iters++
+      }
+      return out
+    }
+    const o = sm.util.tidy(mm_pw_op)
+    for (let i = 0; i < o.length; i++) {
+      expect(o[i] instanceof sm.Tensor).toBe(true)
+    }
+    expect(sm.bytesUsed()).toBe(start_bytes)
+    a.dispose()
+    b.dispose()
+    c.dispose()
   })
 })

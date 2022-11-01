@@ -1,28 +1,68 @@
 import { Tensor } from '../tensor/tensor'
 export const creationTracker: Map<number, Tensor> = new Map()
+export const altTracker: Record<number, Tensor> = {}
+
 export let is_tidy_run = false
 
 export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
   if (!Array.isArray(args)) args = [args]
   is_tidy_run = true
   const result = fn(...args)
-  const keep_ptrs: number[] = []
-  switch (typeof result) {
-  }
-  if (result instanceof Tensor) {
-    keep_ptrs.push(result.ptr)
-  } else if (Array.isArray(result)) {
-    const count = result.length
-    for (let i = 0; i < count; i++) {
-      const item = result[i]
-      if (item instanceof Tensor) {
-        keep_ptrs.push(item.ptr)
+
+  // lazy mark & sweep w stringifed obj to avoid circ ref
+  const prev_seen = new Set<string>()
+  const parseTidyRet = (result: any) => {
+    const res_type = typeof result
+    if (
+      res_type === 'number' ||
+      res_type === 'bigint' ||
+      res_type === 'symbol' ||
+      res_type === 'string' ||
+      res_type === 'boolean' ||
+      res_type === 'undefined' ||
+      result == null
+    ) {
+      return
+    }
+
+    if (result instanceof Tensor) {
+      creationTracker.delete(result.ptr)
+      return
+    }
+
+    if (Array.isArray(result)) {
+      // array
+      const length = result.length
+      for (let i = 0; i < length; i++) {
+        if (result[i] instanceof Tensor) {
+          creationTracker.delete(result[i])
+        } else {
+          parseTidyRet(result[i])
+        }
       }
+      return
+    }
+
+    if (typeof result === 'object') {
+      // Object
+      const stringified = JSON.stringify(result)
+      if (!prev_seen.has(stringified)) {
+        prev_seen.add(stringified)
+
+        const keys = Object.keys(result)
+        for (let i = 0; i < keys.length; i++) {
+          if (result[keys[i]] instanceof Tensor) {
+            creationTracker.delete(result[keys[i]].ptr)
+          } else {
+            parseTidyRet(result[keys[i]])
+          }
+        }
+      }
+      return
     }
   }
-  // TODO: needs to recursively scan for `instanceof Tensor` in the result
+  parseTidyRet(result)
 
-  keep_ptrs.map((ptr) => creationTracker.delete(ptr))
   for (const [, tensor] of creationTracker) {
     tensor.dispose()
   }
