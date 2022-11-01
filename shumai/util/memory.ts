@@ -1,16 +1,13 @@
 import { Tensor } from '../tensor/tensor'
-export const creationTracker: Map<number, Tensor> = new Map()
-export const altTracker: Record<number, Tensor> = {}
-
-export let is_tidy_run = false
+export let _tidyTracker: Map<number, Tensor> = null
 
 export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
+  _tidyTracker = new Map()
   if (!Array.isArray(args)) args = [args]
-  is_tidy_run = true
   const result = fn(...args)
 
-  // lazy mark & sweep w stringifed obj to avoid circ ref
-  const prev_seen = new Set<string>()
+  // lazy mark & sweep w `WeakSet` to avoid circ ref
+  const prev_seen = new WeakSet()
   const parseTidyRet = (result: any) => {
     const res_type = typeof result
     if (
@@ -26,7 +23,10 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
     }
 
     if (result instanceof Tensor) {
-      creationTracker.delete(result.ptr)
+      if (!prev_seen.has(result)) {
+        prev_seen.add(result)
+        _tidyTracker.delete(result.ptr)
+      }
       return
     }
 
@@ -34,28 +34,18 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
       // array
       const length = result.length
       for (let i = 0; i < length; i++) {
-        if (result[i] instanceof Tensor) {
-          creationTracker.delete(result[i].ptr)
-        } else {
-          parseTidyRet(result[i])
-        }
+        parseTidyRet(result[i])
       }
       return
     }
 
     if (result instanceof Object) {
       // Object
-      const stringified = JSON.stringify(result)
-      if (!prev_seen.has(stringified)) {
-        prev_seen.add(stringified)
-
+      if (!prev_seen.has(result)) {
+        prev_seen.add(result)
         const keys = Object.keys(result)
         for (let i = 0; i < keys.length; i++) {
-          if (result[keys[i]] instanceof Tensor) {
-            creationTracker.delete(result[keys[i]].ptr)
-          } else {
-            parseTidyRet(result[keys[i]])
-          }
+          parseTidyRet(result[keys[i]])
         }
       }
       return
@@ -64,10 +54,9 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
 
   parseTidyRet(result)
 
-  for (const [, tensor] of creationTracker) {
+  for (const [, tensor] of _tidyTracker) {
     tensor.dispose()
   }
-  creationTracker.clear()
-  is_tidy_run = false
+  _tidyTracker = null
   return result
 }
