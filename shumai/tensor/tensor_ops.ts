@@ -38,13 +38,13 @@ export function thresholdRelu(tensor: Tensor, threshold = 1): Tensor {
 }
 
 export function clamp(tensor: Tensor, low: number, high: number): Tensor {
-  return tensor.clip(full(tensor.shape, low), full(tensor.shape, high));
+  return tensor.clip(full(tensor.shape, low), full(tensor.shape, high))
 }
 
 export function relu6(tensor: Tensor): Tensor {
-  return clamp(tensor, 0.0, 6.0);
+  return clamp(tensor, 0.0, 6.0)
 }
 
 export function hardTanh(tensor: Tensor): Tensor {
-  return clamp(tensor, -1.0, 1.0);
+  return clamp(tensor, -1.0, 1.0)
 }

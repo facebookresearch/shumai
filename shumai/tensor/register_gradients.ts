@@ -215,9 +215,9 @@ const impls = {
     const low = <Tensor>grad.in[1]
     const high = <Tensor>grad.in[2]
 
-    const lowMask = result.greaterThan(low);
-    const highMask = result.lessThan(high);
-    const lowHighMask = lowMask.bitwiseAnd(highMask);
+    const lowMask = result.greaterThan(low)
+    const highMask = result.lessThan(high)
+    const lowHighMask = lowMask.bitwiseAnd(highMask)
     const gradMask = sm.where(lowHighMask, grad.out, sm.full(grad.out.shape, 0))
 
     return gradMask
