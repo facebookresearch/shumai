@@ -472,7 +472,15 @@ export class Tensor {
   }
 
   get shape64() {
-    return new BigInt64Array(this.ndim)
+    const out = new BigInt64Array(this.ndim)
+    if (out.length === 0) {
+      return out
+    }
+    const err = fl._shape.native(this.ptr, ptr(out), out.length)
+    if (err != 0) {
+      throw "couldn't determine shape"
+    }
+    return out
   }
 
   toString() {
