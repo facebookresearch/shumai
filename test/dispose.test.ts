@@ -160,8 +160,6 @@ describe('dispose', () => {
       return out
     }
     const o = sm.util.tidy(mm_pw_op)
-    console.log(o.length)
-    console.log(o)
     for (let i = 0; i < o.length; i++) {
       const keys = Object.keys(o[i])
       for (let j = 0; j < keys.length; j++) {
