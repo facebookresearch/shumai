@@ -282,7 +282,7 @@ export class Tensor {
 
   private track_tidy_ptr(ptr?: number) {
     if (!ptr) ptr = this.ptr
-    if (!_tidyTracker.has(ptr)) _tidyTracker.set(ptr, this)
+    _tidyTracker.set(ptr, this)
   }
 
   backward(jacobian?: Tensor) {
