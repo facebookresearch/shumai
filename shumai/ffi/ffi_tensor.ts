@@ -56,6 +56,9 @@ const ffi_tensor = {
   genTensorDestroyer: {
     returns: FFIType.ptr
   },
+  dispose: {
+    args: [FFIType.ptr]
+  },
   tensorFromFloat16Buffer: {
     args: [FFIType.i64, FFIType.ptr],
     returns: FFIType.ptr
