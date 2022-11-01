@@ -44,7 +44,6 @@ static std::mutex g_op_mutex;
 
 static std::atomic<size_t> g_bytes_used = 0;
 static std::atomic<bool> g_row_major = true;
-static std::unordered_set<const fl::Tensor*> alreadyDestroyed;
 
 template <typename T>
 std::vector<T> arrayArg(const void* ptr, int len, bool reverse, int invert) {
@@ -268,19 +267,15 @@ void* tensorFromUint64Buffer(int64_t numel, void* ptr) {
 void destroyTensor(void* t, void* /*ignore*/) {
   LOCK_GUARD
   auto* tensor = reinterpret_cast<fl::Tensor*>(t);
-  auto tensor_loc = alreadyDestroyed.find(tensor);
-  if (tensor_loc == alreadyDestroyed.end()) {
+  if (tensor->hasAdapter()) {
     g_bytes_used -= tensor->bytes();
-    delete tensor;
-  } else {
-    alreadyDestroyed.erase(tensor_loc);
   }
+  delete tensor;
 }
 
 void dispose(void* t) {
   LOCK_GUARD
   auto& tensor = *reinterpret_cast<fl::Tensor*>(t);
-  alreadyDestroyed.insert(&tensor);
   g_bytes_used -= tensor.bytes();
   fl::detail::releaseAdapterUnsafe(tensor);
 }
