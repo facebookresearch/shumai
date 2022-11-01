@@ -280,11 +280,6 @@ export class Tensor {
     )
   }
 
-  private track_tidy_ptr(ptr?: number) {
-    if (!ptr) ptr = this.ptr
-    _tidyTracker.set(ptr, this)
-  }
-
   backward(jacobian?: Tensor) {
     return backward(this, jacobian)
   }
@@ -299,96 +294,96 @@ export class Tensor {
       this.stats = obj.stats
       this.grad = obj.grad
       this.op = obj.op
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.hasOwnProperty('_ptr')) {
       this._injest_ptr(obj._ptr)
-      if (_tidyTracker) this.track_tidy_ptr(obj._ptr)
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       this.deps = obj._deps
       return
     }
     if (typeof obj === 'string') {
       const cstr_buffer = new TextEncoder().encode(obj)
       this._injest_ptr(fl.load(cstr_buffer, cstr_buffer.length))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj instanceof Float16Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromFloat16Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === Float32Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromFloat32Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === Float64Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromFloat64Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === Int8Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromInt8Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === Int16Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromInt16Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === Int32Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromInt32Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === BigInt64Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromInt64Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === Uint8Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromUint8Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === Uint16Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromUint16Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === Uint32Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromUint32Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
     if (obj.constructor === BigUint64Array) {
       const len_ = obj.length
       const len = len_.constructor === BigInt ? len_ : BigInt(len_ || 0)
       this._injest_ptr(fl.tensorFromUint64Buffer.native(len, ptr(obj)))
-      if (_tidyTracker) this.track_tidy_ptr()
+      if (_tidyTracker) _tidyTracker.set(this.ptr, this)
       return
     }
 
@@ -396,7 +391,7 @@ export class Tensor {
       obj = [obj]
     }
     this._injest_ptr(fl.createTensor.native(...arrayArg(obj)))
-    if (_tidyTracker) this.track_tidy_ptr()
+    if (_tidyTracker) _tidyTracker.set(this.ptr, this)
     return
   }
 
