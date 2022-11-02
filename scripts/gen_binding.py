@@ -485,7 +485,7 @@ for op, args, ret in op_list:
         wrap_args = [('this', 'Tensor')] + wrap_args
         js_tensor_args = ["this"] + js_tensor_args
     js_ptr_args = [x[0] if x[1] != "Tensor" else f"{x[0]}.ptr" for x in wrap_args]
-    js_ptr_result = f"const _ptr = fl._{op}({', '.join(js_ptr_args)})"
+    js_ptr_result = f"const _ptr = fl._{op}.native({', '.join(js_ptr_args)})"
     js_provenance_args = '||'.join([f"{t}.provenance" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.provenance, 0)" for tv in js_tensor_vector_args])
     js_requires_grad_args = '||'.join([f"{t}.requires_grad" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.requires_grad, false)" for tv in js_tensor_vector_args])
     js_requires_grad_args = 'false' if len(js_requires_grad_args) == 0 else js_requires_grad_args
@@ -506,7 +506,7 @@ for op, args, ret in op_list:
     stats = collectStats([{','.join(js_tensor_args)}])
   }}
   if (requires_stats) {{
-    recorded_stat = [performance.now(), fl.bytesUsed()]
+    recorded_stat = [performance.now(), fl.bytesUsed.native()]
   }}
 
   {js_ptr_result}
@@ -515,7 +515,7 @@ for op, args, ret in op_list:
   if (requires_stats) {{
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
-    const db = fl.bytesUsed() - b0
+    const db = fl.bytesUsed.native() - b0
     const s = getStack()
     if (s in stats) {{
       stats[s].time += dt

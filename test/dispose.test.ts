@@ -96,7 +96,6 @@ describe('dispose', () => {
     b.dispose()
     c.dispose()
   })
-  // WIP: below currently fail
   it('tidy => Record<string, Tensor>', () => {
     const N = 64
     const a = sm.randn([N, 64])
@@ -131,7 +130,6 @@ describe('dispose', () => {
     b.dispose()
     c.dispose()
   })
-
   it('tidy => Record<string, Tensor>[]', () => {
     const N = 64
     const a = sm.randn([N, 64])
@@ -166,6 +164,54 @@ describe('dispose', () => {
         expect(o[i][keys[j]] instanceof sm.Tensor).toBe(true)
         if (o[i][keys[j]] instanceof sm.Tensor) o[i][keys[j]].dispose()
       }
+    }
+    expect(sm.bytesUsed()).toBe(start_bytes)
+    a.dispose()
+    b.dispose()
+    c.dispose()
+  })
+  it('tidy => nested object with circular refs', () => {
+    const N = 64
+    const a = sm.randn([N, 64])
+    const b = sm.identity(N)
+    const c = sm.randn([N, 1])
+    const start_bytes = sm.bytesUsed()
+
+    const mm_pw_op = (): [Record<string, any>, sm.Tensor[]] => {
+      const out: Record<string, any> = {}
+      for (let i = 0; i < 4; i++) {
+        let iters = 0
+        const record: Record<number, sm.Tensor> = {}
+        while (iters < 4) {
+          let d = a
+          for (let j = 0; j < 8 * iters; j++) {
+            d = b.matmul(d)
+            for (let k = 0; k < 1 * iters; k++) {
+              d = d.add(c)
+            }
+          }
+          record[d.ptr] = d.sum()
+          iters++
+        }
+        out[i.toString()] = record
+      }
+      const out_tensors: sm.Tensor[] = []
+      const out_keys = Object.keys(out)
+      for (let i = 0; i < out_keys.length; i++) {
+        const keys = Object.keys(out[out_keys[i]])
+        for (let j = 0; j < keys.length; j++) {
+          if (out[out_keys[i]][keys[j]] instanceof sm.Tensor)
+            out_tensors.push(out[out_keys[i]][keys[j]])
+        }
+      }
+      out['2'][1] = out['1']
+      out['1'][199] = out['2']
+      return [out, out_tensors]
+    }
+    const [, tensors] = sm.util.tidy<[Record<string, any>, sm.Tensor[]]>(mm_pw_op)
+    for (let i = 0; i < tensors.length; i++) {
+      expect(tensors[i] instanceof sm.Tensor).toBe(true)
+      tensors[i].dispose()
     }
     expect(sm.bytesUsed()).toBe(start_bytes)
     a.dispose()
