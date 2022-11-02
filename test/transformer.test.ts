@@ -1,6 +1,117 @@
 import * as sm from '@shumai/shumai'
 import { describe, expect, it } from 'bun:test'
-import { areSameShape, expectArraysClose, expectThrows } from './utils'
+import { areSameShape, expectArraysClose, expectThrows, isShape } from './utils'
+
+describe('TransformerPositionalEncoding', () => {
+  it('dim=1', () => {
+    const module = new sm.module.TransformerPositionalEncoding(1)
+
+    const result = module(3)
+    const expected = [0, 1, 2].map((x) => Math.sin(x))
+    expect(isShape(result, [3, 1])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('dim=2', () => {
+    const module = new sm.module.TransformerPositionalEncoding(2)
+
+    const result = module(3)
+    const expected = [0, 0, 1, 1, 2, 2].map((x, i) => (i % 2 ? Math.cos(x) : Math.sin(x)))
+    expect(isShape(result, [3, 2])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('dim=3', () => {
+    const dim = 3
+    const module = new sm.module.TransformerPositionalEncoding(dim)
+
+    const result = module(3)
+    const expected = [0, 0, 0, 1, 1, 1, 2, 2, 2].map((x, i) =>
+      ((i % dim) % 2 ? Math.cos : Math.sin)(
+        x /
+          Math.pow(
+            sm.module.TransformerPositionalEncoding.ENCODING_BASE,
+            ((i % dim) - ((i % dim) % 2 ? 1 : 0)) / dim
+          )
+      )
+    )
+    expect(isShape(result, [3, dim])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('dim=4', () => {
+    const dim = 4
+    const module = new sm.module.TransformerPositionalEncoding(dim)
+
+    const result = module(3)
+    const expected = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2].map((x, i) =>
+      ((i % dim) % 2 ? Math.cos : Math.sin)(
+        x /
+          Math.pow(
+            sm.module.TransformerPositionalEncoding.ENCODING_BASE,
+            ((i % dim) - ((i % dim) % 2 ? 1 : 0)) / dim
+          )
+      )
+    )
+    expect(isShape(result, [3, dim])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('init sequence length, dim=4', () => {
+    const dim = 4
+    const module = new sm.module.TransformerPositionalEncoding(dim, dim)
+
+    const result = module(3)
+    const expected = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2].map((x, i) =>
+      ((i % dim) % 2 ? Math.cos : Math.sin)(
+        x /
+          Math.pow(
+            sm.module.TransformerPositionalEncoding.ENCODING_BASE,
+            ((i % dim) - ((i % dim) % 2 ? 1 : 0)) / dim
+          )
+      )
+    )
+    expect(isShape(result, [3, dim])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('extends sequence length, dim=4', () => {
+    const dim = 4
+    const module = new sm.module.TransformerPositionalEncoding(dim, 2)
+
+    const result = module(3)
+    const expected = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2].map((x, i) =>
+      ((i % dim) % 2 ? Math.cos : Math.sin)(
+        x /
+          Math.pow(
+            sm.module.TransformerPositionalEncoding.ENCODING_BASE,
+            ((i % dim) - ((i % dim) % 2 ? 1 : 0)) / dim
+          )
+      )
+    )
+    expect(isShape(result, [3, dim])).toBe(true)
+    expectArraysClose(result.toFloat32Array(), expected)
+  })
+  it('dim=0 is invalid', () => {
+    expectThrows(
+      () => new sm.module.TransformerPositionalEncoding(0),
+      new RegExp('dimension must be > 0')
+    )
+  })
+  it('dim=-1 is invalid', () => {
+    expectThrows(
+      () => new sm.module.TransformerPositionalEncoding(-1),
+      new RegExp('dimension must be > 0')
+    )
+  })
+  it('0 init sequenceLength is invalid', () => {
+    expectThrows(
+      () => new sm.module.TransformerPositionalEncoding(3, 0),
+      new RegExp('sequenceLength must be > 0')
+    )
+  })
+  it('-1 init sequenceLength is invalid', () => {
+    expectThrows(
+      () => new sm.module.TransformerPositionalEncoding(3, -1),
+      new RegExp('sequenceLength must be > 0')
+    )
+  })
+})
 
 describe('TransformerDotProductAttention', () => {
   it('single matching token', () => {
@@ -383,5 +494,145 @@ describe('TransformerMultiheadAttention', () => {
     expect(!!queries.grad).toBe(true)
     expect(!!keys.grad).toBe(true)
     expect(!!values.grad).toBe(true)
+  })
+})
+
+describe('TransformerEncoderLayer', () => {
+  it('single token, two heads', () => {
+    const module = new sm.module.TransformerEncoderLayer(6, 2)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+
+    const result = module(input)
+    areSameShape(result, input)
+  })
+  it('single token, two heads (attentionDim)', () => {
+    const module = new sm.module.TransformerEncoderLayer(6, 2, 7)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+
+    const result = module(input)
+    areSameShape(result, input)
+  })
+  it('single token, two heads (feedForwardDim)', () => {
+    const module = new sm.module.TransformerEncoderLayer(6, 2, 6, 12)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+
+    const result = module(input)
+    areSameShape(result, input)
+  })
+  it('batch samples are independent', () => {
+    const module = new sm.module.TransformerEncoderLayer(6, 2)
+    const singleInput = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const batchInput = sm
+      .tensor(
+        new Float32Array(
+          [2, 3, 0.5, 0.25, 1, 2.25].concat([
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random()
+          ])
+        )
+      )
+      .reshape([2, 1, 6])
+
+    const singleResult = module(singleInput)
+    const batchResult = module(batchInput)
+    areSameShape(batchResult, batchInput)
+
+    expectArraysClose(
+      batchResult.index([0, ':', ':']).toFloat32Array(),
+      singleResult.toFloat32Array()
+    )
+    areSameShape(batchResult.index([0, ':', ':']), singleResult)
+  })
+  it('calculates gradient', () => {
+    const module = new sm.module.TransformerEncoderLayer(6, 2)
+    const input = sm
+      .tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25]))
+      .reshape([1, 6])
+      .requireGrad()
+
+    const result = module(input).sum()
+    result.backward()
+    expect(!!input.grad).toBe(true)
+  })
+})
+
+describe('TransformerEncoder', () => {
+  it('depth=1', () => {
+    const module = new sm.module.TransformerEncoder(6, 2, 1)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+
+    const result = module(input)
+    areSameShape(result, input)
+  })
+  it('depth=2', () => {
+    const module = new sm.module.TransformerEncoder(6, 2, 2)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+
+    const result = module(input)
+    areSameShape(result, input)
+  })
+  it('depth=2 (attentionDim)', () => {
+    const module = new sm.module.TransformerEncoder(6, 2, 2, 7)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+
+    const result = module(input)
+    areSameShape(result, input)
+  })
+  it('depth=2 (feedForwardDim)', () => {
+    const module = new sm.module.TransformerEncoder(6, 2, 2, 6, 12)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+
+    const result = module(input)
+    areSameShape(result, input)
+  })
+  it('depth=2 (initSequenceLength)', () => {
+    const module = new sm.module.TransformerEncoder(6, 2, 2, 6, 6, 1)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+
+    const result = module(input)
+    areSameShape(result, input)
+  })
+  it('batch samples are independent', () => {
+    const module = new sm.module.TransformerEncoder(6, 2, 2)
+    const singleInput = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const batchInput = sm
+      .tensor(
+        new Float32Array(
+          [2, 3, 0.5, 0.25, 1, 2.25].concat([
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random()
+          ])
+        )
+      )
+      .reshape([2, 1, 6])
+
+    const singleResult = module(singleInput)
+    const batchResult = module(batchInput)
+    areSameShape(batchResult, batchInput)
+
+    expectArraysClose(
+      batchResult.index([0, ':', ':']).toFloat32Array(),
+      singleResult.toFloat32Array()
+    )
+    areSameShape(batchResult.index([0, ':', ':']), singleResult)
+  })
+  it('calculates gradient', () => {
+    const module = new sm.module.TransformerEncoder(6, 2, 2)
+    const input = sm
+      .tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25]))
+      .reshape([1, 6])
+      .requireGrad()
+
+    const result = module(input).sum()
+    result.backward()
+    expect(!!input.grad).toBe(true)
   })
 })
