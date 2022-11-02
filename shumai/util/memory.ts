@@ -6,9 +6,12 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
   if (!Array.isArray(args)) args = [args]
   const result = fn(...args)
 
-  // lazy mark & sweep w `WeakSet` to avoid circ ref
+  /**
+   * recursively scan for `instanceof Tensor`;
+   * mark & sweep w `WeakSet` to avoid circ ref
+   */
   const prev_seen = new WeakSet()
-  const parseTidyRet = (result: any) => {
+  const parseTidyRet = (result: unknown) => {
     const res_type = typeof result
     if (
       res_type === 'number' ||

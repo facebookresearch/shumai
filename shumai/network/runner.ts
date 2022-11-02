@@ -5,7 +5,7 @@ export function remote_runner(url) {
   async function get_logs() {
     const res = await fetch(`${url}/logs`)
     try {
-      return await res.json()
+      return await (<Promise<{ stdout: string; stderr: string }>>res.json())
     } catch (e) {
       return { stdout: '', stderr: '' }
     }
@@ -60,7 +60,7 @@ export function serve_runner() {
       await Bun.write(`entry.ts`, file)
       console.log('receieved new server file')
       // TODO find cleaner way to call `shumai serve_model`
-      bg_run = Bun.spawn(['bun', `${__dirname}/../run.ts`, 'serve_model', 'entry.ts'], {
+      bg_run = Bun.spawn(['bun', `${import.meta.dir}/../run.ts`, 'serve_model', 'entry.ts'], {
         stdout: Bun.file('stdout.log'),
         stderr: Bun.file('stderr.log')
       })

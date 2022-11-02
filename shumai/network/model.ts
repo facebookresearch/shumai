@@ -1,5 +1,4 @@
 import type { Errorlike, Server } from 'bun'
-import * as crypto from 'crypto'
 import { OptimizerFn } from '../optim'
 import * as sm from '../tensor'
 import { backoff, decode, encode, tfetch } from './tensor'
@@ -258,7 +257,7 @@ export function serve_model(
   grad_update: OptimizerFn,
   options: ServeOpts,
   // TODO: pending further type refinement (requires a fn; same comments above)
-  req_map: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>
+  req_map?: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>
 ) {
   const base_req_map = {
     /* TODO: Refine type of param `u` */
