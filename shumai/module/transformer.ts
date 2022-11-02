@@ -189,6 +189,7 @@ export class TransformerDotProductAttention extends Module {
    * @param queries - Tensor of query embeddings, shape `[..., queryTokens, dim]`
    * @param keys - Tensor of key embeddings, shape `[..., keyTokens, dim]`
    * @param values - Tensor of value embeddings each corresponding to a key, shape `[..., keyTokens, dim]`
+   * @param mask - Tensor mask of shape `[queryTokens, keyTokens]` where a 1 in position $(i, j)$ indicates that the $i$th query should not attend to the $j$th key
    * @returns A Tensor of shape `[..., queryTokens, dim]`
    */
   forward(queries: Tensor, keys: Tensor, values: Tensor, mask?: Tensor): Tensor {
@@ -255,9 +256,10 @@ export class TransformerMultiheadAttention extends Module {
    * @param queries - Tensor of query vectors, shape `[..., queryTokens, dim]`
    * @param keys - Tensor of key vectors, shape `[..., keyTokens, dim]`
    * @param values - Tensor of value vectors each corresponding to a key, shape `[..., keyTokens, dim]`
+   * @param mask - Tensor mask of shape `[queryTokens, keyTokens]` for the {@link TransformerDotProductAttention}
    * @returns A Tensor of shape `[..., queryTokens, dim]`
    */
-  forward(queries: Tensor, keys: Tensor, values: Tensor): Tensor {
+  forward(queries: Tensor, keys: Tensor, values: Tensor, mask?: Tensor): Tensor {
     // queries shape [..., queryTokens, dim]
     // keys and values shape [..., keyTokens, dim]
     checkAttentionInputs(this.dim, queries, keys, values)
@@ -285,7 +287,7 @@ export class TransformerMultiheadAttention extends Module {
     const reverseReshape = [...originalShape]
     reverseReshape[reverseReshape.length - 1] = this.heads * this.attentionDim
 
-    let output = this.attention(queries, keys, values) // shape [..., heads, queryTokens, attentionDim]
+    let output = this.attention(queries, keys, values, mask) // shape [..., heads, queryTokens, attentionDim]
     output = output.transpose(reverseTranspose) // shape [..., queryTokens, heads, attentionDim]
     output = output.reshape(reverseReshape) // shape [..., queryTokens, heads * attentionDim]
     output = this.concatEmbed(output) // shape [..., queryTokens, dim]
