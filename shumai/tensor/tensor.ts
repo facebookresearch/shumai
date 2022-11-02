@@ -49,7 +49,7 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
     stats = collectStats(<Tensor[]>args.filter((arg) => arg instanceof Tensor))
   }
   if (requires_stats) {
-    recorded_stat = [performance.now(), fl.bytesUsed()]
+    recorded_stat = [performance.now(), fl.bytesUsed.native()]
   }
 
   const _ptr = closure(...ptr_args)
@@ -57,7 +57,7 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
   if (requires_stats) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
-    const db = fl.bytesUsed() - b0
+    const db = fl.bytesUsed.native() - b0
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
@@ -400,7 +400,7 @@ export class Tensor {
     this.deps = tensor.deps
     this.eval()
     // TODO do this only when necessary from C++
-    if (fl.bytesUsed() > 10e6 /* 10MB */) {
+    if (fl.bytesUsed.native() > 10e6 /* 10MB */) {
       Bun.gc(true)
     }
     if (this._checkpoint_file) {
@@ -439,7 +439,7 @@ export class Tensor {
   }
 
   astype(dtype: dtype) {
-    return wrapFLTensor(fl._astype, this.ptr, dtype)
+    return wrapFLTensor(fl._astype.native, this.ptr, dtype)
   }
 
   eval() {
