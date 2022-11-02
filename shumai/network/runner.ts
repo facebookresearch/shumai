@@ -23,7 +23,7 @@ export function remote_runner(url) {
     logs: get_logs,
 
     async serve_model(file, port = 3000) {
-      const bundled = await run(
+      const [bundled] = await run(
         `esbuild --target=esnext --format=esm --platform=node --external:bun* --external:@shumai* --bundle ${file}`
       )
       await fetch(`${url}/serve_model`, {

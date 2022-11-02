@@ -1,4 +1,4 @@
-import type { Errorlike, Server } from 'bun'
+import type { ServeOptions } from 'bun'
 import { OptimizerFn } from '../optim'
 import * as sm from '../tensor'
 import { backoff, decode, encode, tfetch } from './tensor'
@@ -57,19 +57,6 @@ export function remote_model(url: string, backward_url?: string, error_handler?)
   return forward
 }
 
-/* copy Bun's Serve Type, less fetch as we supply that logic */
-export type ServeOpts = {
-  port?: string | number
-  hostname?: string
-  baseURI?: string
-  maxRequestBodySize?: number
-  development?: boolean
-  error?: (
-    this: Server,
-    request: Errorlike
-  ) => Response | Promise<Response> | undefined | Promise<undefined>
-}
-
 export type OpStats = {
   bytes: bigint
   time: number
@@ -120,7 +107,7 @@ export type RouteStats = {
  */
 export function serve(
   request_dict: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>,
-  options: ServeOpts
+  options: ServeOptions
 ) {
   const user_data = {}
   const statistics: Record<string, RouteStats> = {}
@@ -255,7 +242,7 @@ export function serve(
 export function serve_model(
   fn: (t: sm.Tensor) => sm.Tensor | Promise<sm.Tensor>,
   grad_update: OptimizerFn,
-  options: ServeOpts,
+  options: ServeOptions,
   // TODO: pending further type refinement (requires a fn; same comments above)
   req_map?: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>
 ) {

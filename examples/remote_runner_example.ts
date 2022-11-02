@@ -15,7 +15,7 @@ let y = await f(x)
 const log = () => {
   return ` y[0] val: ${y.toFloat32()}`
 }
-for (const i of sm.util.viter(100000, log)) {
+for (const _i of sm.util.viter(100000, log)) {
   y = await f(x)
   const ref = x.mul(sm.scalar(2))
   sm.loss.mse(y, ref).backward()
