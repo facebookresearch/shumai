@@ -1,9 +1,8 @@
 import { spawn } from 'bun'
-import { all, sleep } from '../util'
 
 /** Runs all arguments as commands in parallel. */
 export function run(...args) {
-  const procs = []
+  const procs: Promise<string>[] = []
   for (const arg of args) {
     const s = <ReadableStream>spawn(arg.split(' '), {
       stdout: 'pipe',

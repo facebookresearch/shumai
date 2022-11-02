@@ -1,5 +1,5 @@
 import type { Tensor } from './tensor'
-import { _var, erf, full, sigmoid } from './tensor_ops_gen'
+import { _var, full, sigmoid } from './tensor_ops_gen'
 
 export * from './tensor_ops_gen'
 

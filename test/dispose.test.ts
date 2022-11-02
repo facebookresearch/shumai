@@ -177,8 +177,10 @@ describe('dispose', () => {
     const c = sm.randn([N, 1])
     const start_bytes = sm.bytesUsed()
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const mm_pw_op = (): [Record<string, any>, sm.Tensor[]] => {
       const out: Record<string, any> = {}
+      /* eslint-enable @typescript-eslint/no-explicit-any */
       for (let i = 0; i < 4; i++) {
         let iters = 0
         const record: Record<number, sm.Tensor> = {}
@@ -208,6 +210,7 @@ describe('dispose', () => {
       out['1'][199] = out['2']
       return [out, out_tensors]
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [, tensors] = sm.util.tidy<[Record<string, any>, sm.Tensor[]]>(mm_pw_op)
     for (let i = 0; i < tensors.length; i++) {
       expect(tensors[i] instanceof sm.Tensor).toBe(true)
