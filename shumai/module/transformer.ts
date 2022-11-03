@@ -189,6 +189,7 @@ export class TransformerDotProductAttention extends Module {
    * @param queries - Tensor of query embeddings, shape `[..., queryTokens, dim]`
    * @param keys - Tensor of key embeddings, shape `[..., keyTokens, dim]`
    * @param values - Tensor of value embeddings each corresponding to a key, shape `[..., keyTokens, dim]`
+   * @param mask - Tensor mask of shape `[queryTokens, keyTokens]` where a 1 in position $(i, j)$ indicates that the $i$th query should not attend to the $j$th key
    * @returns A Tensor of shape `[..., queryTokens, dim]`
    */
   forward(queries: Tensor, keys: Tensor, values: Tensor, mask?: Tensor): Tensor {
@@ -200,6 +201,13 @@ export class TransformerDotProductAttention extends Module {
     let output = queries.matmul(keys.T()) // shape [..., queryTokens, keyTokens]
 
     if (mask !== undefined) {
+      if (output.shape.length > 2) {
+        // mask.shape.length is always 2
+        const tile = output.shape
+        tile[tile.length - 1] = 1
+        tile[tile.length - 2] = 1
+        mask = mask.tile(tile)
+      }
       const negativeInfinities = sm.full([1], -Infinity).tile(output.shape)
       output = sm.where(mask, negativeInfinities, output)
     }
@@ -255,9 +263,10 @@ export class TransformerMultiheadAttention extends Module {
    * @param queries - Tensor of query vectors, shape `[..., queryTokens, dim]`
    * @param keys - Tensor of key vectors, shape `[..., keyTokens, dim]`
    * @param values - Tensor of value vectors each corresponding to a key, shape `[..., keyTokens, dim]`
+   * @param mask - Tensor mask of shape `[queryTokens, keyTokens]` for the {@link TransformerDotProductAttention}
    * @returns A Tensor of shape `[..., queryTokens, dim]`
    */
-  forward(queries: Tensor, keys: Tensor, values: Tensor): Tensor {
+  forward(queries: Tensor, keys: Tensor, values: Tensor, mask?: Tensor): Tensor {
     // queries shape [..., queryTokens, dim]
     // keys and values shape [..., keyTokens, dim]
     checkAttentionInputs(this.dim, queries, keys, values)
@@ -285,7 +294,7 @@ export class TransformerMultiheadAttention extends Module {
     const reverseReshape = [...originalShape]
     reverseReshape[reverseReshape.length - 1] = this.heads * this.attentionDim
 
-    let output = this.attention(queries, keys, values) // shape [..., heads, queryTokens, attentionDim]
+    let output = this.attention(queries, keys, values, mask) // shape [..., heads, queryTokens, attentionDim]
     output = output.transpose(reverseTranspose) // shape [..., queryTokens, heads, attentionDim]
     output = output.reshape(reverseReshape) // shape [..., queryTokens, heads * attentionDim]
     output = this.concatEmbed(output) // shape [..., queryTokens, dim]
@@ -397,7 +406,7 @@ export class TransformerEncoder extends Module {
    * @param depth - Number of encoder layers
    * @param attentionDim - Number of dimensions of the embeddings used in the scaled dot-product attention, or `dim` if not specified
    * @param feedForwardDim - Number of dimensions in the hidden layer of the feed forward network, or `dim` if not specified
-   * @param initSequenceLength - Initial sequence length that the positional embedding should be computed for, or {@link TransformerPositionalEncoding.DEFAULT_SEQUENCE_LENGTH} if not specified
+   * @param initSequenceLength - Initial sequence length that the positional encoding should be computed for, or {@link TransformerPositionalEncoding.DEFAULT_SEQUENCE_LENGTH} if not specified
    */
   constructor(
     dim: number,
@@ -423,7 +432,7 @@ export class TransformerEncoder extends Module {
       this.feedForwardDim = feedForwardDim
     }
 
-    if (feedForwardDim === undefined) {
+    if (initSequenceLength === undefined) {
       this.positional = new TransformerPositionalEncoding(this.dim)
     } else {
       this.positional = new TransformerPositionalEncoding(this.dim, initSequenceLength)
@@ -448,6 +457,172 @@ export class TransformerEncoder extends Module {
 
     let output = input.add(positionalEncoding) // shape [..., tokens, dim]
     output = this.layers(output) // shape [..., tokens, dim]
+    return output
+  }
+}
+
+/**
+ * A layer of the Transformer decoder, as described by Vaswani et al, consisting of a masked {@link TransformerMultiheadAttention | multi-head} self-attention layer, an unmasked {@link TransformerMultiheadAttention | multi-head} cross-attention layer and a fully-connected feed forward network. All of these use residual connections and are normalised with {@link LayerNorm}.
+ */
+export class TransformerDecoderLayer extends Module {
+  private dim: number
+  private heads: number
+  private attentionDim: number
+  private feedForwardDim: number
+  private maskedSelfAttention: TransformerMultiheadAttention
+  private maskedSelfAttentionNorm: LayerNorm
+  private crossAttention: TransformerMultiheadAttention
+  private crossAttentionNorm: LayerNorm
+  private ff: FeedForward
+  private ffNorm: LayerNorm
+
+  /**
+   * @param dim - Number of dimensions of the input embeddings
+   * @param heads - Number of heads for the multi-head attention
+   * @param attentionDim - Number of dimensions of the embeddings used in the scaled dot-product attention, or `dim` if not specified
+   * @param feedForwardDim - Number of dimensions in the hidden layer of the feed forward network, or `dim` if not specified
+   */
+  constructor(dim: number, heads: number, attentionDim?: number, feedForwardDim?: number) {
+    super()
+
+    this.dim = dim
+    this.heads = heads
+    if (attentionDim === undefined) {
+      this.attentionDim = dim
+    } else {
+      this.attentionDim = attentionDim
+    }
+    if (feedForwardDim === undefined) {
+      this.feedForwardDim = dim
+    } else {
+      this.feedForwardDim = feedForwardDim
+    }
+
+    this.maskedSelfAttention = new TransformerMultiheadAttention(
+      this.dim,
+      this.heads,
+      this.attentionDim
+    )
+    this.maskedSelfAttentionNorm = new LayerNorm([this.dim])
+    this.crossAttention = new TransformerMultiheadAttention(this.dim, this.heads, this.attentionDim)
+    this.crossAttentionNorm = new LayerNorm([this.dim])
+    this.ff = new FeedForward(this.dim, this.feedForwardDim)
+    this.ffNorm = new LayerNorm([this.dim])
+  }
+
+  /**
+   * @param sequenceLength - Length of sequence for which the mask should be generated
+   * @returns A Tensor mask of shape `[sequenceLength, sequenceLength]` where row $i$ should have 0s in positions up to $i$ and 1s everywhere else
+   */
+  static getSelfAttentionMask(sequenceLength: number): Tensor {
+    return sm
+      .full([sequenceLength, sequenceLength], 1)
+      .astype(sm.dtype.BoolInt8)
+      .tril()
+      .logicalNot()
+  }
+
+  /**
+   * @param input - Tensor from the previous decoder layer, shape `[..., tokens, dim]`
+   * @param encoderOutput - Tensor output by the encoder, shape `[..., encoderTokens, dim]`
+   * @returns A Tensor of shape `[..., tokens, dim]`
+   */
+  forward(input: Tensor, encoderOutput: Tensor): Tensor {
+    const decoderLength = input.shape[input.shape.length - 2]
+    const mask = TransformerDecoderLayer.getSelfAttentionMask(decoderLength)
+
+    let residual = input
+    let output = this.maskedSelfAttention(input, input, input, mask) // shape [..., tokens, dim]
+    output = this.maskedSelfAttentionNorm(residual.add(output))
+
+    residual = output
+    output = this.crossAttention(output, encoderOutput, encoderOutput) // shape [..., tokens, dim]
+    output = this.crossAttentionNorm(residual.add(output))
+
+    residual = output
+    output = this.ff(output) // shape [..., tokens, dim]
+    output = this.ffNorm(residual.add(output))
+
+    return output
+  }
+}
+
+/**
+ * Transformer decoder as described by Vaswani et al containing an arbitrary number of {@link TransformerDecoderLayer | TransformerDecoderLayers}.
+ */
+export class TransformerDecoder extends Module {
+  private dim: number
+  private heads: number
+  private depth: number
+  private attentionDim: number
+  private feedForwardDim: number
+  private positional: TransformerPositionalEncoding
+  private layers: Sequential
+
+  /**
+   * @param dim - Number of dimensions of the input embeddings
+   * @param heads - Number of heads for the multi-head attention
+   * @param depth - Number of encoder layers
+   * @param attentionDim - Number of dimensions of the embeddings used in the scaled dot-product attention, or `dim` if not specified
+   * @param feedForwardDim - Number of dimensions in the hidden layer of the feed forward network, or `dim` if not specified
+   * @param initSequenceLength - Initial sequence length that the positional encoding should be computed for, or {@link TransformerPositionalEncoding.DEFAULT_SEQUENCE_LENGTH} if not specified
+   */
+  constructor(
+    dim: number,
+    heads: number,
+    depth: number,
+    attentionDim?: number,
+    feedForwardDim?: number,
+    initSequenceLength?: number
+  ) {
+    super()
+
+    this.dim = dim
+    this.heads = heads
+    this.depth = depth
+    if (attentionDim === undefined) {
+      this.attentionDim = dim
+    } else {
+      this.attentionDim = attentionDim
+    }
+    if (feedForwardDim === undefined) {
+      this.feedForwardDim = dim
+    } else {
+      this.feedForwardDim = feedForwardDim
+    }
+
+    if (initSequenceLength === undefined) {
+      this.positional = new TransformerPositionalEncoding(this.dim)
+    } else {
+      this.positional = new TransformerPositionalEncoding(this.dim, initSequenceLength)
+    }
+
+    const layers: CallableFunction[] = []
+    for (let i = 0; i < this.depth; i++) {
+      const layer = new TransformerDecoderLayer(
+        this.dim,
+        this.heads,
+        this.attentionDim,
+        this.feedForwardDim
+      )
+      layers.push((input: Tensor, encoderOutput: Tensor) => [
+        layer(input, encoderOutput),
+        encoderOutput
+      ])
+    }
+    this.layers = new Sequential(...layers)
+  }
+
+  /**
+   * @param input - Input Tensor of shape `[..., tokens, dim]`
+   * @param encoderOutput - Tensor output by the encoder, shape `[..., encoderTokens, dim]`
+   * @returns A Tensor of shape `[..., tokens, dim]`
+   */
+  forward(input: Tensor, encoderOutput: Tensor): Tensor {
+    const positionalEncoding = this.positional(input.shape[input.shape.length - 2]) // shape [tokens, dim]
+
+    let output = input.add(positionalEncoding) // shape [..., tokens, dim]
+    output = this.layers(output, encoderOutput)[0] // shape [..., tokens, dim]
     return output
   }
 }
