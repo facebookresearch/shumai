@@ -464,6 +464,10 @@ export class Tensor {
     return this._deps
   }
 
+  setDeps(deps) {
+    this._deps = deps
+  }
+
   get ndim() {
     return Number(fl._ndim.native(this.ptr))
   }

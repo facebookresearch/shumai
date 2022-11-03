@@ -19,6 +19,9 @@
 <li><a href="../modules/module.html">module</a></li>
 <li><a href="module.TransformerDotProductAttention.html">TransformerDotProductAttention</a></li></ul>
 <h1>Class TransformerDotProductAttention</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>Scaled dot-product mechanism as described by Vaswani et al. The <a href="module.TransformerDotProductAttention.html#scaleFactor">scaleFactor</a> is computed during object creation as $\frac{1}{\sqrt{d}}$, where $d$ is the dimensionality of the inputs.</p>
+</div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
@@ -26,7 +29,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">TransformerDotProductAttention</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L11">shumai/module/transformer.ts:11</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L171">shumai/module/transformer.ts:171</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -44,7 +47,7 @@
 <a href="module.TransformerDotProductAttention.html#length" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>length</span></a>
 <a href="module.TransformerDotProductAttention.html#name" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>name</span></a>
 <a href="module.TransformerDotProductAttention.html#prototype" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>prototype</span></a>
-<a href="module.TransformerDotProductAttention.html#scale_factor" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>scale_<wbr/>factor</span></a>
+<a href="module.TransformerDotProductAttention.html#scaleFactor" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>scale<wbr/>Factor</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
@@ -67,11 +70,13 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>dim: <span class="tsd-signature-type">number</span></h5></li></ul></div>
+<h5>dim: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Number of dimensions of the inputs</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="module.TransformerDotProductAttention.html" class="tsd-signature-type" data-tsd-kind="Class">TransformerDotProductAttention</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="module.Module.html">Module</a>.<a href="module.Module.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L15">shumai/module/transformer.ts:15</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L178">shumai/module/transformer.ts:178</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="arguments" class="tsd-anchor"></a>
@@ -90,7 +95,7 @@
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>dim</span><a href="#dim" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">dim<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L12">shumai/module/transformer.ts:12</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L172">shumai/module/transformer.ts:172</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="length" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>length</span><a href="#length" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
@@ -111,11 +116,11 @@
 <p>Inherited from <a href="module.Module.html">Module</a>.<a href="module.Module.html#prototype">prototype</a></p>
 <ul>
 <li>Defined in node_modules/typescript/lib/lib.es5.d.ts:306</li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="scale_factor" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>scale_<wbr/>factor</span><a href="#scale_factor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">scale_<wbr/>factor<span class="tsd-signature-symbol">:</span> <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></div><aside class="tsd-sources">
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="scaleFactor" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>scale<wbr/>Factor</span><a href="#scaleFactor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">scale<wbr/>Factor<span class="tsd-signature-symbol">:</span> <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L13">shumai/module/transformer.ts:13</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L173">shumai/module/transformer.ts:173</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="_hasInstance_" class="tsd-anchor"></a>
@@ -213,21 +218,34 @@ The this object of the bound function is associated with the specified object, a
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="forward" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>forward</span><a href="#forward" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="forward.forward-1">forward<span class="tsd-signature-symbol">(</span>queries<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, keys<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, values<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#forward.forward-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="forward.forward-1">forward<span class="tsd-signature-symbol">(</span>queries<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, keys<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, values<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, mask<span class="tsd-signature-symbol">?: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#forward.forward-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Returns</h3><p>A Tensor of shape <code>[..., queryTokens, dim]</code></p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>queries: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li>
+<h5>queries: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5>
+<div class="tsd-comment tsd-typography"><p>Tensor of query embeddings, shape <code>[..., queryTokens, dim]</code></p>
+</div></li>
 <li>
-<h5>keys: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li>
+<h5>keys: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5>
+<div class="tsd-comment tsd-typography"><p>Tensor of key embeddings, shape <code>[..., keyTokens, dim]</code></p>
+</div></li>
 <li>
-<h5>values: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
+<h5>values: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5>
+<div class="tsd-comment tsd-typography"><p>Tensor of value embeddings each corresponding to a key, shape <code>[..., keyTokens, dim]</code></p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> mask: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5>
+<div class="tsd-comment tsd-typography"><p>Tensor mask of shape <code>[queryTokens, keyTokens]</code> where a 1 in position $(i, j)$ indicates that the $i$th query should not attend to the $j$th key</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="module.Module.html">Module</a>.<a href="module.Module.html#forward">forward</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L25">shumai/module/transformer.ts:25</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L195">shumai/module/transformer.ts:195</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a id="scale" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>scale</span><a href="#scale" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
@@ -240,7 +258,7 @@ The this object of the bound function is associated with the specified object, a
 <h5>tensor: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L21">shumai/module/transformer.ts:21</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L184">shumai/module/transformer.ts:184</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -276,6 +294,7 @@ The this object of the bound function is associated with the specified object, a
 <li class="tsd-kind-namespace"><a href="../modules/io.html">io</a></li>
 <li class="tsd-kind-namespace"><a href="../modules/loss.html">loss</a></li>
 <li class="current tsd-kind-namespace"><a href="../modules/module.html">module</a></li>
+<li class="tsd-kind-namespace"><a href="../modules/network.html">network</a></li>
 <li class="tsd-kind-namespace"><a href="../modules/optim.html">optim</a></li>
 <li class="tsd-kind-namespace"><a href="../modules/util.html">util</a></li></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
@@ -289,7 +308,7 @@ The this object of the bound function is associated with the specified object, a
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerDotProductAttention.html#length" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>length</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerDotProductAttention.html#name" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>name</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerDotProductAttention.html#prototype" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>prototype</a></li>
-<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerDotProductAttention.html#scale_factor" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>scale_<wbr/>factor</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerDotProductAttention.html#scaleFactor" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>scale<wbr/>Factor</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerDotProductAttention.html#_hasInstance_" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>[has<wbr/>Instance]</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerDotProductAttention.html#apply" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>apply</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerDotProductAttention.html#bind" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>bind</a></li>

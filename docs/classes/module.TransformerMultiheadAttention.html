@@ -19,6 +19,9 @@
 <li><a href="../modules/module.html">module</a></li>
 <li><a href="module.TransformerMultiheadAttention.html">TransformerMultiheadAttention</a></li></ul>
 <h1>Class TransformerMultiheadAttention</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>Multi-head attention mechanism as described by Vaswani et al. The input Tensors are linearly embedded before being passed to <a href="module.TransformerDotProductAttention.html">scaled dot-product attentions</a>.</p>
+</div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
@@ -26,7 +29,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">TransformerMultiheadAttention</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L50">shumai/module/transformer.ts:50</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L224">shumai/module/transformer.ts:224</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -40,17 +43,17 @@
 <h3 class="tsd-index-heading">Properties</h3>
 <div class="tsd-index-list"><a href="module.TransformerMultiheadAttention.html#arguments" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>arguments</span></a>
 <a href="module.TransformerMultiheadAttention.html#attention" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>attention</span></a>
-<a href="module.TransformerMultiheadAttention.html#attn_dim" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>attn_<wbr/>dim</span></a>
+<a href="module.TransformerMultiheadAttention.html#attentionDim" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>attention<wbr/>Dim</span></a>
 <a href="module.TransformerMultiheadAttention.html#caller" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>caller</span></a>
-<a href="module.TransformerMultiheadAttention.html#concat_embed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>concat_<wbr/>embed</span></a>
+<a href="module.TransformerMultiheadAttention.html#concatEmbed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>concat<wbr/>Embed</span></a>
 <a href="module.TransformerMultiheadAttention.html#dim" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>dim</span></a>
 <a href="module.TransformerMultiheadAttention.html#heads" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>heads</span></a>
-<a href="module.TransformerMultiheadAttention.html#key_embed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>key_<wbr/>embed</span></a>
+<a href="module.TransformerMultiheadAttention.html#keyEmbed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>key<wbr/>Embed</span></a>
 <a href="module.TransformerMultiheadAttention.html#length" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>length</span></a>
 <a href="module.TransformerMultiheadAttention.html#name" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>name</span></a>
 <a href="module.TransformerMultiheadAttention.html#prototype" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>prototype</span></a>
-<a href="module.TransformerMultiheadAttention.html#query_embed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>query_<wbr/>embed</span></a>
-<a href="module.TransformerMultiheadAttention.html#value_embed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>value_<wbr/>embed</span></a>
+<a href="module.TransformerMultiheadAttention.html#queryEmbed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>query<wbr/>Embed</span></a>
+<a href="module.TransformerMultiheadAttention.html#valueEmbed" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-private"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>value<wbr/>Embed</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
@@ -66,21 +69,27 @@
 <section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_TransformerMultiheadAttention">new <wbr/>Transformer<wbr/>Multihead<wbr/>Attention<span class="tsd-signature-symbol">(</span>dim<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, heads<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, attn_dim<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="module.TransformerMultiheadAttention.html" class="tsd-signature-type" data-tsd-kind="Class">TransformerMultiheadAttention</a><a href="#constructor.new_TransformerMultiheadAttention" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_TransformerMultiheadAttention">new <wbr/>Transformer<wbr/>Multihead<wbr/>Attention<span class="tsd-signature-symbol">(</span>dim<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, heads<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, attentionDim<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="module.TransformerMultiheadAttention.html" class="tsd-signature-type" data-tsd-kind="Class">TransformerMultiheadAttention</a><a href="#constructor.new_TransformerMultiheadAttention" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>dim: <span class="tsd-signature-type">number</span></h5></li>
+<h5>dim: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Number of dimensions of the input embeddings</p>
+</div></li>
 <li>
-<h5>heads: <span class="tsd-signature-type">number</span></h5></li>
+<h5>heads: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Number of heads for the multi-head attention</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> attn_dim: <span class="tsd-signature-type">number</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> attentionDim: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Number of dimensions of the further embeddings used by the <a href="module.TransformerDotProductAttention.html">scaled dot-product attentions</a>, or <code>dim</code> if not specified</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="module.TransformerMultiheadAttention.html" class="tsd-signature-type" data-tsd-kind="Class">TransformerMultiheadAttention</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="module.Module.html">Module</a>.<a href="module.Module.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L60">shumai/module/transformer.ts:60</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L239">shumai/module/transformer.ts:239</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="arguments" class="tsd-anchor"></a>
@@ -93,38 +102,38 @@
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>attention</span><a href="#attention" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">attention<span class="tsd-signature-symbol">:</span> <a href="module.TransformerDotProductAttention.html" class="tsd-signature-type" data-tsd-kind="Class">TransformerDotProductAttention</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L57">shumai/module/transformer.ts:57</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="attn_dim" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>attn_<wbr/>dim</span><a href="#attn_dim" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">attn_<wbr/>dim<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L231">shumai/module/transformer.ts:231</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="attentionDim" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>attention<wbr/>Dim</span><a href="#attentionDim" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">attention<wbr/>Dim<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L53">shumai/module/transformer.ts:53</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L227">shumai/module/transformer.ts:227</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="caller" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>caller</span><a href="#caller" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">caller<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="module.Module.html">Module</a>.<a href="module.Module.html#caller">caller</a></p>
 <ul>
 <li>Defined in node_modules/typescript/lib/lib.es5.d.ts:311</li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="concat_embed" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>concat_<wbr/>embed</span><a href="#concat_embed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">concat_<wbr/>embed<span class="tsd-signature-symbol">:</span> <a href="module.Linear.html" class="tsd-signature-type" data-tsd-kind="Class">Linear</a></div><aside class="tsd-sources">
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="concatEmbed" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>concat<wbr/>Embed</span><a href="#concatEmbed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">concat<wbr/>Embed<span class="tsd-signature-symbol">:</span> <a href="module.Linear.html" class="tsd-signature-type" data-tsd-kind="Class">Linear</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L58">shumai/module/transformer.ts:58</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L232">shumai/module/transformer.ts:232</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="dim" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>dim</span><a href="#dim" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">dim<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L51">shumai/module/transformer.ts:51</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L225">shumai/module/transformer.ts:225</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="heads" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>heads</span><a href="#heads" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">heads<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L52">shumai/module/transformer.ts:52</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="key_embed" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>key_<wbr/>embed</span><a href="#key_embed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">key_<wbr/>embed<span class="tsd-signature-symbol">:</span> <a href="module.Linear.html" class="tsd-signature-type" data-tsd-kind="Class">Linear</a></div><aside class="tsd-sources">
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L226">shumai/module/transformer.ts:226</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="keyEmbed" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>key<wbr/>Embed</span><a href="#keyEmbed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">key<wbr/>Embed<span class="tsd-signature-symbol">:</span> <a href="module.Linear.html" class="tsd-signature-type" data-tsd-kind="Class">Linear</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L55">shumai/module/transformer.ts:55</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L229">shumai/module/transformer.ts:229</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="length" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>length</span><a href="#length" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
@@ -145,16 +154,16 @@
 <p>Inherited from <a href="module.Module.html">Module</a>.<a href="module.Module.html#prototype">prototype</a></p>
 <ul>
 <li>Defined in node_modules/typescript/lib/lib.es5.d.ts:306</li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="query_embed" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>query_<wbr/>embed</span><a href="#query_embed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">query_<wbr/>embed<span class="tsd-signature-symbol">:</span> <a href="module.Linear.html" class="tsd-signature-type" data-tsd-kind="Class">Linear</a></div><aside class="tsd-sources">
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="queryEmbed" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>query<wbr/>Embed</span><a href="#queryEmbed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">query<wbr/>Embed<span class="tsd-signature-symbol">:</span> <a href="module.Linear.html" class="tsd-signature-type" data-tsd-kind="Class">Linear</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L54">shumai/module/transformer.ts:54</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="value_embed" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>value_<wbr/>embed</span><a href="#value_embed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">value_<wbr/>embed<span class="tsd-signature-symbol">:</span> <a href="module.Linear.html" class="tsd-signature-type" data-tsd-kind="Class">Linear</a></div><aside class="tsd-sources">
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L228">shumai/module/transformer.ts:228</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="valueEmbed" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>value<wbr/>Embed</span><a href="#valueEmbed" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">value<wbr/>Embed<span class="tsd-signature-symbol">:</span> <a href="module.Linear.html" class="tsd-signature-type" data-tsd-kind="Class">Linear</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L56">shumai/module/transformer.ts:56</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L230">shumai/module/transformer.ts:230</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="_hasInstance_" class="tsd-anchor"></a>
@@ -252,21 +261,34 @@ The this object of the bound function is associated with the specified object, a
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="forward" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>forward</span><a href="#forward" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="forward.forward-1">forward<span class="tsd-signature-symbol">(</span>queries<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, keys<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, values<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#forward.forward-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="forward.forward-1">forward<span class="tsd-signature-symbol">(</span>queries<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, keys<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, values<span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a>, mask<span class="tsd-signature-symbol">?: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a><a href="#forward.forward-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Returns</h3><p>A Tensor of shape <code>[..., queryTokens, dim]</code></p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>queries: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li>
+<h5>queries: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5>
+<div class="tsd-comment tsd-typography"><p>Tensor of query vectors, shape <code>[..., queryTokens, dim]</code></p>
+</div></li>
 <li>
-<h5>keys: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li>
+<h5>keys: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5>
+<div class="tsd-comment tsd-typography"><p>Tensor of key vectors, shape <code>[..., keyTokens, dim]</code></p>
+</div></li>
 <li>
-<h5>values: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5></li></ul></div>
+<h5>values: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5>
+<div class="tsd-comment tsd-typography"><p>Tensor of value vectors each corresponding to a key, shape <code>[..., keyTokens, dim]</code></p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> mask: <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h5>
+<div class="tsd-comment tsd-typography"><p>Tensor mask of shape <code>[queryTokens, keyTokens]</code> for the <a href="module.TransformerDotProductAttention.html">TransformerDotProductAttention</a></p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Tensor.html" class="tsd-signature-type" data-tsd-kind="Class">Tensor</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="module.Module.html">Module</a>.<a href="module.Module.html#forward">forward</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/13737ee/shumai/module/transformer.ts#L83">shumai/module/transformer.ts:83</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/facebookresearch/shumai/blob/9158fba/shumai/module/transformer.ts#L269">shumai/module/transformer.ts:269</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -302,6 +324,7 @@ The this object of the bound function is associated with the specified object, a
 <li class="tsd-kind-namespace"><a href="../modules/io.html">io</a></li>
 <li class="tsd-kind-namespace"><a href="../modules/loss.html">loss</a></li>
 <li class="current tsd-kind-namespace"><a href="../modules/module.html">module</a></li>
+<li class="tsd-kind-namespace"><a href="../modules/network.html">network</a></li>
 <li class="tsd-kind-namespace"><a href="../modules/optim.html">optim</a></li>
 <li class="tsd-kind-namespace"><a href="../modules/util.html">util</a></li></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
@@ -311,17 +334,17 @@ The this object of the bound function is associated with the specified object, a
 <li class="tsd-kind-constructor tsd-parent-kind-class"><a href="module.TransformerMultiheadAttention.html#constructor" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-512-path"></use><use href="#icon-512-text"></use></svg>constructor</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerMultiheadAttention.html#arguments" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>arguments</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#attention" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>attention</a></li>
-<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#attn_dim" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>attn_<wbr/>dim</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#attentionDim" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>attention<wbr/>Dim</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerMultiheadAttention.html#caller" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>caller</a></li>
-<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#concat_embed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>concat_<wbr/>embed</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#concatEmbed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>concat<wbr/>Embed</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#dim" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>dim</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#heads" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>heads</a></li>
-<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#key_embed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>key_<wbr/>embed</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#keyEmbed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>key<wbr/>Embed</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerMultiheadAttention.html#length" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>length</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerMultiheadAttention.html#name" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>name</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerMultiheadAttention.html#prototype" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>prototype</a></li>
-<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#query_embed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>query_<wbr/>embed</a></li>
-<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#value_embed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>value_<wbr/>embed</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#queryEmbed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>query<wbr/>Embed</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="module.TransformerMultiheadAttention.html#valueEmbed" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>value<wbr/>Embed</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerMultiheadAttention.html#_hasInstance_" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>[has<wbr/>Instance]</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerMultiheadAttention.html#apply" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>apply</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="module.TransformerMultiheadAttention.html#bind" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>bind</a></li>
