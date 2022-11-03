@@ -548,7 +548,7 @@ export class TransformerDecoderLayer extends Module {
 }
 
 /**
- * Transformer decoder as described by Vaswani et al containing an arbitrary number of {@link TransformerEncoderLayer | TransformerEncoderLayers}.
+ * Transformer decoder as described by Vaswani et al containing an arbitrary number of {@link TransformerDecoderLayer | TransformerDecoderLayers}.
  */
 export class TransformerDecoder extends Module {
   private dim: number
