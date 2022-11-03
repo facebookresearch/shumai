@@ -4,7 +4,7 @@ import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
 import type { OpStats } from '../network'
 import { _tidyTracker, cyrb53, Float16Array } from '../util'
-import { Grad } from './register_gradients'
+import { GradContext } from './register_gradients'
 import { collectStats, getStack } from './stats'
 import { full } from './tensor_ops'
 import * as ops from './tensor_ops'
@@ -108,13 +108,13 @@ function traverse_gradients(
       if (!dep.requires_grad) {
         continue
       }
-      const grad_arg = {
-        idx: idx,
-        in: t.deps,
-        out: t,
-        grad_in: all_grads_dict[t.ptr][1]
+      const ctx = <GradContext>{
+        backward_output_index: idx,
+        forward_inputs: t.deps,
+        forward_output: t,
+        backward_input: all_grads_dict[t.ptr][1]
       }
-      const g: Tensor = gradient_functions[t.op](grad_arg)
+      const g: Tensor = gradient_functions[t.op](ctx)
       if (dep.ptr in all_grads_dict) {
         const [prev_dep, prev_g] = all_grads_dict[dep.ptr]
         if (dep !== prev_dep) {
@@ -149,17 +149,17 @@ async function async_traverse_gradients(
       if (!dep.requires_grad) {
         continue
       }
-      const grad_arg = <Grad>{
-        idx: idx,
-        in: t.deps,
-        out: t,
-        grad_in: all_grads_dict[t.ptr][1]
+      const ctx = <GradContext>{
+        backward_output_index: idx,
+        forward_inputs: t.deps,
+        forward_output: t,
+        backward_input: all_grads_dict[t.ptr][1]
       }
       let g
       if (t.grad_callback_async) {
-        g = await t.grad_callback_async(grad_arg)
+        g = await t.grad_callback_async(ctx)
       } else {
-        g = gradient_functions[t.op](grad_arg)
+        g = gradient_functions[t.op](ctx)
       }
       if (dep.ptr in all_grads_dict) {
         const [t, prev_g] = all_grads_dict[dep.ptr]
@@ -269,7 +269,7 @@ export class Tensor {
   grad: Tensor = null
   op = 'constant'
 
-  grad_callback_async?: (grad?: Grad) => Promise<void | Tensor>
+  grad_callback_async?: (grad?: GradContext) => Promise<void | Tensor>
 
   /** @private */
   private _injest_ptr(_ptr: number) {
