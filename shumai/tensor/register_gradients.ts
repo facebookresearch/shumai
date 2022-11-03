@@ -6,10 +6,10 @@ const sm = { ...base, ...ops }
 type ArgType = Tensor | number | number[] | BigInt64Array | boolean
 
 export interface GradContext {
-  op_inputs: [Tensor, ...ArgType[]]
-  op_result: Tensor
-  grad_idx: number // index of the input to be differentiated
-  grad_result: Tensor
+  forward_inputs: [Tensor, ...ArgType[]]
+  forward_output: Tensor
+  backward_input: Tensor // the associated gradient of forward_output
+  backward_output_index: number // // index of the associated forward input to be differentiated
 }
 
 function recoverShape(tensor: Tensor, originalShape: number[], lostAxes: number[]) {
@@ -24,17 +24,17 @@ function recoverShape(tensor: Tensor, originalShape: number[], lostAxes: number[
   return tensorForBroadcast.add(sm.full(originalShape, 0))
 }
 
-function possiblyReduce(grad_out: Tensor, grad: GradContext) {
-  const input = <Tensor>grad.op_inputs[grad.grad_idx]
+function possiblyReduce(grad_out: Tensor, ctx: GradContext) {
+  const input = <Tensor>ctx.forward_inputs[ctx.backward_output_index]
   const new_shape = input.shape
-  if (grad.grad_result.shape.length != input.shape.length) {
-    for (let i = 0; i < grad.grad_result.shape.length - input.shape.length; ++i) {
+  if (ctx.backward_input.shape.length != input.shape.length) {
+    for (let i = 0; i < ctx.backward_input.shape.length - input.shape.length; ++i) {
       new_shape.push(1)
     }
   }
   const reduction_axes = []
   for (let i = 0; i < new_shape.length; ++i) {
-    if (new_shape[i] === 1 && grad.grad_result.shape[i] !== 1) {
+    if (new_shape[i] === 1 && ctx.backward_input.shape[i] !== 1) {
       reduction_axes.push(i)
     }
   }
@@ -45,13 +45,13 @@ function possiblyReduce(grad_out: Tensor, grad: GradContext) {
 }
 
 const impls = {
-  add: (grad: GradContext) => {
-    return possiblyReduce(grad.grad_result, grad)
+  add: (ctx: GradContext) => {
+    return possiblyReduce(ctx.backward_input, ctx)
   },
-  conv2d: (grad: GradContext) => {
+  conv2d: (ctx: GradContext) => {
     const [x, w, sx, sy, px, py, dx, dy, g] = <
       [Tensor, Tensor, number, number, number, number, number, number, number]
-    >grad.op_inputs
+    >ctx.forward_inputs
     if (dx !== 1 || dy !== 1) {
       throw new Error(
         `cannot differentiate convolution with dilation (${dx}, ${dy}), please file an issue.`
@@ -67,14 +67,14 @@ const impls = {
     }
     /* eslint-disable @typescript-eslint/no-unused-vars */
     const batch = x.shape[0]
-    const channel_out = grad.grad_result.shape[1]
+    const channel_out = ctx.backward_input.shape[1]
     const channel_in = x.shape[1]
     /* eslint-enable @typescript-eslint/no-unused-vars */
 
     const k = w.shape[2]
-    if (grad.grad_idx === 0) {
+    if (ctx.backward_output_index === 0) {
       const padding = k - 1 - (sx - 1) - px
-      let dxgrad = grad.grad_result
+      let dxgrad = ctx.backward_input
       if (sx > 1) {
         dxgrad = dxgrad.reshape(dxgrad.shape.concat([1, 1]))
         dxgrad = dxgrad
@@ -85,7 +85,7 @@ const impls = {
             [sx - 1, 0]
           ])
           .transpose([3, 4])
-        const shape = grad.grad_result.shape
+        const shape = ctx.backward_input.shape
         dxgrad = dxgrad.reshape(shape.slice(0, 2).concat(shape.slice(2).map((x) => x * 2)))
         dxgrad = dxgrad.pad([
           [0, 0],
@@ -105,7 +105,7 @@ const impls = {
       return sm.conv2d(dxgrad, dxw, 1, 1, padding, padding, 1, 1, g)
     }
 
-    const dwgrad = grad.grad_result.transpose([0, 1])
+    const dwgrad = ctx.backward_input.transpose([0, 1])
     let dwx = x.transpose([0, 1])
     if (g > 1) {
       dwx = x.reshape([x.shape[0], g, x.shape[1] / g].concat(x.shape.slice(2)))
@@ -114,53 +114,53 @@ const impls = {
     }
     return sm.conv2d(dwx, dwgrad, 1, 1, px, px, sx, sx, g)
   },
-  div: (grad: GradContext) => {
-    const recip = sm.scalar(1).div(<Tensor>grad.op_inputs[1])
-    const go = grad.grad_result.mul(recip)
-    if (grad.grad_idx === 0) {
-      return possiblyReduce(go, grad)
-    } else if (grad.grad_idx === 1) {
-      return possiblyReduce(go.negative().mul(recip), grad)
+  div: (ctx: GradContext) => {
+    const recip = sm.scalar(1).div(<Tensor>ctx.forward_inputs[1])
+    const go = ctx.backward_input.mul(recip)
+    if (ctx.backward_output_index === 0) {
+      return possiblyReduce(go, ctx)
+    } else if (ctx.backward_output_index === 1) {
+      return possiblyReduce(go.negative().mul(recip), ctx)
     }
   },
-  sqrt: (grad: GradContext): Tensor => {
-    return grad.grad_result.div(grad.op_result.mul(sm.scalar(2)))
+  sqrt: (ctx: GradContext): Tensor => {
+    return ctx.backward_input.div(ctx.forward_output.mul(sm.scalar(2)))
   },
-  exp: (grad: GradContext) => {
-    return sm.exp(grad.op_inputs[0])
+  exp: (ctx: GradContext) => {
+    return sm.exp(ctx.forward_inputs[0])
   },
-  matmul: (grad: GradContext) => {
-    if (grad.grad_idx === 0) {
-      const y = <Tensor>grad.op_inputs[1]
-      if (grad.grad_result.shape.length === 1 && y.shape.length === 1) {
+  matmul: (ctx: GradContext) => {
+    if (ctx.backward_output_index === 0) {
+      const y = <Tensor>ctx.forward_inputs[1]
+      if (ctx.backward_input.shape.length === 1 && y.shape.length === 1) {
         // grad_in and y are 1D column vectors
-        const expandedGradIn = grad.grad_result.reshape([grad.grad_result.shape[0], 1])
+        const expandedGradIn = ctx.backward_input.reshape([ctx.backward_input.shape[0], 1])
         const expandedY = y.reshape([y.shape[0], 1])
         return expandedGradIn.matmul(expandedY.T())
       }
-      return grad.grad_result.matmul(y.T()) // this is 1D if grad_in is a 1D row vector
-    } else if (grad.grad_idx === 1) {
-      const x = <Tensor>grad.op_inputs[0]
-      if (grad.grad_result.shape.length === 1 && x.shape.length === 1) {
+      return ctx.backward_input.matmul(y.T()) // this is 1D if grad_in is a 1D row vector
+    } else if (ctx.backward_output_index === 1) {
+      const x = <Tensor>ctx.forward_inputs[0]
+      if (ctx.backward_input.shape.length === 1 && x.shape.length === 1) {
         // grad_in and x are 1D row vectors
-        const expandedGradIn = grad.grad_result.reshape([1, grad.grad_result.shape[0]])
+        const expandedGradIn = ctx.backward_input.reshape([1, ctx.backward_input.shape[0]])
         const expandedX = x.reshape([1, x.shape[0]])
         return expandedX.T().matmul(expandedGradIn)
       }
-      return x.T().matmul(grad.grad_result) // this is 1D if grad_in is a 1D column vector
+      return x.T().matmul(ctx.backward_input) // this is 1D if grad_in is a 1D column vector
     } else {
       throw new Error(`Invalid GradContext argument`)
     }
   },
-  maximum: (grad: GradContext) => {
-    const a_idx = grad.grad_idx
-    const b_idx = <0 | 1>(1 - grad.grad_idx)
-    const mask = (<Tensor>grad.op_inputs[a_idx]).greaterThan(<Tensor>grad.op_inputs[b_idx])
-    return mask.mul(grad.grad_result)
+  maximum: (ctx: GradContext) => {
+    const a_idx = ctx.backward_output_index
+    const b_idx = <0 | 1>(1 - ctx.backward_output_index)
+    const mask = (<Tensor>ctx.forward_inputs[a_idx]).greaterThan(<Tensor>ctx.forward_inputs[b_idx])
+    return mask.mul(ctx.backward_input)
   },
-  mean: (grad: GradContext) => {
-    const inShape = (<Tensor>grad.op_inputs[0]).shape
-    let axes = <number[]>grad.op_inputs[1]
+  mean: (ctx: GradContext) => {
+    const inShape = (<Tensor>ctx.forward_inputs[0]).shape
+    let axes = <number[]>ctx.forward_inputs[1]
     if (axes.length === 0) {
       axes = inShape.map((x, i) => i) // All axes
     }
@@ -170,17 +170,17 @@ const impls = {
       num *= inShape[axis]
     }
 
-    return recoverShape(grad.grad_result.div(sm.scalar(num)), inShape, axes)
+    return recoverShape(ctx.backward_input.div(sm.scalar(num)), inShape, axes)
   },
-  var: (grad: GradContext) => {
-    const input = <Tensor>grad.op_inputs[0]
+  var: (ctx: GradContext) => {
+    const input = <Tensor>ctx.forward_inputs[0]
     const inShape = input.shape
-    let axes = <number[]>grad.op_inputs[1]
+    let axes = <number[]>ctx.forward_inputs[1]
     if (axes.length === 0) {
       axes = inShape.map((x, i) => i)
     }
 
-    const bias = <boolean>grad.op_inputs[2]
+    const bias = <boolean>ctx.forward_inputs[2]
     let num = 1
     for (const axis of axes) {
       num *= inShape[axis]
@@ -189,78 +189,103 @@ const impls = {
       num -= 1
     }
 
-    const expandedGradIn = recoverShape(grad.grad_result, inShape, axes)
+    const expandedGradIn = recoverShape(ctx.backward_input, inShape, axes)
     const expandedMean = recoverShape(input.mean(axes), inShape, axes)
 
     return expandedGradIn.mul(sm.scalar(2 / num)).mul(input.sub(expandedMean))
   },
-  mul: (grad: GradContext) => {
-    const grad_idx = <0 | 1>(1 - grad.grad_idx)
-    return possiblyReduce((<Tensor>grad.op_inputs[grad_idx]).mul(grad.grad_result), grad)
+  mul: (ctx: GradContext) => {
+    const backward_output_index = <0 | 1>(1 - ctx.backward_output_index)
+    return possiblyReduce(
+      (<Tensor>ctx.forward_inputs[backward_output_index]).mul(ctx.backward_input),
+      ctx
+    )
   },
-  greaterThanEqual: (grad: GradContext) => {
-    const o = sm.scalar(1).sub(grad.op_result)
-    return grad.op_result.mul(o)
+  greaterThanEqual: (ctx: GradContext) => {
+    return ctx.backward_input.mul(ctx.forward_output).mul(sm.scalar(1).sub(ctx.forward_output))
   },
-  logicalNot: (grad: GradContext) => {
-    const o = sm.scalar(1).sub(grad.op_result)
-    return grad.op_result.mul(o)
+  logicalNot: (ctx: GradContext) => {
+    return ctx.backward_input.mul(ctx.forward_output).mul(sm.scalar(1).sub(ctx.forward_output))
   },
-  sigmoid: (grad: GradContext) => {
-    const o = sm.scalar(1).sub(grad.op_result)
-    return grad.op_result.mul(o)
+  sigmoid: (ctx: GradContext) => {
+    return ctx.backward_input.mul(ctx.forward_output).mul(sm.scalar(1).sub(ctx.forward_output))
   },
-  clip: (grad: GradContext) => {
-    const result = <Tensor>grad.op_result
-    const low = <Tensor>grad.op_inputs[1]
-    const high = <Tensor>grad.op_inputs[2]
+  clip: (ctx: GradContext) => {
+    const result = <Tensor>ctx.forward_output
+    const low = <Tensor>ctx.forward_inputs[1]
+    const high = <Tensor>ctx.forward_inputs[2]
 
     const lowMask = result.greaterThan(low)
     const highMask = result.lessThan(high)
     const lowHighMask = lowMask.bitwiseAnd(highMask)
-    const gradMask = sm.where(lowHighMask, grad.op_result, sm.full(grad.op_result.shape, 0))
+    const gradMask = sm.where(lowHighMask, ctx.forward_output, sm.full(ctx.forward_output.shape, 0))
 
     return gradMask
   },
-  sub: (grad: GradContext) => {
-    if (grad.grad_idx) {
-      return possiblyReduce(grad.grad_result.negative(), grad)
-    }
-    return possiblyReduce(grad.grad_result, grad)
+  erf: (ctx: GradContext) => {
+    const input = <Tensor>ctx.forward_inputs[0]
+    return ctx.backward_input
+      .mul(sm.scalar(2))
+      .div(sm.sqrt(sm.scalar(Math.PI)))
+      .mul(sm.exp(input.mul(input).mul(sm.scalar(-1))))
   },
-  sum: (grad: GradContext) => {
-    const inShape = grad.op_inputs[0].shape
-    let axes = <number[]>grad.op_inputs[1]
+  minimum: (ctx: GradContext) => {
+    const input = <Tensor>ctx.forward_inputs[0]
+    const rhsVal = <Tensor>ctx.forward_inputs[1]
+    const mask = input.lessThan(rhsVal).astype(ctx.backward_input.dtype)
+    return mask.mul(ctx.backward_input)
+  },
+  sub: (ctx: GradContext) => {
+    if (ctx.backward_output_index) {
+      return possiblyReduce(ctx.backward_input.negative(), ctx)
+    }
+    return possiblyReduce(ctx.backward_input, ctx)
+  },
+  sum: (ctx: GradContext) => {
+    const inShape = ctx.forward_inputs[0].shape
+    let axes = <number[]>ctx.forward_inputs[1]
     if (axes.length === 0) {
       axes = inShape.map((x, i) => i) // All axes
     }
-    return recoverShape(grad.grad_result, inShape, axes)
+    return recoverShape(ctx.backward_input, inShape, axes)
   },
-  tanh: (grad: GradContext) => {
-    return sm.scalar(1).sub(grad.op_result.mul(grad.op_result))
+  tanh: (ctx: GradContext) => {
+    return sm.scalar(1).sub(ctx.forward_output.mul(ctx.forward_output))
   },
-  concatenate: (grad: GradContext): Tensor => {
-    const axis = <number>grad.op_inputs[grad.op_inputs.length - 1]
-    const { grad_idx } = grad
-    const prevTensors = <Tensor[]>grad.op_inputs.slice(0, grad_idx)
+  concatenate: (ctx: GradContext): Tensor => {
+    const axis = <number>ctx.forward_inputs[ctx.forward_inputs.length - 1]
+    const { backward_output_index } = ctx
+    const prevTensors = <Tensor[]>ctx.forward_inputs.slice(0, backward_output_index)
     const start = prevTensors.reduce((r, t) => r + t.shape[axis], 0)
-    const end = start + (<Tensor>grad.op_inputs[grad_idx]).shape[axis]
-    const range = grad.op_result.shape.map(() => ':')
+    const end = start + (<Tensor>ctx.forward_inputs[backward_output_index]).shape[axis]
+    const range = ctx.forward_output.shape.map(() => ':')
     range[axis] = start + ':' + end
 
-    return grad.grad_result.index(range)
+    return ctx.backward_input.index(range)
   },
-  transpose: (grad: GradContext): Tensor => {
-    const forwardAxes = <number[]>grad.op_inputs[1]
+  transpose: (ctx: GradContext): Tensor => {
+    const forwardAxes = <number[]>ctx.forward_inputs[1]
     const reverseAxes = [...forwardAxes]
     for (let i = 0; i < forwardAxes.length; i++) {
       reverseAxes[forwardAxes[i]] = i
     } // If forwardAxes === [], reverseAxes === []
-    return grad.grad_result.transpose(reverseAxes)
+    return ctx.backward_input.transpose(reverseAxes)
   },
-  reshape: (grad: GradContext): Tensor => {
-    const inShape = (<Tensor>grad.op_inputs[0]).shape
-    return grad.grad_result.reshape(inShape)
+  reshape: (ctx: GradContext): Tensor => {
+    const inShape = (<Tensor>ctx.forward_inputs[0]).shape
+    return ctx.backward_input.reshape(inShape)
+  },
+  where: (ctx: GradContext): Tensor => {
+    const zeros = sm.full(ctx.backward_input.shape, 0)
+    if (ctx.backward_output_index === 0) {
+      throw new Error(`Gradient cannot be propagated to the cond Tensor`)
+    } else if (ctx.backward_output_index === 1) {
+      return sm.where(ctx.forward_inputs[0], ctx.backward_input, zeros)
+    } else if (ctx.backward_output_index === 2) {
+      return sm.where(ctx.forward_inputs[0], zeros, ctx.backward_input)
+    } else {
+      throw new Error(`Invalid Grad argument`)
+    }
   }
 }
 
