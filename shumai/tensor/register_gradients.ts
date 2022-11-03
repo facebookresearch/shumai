@@ -268,6 +268,18 @@ const impls = {
   reshape: (grad: Grad): Tensor => {
     const inShape = (<Tensor>grad.in[0]).shape
     return grad.grad_in.reshape(inShape)
+  },
+  where: (grad: Grad): Tensor => {
+    const zeros = sm.full(grad.grad_in.shape, 0)
+    if (grad.idx === 0) {
+      throw new Error(`Gradient cannot be propagated to the cond Tensor`)
+    } else if (grad.idx === 1) {
+      return sm.where(grad.in[0], grad.grad_in, zeros)
+    } else if (grad.idx === 2) {
+      return sm.where(grad.in[0], zeros, grad.grad_in)
+    } else {
+      throw new Error(`Invalid Grad argument`)
+    }
   }
 }
 
