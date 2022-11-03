@@ -133,21 +133,21 @@ const impls = {
     if (ctx.backward_output_index === 0) {
       const y = <Tensor>ctx.forward_inputs[1]
       if (ctx.backward_input.shape.length === 1 && y.shape.length === 1) {
-        // grad_in and y are 1D column vectors
+        // backward_input and y are 1D column vectors
         const expandedGradIn = ctx.backward_input.reshape([ctx.backward_input.shape[0], 1])
         const expandedY = y.reshape([y.shape[0], 1])
         return expandedGradIn.matmul(expandedY.T())
       }
-      return ctx.backward_input.matmul(y.T()) // this is 1D if grad_in is a 1D row vector
+      return ctx.backward_input.matmul(y.T()) // this is 1D if backward_input is a 1D row vector
     } else if (ctx.backward_output_index === 1) {
       const x = <Tensor>ctx.forward_inputs[0]
       if (ctx.backward_input.shape.length === 1 && x.shape.length === 1) {
-        // grad_in and x are 1D row vectors
+        // backward_input and x are 1D row vectors
         const expandedGradIn = ctx.backward_input.reshape([1, ctx.backward_input.shape[0]])
         const expandedX = x.reshape([1, x.shape[0]])
         return expandedX.T().matmul(expandedGradIn)
       }
-      return x.T().matmul(ctx.backward_input) // this is 1D if grad_in is a 1D column vector
+      return x.T().matmul(ctx.backward_input) // this is 1D if backward_input is a 1D column vector
     } else {
       throw new Error(`Invalid GradContext argument`)
     }
