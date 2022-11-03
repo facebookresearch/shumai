@@ -1,6 +1,6 @@
 import * as sm from '@shumai/shumai'
-import { describe, /*,expect*/ it } from 'bun:test'
-import { expectArraysClose /*, isShape*/ } from './utils'
+import { describe, expect, it } from 'bun:test'
+import { expectArraysClose, expectThrows, isShape } from './utils'
 
 describe('where', () => {
   it('Scalars', () => {
@@ -66,5 +66,54 @@ describe('where', () => {
     const b = sm.tensor(new Float32Array([3, 3, 3, 3])).reshape([2, 2, 1, 1])
     expectArraysClose(sm.where(c, a, b).toFloat32Array(), [7, 3, 7, 7])
   })
-  /* TODO: unit tests for gradients */
+
+  it('gradient for scalars', () => {
+    const c = sm.scalar(1)
+    const a = sm.scalar(10).requireGrad()
+    const b = sm.scalar(20).requireGrad()
+    const result = sm.where(c, a, b)
+    result.backward()
+
+    expect(isShape(a.grad, a.shape)).toBe(true)
+    expectArraysClose(a.grad.toFloat32Array(), [1])
+
+    expect(isShape(b.grad, b.shape)).toBe(true)
+    expectArraysClose(b.grad.toFloat32Array(), [0])
+  })
+  it('gradient for 2D Tensors', () => {
+    const c = sm.tensor(new Float32Array([1, 0, 1, 1])).reshape([2, 2])
+    const a = sm
+      .tensor(new Float32Array([10, 10, 10, 10]))
+      .reshape([2, 2])
+      .requireGrad()
+    const b = sm
+      .tensor(new Float32Array([5, 5, 5, 5]))
+      .reshape([2, 2])
+      .requireGrad()
+    const result = sm.where(c, a, b).sum()
+    result.backward()
+
+    expect(isShape(a.grad, a.shape)).toBe(true)
+    expectArraysClose(a.grad.toFloat32Array(), [1, 0, 1, 1])
+
+    expect(isShape(b.grad, b.shape)).toBe(true)
+    expectArraysClose(b.grad.toFloat32Array(), [0, 1, 0, 0])
+  })
+  it('gradient cond is invalid', () => {
+    const c = sm
+      .tensor(new Float32Array([1, 0, 1, 1]))
+      .reshape([2, 2])
+      .requireGrad()
+    const a = sm
+      .tensor(new Float32Array([10, 10, 10, 10]))
+      .reshape([2, 2])
+      .requireGrad()
+    const b = sm
+      .tensor(new Float32Array([5, 5, 5, 5]))
+      .reshape([2, 2])
+      .requireGrad()
+    const result = sm.where(c, a, b).sum()
+
+    expectThrows(() => result.backward(), new RegExp('cannot be propagated'))
+  })
 })
