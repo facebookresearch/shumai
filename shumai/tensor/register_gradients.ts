@@ -199,19 +199,16 @@ const impls = {
     return possiblyReduce((<Tensor>grad.in[grad_idx]).mul(grad.grad_in), grad)
   },
   greaterThanEqual: (grad: Grad) => {
-    const o = sm.scalar(1).sub(grad.out)
-    return grad.out.mul(o)
+    return grad.grad_in.mul(grad.out).mul(sm.scalar(1).sub(grad.out))
   },
   logicalNot: (grad: Grad) => {
-    const o = sm.scalar(1).sub(grad.out)
-    return grad.out.mul(o)
+    return grad.grad_in.mul(grad.out).mul(sm.scalar(1).sub(grad.out))
   },
   sigmoid: (grad: Grad) => {
-    const o = sm.scalar(1).sub(grad.out)
-    return grad.out.mul(o)
+    return grad.grad_in.mul(grad.out).mul(sm.scalar(1).sub(grad.out))
   },
   clip: (grad: Grad) => {
-    const result = <Tensor>grad.in[0]
+    const result = <Tensor>grad.out
     const low = <Tensor>grad.in[1]
     const high = <Tensor>grad.in[2]
 
@@ -221,6 +218,16 @@ const impls = {
     const gradMask = sm.where(lowHighMask, grad.out, sm.full(grad.out.shape, 0))
 
     return gradMask
+  },
+  erf: (grad: Grad) => {
+    const input = <Tensor>grad.in[0]
+    return grad.grad_in.mul(sm.scalar(2)).div(sm.sqrt(sm.scalar(Math.PI))).mul(sm.exp(input.mul(input).mul(sm.scalar(-1))))
+  },
+  minimum: (grad: Grad) => {
+    const input = <Tensor>grad.in[0]
+    const rhsVal = <Tensor>grad.in[1]
+    const mask = input.lessThan(rhsVal).astype(grad.grad_in.dtype)
+    return mask.mul(grad.grad_in)
   },
   sub: (grad: Grad) => {
     if (grad.idx) {
