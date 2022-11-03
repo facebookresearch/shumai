@@ -201,6 +201,13 @@ export class TransformerDotProductAttention extends Module {
     let output = queries.matmul(keys.T()) // shape [..., queryTokens, keyTokens]
 
     if (mask !== undefined) {
+      if (output.shape.length > 2) {
+        // mask.shape.length is always 2
+        const tile = output.shape
+        tile[tile.length - 1] = 1
+        tile[tile.length - 2] = 1
+        mask = mask.tile(tile)
+      }
       const negativeInfinities = sm.full([1], -Infinity).tile(output.shape)
       output = sm.where(mask, negativeInfinities, output)
     }
