@@ -4,7 +4,7 @@ import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
 import type { OpStats } from '../network'
 import { _tidyTracker, cyrb53, Float16Array } from '../util'
-import { Grad } from './register_gradients'
+import { GradContext } from './register_gradients'
 import { collectStats, getStack } from './stats'
 import { full } from './tensor_ops'
 import * as ops from './tensor_ops'
@@ -108,11 +108,11 @@ function traverse_gradients(
       if (!dep.requires_grad) {
         continue
       }
-      const grad_arg = {
-        idx: idx,
-        in: t.deps,
-        out: t,
-        grad_in: all_grads_dict[t.ptr][1]
+      const grad_arg = <GradContext>{
+        grad_idx: idx,
+        op_inputs: t.deps,
+        op_result: t,
+        grad_result: all_grads_dict[t.ptr][1]
       }
       const g: Tensor = gradient_functions[t.op](grad_arg)
       if (dep.ptr in all_grads_dict) {
@@ -149,11 +149,11 @@ async function async_traverse_gradients(
       if (!dep.requires_grad) {
         continue
       }
-      const grad_arg = <Grad>{
-        idx: idx,
-        in: t.deps,
-        out: t,
-        grad_in: all_grads_dict[t.ptr][1]
+      const grad_arg = <GradContext>{
+        grad_idx: idx,
+        op_inputs: t.deps,
+        op_result: t,
+        grad_result: all_grads_dict[t.ptr][1]
       }
       let g
       if (t.grad_callback_async) {
@@ -269,7 +269,7 @@ export class Tensor {
   grad: Tensor = null
   op = 'constant'
 
-  grad_callback_async?: (grad?: Grad) => Promise<void | Tensor>
+  grad_callback_async?: (grad?: GradContext) => Promise<void | Tensor>
 
   /** @private */
   private _injest_ptr(_ptr: number) {

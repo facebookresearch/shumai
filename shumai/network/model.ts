@@ -45,7 +45,7 @@ export function remote_model(url: string, backward_url?: string, error_handler?)
   }
   const backward = async (grad) => {
     const jacobian = await backoff(async () => {
-      return await tfetch(backward_url, grad.grad_in)
+      return await tfetch(backward_url, grad.grad_result)
     }, error_handler)
     return jacobian
   }
