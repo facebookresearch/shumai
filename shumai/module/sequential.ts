@@ -1,10 +1,10 @@
-import type { Tensor } from '../tensor'
+import { Tensor } from '../tensor'
 import { Module } from './module'
 
 export class Sequential extends Module {
-  private _modules: Module[]
+  private _modules: CallableFunction[]
 
-  constructor(...modules: Module[]) {
+  constructor(...modules: CallableFunction[]) {
     super()
     this._modules = modules
   }
@@ -13,18 +13,26 @@ export class Sequential extends Module {
     return this._modules.length
   }
 
-  get modules(): Module[] {
+  get modules(): CallableFunction[] {
     return this._modules
   }
 
-  forward(...inputs: Tensor[]): Tensor | Tensor[] {
+  forward(...inputs: unknown[]): Tensor | Tensor[] {
     if (this._modules.length === 0) {
       if (inputs.length === 0) {
         return null
       } else if (inputs.length === 1) {
+        if (!(inputs[0] instanceof Tensor)) {
+          throw new Error(`No-op can only be performed on Tensor inputs: arg at index 0`)
+        }
         return inputs[0]
       } else {
-        return inputs
+        for (let i = 0; i < inputs.length; i++) {
+          if (!(inputs[i] instanceof Tensor)) {
+            throw new Error(`No-op can only be performed on Tensor inputs: arg at index ${i}`)
+          }
+        }
+        return <Tensor[]>inputs
       }
     }
 
