@@ -186,6 +186,23 @@ describe('TransformerDotProductAttention', () => {
     // Result 1 is more value 0 than value 1
     expect(result.index([1, 0]).toFloat32() > result.index([1, 1]).toFloat32()).toBe(true)
   })
+  it('two tokens, one masked, batch samples', () => {
+    const module = new sm.module.TransformerDotProductAttention(3)
+
+    const queries = sm
+      .tensor(new Float32Array([0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1]))
+      .reshape([2, 2, 3])
+    const keys = sm
+      .tensor(new Float32Array([0, 1, 0.25, 0, 0.5, 1, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]))
+      .reshape([2, 2, 3])
+    const values = sm
+      .tensor(new Float32Array([1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1]))
+      .reshape([2, 2, 3])
+    const mask = sm.tensor(new Int8Array([0, 1, 0, 0])).reshape([2, 2])
+
+    const result = module(queries, keys, values, mask)
+    areSameShape(result, queries)
+  })
   it('batch samples are independent', () => {
     const module = new sm.module.TransformerDotProductAttention(3)
 
@@ -632,6 +649,268 @@ describe('TransformerEncoder', () => {
       .requireGrad()
 
     const result = module(input).sum()
+    result.backward()
+    expect(!!input.grad).toBe(true)
+  })
+})
+
+describe('TransformerDecoderLayer', () => {
+  it('single token, two heads', () => {
+    const module = new sm.module.TransformerDecoderLayer(6, 2)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput)
+    areSameShape(result, input)
+  })
+  it('single token, two heads (attentionDim)', () => {
+    const module = new sm.module.TransformerDecoderLayer(6, 2, 7)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput)
+    areSameShape(result, input)
+  })
+  it('single token, two heads (feedForwardDim)', () => {
+    const module = new sm.module.TransformerDecoderLayer(6, 2, 6, 12)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput)
+    areSameShape(result, input)
+  })
+  it('batch samples are independent', () => {
+    const module = new sm.module.TransformerDecoderLayer(6, 2)
+    const singleInput = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const singleEncoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+    const batchInput = sm
+      .tensor(
+        new Float32Array(
+          [2, 3, 0.5, 0.25, 1, 2.25].concat([
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random()
+          ])
+        )
+      )
+      .reshape([2, 1, 6])
+    const batchEncoderOutput = sm
+      .tensor(
+        new Float32Array(
+          [
+            1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+          ].concat(Array.from(Array(18), () => Math.random()))
+        )
+      )
+      .reshape([2, 3, 6])
+
+    const singleResult = module(singleInput, singleEncoderOutput)
+    const batchResult = module(batchInput, batchEncoderOutput)
+    areSameShape(batchResult, batchInput)
+
+    expectArraysClose(
+      batchResult.index([0, ':', ':']).toFloat32Array(),
+      singleResult.toFloat32Array()
+    )
+    areSameShape(batchResult.index([0, ':', ':']), singleResult)
+  })
+  it('calculates gradient', () => {
+    const module = new sm.module.TransformerDecoderLayer(6, 2)
+    const input = sm
+      .tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25]))
+      .reshape([1, 6])
+      .requireGrad()
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+      .requireGrad()
+
+    const result = module(input, encoderOutput).sum()
+    result.backward()
+    expect(!!input.grad).toBe(true)
+    expect(!!encoderOutput.grad).toBe(true)
+  })
+})
+
+describe('TransformerDecoderLayer.getSelfAttentionMask', () => {
+  it('length=1', () => {
+    const mask = sm.module.TransformerDecoderLayer.getSelfAttentionMask(1)
+    expect(isShape(mask, [1, 1])).toBe(true)
+    expectArraysClose(mask.toFloat32Array(), [0])
+  })
+  it('length=2', () => {
+    const mask = sm.module.TransformerDecoderLayer.getSelfAttentionMask(2)
+    expect(isShape(mask, [2, 2])).toBe(true)
+    expectArraysClose(mask.toFloat32Array(), [0, 1, 0, 0])
+  })
+  it('length=3', () => {
+    const mask = sm.module.TransformerDecoderLayer.getSelfAttentionMask(3)
+    expect(isShape(mask, [3, 3])).toBe(true)
+    expectArraysClose(mask.toFloat32Array(), [0, 1, 1, 0, 0, 1, 0, 0, 0])
+  })
+})
+
+describe('TransformerDecoder', () => {
+  it('depth=1', () => {
+    const module = new sm.module.TransformerDecoder(6, 2, 1)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput)
+    areSameShape(result, input)
+  })
+  it('depth=2', () => {
+    const module = new sm.module.TransformerDecoder(6, 2, 2)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput)
+    areSameShape(result, input)
+  })
+  it('depth=2 (attentionDim)', () => {
+    const module = new sm.module.TransformerDecoder(6, 2, 2, 7)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput)
+    areSameShape(result, input)
+  })
+  it('depth=2 (feedForwardDim)', () => {
+    const module = new sm.module.TransformerDecoder(6, 2, 2, 6, 12)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput)
+    areSameShape(result, input)
+  })
+  it('depth=2 (initSequenceLength)', () => {
+    const module = new sm.module.TransformerDecoder(6, 2, 2, 6, 6, 1)
+    const input = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput)
+    areSameShape(result, input)
+  })
+  it('batch samples are independent', () => {
+    const module = new sm.module.TransformerDecoder(6, 2, 2)
+    const singleInput = sm.tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25])).reshape([1, 6])
+    const singleEncoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+    const batchInput = sm
+      .tensor(
+        new Float32Array(
+          [2, 3, 0.5, 0.25, 1, 2.25].concat([
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random(),
+            Math.random()
+          ])
+        )
+      )
+      .reshape([2, 1, 6])
+    const batchEncoderOutput = sm
+      .tensor(
+        new Float32Array(
+          [
+            1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+          ].concat(Array.from(Array(18), () => Math.random()))
+        )
+      )
+      .reshape([2, 3, 6])
+
+    const singleResult = module(singleInput, singleEncoderOutput)
+    const batchResult = module(batchInput, batchEncoderOutput)
+    areSameShape(batchResult, batchInput)
+
+    expectArraysClose(
+      batchResult.index([0, ':', ':']).toFloat32Array(),
+      singleResult.toFloat32Array()
+    )
+    areSameShape(batchResult.index([0, ':', ':']), singleResult)
+  })
+  it('calculates gradient', () => {
+    const module = new sm.module.TransformerDecoder(6, 2, 2)
+    const input = sm
+      .tensor(new Float32Array([2, 3, 0.5, 0.25, 1, 2.25]))
+      .reshape([1, 6])
+      .requireGrad()
+    const encoderOutput = sm
+      .tensor(
+        new Float32Array([
+          1, 1.4, 1.2, 1.6, 1.1, 1.3, 2, 1.9, 1.8, 1.7, 1.6, 1.5, 0.9, 1.1, 1.3, 1.7, 1.2, 1.1
+        ])
+      )
+      .reshape([3, 6])
+
+    const result = module(input, encoderOutput).sum()
     result.backward()
     expect(!!input.grad).toBe(true)
   })

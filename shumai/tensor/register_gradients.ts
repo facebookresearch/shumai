@@ -221,7 +221,10 @@ const impls = {
   },
   erf: (grad: Grad) => {
     const input = <Tensor>grad.in[0]
-    return grad.grad_in.mul(sm.scalar(2)).div(sm.sqrt(sm.scalar(Math.PI))).mul(sm.exp(input.mul(input).mul(sm.scalar(-1))))
+    return grad.grad_in
+      .mul(sm.scalar(2))
+      .div(sm.sqrt(sm.scalar(Math.PI)))
+      .mul(sm.exp(input.mul(input).mul(sm.scalar(-1))))
   },
   minimum: (grad: Grad) => {
     const input = <Tensor>grad.in[0]
