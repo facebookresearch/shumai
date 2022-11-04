@@ -180,11 +180,6 @@ Once `bun` and `ArrayFire` are installed, install the package and backing libs w
 bun install @shumai/shumai
 ```
 
-^**Linux users can use the CPU backend** by swapping the required `package.json` dependency from `@shumai/linux_x64_shumai_flashlight` to `@shumai/linux_x64_shumai_flashlight_cpu`, i.e. running:
-```shell
-sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
-```
-
 ### Windows Support
 
 While not officially supported, Windows users have been successful leveraging [Docker](https://www.docker.com/) + [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) + Linux. Including CUDA support.
