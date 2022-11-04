@@ -20,7 +20,7 @@ const sm = { ...ops, ...tensor, util }
  *
  * The multiplicative factors $\frac{1}{10000^{2z/d}}$ are precomputed during object creation as they are constant for all $i$.
  *
- * The full PE is initially precomputed for all $i$ up to 256 (configurable). If the module is called with a sequence length larger than the initial value, the additional values are also calculated and stored.
+ * The full PE is initially precomputed for all $i$ up to 256 (or `initSequenceLength` given in the constructor). If the module is called with a sequence length larger than what has already been computed, the additional PE values are also calculated and then stored.
  */
 export class TransformerPositionalEncoding extends Module {
   /**
@@ -234,7 +234,7 @@ export class TransformerMultiheadAttention extends Module {
   /**
    * @param dim - Number of dimensions of the input embeddings
    * @param heads - Number of heads for the multi-head attention
-   * @param attentionDim - Number of dimensions of the further embeddings used by the {@link TransformerDotProductAttention | scaled dot-product attentions}, or `dim` if not specified
+   * @param attentionDim - Number of dimensions of the further embeddings which are passed to the scaled dot-product attention mechanisms, or `dim` if not specified
    */
   constructor(dim: number, heads: number, attentionDim?: number) {
     super()
@@ -344,8 +344,8 @@ export class TransformerEncoderLayer extends Module {
 
   /**
    * @param dim - Number of dimensions of the input embeddings
-   * @param heads - Number of heads for the multi-head attention
-   * @param attentionDim - Number of dimensions of the embeddings used in the scaled dot-product attention, or `dim` if not specified
+   * @param heads - Number of heads in the multi-head attention mechanism
+   * @param attentionDim - Number of dimensions of the embeddings which are passed to the scaled dot-product attention mechanisms, or `dim` if not specified
    * @param feedForwardDim - Number of dimensions in the hidden layer of the feed forward network, or `dim` if not specified
    */
   constructor(dim: number, heads: number, attentionDim?: number, feedForwardDim?: number) {
@@ -402,10 +402,10 @@ export class TransformerEncoder extends Module {
 
   /**
    * @param dim - Number of dimensions of the input embeddings
-   * @param heads - Number of heads for the multi-head attention
+   * @param heads - Number of heads in each multi-head attention mechanism
    * @param depth - Number of encoder layers
-   * @param attentionDim - Number of dimensions of the embeddings used in the scaled dot-product attention, or `dim` if not specified
-   * @param feedForwardDim - Number of dimensions in the hidden layer of the feed forward network, or `dim` if not specified
+   * @param attentionDim - Number of dimensions of the embeddings which are passed to the scaled dot-product attention mechanisms, or `dim` if not specified
+   * @param feedForwardDim - Number of dimensions in the hidden layer of each feed forward network, or `dim` if not specified
    * @param initSequenceLength - Initial sequence length that the positional encoding should be computed for, or {@link TransformerPositionalEncoding.DEFAULT_SEQUENCE_LENGTH} if not specified
    */
   constructor(
@@ -478,8 +478,8 @@ export class TransformerDecoderLayer extends Module {
 
   /**
    * @param dim - Number of dimensions of the input embeddings
-   * @param heads - Number of heads for the multi-head attention
-   * @param attentionDim - Number of dimensions of the embeddings used in the scaled dot-product attention, or `dim` if not specified
+   * @param heads - Number of heads in each multi-head attention mechanism
+   * @param attentionDim - Number of dimensions of the embeddings which are passed to the scaled dot-product attention mechanisms, or `dim` if not specified
    * @param feedForwardDim - Number of dimensions in the hidden layer of the feed forward network, or `dim` if not specified
    */
   constructor(dim: number, heads: number, attentionDim?: number, feedForwardDim?: number) {
@@ -561,10 +561,10 @@ export class TransformerDecoder extends Module {
 
   /**
    * @param dim - Number of dimensions of the input embeddings
-   * @param heads - Number of heads for the multi-head attention
-   * @param depth - Number of encoder layers
-   * @param attentionDim - Number of dimensions of the embeddings used in the scaled dot-product attention, or `dim` if not specified
-   * @param feedForwardDim - Number of dimensions in the hidden layer of the feed forward network, or `dim` if not specified
+   * @param heads - Number of heads in each multi-head attention mechanism
+   * @param depth - Number of decoder layers
+   * @param attentionDim - Number of dimensions of the embeddings which are passed to the scaled dot-product mechanisms, or `dim` if not specified
+   * @param feedForwardDim - Number of dimensions in the hidden layer of each feed forward network, or `dim` if not specified
    * @param initSequenceLength - Initial sequence length that the positional encoding should be computed for, or {@link TransformerPositionalEncoding.DEFAULT_SEQUENCE_LENGTH} if not specified
    */
   constructor(
