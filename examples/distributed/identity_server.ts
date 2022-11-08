@@ -1,7 +1,7 @@
 import * as sm from '@shumai/shumai'
 
-function identity(x) {
+function identity(x: sm.Tensor) {
   return x
 }
 
-sm.io.serve_model(identity)
+sm.network.serve_model(identity)

@@ -1,6 +1,9 @@
 import * as sm from '@shumai/shumai'
 
 class MLP extends sm.module.Module {
+  public l0
+  public l1
+  public l2
   constructor() {
     super()
     this.l0 = sm.module.linear(8, 8)

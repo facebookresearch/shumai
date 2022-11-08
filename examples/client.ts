@@ -1,7 +1,7 @@
 import * as sm from '@shumai/shumai'
 
 const url = '127.0.0.1:3001'
-const model = sm.io.remote_model(url)
+const model = sm.network.remote_model(url)
 
 const ref_weight = sm.full([128, 8], 1)
 let loss
