@@ -33,13 +33,11 @@ export class LayerNorm extends Module {
     }
 
     this.resetParameters()
-    this.gamma.requireGrad()
-    this.beta.requireGrad()
   }
 
   resetParameters(): void {
-    this.gamma = sm.full(this.dims, 1)
-    this.beta = sm.full(this.dims, 0)
+    this.gamma = sm.full(this.dims, 1).requireGrad()
+    this.beta = sm.full(this.dims, 0).requireGrad()
   }
 
   forward(tensor: Tensor): Tensor {
