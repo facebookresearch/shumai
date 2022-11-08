@@ -4,7 +4,8 @@
   "module": "shumai/index.ts",
   "type": "module",
   "scripts": {
-    "format": "eslint '**/*.{js,ts}' '*.{js,ts,cjs}' package.json --fix"
+    "format": "eslint '**/*.{js,ts}' '*.{js,ts,cjs}' package.json --fix",
+    "typedoc": "typedoc --tsconfig tsconfig.typedoc.json"
   },
   "bin": {
     "shumai": "./shumai/run.ts"
