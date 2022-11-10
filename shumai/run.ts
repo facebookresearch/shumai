@@ -38,7 +38,7 @@ if (command === 'serve') {
       throw `Please export a loss function from ${model}`
     }
     let loss = null
-    await new Promise((r) =>
+    await new Promise((resolve) =>
       sm.io.readlinesCallback(
         '/dev/stdin',
         (line) => {
@@ -53,14 +53,14 @@ if (command === 'serve') {
           m.backward(loss.backward())
           sm.util.tuiLoad(loss.toFloat32())
         },
-        r
+        resolve
       )
     )
     if (loss !== null) {
       console.log(loss.toFloat32())
     }
   } else {
-    throw `network train not yet supported`
+    throw `training over the network is not yet supported (TODO: expose loss function)`
   }
 } else if (command === 'infer') {
   if (args.length < 2) {
@@ -69,7 +69,7 @@ if (command === 'serve') {
   }
   const model = args[1]
   if (existsSync(model)) {
-    const m = await import(`${process.cwd()}/${args[1]}`)
+    const m = await import(`${process.cwd()}/${model}`)
     if (m.default === undefined) {
       throw `Please export a default function from ${model}`
     }
@@ -79,6 +79,18 @@ if (command === 'serve') {
       console.log(sm.io.encodeReadable(out))
     })
   } else {
-    throw `network infer not yet supported`
+    const m = sm.network.remote_model(model)
+    await new Promise((resolve) => {
+      sm.io.readlinesCallback(
+        '/dev/stdin',
+        (line) => {
+          const t = sm.io.decodeReadable(line)
+          m(t).then((out) => {
+            console.log(sm.io.encodeReadable(out))
+          })
+        },
+        resolve
+      )
+    })
   }
 }

@@ -1,5 +1,5 @@
 import * as crypto from 'crypto'
-import { decodeBinary } from '../io'
+import { decodeBinary, encodeBinary } from '../io'
 import * as sm from '../tensor'
 import { sleep } from '../util'
 
@@ -94,9 +94,12 @@ export async function tfetch(
   })()
   const buff = await response.arrayBuffer()
   if (buff.byteLength) {
-    const t = await decodeBinary(buff).catch((err) => {
+    let t = null
+    try {
+      t = decodeBinary(buff)
+    } catch (err) {
       throw `tfetched result invalid: ${err}`
-    })
+    }
     if (options && options.grad_fn) {
       t.requires_grad = true
       tensor.requires_grad = true
