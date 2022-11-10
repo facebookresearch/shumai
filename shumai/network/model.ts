@@ -1,7 +1,8 @@
 import type { ServeOptions } from 'bun'
+import { decodeBinary, encodeBinary } from '../io'
 import { OptimizerFn } from '../optim'
 import * as sm from '../tensor'
-import { backoff, decode, encode, tfetch } from './tensor'
+import { backoff, tfetch } from './tensor'
 
 /**
  * Connect to a remote model as if it were a local differentiable function.
@@ -138,7 +139,7 @@ export function serve(
     const buf = await req.arrayBuffer()
     let ret = null
     if (buf.byteLength) {
-      const t = await decode(buf)
+      const t = await decodeBinary(buf)
       ret = await fn(get_user_data(t), t)
       if (ret) {
         ret.provenance = t.provenance
@@ -154,7 +155,7 @@ export function serve(
         const route = last_seg in request_dict ? last_seg : 'default'
         op_stats[route] = ret.stats
       }
-      return new Response(encode(ret))
+      return new Response(encodeBinary(ret))
     } else if (ret && ret.constructor === Object) {
       const headers = new Headers([['Content-Type', 'application/json']])
       headers.set('Access-Control-Allow-Origin', '*')
