@@ -241,8 +241,8 @@ export function serve(
  */
 export function serve_model(
   fn: (t: sm.Tensor) => sm.Tensor | Promise<sm.Tensor>,
-  grad_update: OptimizerFn,
-  options: ServeOptions,
+  grad_update?: OptimizerFn,
+  options?: ServeOptions,
   // TODO: pending further type refinement (requires a fn; same comments above)
   req_map?: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>
 ) {
