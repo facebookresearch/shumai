@@ -86,6 +86,7 @@ export async function* readlines(filename: string, utfLabel: Encoding = 'utf-8',
 export function readlinesCallback(
   filename: string,
   callback,
+  finishCallback,
   utfLabel: Encoding = 'utf-8',
   buffer_len = 16
 ) {
@@ -145,5 +146,6 @@ export function readlinesCallback(
     for (const d of flush_buffer()) {
       callback(d)
     }
+    finishCallback()
   })
 }
