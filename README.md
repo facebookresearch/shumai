@@ -26,6 +26,7 @@ A fast differentiable tensor library for research in TypeScript and JavaScript. 
 - [Usage](#usage)
 - [Install](#install)
 - [Build from source](#installing-local-build-from-source)
+- [Benchmarks](#benchmarks)
 - [Contributing](#contributing)
 - [Supported operations](#supported-operations)
 
@@ -272,6 +273,41 @@ With Shumai, we hope to make
 - **Building applications enoyable**
   - JavaScript has a ~~large~~ [HUGE](https://survey.stackoverflow.co/2022/#section-most-popular-technologies-programming-scripting-and-markup-languages) ecosystem, which facilitates better application development
   
+  
+## Benchmarks
+
+Benchmark data is collected from https://github.com/shumai-org/benchmarks
+
+On an Apple M1 Pro:
+
+| Benchmark     | Shumai (bun)  | TF.js (node)  | Difference |
+| ------------- |---------------| --------------| -----------|
+| 32-wide addition | 624.78K iter/s | 195.627K iter/s | 3.19x |
+| 1024-wide addition | 460.008K iter/s | 94.945K iter/s | 4.84x |
+| 32768-wide addition | 57.929K iter/s | 40.484K iter/s | 1.43x |
+| 64-wide square matmul | 43 GFlop/s | 28.533 GFlop/s | 1.51x |
+| 128-wide square matmul | 518.704 GFlop/s | 58.764 GFlop/s | 8.83x |
+| 1024-wide square matmul | 2,147.771 GFlop/s | 318.826 GFlop/s | 6.74x |
+| B=64, 64-wide hidden layer + 5x pointwise |41.344K iter/s| 16.679K iter/s | 2.48x|
+| B=64, 128-wide hidden layer + 5x pointwise |24.554K iter/s| 8.563K iter/s | 2.87x|
+| B=64, 1024-wide hidden layer + 5x pointwise |2.716K iter/s| 0.969K iter/s | 2.80x|
+
+On an Nvidia GP100:
+
+| Benchmark     | Shumai (bun)  | TF.js (node)  | Difference |
+| ------------- |---------------| --------------| -----------|
+| 32-wide addition | 243.217K iter/s | 34.539K iter/s | 7.04x |
+| 1024-wide addition | 144.771K iter/s | 18.006K iter/s | 8.04x |
+| 32768-wide addition | 71.793K iter/s | 17.071K iter/s | 4.21x |
+| 64-wide square matmul | 63.239 GFlop/s | 12.749 GFlop/s | 4.96x |
+| 128-wide square matmul | 435.565 GFlop/s | 104.885 GFlop/s | 4.15x |
+| 1024-wide square matmul | 7,165.062 GFlop/s | 6,470.793 GFlop/s | 1.11x |
+| B=64, 64-wide hidden layer + 5x pointwise |25.507K iter/s| 5.192K iter/s | 4.91x|
+| B=64, 128-wide hidden layer + 5x pointwise |22.529K iter/s| 4.861K iter/s | 4.63x|
+| B=64, 1024-wide hidden layer + 5x pointwise |11.568K iter/s| 2.854K iter/s | 4.05x|
+
+
+
 ## Contributing
 
 If you'd like to make changes to the core bindings or ffi, first [build from source](#installing-from-source).
