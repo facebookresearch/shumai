@@ -98,10 +98,9 @@ describe('encode/decode Readable', () => {
     expect(encoding).toBe('[[77, 1], [2, 4]]:Float32')
   })
   it('Ragged Tensor (unsupported)', () => {
-    const a = sm.tensor(new Float32Array([1, 0, 3, 2])).reshape([2, 2])
     const a_buf = '[[1, 0], [3, 2, 4]]: Float32'
     expectThrows(() => {
-      const b = sm.io.decodeReadable(a_buf)
+      sm.io.decodeReadable(a_buf)
     })
   })
   it('Scalar', () => {

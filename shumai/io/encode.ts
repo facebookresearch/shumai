@@ -91,13 +91,13 @@ export function encodeReadable(tensor: sm.Tensor) {
 
 export function decodeReadable(readableString: string) {
   const [arrayString, typeString] = readableString.split(':')
-  let dtype = sm.dtype.Float32
+  let dtype: sm.dtype = sm.dtype.Float32
   if (typeString !== undefined) {
     dtype = sm.stringToType(typeString)
   }
 
   // returns array, shape and characters parsed
-  function parseTensor(s: string, offset = 0) {
+  function parseTensor(s: string, offset = 0): [number[], number[], number] {
     const total_chars = s.length
     let idx = 1
     if (!s.includes(']') && !s.includes(',')) {
@@ -106,9 +106,9 @@ export function decodeReadable(readableString: string) {
     if (s[offset] !== '[') {
       throw `Invalid string passed into Tensor parser: found '${s[offset + idx]}', expected '['`
     }
-    let array = []
+    let array: number[] = []
     let outer_shape = 0
-    let inner_shape = null
+    let inner_shape: number[] | null | 0 = null
     let cur_chars = ''
     const digest = () => {
       if (cur_chars.length) {
@@ -127,7 +127,7 @@ export function decodeReadable(readableString: string) {
         idx += 1
         continue
       } else if (char === '[') {
-        const [_array, _shape, _idx] = parseTensor(s, offset + idx)
+        const [_array, _shape, _idx] = <[any[], any[], number]>parseTensor(s, offset + idx)
         idx += _idx
         const same = (a, b) => a.length === b.length && a.every((e, i) => e === b[i])
         if (inner_shape !== null && !same(inner_shape, _shape)) {
@@ -149,9 +149,8 @@ export function decodeReadable(readableString: string) {
       }
     }
     throw `Never found closing ']'`
-    return [], 0
   }
-  const [array, shape, len] = parseTensor(arrayString.trim())
+  const [array, shape] = parseTensor(arrayString.trim())
   // TODO: this is an issue for larger types
   return sm.tensor(new Float32Array(array)).reshape(shape).astype(dtype)
 }

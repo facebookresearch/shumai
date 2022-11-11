@@ -416,7 +416,7 @@ export class Tensor {
     }
   }
 
-  checkpoint(file?: () => any, callback?: () => boolean) {
+  checkpoint(file?: () => any | any, callback?: () => boolean) {
     if (typeof file === 'function') {
       callback = file
       file = undefined

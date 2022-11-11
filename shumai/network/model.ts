@@ -1,4 +1,4 @@
-import type { ServeOptions } from 'bun'
+import type { Errorlike, Server } from 'bun'
 import { decodeBinary, encodeBinary } from '../io'
 import { OptimizerFn } from '../optim'
 import * as sm from '../tensor'
@@ -71,6 +71,18 @@ export type RouteStats = {
   op_stats?: OpStats
 }
 
+export type NetworkServeOpts = {
+  port?: string | number
+  hostname?: string
+  baseURI?: string
+  maxRequestBodySize?: number
+  development?: boolean
+  error?: (
+    this: Server,
+    request: Errorlike
+  ) => Response | Promise<Response> | undefined | Promise<undefined>
+}
+
 /**
  * Spawn an HTTP server to handle tensor input and output requests.
  *
@@ -108,7 +120,7 @@ export type RouteStats = {
  */
 export function serve(
   request_dict: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>,
-  options: ServeOptions
+  options: NetworkServeOpts
 ) {
   const user_data = {}
   const statistics: Record<string, RouteStats> = {}
@@ -243,7 +255,7 @@ export function serve(
 export function serve_model(
   fn: (t: sm.Tensor) => sm.Tensor | Promise<sm.Tensor>,
   grad_update?: OptimizerFn,
-  options?: ServeOptions,
+  options?: NetworkServeOpts,
   // TODO: pending further type refinement (requires a fn; same comments above)
   req_map?: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>
 ) {
@@ -258,7 +270,7 @@ export function serve_model(
       return out
     },
     optimize: async (u: any, t: sm.Tensor) => {
-      const [ts, grad] = <[sm.Tensor[], sm.Tensor]>await u.saved_backward(t)
+      const [ts, grad] = await u.saved_backward(t)
       let ret: sm.Tensor = null
       if (grad) {
         ret = grad.detach()

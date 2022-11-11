@@ -111,7 +111,7 @@ export function readlinesCallback(
     }
     return []
   }
-  stdin.on('data', (value) => {
+  stdin.on('data', (value: Uint8Array) => {
     let i = -1
     let last_nl = 0
     while ((i = value.indexOf('\n'.charCodeAt(0), i + 1)) >= 0) {
