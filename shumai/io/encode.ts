@@ -127,7 +127,7 @@ export function decodeReadable(readableString: string) {
         idx += 1
         continue
       } else if (char === '[') {
-        const [_array, _shape, _idx] = <[any[], any[], number]>parseTensor(s, offset + idx)
+        const [_array, _shape, _idx] = parseTensor(s, offset + idx)
         idx += _idx
         const same = (a, b) => a.length === b.length && a.every((e, i) => e === b[i])
         if (inner_shape !== null && !same(inner_shape, _shape)) {
