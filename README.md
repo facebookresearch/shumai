@@ -21,10 +21,9 @@ A [fast](#benchmarks), [network-connected](https://facebookresearch.github.io/sh
 
 - [Usage](#usage)
 - [Install](#install)
-- [Build from source](#installing-local-build-from-source)
+- [Build from source](#building-native-libraries-from-source)
 - [Benchmarks](#benchmarks)
 - [Contributing](#contributing)
-- [Supported operations](#supported-operations)
 
 ## Quickstart
 Install [Bun](https://bun.sh/) and [ArrayFire](https://github.com/arrayfire/arrayfire/wiki/Getting-ArrayFire)
