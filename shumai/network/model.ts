@@ -1,5 +1,6 @@
 import type { Errorlike, Server } from 'bun'
 import { decodeBinary, encodeBinary } from '../io'
+import { Module } from '../module'
 import { OptimizerFn } from '../optim'
 import * as sm from '../tensor'
 import { backoff, tfetch } from './tensor'
@@ -253,7 +254,7 @@ export function serve(
  *
  */
 export function serve_model(
-  fn: (t: sm.Tensor) => sm.Tensor | Promise<sm.Tensor>,
+  fn: ((t: sm.Tensor) => sm.Tensor | Promise<sm.Tensor>) | Module,
   grad_update?: OptimizerFn,
   options?: NetworkServeOpts,
   // TODO: pending further type refinement (requires a fn; same comments above)
@@ -262,6 +263,8 @@ export function serve_model(
   const base_req_map = {
     /* TODO: Refine type of param `u` */
     forward: async (u: any, input: sm.Tensor) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore - inherits from `Function`: super('...args', 'return this.__self__.forward(...args)')
       const out = await fn(input)
       input.requires_grad = true
       u.saved_backward = async (jacobian?: sm.Tensor) => {
