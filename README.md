@@ -4,7 +4,7 @@
 
 </p>
 
-A fast differentiable tensor library for research in TypeScript and JavaScript.  Built with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
+A [fast](#benchmarks), [network-connected](https://facebookresearch.github.io/shumai/modules/network.html), differentiable tensor library for research in TypeScript (and JavaScript).  Built with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
 
 ![shumai_big](https://user-images.githubusercontent.com/4842908/190880994-6e59dd90-22ef-4a6a-9129-5be04086b59a.gif)
 
