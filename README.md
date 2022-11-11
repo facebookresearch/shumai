@@ -83,20 +83,6 @@ Only macOS and Linux are supported. Linux installs default to GPU computation wi
 *Install is work in progress*: [**please file an issue**](https://github.com/facebookresearch/shumai/issues) if you run into problems.
 
 
-
-## Why build this?
-
-With Shumai, we hope to make 
-
-- **Creating datasets**
-  - JavaScript, with native typed arrays and a JIT compiler, is perfect for twiddling with data before it can be made into big, flat GPU-compatible arrays.
-- **Training small models**
-  - FFI bindings in Bun are crazy fast (~3ns), so JS gets out of the way when training small models
-- **Advanced/fine-grained training/inference logic**
-  - Bun uses the JSC JIT compiler, meaning you can confidently write complex training logic without needing a native C++ implementation
-- **Building applications**
-  - JavaScript has a ~~large~~ [HUGE](https://survey.stackoverflow.co/2022/#section-most-popular-technologies-programming-scripting-and-markup-languages) ecosystem, which facilitates better application development
-
 ## Usage
 
 shumai will always attempt to use an attached GPU or accelerator; although CPU computation will use the ArrayFire CPU backend, which is not well-optimized.
@@ -271,6 +257,21 @@ cmake .. \
 make -j$(nproc)
 ```
 
+
+
+## Why build this?
+
+With Shumai, we hope to make 
+
+- **Creating datasets easier**
+  - JavaScript, with native typed arrays and a JIT compiler, is perfect for twiddling with data before it can be made into big, flat GPU-compatible arrays.
+- **Training small models faster**
+  - FFI bindings in Bun are crazy fast (~3ns), so JS gets out of the way when training small models
+- **Advanced/fine-grained training/inference logic more expressive**
+  - Bun uses the JSC JIT compiler, meaning you can confidently write complex training logic without needing a native C++ implementation
+- **Building applications enoyable**
+  - JavaScript has a ~~large~~ [HUGE](https://survey.stackoverflow.co/2022/#section-most-popular-technologies-programming-scripting-and-markup-languages) ecosystem, which facilitates better application development
+  
 ## Contributing
 
 If you'd like to make changes to the core bindings or ffi, first [build from source](#installing-from-source).
