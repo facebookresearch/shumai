@@ -1,10 +1,6 @@
-<p align="center">
-<img width="375" alt="shumai_logo_light" src="https://user-images.githubusercontent.com/4842908/187270063-250a42b0-475e-4eb2-bc1e-2b6a54182577.png#gh-light-mode-only">
-<img width="375" alt="shumai_logo_dark" src="https://user-images.githubusercontent.com/4842908/187270061-99666d73-047c-4076-906c-f181c940244c.png#gh-dark-mode-only">
+# Shumai 🥟
 
-</p>
-
-A [fast](#benchmarks), [network-connected](https://facebookresearch.github.io/shumai/modules/network.html), differentiable tensor library for research in TypeScript (and JavaScript).  Built with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight).
+A [fast](#benchmarks), [network-connected](https://facebookresearch.github.io/shumai/modules/network.html), differentiable tensor library for TypeScript (and JavaScript).  Built with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight) for software engineers and researchers alike.
 
 ![shumai_big](https://user-images.githubusercontent.com/4842908/190880994-6e59dd90-22ef-4a6a-9129-5be04086b59a.gif)
 
