@@ -11,8 +11,10 @@
     "shumai": "./shumai/run.ts"
   },
   "files": [
-    "shumai/**/*.ts"
+    "shumai/**/*.ts",
+    "dist/**/*.d.ts"
   ],
+  "types": "dist/shumai/index.d.ts",
   "keywords": [
     "bun",
     "flashlight",

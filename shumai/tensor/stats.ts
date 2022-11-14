@@ -1,6 +1,6 @@
 import type { Tensor } from './tensor'
 /** @private */
-export const getStack = (skip_slice: bool = false) => {
+export const getStack = (skip_slice = false) => {
   try {
     throw new Error('')
   } catch (e) {

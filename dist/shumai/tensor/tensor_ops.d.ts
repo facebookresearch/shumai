@@ -1,0 +1,12 @@
+import type { Tensor } from './tensor';
+export * from './tensor_ops_gen';
+export declare function scalar(s: number): Tensor;
+export declare function softmax(tensor: Tensor, axis: number): Tensor;
+export declare function relu(tensor: Tensor): Tensor;
+export declare function leakyRelu(tensor: Tensor, negative_slope?: number): Tensor;
+export declare function swish(tensor: Tensor, beta?: number): Tensor;
+export declare function elu(tensor: Tensor, alpha?: number): Tensor;
+export declare function thresholdRelu(tensor: Tensor, threshold?: number): Tensor;
+export declare function clamp(tensor: Tensor, low: number, high: number): Tensor;
+export declare function relu6(tensor: Tensor): Tensor;
+export declare function hardTanh(tensor: Tensor): Tensor;
