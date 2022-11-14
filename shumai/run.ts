@@ -38,27 +38,27 @@ if (command === 'serve') {
       throw `Please export a loss function from ${model}`
     }
     let loss = null
-    await new Promise((resolve) =>
-      sm.io.readlinesCallback(
-        '/dev/stdin',
-        (line) => {
-          const [example, ref] = line.split('|')
-          if (ref === undefined) {
-            throw `No reference provided for example!`
-          }
-          const X = sm.io.decodeReadable(example)
-          const Y = sm.io.decodeReadable(ref)
-          const Y_hat = m.default(X)
-          loss = m.loss(Y, Y_hat)
-          m.backward(loss.backward())
-          sm.util.tuiLoad(loss.toFloat32())
-        },
-        resolve
-      )
+    console.log('sdf')
+    sm.io.readlinesCallback(
+      '/dev/stdin',
+      (line) => {
+        const [example, ref] = line.split('|')
+        if (ref === undefined) {
+          throw `No reference provided for example!`
+        }
+        const X = sm.io.decodeReadable(example)
+        const Y = sm.io.decodeReadable(ref)
+        const Y_hat = m.default(X)
+        loss = m.loss(Y, Y_hat)
+        m.backward(loss.backward())
+        sm.util.tuiLoad(loss.toFloat32())
+      },
+      () => {
+        if (loss !== null) {
+          console.log(loss.toFloat32())
+        }
+      }
     )
-    if (loss !== null) {
-      console.log(loss.toFloat32())
-    }
   } else {
     throw `training over the network is not yet supported (TODO: expose loss function)`
   }

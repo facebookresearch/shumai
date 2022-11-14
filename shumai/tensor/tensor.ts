@@ -422,7 +422,7 @@ export class Tensor {
       file = undefined
     }
     if (file === undefined) {
-      this._checkpoint_file = `tensor_${cyrb53(getStack())}.fl`
+      this._checkpoint_file = `tensor_${cyrb53(getStack(true))}.fl`
     } else {
       this._checkpoint_file = file.toString()
     }

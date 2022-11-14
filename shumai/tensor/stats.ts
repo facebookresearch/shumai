@@ -1,12 +1,11 @@
 import type { Tensor } from './tensor'
 /** @private */
-export const getStack = () => {
+export const getStack = (skip_slice: bool = false) => {
   try {
-    const e = new Error('')
+    throw new Error('')
   } catch (e) {
     const slice_idx = e.stack.indexOf('\n')
-    console.log(e, slice_idx)
-    if (slice_idx < 0) {
+    if (slice_idx < 0 || skip_slice) {
       return e.stack
     }
     return e.stack.slice(slice_idx)

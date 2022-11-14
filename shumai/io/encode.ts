@@ -152,5 +152,10 @@ export function decodeReadable(readableString: string) {
   }
   const [array, shape] = parseTensor(arrayString.trim())
   // TODO: this is an issue for larger types
-  return sm.tensor(new Float32Array(array)).reshape(shape).astype(dtype)
+  const native_array = new Float32Array(array)
+  const t = sm.tensor(native_array).reshape(shape)
+  if (dtype !== sm.dtype.Float32) {
+    return t.astype(dtype)
+  }
+  return t
 }
