@@ -92,9 +92,10 @@ function traverse_gradients(
   sorted_traversal: Tensor[],
   jacobian: Tensor
 ): Record<number, [Tensor, Tensor]> {
-  const all_grads_dict: Record<number, [Tensor, Tensor]> = {}
+  const all_grads_dict: Record<number, [Tensor, Tensor, number]> = {}
   const base_t = sorted_traversal[0]
-  all_grads_dict[base_t.ptr] = [base_t, jacobian]
+  let id = 0
+  all_grads_dict[base_t.ptr] = [base_t, jacobian, id++]
   for (const t of sorted_traversal) {
     if (t.requires_grad && !all_grads_dict[t.ptr]) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
@@ -120,9 +121,9 @@ function traverse_gradients(
         if (dep !== prev_dep) {
           throw new Error(`Internal error: invalid all_grads_dict`)
         }
-        all_grads_dict[dep.ptr] = [prev_dep, prev_g.add(g)]
+        all_grads_dict[dep.ptr] = [prev_dep, prev_g.add(g), id++]
       } else {
-        all_grads_dict[dep.ptr] = [dep, g]
+        all_grads_dict[dep.ptr] = [dep, g, id++]
       }
     }
   }
@@ -133,9 +134,10 @@ async function async_traverse_gradients(
   sorted_traversal: Tensor[],
   jacobian: Tensor
 ): Promise<Record<number, [Tensor, Tensor]>> {
-  const all_grads_dict: Record<number, [Tensor, Tensor]> = {}
+  const all_grads_dict: Record<number, [Tensor, Tensor, number]> = {}
   const base_t = sorted_traversal[0]
-  all_grads_dict[base_t.ptr] = [base_t, jacobian]
+  let id = 0
+  all_grads_dict[base_t.ptr] = [base_t, jacobian, id++]
   for (const t of sorted_traversal) {
     if (t.requires_grad && !all_grads_dict[t.ptr]) {
       throw `Cannot run backward pass through ${t.op}. The gradient fed into it is null!`
@@ -163,9 +165,9 @@ async function async_traverse_gradients(
       }
       if (dep.ptr in all_grads_dict) {
         const [t, prev_g] = all_grads_dict[dep.ptr]
-        all_grads_dict[dep.ptr] = [t, prev_g.add(g)]
+        all_grads_dict[dep.ptr] = [t, prev_g.add(g), id++]
       } else {
-        all_grads_dict[dep.ptr] = [dep, g]
+        all_grads_dict[dep.ptr] = [dep, g, id++]
       }
     }
   }
@@ -237,9 +239,8 @@ export function backward(
     const all_grads: Record<string, { grad: Tensor; tensor: Tensor }> = {}
     // TODO: this is assuming the same path is traversed, it should be a compute hash
     // unique identifier
-    let id = 0
-    for (const t_ of sorted_traversal) {
-      const [t, g] = all_grads_dict[t_.ptr]
+    for (const key in all_grads_dict) {
+      const [t, g, id] = all_grads_dict[key]
       // NB: not really safe in parallel, but convenient for stateful API
       t.grad = g
       // this is a preferable API
@@ -248,7 +249,6 @@ export function backward(
         grad: g,
         id: id
       }
-      id += 1
     }
     return all_grads
   }
