@@ -235,14 +235,20 @@ export function backward(
     all_grads_dict: Record<number, [Tensor, Tensor]>
   ): Record<string, { grad: Tensor; tensor: Tensor }> => {
     const all_grads: Record<string, { grad: Tensor; tensor: Tensor }> = {}
-    for (const key in all_grads_dict) {
-      const [t, g] = all_grads_dict[key]
+    // TODO: this is assuming the same path is traversed, it should be a compute hash
+    // unique identifier
+    let id = 0
+    for (const t_ of sorted_traversal) {
+      const [t, g] = all_grads_dict[t_.ptr]
       // NB: not really safe in parallel, but convenient for stateful API
       t.grad = g
+      // this is a preferable API
       all_grads[t.toString()] = {
         tensor: t,
-        grad: g
+        grad: g,
+        id: id
       }
+      id += 1
     }
     return all_grads
   }

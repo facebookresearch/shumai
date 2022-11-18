@@ -9,4 +9,6 @@ export type OptimizerFn = (
   >,
   learning_rate?: number
 ) => Promise<void> | void
+export * from './adam'
+export * from './optim'
 export * from './sgd'

@@ -41,11 +41,11 @@ export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number
     tuiLoad(
       `${Math.floor((100 * i) / len)
         .toString()
-        .padStart(2)}% (${i + 1}/${len})${callback ? callback(i) : ''}`
+        .padStart(2)}% (${i + 1}/${len})${callback ? ' ' + callback(i) : ''}`
     )
     yield is_num ? i : arrayLike[i]
   }
-  console.log(`\u001b[2K100% ${len}/${len}${callback ? callback(len) : ''}\u001b[A\n`)
+  console.log(`\u001b[2K100% ${len}/${len}${callback ? ' ' + callback(len) : ''}\u001b[A\n`)
 }
 
 export function shuffle<T>(array: T[]): T[] {

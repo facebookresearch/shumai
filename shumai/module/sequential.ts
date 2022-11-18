@@ -48,3 +48,7 @@ export class Sequential extends Module {
     return output
   }
 }
+
+export function sequential(...args) {
+  return new Sequential(...args)
+}
