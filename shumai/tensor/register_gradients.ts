@@ -127,7 +127,7 @@ const impls = {
     return ctx.backward_input.div(ctx.forward_output.mul(sm.scalar(2)))
   },
   exp: (ctx: GradContext) => {
-    return sm.exp(ctx.forward_inputs[0])
+    return sm.exp(ctx.forward_inputs[0]).mul(ctx.backward_input)
   },
   matmul: (ctx: GradContext) => {
     if (ctx.backward_output_index === 0) {
@@ -161,7 +161,7 @@ const impls = {
   mean: (ctx: GradContext) => {
     const inShape = (<Tensor>ctx.forward_inputs[0]).shape
     let axes = <number[]>ctx.forward_inputs[1]
-    if (axes.length === 0) {
+    if (axes === undefined || axes.length === 0) {
       axes = inShape.map((x, i) => i) // All axes
     }
 
@@ -250,7 +250,7 @@ const impls = {
     return recoverShape(ctx.backward_input, inShape, axes)
   },
   tanh: (ctx: GradContext) => {
-    return sm.scalar(1).sub(ctx.forward_output.mul(ctx.forward_output))
+    return sm.scalar(1).sub(ctx.forward_output.mul(ctx.forward_output)).mul(ctx.backward_input)
   },
   concatenate: (ctx: GradContext): Tensor => {
     const axis = <number>ctx.forward_inputs[ctx.forward_inputs.length - 1]
