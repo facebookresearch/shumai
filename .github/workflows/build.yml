@@ -54,7 +54,7 @@ jobs:
       - name: "Colocate package assets"
         run: |
           mkdir -p shumai_bindings
-          mv -v $HOME/usr/lib/libflashlight.0.3.2.dylib shumai_bindings/libflashlight.0.dylib
+          mv -v $HOME/usr/lib/libflashlight.0.4.dylib shumai_bindings/libflashlight.0.dylib
           mv -v libflashlight_binding.dylib shumai_bindings
       - name: "Add bindings dylib dir as rpath"
         run: install_name_tool -add_rpath "@loader_path" shumai_bindings/libflashlight_binding.dylib
@@ -128,7 +128,7 @@ jobs:
       - name: "Colocate package assets"
         run: |
           mkdir -p shumai_bindings
-          mv --verbose $HOME/usr/lib/libflashlight.so.0.3.2 shumai_bindings/libflashlight.so.0
+          mv --verbose $HOME/usr/lib/libflashlight.so.0.4 shumai_bindings/libflashlight.so.0
           mv --verbose libflashlight_binding.so shumai_bindings
       - name: "Add bindings shared lib dir as rpath"
         run: patchelf --set-rpath '$ORIGIN' shumai_bindings/libflashlight_binding.so
@@ -189,7 +189,7 @@ jobs:
       - name: "Colocate package assets"
         run: |
           mkdir -p shumai_bindings
-          mv --verbose $HOME/usr/lib/libflashlight.so.0.3.2 shumai_bindings/libflashlight.so.0
+          mv --verbose $HOME/usr/lib/libflashlight.so.0.4 shumai_bindings/libflashlight.so.0
           mv --verbose libflashlight_binding.so shumai_bindings
       - name: "Add bindings shared lib dir as rpath"
         run: patchelf --set-rpath '$ORIGIN' shumai_bindings/libflashlight_binding.so
