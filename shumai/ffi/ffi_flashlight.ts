@@ -38,7 +38,7 @@ for (const file of files_to_attempt) {
     NATIVE_FILE = file
     break
   } catch (error) {
-    console.log(`warning: couldn't load ${file}, falling back...`)
+    console.log(`warning: couldn't load ${file} (${error}), falling back...`)
   }
 }
 
