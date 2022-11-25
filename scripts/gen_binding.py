@@ -523,12 +523,15 @@ for op, args, ret in op_list:
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([{','.join(js_tensor_args)}].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {{
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     }} else {{
-      stats[s] = {{ time: dt, bytes: db }}
+      stats[s] = {{ time: dt, bytes: db, ops, count: 1 }}
     }}
   }}
 

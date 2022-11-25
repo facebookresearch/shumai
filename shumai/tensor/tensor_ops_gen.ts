@@ -41,12 +41,15 @@ import { Tensor } from './tensor'
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -99,12 +102,15 @@ import { Tensor } from './tensor'
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -155,12 +161,15 @@ import { Tensor } from './tensor'
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -212,12 +221,15 @@ import { Tensor } from './tensor'
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -276,12 +288,15 @@ export function eye(dim: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -333,12 +348,15 @@ export function eye(dim: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -395,12 +413,15 @@ export function eye(dim: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -461,12 +482,15 @@ export function eye(dim: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -526,12 +550,15 @@ export function eye(dim: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -578,12 +605,15 @@ export function concatenate(tensors: Array<Tensor>, axis: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -644,12 +674,15 @@ export function concat(tensors: Array<Tensor>, axis: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -704,12 +737,15 @@ export function concat(tensors: Array<Tensor>, axis: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -770,12 +806,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -830,12 +869,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -890,12 +932,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -950,12 +995,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1010,12 +1058,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1070,12 +1121,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1130,12 +1184,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1190,12 +1247,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1250,12 +1310,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1310,12 +1373,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1377,12 +1443,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1437,12 +1506,15 @@ export function negate(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1501,12 +1573,15 @@ export function abs(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1561,12 +1636,15 @@ export function abs(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1606,12 +1684,15 @@ export function flip(tensor: Tensor, dim: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1650,12 +1731,15 @@ export function clip(tensor: Tensor, low: Tensor, high: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, low, high].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1692,12 +1776,15 @@ export function roll(tensor: Tensor, shift: number, axis: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1734,12 +1821,15 @@ export function isnan(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1776,12 +1866,15 @@ export function isinf(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1818,12 +1911,15 @@ export function sign(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1860,12 +1956,15 @@ export function tril(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1902,12 +2001,15 @@ export function triu(tensor: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1944,12 +2046,15 @@ export function where(cond: Tensor, x: Tensor, y: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([cond, x, y].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -1989,12 +2094,15 @@ export function sort(tensor: Tensor, dim: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2033,12 +2141,15 @@ export function add(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2075,12 +2186,15 @@ export function sub(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2117,12 +2231,15 @@ export function mul(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2159,12 +2276,15 @@ export function div(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2201,12 +2321,15 @@ export function eq(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2243,12 +2366,15 @@ export function neq(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2285,12 +2411,15 @@ export function lessThan(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2333,12 +2462,15 @@ export function lessThanEqual(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2381,12 +2513,15 @@ export function greaterThan(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2429,12 +2564,15 @@ export function greaterThanEqual(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2477,12 +2615,15 @@ export function logicalOr(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2521,12 +2662,15 @@ export function logicalAnd(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2563,12 +2707,15 @@ export function mod(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2607,12 +2754,15 @@ export function bitwiseAnd(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2651,12 +2801,15 @@ export function bitwiseOr(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2695,12 +2848,15 @@ export function bitwiseXor(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2737,12 +2893,15 @@ export function lShift(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2779,12 +2938,15 @@ export function rShift(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2821,12 +2983,15 @@ export function minimum(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2863,12 +3028,15 @@ export function maximum(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2905,12 +3073,15 @@ export function power(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -2947,12 +3118,15 @@ export function matmul(tensor: Tensor, other: Tensor) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, other].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3013,12 +3187,15 @@ export function conv2d(
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor, weights].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3058,12 +3235,15 @@ export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3101,12 +3281,15 @@ export function amax(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3143,12 +3326,15 @@ export function argmin(tensor: Tensor, axis: number, keep_dims = false) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3185,12 +3371,15 @@ export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3228,12 +3417,15 @@ export function sum(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3270,12 +3462,15 @@ export function cumsum(tensor: Tensor, axis: number) {
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3313,12 +3508,15 @@ export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3356,12 +3554,15 @@ export function median(tensor: Tensor, axes: BigInt64Array | number[] = [], keep
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3404,12 +3605,15 @@ export function _var(
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3456,12 +3660,15 @@ export function std(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3510,12 +3717,15 @@ export function norm(
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3570,12 +3780,15 @@ export function countNonzero(
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3613,12 +3826,15 @@ export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
@@ -3656,12 +3872,15 @@ export function all(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
+    const ops = BigInt([tensor].reduce((ops, t) => ops + t.elements, 0))
     const s = getStack()
     if (s in stats) {
       stats[s].time += dt
       stats[s].bytes += db
+      stats[s].ops += ops
+      stats[s].count += 1
     } else {
-      stats[s] = { time: dt, bytes: db }
+      stats[s] = { time: dt, bytes: db, ops, count: 1 }
     }
   }
 
