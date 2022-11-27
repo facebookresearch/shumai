@@ -411,15 +411,12 @@ export class Tensor {
     this._ptr = ptr(tensor._underlying)
     this._deps = tensor.deps
     this.eval()
-    // TODO do this only when necessary from C++
-    if (fl.bytesUsed.native() > 10e6 /* 10MB */) {
-      Bun.gc(true)
-    }
     if (this._checkpoint_file) {
       if (this._checkpoint_callback()) {
         this.save(this._checkpoint_file)
       }
     }
+    return this
   }
 
   checkpoint(file?: (() => boolean) | any, callback?: () => boolean) {
@@ -575,6 +572,11 @@ export class Tensor {
     t.grad = null
     t._deps = []
     return t
+  }
+
+  untidy() {
+    _tidyTracker?.delete(this.ptr)
+    return this
   }
 
   get elements() {

@@ -2,7 +2,10 @@ import { Tensor } from '../tensor/tensor'
 export let _tidyTracker: Map<number, Tensor> = null
 
 export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
-  _tidyTracker = new Map()
+  // by tracking ownership nested tidy's can play nice
+  // TODO: would be wise to support nested/scoped tracker's to avoid waiting for top-most tracker before releasing memory
+  const ownsTracker = !_tidyTracker
+  _tidyTracker ||= new Map()
   if (!Array.isArray(args)) args = [args]
   const result = fn(...args)
 
@@ -57,9 +60,12 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
 
   parseTidyRet(result)
 
-  for (const [, tensor] of _tidyTracker) {
-    tensor.dispose()
+  if (ownsTracker) {
+    for (const [, tensor] of _tidyTracker) {
+      tensor.dispose()
+    }
+    _tidyTracker = null
   }
-  _tidyTracker = null
+
   return result
 }
