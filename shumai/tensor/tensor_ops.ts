@@ -52,5 +52,9 @@ export function hardTanh(tensor: Tensor): Tensor {
 const geluConst = 1 / Math.sqrt(2)
 export function gelu(tensor: Tensor): Tensor {
   // https://arxiv.org/pdf/1606.08415.pdf
-  return tensor.mul(scalar(0.5)).mul(scalar(1.0).add(tensor.mul(scalar(geluConst))).erf())
+  return tensor.mul(scalar(0.5)).mul(
+    scalar(1.0)
+      .add(tensor.mul(scalar(geluConst)))
+      .erf()
+  )
 }
