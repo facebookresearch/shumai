@@ -305,7 +305,7 @@ On an Nvidia GP100:
 ## Memory Usage
 
 While the out of the box memory management may suffice in many cases, tuning memory
-usage can greatly improve performance by reducing unecessary overhead from the
+usage can greatly improve performance by reducing unnecessary overhead from the
 Garbage Collector.
 
 ```
