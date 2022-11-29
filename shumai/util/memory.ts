@@ -1,4 +1,6 @@
+import { fl } from '../ffi/ffi_flashlight'
 import { Tensor } from '../tensor/tensor'
+
 export let _tidyTracker: Map<number, Tensor> = null
 
 export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
@@ -68,4 +70,44 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
   }
 
   return result
+}
+
+export type MemoryOptions = {
+  lowerBoundThreshold?: number
+  upperBoundThreshold?: number
+  delayBetweenGCs?: number
+}
+
+const DEFAULT_MEMORY_OPTIONS: MemoryOptions = {
+  lowerBoundThreshold: 100e6, // 100MB
+  upperBoundThreshold: 5e9, // 5GB
+  delayBetweenGCs: 1000 // 1s
+}
+
+/** @private */
+const gOptions: MemoryOptions = {
+  ...DEFAULT_MEMORY_OPTIONS
+}
+
+/** @private */
+let nextGC = performance.now() + gOptions.delayBetweenGCs
+
+export function gcAsNeeded(bytesNeeded = 0) {
+  const bytesUsed = fl.bytesUsed.native() + BigInt(bytesNeeded)
+  const now = performance.now()
+  if (
+    bytesUsed >= gOptions.upperBoundThreshold ||
+    (now >= nextGC && bytesUsed >= gOptions.lowerBoundThreshold)
+  ) {
+    Bun.gc(true)
+    nextGC = now + gOptions.delayBetweenGCs
+  }
+}
+
+export function memoryOptions(opts: MemoryOptions): MemoryOptions {
+  gOptions.lowerBoundThreshold = opts?.lowerBoundThreshold ?? gOptions.lowerBoundThreshold
+  gOptions.upperBoundThreshold = opts?.upperBoundThreshold ?? gOptions.upperBoundThreshold
+  gOptions.delayBetweenGCs = opts?.delayBetweenGCs ?? gOptions.delayBetweenGCs
+
+  return gOptions
 }

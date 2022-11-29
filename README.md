@@ -302,6 +302,26 @@ On an Nvidia GP100:
 | B=64, 1024-wide hidden layer + 5x pointwise |11.568K iter/s| 2.854K iter/s | 4.05x|
 
 
+## Memory Usage
+
+While the out of the box memory management may suffice in many cases, tuning memory
+usage can greatly improve performance by reducing unnecessary overhead from the
+Garbage Collector.
+
+```
+import { util } from '@shumai/shumai'
+
+util.memoryOptions({
+  lowerBoundThreshold: 100e6, // 100MB
+  upperBoundThreshold: 5e9, // 5GB
+  delayBetweenGCs: 1000 // 1s
+})
+```
+
+Pay special attention to `upperBoundThreshold` which if exceeded will force GC
+for every allocated tensor, ignoring `delayBetweenGCs`. Supplying a value that
+will fully utilize your hardware can greatly improve performance.
+
 
 ## Contributing
 
