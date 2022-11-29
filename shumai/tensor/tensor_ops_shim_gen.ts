@@ -1,6 +1,7 @@
 /* GENERATED CODE (gen_binding.py) */
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
+import { opToFlops } from './op_to_flops'
 import { collectStats, getStack } from './stats'
 import type { Tensor } from './tensor'
 
@@ -29,15 +30,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('reshape', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -77,15 +78,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('transpose', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -123,15 +124,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('tile', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -170,15 +171,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('nonzero', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -217,15 +218,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('negative', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -268,15 +269,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('logicalNot', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -313,15 +314,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('exp', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -358,15 +359,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('log', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -405,15 +406,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('log1p', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -450,15 +451,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('sin', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -495,15 +496,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('cos', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -540,15 +541,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('sqrt', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -585,15 +586,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('tanh', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -632,15 +633,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('floor', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -677,15 +678,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('ceil', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -722,15 +723,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('rint', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -769,15 +770,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('absolute', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -820,15 +821,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('sigmoid', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -865,15 +866,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('erf', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -913,15 +914,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('flip', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -960,15 +961,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, low, high].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('clip', [this, low, high])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1005,15 +1006,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('roll', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1052,15 +1053,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('isnan', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1099,15 +1100,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('isinf', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1144,15 +1145,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('sign', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1189,15 +1190,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('tril', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1234,15 +1235,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('triu', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1281,15 +1282,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, x, y].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('where', [this, x, y])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1329,15 +1330,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('sort', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1376,15 +1377,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('add', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1421,15 +1422,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('sub', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1466,15 +1467,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('mul', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1511,15 +1512,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('div', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1556,15 +1557,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('eq', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1601,15 +1602,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('neq', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1648,15 +1649,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('lessThan', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1699,15 +1700,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('lessThanEqual', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1750,15 +1751,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('greaterThan', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1801,15 +1802,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('greaterThanEqual', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1852,15 +1853,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('logicalOr', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1899,15 +1900,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('logicalAnd', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1944,15 +1945,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('mod', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -1991,15 +1992,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('bitwiseAnd', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2038,15 +2039,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('bitwiseOr', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2085,15 +2086,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('bitwiseXor', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2132,15 +2133,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('lShift', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2179,15 +2180,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('rShift', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2226,15 +2227,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('minimum', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2273,15 +2274,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('maximum', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2320,15 +2321,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('power', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2367,15 +2368,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, tensor].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('matmul', [this, tensor])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2428,15 +2429,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this, weights].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('conv2d', [this, weights])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2476,15 +2477,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('amin', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2522,15 +2523,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('amax', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2569,15 +2570,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('argmin', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2616,15 +2617,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('argmax', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2662,15 +2663,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('sum', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2709,15 +2710,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('cumsum', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2755,15 +2756,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('mean', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2803,15 +2804,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('median', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2849,15 +2850,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('var', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2899,15 +2900,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('std', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -2951,15 +2952,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('norm', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -3005,15 +3006,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('countNonzero', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -3051,15 +3052,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('any', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 
@@ -3097,15 +3098,15 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const ops = BigInt([this].reduce((ops, t) => ops + t.elements, 0))
+        const flops = opToFlops('all', [this])
         const s = getStack()
         if (s in stats) {
           stats[s].time += dt
           stats[s].bytes += db
-          stats[s].ops += ops
+          stats[s].flops += flops
           stats[s].count += 1
         } else {
-          stats[s] = { time: dt, bytes: db, ops, count: 1 }
+          stats[s] = { time: dt, bytes: db, flops, count: 1 }
         }
       }
 

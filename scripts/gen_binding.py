@@ -523,15 +523,15 @@ for op, args, ret in op_list:
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
-    const ops = BigInt([{','.join(js_tensor_args)}].reduce((ops, t) => ops + t.elements, 0))
+    const flops = opToFlops('{op}', [{','.join(js_tensor_args)}])
     const s = getStack()
     if (s in stats) {{
       stats[s].time += dt
       stats[s].bytes += db
-      stats[s].ops += ops
+      stats[s].flops += flops
       stats[s].count += 1
     }} else {{
-      stats[s] = {{ time: dt, bytes: db, ops, count: 1 }}
+      stats[s] = {{ time: dt, bytes: db, flops, count: 1 }}
     }}
   }}
 
@@ -606,6 +606,7 @@ if sys.argv[1] in ["js", "js_methods"]:
 import {{ arrayArg }} from '../ffi/ffi_bind_utils'
 import {{ fl }} from '../ffi/ffi_flashlight'
 import {{ getStack, collectStats }} from './stats'
+import {{ opToFlops }} from "./op_to_flops"
 import type {{ Tensor }} from './tensor'
 
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {{
@@ -620,6 +621,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
 import {{ arrayArg }} from "../ffi/ffi_bind_utils"
 import {{ fl }} from "../ffi/ffi_flashlight"
 import {{ getStack, collectStats }} from './stats'
+import {{ opToFlops }} from "./op_to_flops"
 import {{ Tensor }} from "./tensor"
 
 {full_js}"""

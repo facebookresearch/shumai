@@ -25,7 +25,7 @@ export function collectStats(tensors: Tensor[]) {
         stats[key].count += t.stats[key].count
         stats[key].time += t.stats[key].time
         stats[key].bytes += t.stats[key].bytes
-        stats[key].ops += t.stats[key].ops
+        stats[key].flops += t.stats[key].flops
       } else {
         stats[key] = t.stats[key]
       }
@@ -38,7 +38,7 @@ export type StatsEntry = {
   count: number
   time: number
   bytes: bigint
-  ops: bigint
+  flops: bigint
 }
 
 export type StatsSummary = {
@@ -53,8 +53,8 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
   if (!stats) {
     // init
     stats = {
-      totals: { count: 0, time: 0, bytes: 0n, ops: 0n },
-      perSec: { count: 0, time: 0, bytes: 0n, ops: 0n },
+      totals: { count: 0, time: 0, bytes: 0n, flops: 0n },
+      perSec: { count: 0, time: 0, bytes: 0n, flops: 0n },
       entriesByStack: new Map(),
       entriesByOp: new Map()
     }
@@ -71,14 +71,14 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
       stats.totals.count += entry.count
       stats.totals.time += entry.time
       stats.totals.bytes += entry.bytes
-      stats.totals.ops += entry.ops
+      stats.totals.flops += entry.flops
 
       const stackEntry = stats.entriesByStack.get(key)
       if (stackEntry) {
         stackEntry.count += entry.count
         stackEntry.time += entry.time
         stackEntry.bytes += entry.bytes
-        stackEntry.ops += entry.ops
+        stackEntry.flops += entry.flops
       } else {
         stats.entriesByStack.set(key, entry)
       }
@@ -88,7 +88,7 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
         opEntry.count += entry.count
         opEntry.time += entry.time
         opEntry.bytes += entry.bytes
-        opEntry.ops += entry.ops
+        opEntry.flops += entry.flops
       } else {
         stats.entriesByOp.set(entry.op, entry)
       }
@@ -101,7 +101,7 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
   stats.perSec.time = stats.totals.time / seconds
   // perSec stats may result in loss due to type conversions
   stats.perSec.bytes = stats.totals.bytes / BigInt(stats.totals.count)
-  stats.perSec.ops = BigInt(Math.round(Number(stats.totals.ops) / seconds))
+  stats.perSec.flops = BigInt(Math.round(Number(stats.totals.flops) / seconds))
 
   return stats
 }
