@@ -3,7 +3,7 @@ import { existsSync } from 'fs'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
 import type { OpStats } from '../network'
-import { _tidyTracker, cyrb53, Float16Array } from '../util'
+import { _tidyTracker, cyrb53, Float16Array, gcAsNeeded } from '../util'
 import { GradContext } from './register_gradients'
 import { collectStats, getStack } from './stats'
 import { full } from './tensor_ops'
@@ -280,10 +280,14 @@ export class Tensor {
   /** @private */
   private _injest_ptr(_ptr: number) {
     this._ptr = _ptr
+
+    const byteLength = Number(fl._bytes.native(_ptr))
+    gcAsNeeded(byteLength) // perform cleanup prior to allocating new tensor
+
     this._underlying = toArrayBuffer(
       _ptr,
       0,
-      Number(fl._bytes.native(_ptr)),
+      byteLength,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore - overload toArrayBuffer params
       fl.genTensorDestroyer.native()
@@ -411,15 +415,12 @@ export class Tensor {
     this._ptr = ptr(tensor._underlying)
     this._deps = tensor.deps
     this.eval()
-    // TODO do this only when necessary from C++
-    if (fl.bytesUsed.native() > 10e6 /* 10MB */) {
-      Bun.gc(true)
-    }
     if (this._checkpoint_file) {
       if (this._checkpoint_callback()) {
         this.save(this._checkpoint_file)
       }
     }
+    return this
   }
 
   checkpoint(file?: (() => boolean) | any, callback?: () => boolean) {
@@ -575,6 +576,11 @@ export class Tensor {
     t.grad = null
     t._deps = []
     return t
+  }
+
+  untidy() {
+    _tidyTracker?.delete(this.ptr)
+    return this
   }
 
   get elements() {
