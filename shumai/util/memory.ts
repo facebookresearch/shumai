@@ -84,10 +84,12 @@ const DEFAULT_MEMORY_OPTIONS: MemoryOptions = {
   delayBetweenGCs: 1000 // 1s
 }
 
+/** @private */
 const gOptions: MemoryOptions = {
   ...DEFAULT_MEMORY_OPTIONS
 }
 
+/** @private */
 let nextGC = performance.now() + gOptions.delayBetweenGCs
 
 export function gcAsNeeded(bytesNeeded = 0) {
