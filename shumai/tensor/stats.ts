@@ -25,7 +25,7 @@ export function collectStats(tensors: Tensor[]) {
         stats[key].count += t.stats[key].count
         stats[key].time += t.stats[key].time
         stats[key].bytes += t.stats[key].bytes
-        stats[key].flops += t.stats[key].flops
+        stats[key].gflops += t.stats[key].gflops
       } else {
         stats[key] = t.stats[key]
       }
@@ -35,10 +35,10 @@ export function collectStats(tensors: Tensor[]) {
 }
 
 export type StatsEntry = {
-  count: number
+  count: bigint
   time: number
   bytes: bigint
-  flops: bigint
+  gflops: number
 }
 
 export type StatsSummary = {
@@ -53,8 +53,8 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
   if (!stats) {
     // init
     stats = {
-      totals: { count: 0, time: 0, bytes: 0n, flops: 0n },
-      perSec: { count: 0, time: 0, bytes: 0n, flops: 0n },
+      totals: { count: 0n, time: 0, bytes: 0n, gflops: 0 },
+      perSec: { count: 0n, time: 0, bytes: 0n, gflops: 0 },
       entriesByStack: new Map(),
       entriesByOp: new Map()
     }
@@ -70,15 +70,23 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
       const entry = t.stats[key]
       stats.totals.count += entry.count
       stats.totals.time += entry.time
+      if (stats.totals.time === Infinity) {
+        console.warn('something wrong!', stats.totals, entry)
+        process.exit()
+      }
       stats.totals.bytes += entry.bytes
-      stats.totals.flops += entry.flops
+      stats.totals.gflops += entry.gflops
+      if (stats.totals.time === Infinity) {
+        console.warn('something wrong!', stats.totals, entry)
+        process.exit()
+      }
 
       const stackEntry = stats.entriesByStack.get(key)
       if (stackEntry) {
         stackEntry.count += entry.count
         stackEntry.time += entry.time
         stackEntry.bytes += entry.bytes
-        stackEntry.flops += entry.flops
+        stackEntry.gflops += entry.gflops
       } else {
         stats.entriesByStack.set(key, entry)
       }
@@ -88,7 +96,7 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
         opEntry.count += entry.count
         opEntry.time += entry.time
         opEntry.bytes += entry.bytes
-        opEntry.flops += entry.flops
+        opEntry.gflops += entry.gflops
       } else {
         stats.entriesByOp.set(entry.op, entry)
       }
@@ -97,11 +105,23 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
 
   // compute per second stats
   const seconds = stats.totals.time / 1000
-  stats.perSec.count = stats.totals.count / seconds
-  stats.perSec.time = stats.totals.time / seconds
+  let seconds64;
+  try {
+  seconds64 = BigInt(Math.round(seconds))
+  } catch (e) {
+    console.log('seconds', stats.totals.time, seconds)
+    throw e;
+  }
+  stats.perSec.count = seconds64 ? stats.totals.count / seconds64 : 0n
+  stats.perSec.time = 1_000 // not useful to compute, just set to 1 second
   // perSec stats may result in loss due to type conversions
-  stats.perSec.bytes = stats.totals.bytes / BigInt(stats.totals.count)
-  stats.perSec.flops = BigInt(Math.round(Number(stats.totals.flops) / seconds))
+  try {
+    stats.perSec.bytes = stats.totals.bytes / BigInt(stats.totals.count)
+  } catch (err) {
+    console.warn('stats.totals.count is NaN', stats.totals)
+    throw err
+  }
+  stats.perSec.gflops = Number(stats.totals.gflops) / seconds
 
   return stats
 }

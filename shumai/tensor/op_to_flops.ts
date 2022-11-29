@@ -1,8 +1,23 @@
-export function opToFlops(op: string, args: any[]): bigint {
+import type { Tensor } from './tensor'
+
+export function opToFlops(op: string, args: any[], out: Tensor): number {
   switch (op) {
     case 'matmul':
-      return BigInt(Math.round(Math.pow(args[0].elements, 2.37188)))
+      return opToFlopsMatmul(args, out)
     default:
-      return BigInt(args.reduce((flops, t) => flops + (t.elements || 0), 0))
+      return opToFlopsGeneric(args, out)
   }
+}
+
+function opToFlopsGeneric(args: any[], out: Tensor): number {
+  // default behavior is to take the maximum size of all tensors and assume flops=max(elements)
+  return args.reduce((flops: number, t) => Math.max(flops, t?.elements || 0), out.elements)
+}
+
+function opToFlopsMatmul(args: any[], out: Tensor): number {
+  const a = args[0] as Tensor
+
+  const k = a.shape[a.shape.length - 1]
+
+  return k * out.elements * 2
 }

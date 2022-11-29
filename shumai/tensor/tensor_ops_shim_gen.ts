@@ -12,6 +12,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -30,15 +31,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('reshape', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -50,6 +50,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('reshape', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'reshape'
       return t
@@ -60,6 +62,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -78,15 +81,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('transpose', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -98,6 +100,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('transpose', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'transpose'
       return t
@@ -108,6 +112,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -124,15 +129,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('tile', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -144,6 +148,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('tile', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'tile'
       return t
@@ -153,6 +159,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -171,15 +178,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('nonzero', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -191,6 +197,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('nonzero', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'nonzero'
       return t
@@ -200,6 +208,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -218,15 +227,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('negative', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -238,6 +246,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('negative', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'negative'
       return t
@@ -251,6 +261,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -269,15 +280,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('logicalNot', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -289,6 +299,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('logicalNot', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'logicalNot'
       return t
@@ -298,6 +310,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -314,15 +327,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('exp', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -334,6 +346,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('exp', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'exp'
       return t
@@ -343,6 +357,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -359,15 +374,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('log', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -379,6 +393,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('log', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'log'
       return t
@@ -388,6 +404,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -406,15 +423,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('log1p', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -426,6 +442,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('log1p', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'log1p'
       return t
@@ -435,6 +453,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -451,15 +470,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('sin', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -471,6 +489,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('sin', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'sin'
       return t
@@ -480,6 +500,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -496,15 +517,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('cos', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -516,6 +536,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('cos', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'cos'
       return t
@@ -525,6 +547,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -541,15 +564,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('sqrt', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -561,6 +583,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('sqrt', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'sqrt'
       return t
@@ -570,6 +594,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -586,15 +611,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('tanh', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -606,6 +630,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('tanh', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'tanh'
       return t
@@ -615,6 +641,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -633,15 +660,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('floor', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -653,6 +679,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('floor', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'floor'
       return t
@@ -662,6 +690,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -678,15 +707,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('ceil', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -698,6 +726,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('ceil', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'ceil'
       return t
@@ -707,6 +737,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -723,15 +754,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('rint', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -743,6 +773,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('rint', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'rint'
       return t
@@ -752,6 +784,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -770,15 +803,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('absolute', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -790,6 +822,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('absolute', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'absolute'
       return t
@@ -803,6 +837,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -821,15 +856,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('sigmoid', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -841,6 +875,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('sigmoid', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'sigmoid'
       return t
@@ -850,6 +886,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -866,15 +903,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('erf', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -886,6 +922,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('erf', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'erf'
       return t
@@ -895,6 +933,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -914,15 +953,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('flip', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -936,6 +974,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('flip', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'flip'
       return t
@@ -945,6 +985,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || low.requires_stats || high.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, low, high])
@@ -961,15 +1002,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('clip', [this, low, high])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -981,6 +1021,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('clip', [this, low, high], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'clip'
       return t
@@ -990,6 +1032,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -1006,15 +1049,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('roll', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1026,6 +1068,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('roll', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'roll'
       return t
@@ -1035,6 +1079,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -1053,15 +1098,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('isnan', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1073,6 +1117,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('isnan', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'isnan'
       return t
@@ -1082,6 +1128,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -1100,15 +1147,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('isinf', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1120,6 +1166,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('isinf', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'isinf'
       return t
@@ -1129,6 +1177,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -1145,15 +1194,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('sign', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1165,6 +1213,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('sign', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'sign'
       return t
@@ -1174,6 +1224,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -1190,15 +1241,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('tril', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1210,6 +1260,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('tril', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'tril'
       return t
@@ -1219,6 +1271,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -1235,15 +1288,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('triu', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1255,6 +1307,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('triu', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'triu'
       return t
@@ -1264,6 +1318,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || x.requires_stats || y.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, x, y])
@@ -1282,15 +1337,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('where', [this, x, y])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1302,6 +1356,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('where', [this, x, y], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'where'
       return t
@@ -1311,6 +1367,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -1330,15 +1387,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('sort', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1352,6 +1408,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('sort', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'sort'
       return t
@@ -1361,6 +1419,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1377,15 +1436,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('add', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1397,6 +1455,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('add', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'add'
       return t
@@ -1406,6 +1466,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1422,15 +1483,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('sub', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1442,6 +1502,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('sub', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'sub'
       return t
@@ -1451,6 +1513,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1467,15 +1530,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('mul', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1487,6 +1549,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('mul', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'mul'
       return t
@@ -1496,6 +1560,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1512,15 +1577,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('div', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1532,6 +1596,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('div', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'div'
       return t
@@ -1541,6 +1607,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1557,15 +1624,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('eq', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1577,6 +1643,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('eq', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'eq'
       return t
@@ -1586,6 +1654,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1602,15 +1671,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('neq', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1622,6 +1690,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('neq', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'neq'
       return t
@@ -1631,6 +1701,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1649,15 +1720,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('lessThan', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1669,6 +1739,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('lessThan', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'lessThan'
       return t
@@ -1682,6 +1754,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1700,15 +1773,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('lessThanEqual', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1720,6 +1792,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('lessThanEqual', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'lessThanEqual'
       return t
@@ -1733,6 +1807,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1751,15 +1826,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('greaterThan', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1771,6 +1845,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('greaterThan', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'greaterThan'
       return t
@@ -1784,6 +1860,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1802,15 +1879,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('greaterThanEqual', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1822,6 +1898,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('greaterThanEqual', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'greaterThanEqual'
       return t
@@ -1835,6 +1913,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1853,15 +1932,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('logicalOr', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1873,6 +1951,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('logicalOr', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'logicalOr'
       return t
@@ -1882,6 +1962,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1900,15 +1981,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('logicalAnd', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1920,6 +2000,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('logicalAnd', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'logicalAnd'
       return t
@@ -1929,6 +2011,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1945,15 +2028,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('mod', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -1965,6 +2047,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('mod', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'mod'
       return t
@@ -1974,6 +2058,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -1992,15 +2077,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('bitwiseAnd', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2012,6 +2096,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('bitwiseAnd', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'bitwiseAnd'
       return t
@@ -2021,6 +2107,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -2039,15 +2126,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('bitwiseOr', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2059,6 +2145,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('bitwiseOr', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'bitwiseOr'
       return t
@@ -2068,6 +2156,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -2086,15 +2175,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('bitwiseXor', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2106,6 +2194,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('bitwiseXor', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'bitwiseXor'
       return t
@@ -2115,6 +2205,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -2133,15 +2224,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('lShift', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2153,6 +2243,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('lShift', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'lShift'
       return t
@@ -2162,6 +2254,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -2180,15 +2273,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('rShift', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2200,6 +2292,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('rShift', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'rShift'
       return t
@@ -2209,6 +2303,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -2227,15 +2322,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('minimum', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2247,6 +2341,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('minimum', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'minimum'
       return t
@@ -2256,6 +2352,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -2274,15 +2371,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('maximum', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2294,6 +2390,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('maximum', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'maximum'
       return t
@@ -2303,6 +2401,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -2321,15 +2420,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('power', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2341,6 +2439,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('power', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'power'
       return t
@@ -2350,6 +2450,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || tensor.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, tensor])
@@ -2368,15 +2469,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('matmul', [this, tensor])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2388,6 +2488,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('matmul', [this, tensor], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'matmul'
       return t
@@ -2401,6 +2503,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats || weights.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this, weights])
@@ -2429,15 +2532,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('conv2d', [this, weights])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2451,6 +2553,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('conv2d', [this, weights], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'conv2d'
       return t
@@ -2461,6 +2565,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2477,15 +2582,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('amin', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2497,6 +2601,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('amin', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'amin'
       return t
@@ -2507,6 +2613,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2523,15 +2630,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('amax', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2543,6 +2649,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('amax', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'amax'
       return t
@@ -2552,6 +2660,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2570,15 +2679,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('argmin', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2590,6 +2698,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('argmin', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'argmin'
       return t
@@ -2599,6 +2709,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2617,15 +2728,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('argmax', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2637,6 +2747,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('argmax', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'argmax'
       return t
@@ -2647,6 +2759,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2663,15 +2776,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('sum', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2683,6 +2795,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('sum', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'sum'
       return t
@@ -2692,6 +2806,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2710,15 +2825,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('cumsum', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2730,6 +2844,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('cumsum', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'cumsum'
       return t
@@ -2740,6 +2856,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2756,15 +2873,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('mean', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2776,6 +2892,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('mean', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'mean'
       return t
@@ -2786,6 +2904,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2804,15 +2923,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('median', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2824,6 +2942,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('median', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'median'
       return t
@@ -2834,6 +2954,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2850,15 +2971,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('var', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2870,6 +2990,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('var', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'var'
       return t
@@ -2884,6 +3006,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2900,15 +3023,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('std', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2920,6 +3042,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('std', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'std'
       return t
@@ -2930,6 +3054,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -2952,15 +3077,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('norm', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -2974,6 +3098,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('norm', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'norm'
       return t
@@ -2988,6 +3114,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -3006,15 +3133,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('countNonzero', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -3026,6 +3152,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('countNonzero', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'countNonzero'
       return t
@@ -3036,6 +3164,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -3052,15 +3181,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('any', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -3072,6 +3200,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('any', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'any'
       return t
@@ -3082,6 +3212,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       const requires_stats = this.requires_stats
 
       let stats = null
+      let stat_entry = null
       let recorded_stat = null
       if (requires_stats) {
         stats = collectStats([this])
@@ -3098,15 +3229,14 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
         const [t0, b0] = recorded_stat
         const dt = performance.now() - t0
         const db = fl.bytesUsed.native() - b0
-        const flops = opToFlops('all', [this])
         const s = getStack()
-        if (s in stats) {
-          stats[s].time += dt
-          stats[s].bytes += db
-          stats[s].flops += flops
-          stats[s].count += 1
+        stat_entry = stats[s]
+        if (stat_entry) {
+          stat_entry.time += dt
+          stat_entry.bytes += db
+          stat_entry.count += 1n
         } else {
-          stats[s] = { time: dt, bytes: db, flops, count: 1 }
+          stat_entry = stats[s] = { time: dt, bytes: db, gflops: 0, count: 1n }
         }
       }
 
@@ -3118,6 +3248,8 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       if (requires_stats) {
         t.requires_stats = true
         t.stats = stats
+        const gflops = opToFlops('all', [this], t) / 1e9
+        stat_entry.gflops += gflops
       }
       t.op = 'all'
       return t

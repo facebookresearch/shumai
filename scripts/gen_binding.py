@@ -508,6 +508,7 @@ for op, args, ret in op_list:
   const requires_stats = {js_requires_stats}
 
   let stats = null
+  let stat_entry = null
   let recorded_stat = null
   if (requires_stats) {{
     stats = collectStats([{','.join(js_tensor_args)}])
@@ -523,15 +524,14 @@ for op, args, ret in op_list:
     const [t0, b0] = recorded_stat
     const dt = performance.now() - t0
     const db = fl.bytesUsed.native() - b0
-    const flops = opToFlops('{op}', [{','.join(js_tensor_args)}])
     const s = getStack()
-    if (s in stats) {{
-      stats[s].time += dt
-      stats[s].bytes += db
-      stats[s].flops += flops
-      stats[s].count += 1
+    stat_entry = stats[s]
+    if (stat_entry) {{
+      stat_entry.time += dt
+      stat_entry.bytes += db
+      stat_entry.count += 1n
     }} else {{
-      stats[s] = {{ time: dt, bytes: db, flops, count: 1 }}
+      stat_entry = stats[s] = {{ time: dt, bytes: db, gflops: 0, count: 1n }}
     }}
   }}
 
@@ -543,6 +543,8 @@ for op, args, ret in op_list:
   if (requires_stats) {{
     t.requires_stats = true
     t.stats = stats
+    const gflops = opToFlops('{op}', [{','.join(js_tensor_args)}], t) / 1e9
+		stat_entry.gflops += gflops
   }}
   t.op = "{op}";
   return t;
