@@ -1,4 +1,5 @@
 import type { Tensor } from './tensor'
+
 /** @private */
 export const getStack = (skip_slice = false) => {
   try {
@@ -54,7 +55,7 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
     // init
     stats = {
       totals: { count: 0n, time: 0, bytes: 0n, gflops: 0 },
-      perSec: { count: 0n, time: 0, bytes: 0n, gflops: 0 },
+      perSec: { count: 0n, time: 1_000, bytes: 0n, gflops: 0 },
       entriesByStack: new Map(),
       entriesByOp: new Map()
     }
@@ -70,16 +71,8 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
       const entry = t.stats[key]
       stats.totals.count += entry.count
       stats.totals.time += entry.time
-      if (stats.totals.time === Infinity) {
-        console.warn('something wrong!', stats.totals, entry)
-        process.exit()
-      }
       stats.totals.bytes += entry.bytes
       stats.totals.gflops += entry.gflops
-      if (stats.totals.time === Infinity) {
-        console.warn('something wrong!', stats.totals, entry)
-        process.exit()
-      }
 
       const stackEntry = stats.entriesByStack.get(key)
       if (stackEntry) {
@@ -98,29 +91,18 @@ export function getStatsSummary(tensors: Tensor[], priorStats?: StatsSummary): S
         opEntry.bytes += entry.bytes
         opEntry.gflops += entry.gflops
       } else {
-        stats.entriesByOp.set(entry.op, entry)
+        stats.entriesByOp.set(op, entry)
       }
     }
+
+    t.stats = null // wipe out stats so they're not accidently reused which would skew summary
   }
 
   // compute per second stats
   const seconds = stats.totals.time / 1000
-  let seconds64;
-  try {
-  seconds64 = BigInt(Math.round(seconds))
-  } catch (e) {
-    console.log('seconds', stats.totals.time, seconds)
-    throw e;
-  }
-  stats.perSec.count = seconds64 ? stats.totals.count / seconds64 : 0n
-  stats.perSec.time = 1_000 // not useful to compute, just set to 1 second
+  stats.perSec.count = BigInt(Math.round(Number(stats.totals.count) / seconds))
   // perSec stats may result in loss due to type conversions
-  try {
-    stats.perSec.bytes = stats.totals.bytes / BigInt(stats.totals.count)
-  } catch (err) {
-    console.warn('stats.totals.count is NaN', stats.totals)
-    throw err
-  }
+  stats.perSec.bytes = stats.totals.bytes / BigInt(stats.totals.count)
   stats.perSec.gflops = Number(stats.totals.gflops) / seconds
 
   return stats
