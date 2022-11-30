@@ -1,4 +1,6 @@
-# Shumai 🥟
+<img width="1276" alt="Shumai" src="https://user-images.githubusercontent.com/4842908/204894855-a1e697af-ea42-4f1f-9c2e-07a5da26f582.png">
+
+---
 
 A [fast](#benchmarks), [network-connected](https://facebookresearch.github.io/shumai/modules/network.html), differentiable tensor library for TypeScript (and JavaScript).  Built with [bun](https://bun.sh) + [flashlight](https://github.com/flashlight/flashlight) for software engineers and researchers alike.
 
