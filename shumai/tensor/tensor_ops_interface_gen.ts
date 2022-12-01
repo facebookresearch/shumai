@@ -418,6 +418,7 @@ interface TensorOpsInterface {
   minimum(other: Tensor): Tensor
   maximum(other: Tensor): Tensor
   power(other: Tensor): Tensor
+  pow(other: Tensor): Tensor
   matmul(other: Tensor): Tensor
   mm(other: Tensor): Tensor
   conv2d(

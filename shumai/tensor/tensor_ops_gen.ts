@@ -3213,6 +3213,10 @@ export function power(tensor: Tensor, other: Tensor) {
   return t
 }
 
+export function pow(tensor: Tensor, other: Tensor) {
+  return power(tensor, other)
+}
+
 export function matmul(tensor: Tensor, other: Tensor) {
   const requires_stats = tensor.requires_stats || other.requires_stats
 

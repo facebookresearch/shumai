@@ -2446,6 +2446,10 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
       return t
     },
 
+    pow(tensor: Tensor) {
+      return this.power(tensor)
+    },
+
     matmul(tensor: Tensor) {
       const requires_stats = this.requires_stats || tensor.requires_stats
 

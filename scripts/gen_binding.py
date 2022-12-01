@@ -211,6 +211,7 @@ op_aliases = {
   "var": ["variance"],
   "norm": ["normalize"],
   "concatenate": ["concat"],
+  "power": ["pow"],
 }
 
 # ops that need inputs transposed to work correctly
