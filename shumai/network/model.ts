@@ -59,19 +59,6 @@ export function remote_model(url: string, backward_url?: string, error_handler?)
   return forward
 }
 
-export type OpStats = {
-  bytes: bigint
-  time: number
-}
-
-export type TensorOpStats = Record<string, OpStats>
-
-export type RouteStats = {
-  hits: number
-  seconds: number
-  op_stats?: OpStats
-}
-
 export type NetworkServeOpts = {
   port?: string | number
   hostname?: string
@@ -124,17 +111,6 @@ export function serve(
   options: NetworkServeOpts
 ) {
   const user_data = {}
-  const statistics: Record<string, RouteStats> = {}
-  const op_stats: TensorOpStats = {}
-
-  const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
-  request_dict.statistics = async (u) => {
-    if (sub_stat_fn) {
-      const s = await sub_stat_fn(u)
-      return { ...s, statistics, bytes_used: sm.bytesUsed() }
-    }
-    return { statistics, bytes_used: sm.bytesUsed() }
-  }
 
   const get_user_data = (t) => {
     const user_id = t.provenance
@@ -162,12 +138,6 @@ export function serve(
     }
 
     if (ret && ret instanceof sm.Tensor) {
-      if (ret.stats !== null) {
-        const segments = req.url.split('/')
-        const last_seg = segments[segments.length - 1]
-        const route = last_seg in request_dict ? last_seg : 'default'
-        op_stats[route] = ret.stats
-      }
       return new Response(encodeBinary(ret))
     } else if (ret && ret.constructor === Object) {
       const headers = new Headers([['Content-Type', 'application/json']])
@@ -190,18 +160,7 @@ export function serve(
       const last_seg = segments[segments.length - 1]
       const route = last_seg in request_dict ? last_seg : 'default'
       if (route in request_dict) {
-        const t0 = performance.now()
         const res = await serve_request(req, request_dict[route])
-        const t1 = performance.now()
-        if (!(route in statistics)) {
-          statistics[route] = {
-            hits: 0,
-            seconds: 0
-          }
-        }
-        statistics[route].op_stats = op_stats[route]
-        statistics[route].hits += 1
-        statistics[route].seconds += (t1 - t0) / 1e3
         return res
       }
     }

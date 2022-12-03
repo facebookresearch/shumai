@@ -325,6 +325,92 @@ for every allocated tensor, ignoring `delayBetweenGCs`. Supplying a value that
 will fully utilize your hardware can greatly improve performance.
 
 
+## Statistics
+
+```mermaid
+graph TD
+  OpA(Op A) --> statsA{{"stats A"}};
+  OpB(Op B) --> statsA;
+  statsA --> CollectorA{{"Collector A"}};
+  CollectorA --> LoggerA{{"LoggerConsole A"}} --> Stdout(("Stdout"));
+  OpC(Op C) --> statsA;
+  OpD(Op D) --> statsA;
+  statsA --> CollectorB{{"Collector B"}};
+  CollectorB --> LoggerB("LoggerCustom B") --> Disk(("Disk"));
+```
+
+Basic usage of gathering statistics is as simple adding
+a collector using the default `StatsLoggerConsole`.
+
+```
+import { stats, StatsLoggerConsole, rand, matmul } from '@shumai/shumai'
+
+stats.enabled = true
+// ^ is same as `stats.addCollector(new StatsLoggerConsole())`
+
+// perform ops...
+const a = rand([10, 10])
+const b = rand([10, 10])
+const c = matmul(a, b)
+
+// disabling stats removes all collectors
+stats.enabled = false
+
+// Aliases if you'll never have more than 1 collector:
+// stats.statsByStacks -> stats.collectors[0].statsByStacks
+// stats.statsByOps -> stats.collectors[0].statsByOps
+// stats.getSummary() -> stats.collectors[0].getSummary()
+// stats.reset() -> stats.collectors.map(c => c.reset())
+```
+
+While the above examples may suffice for simple use cases, if you're
+looking to capture stats across multiple threads, processes, and/or hosts,
+`StatsLoggerHttp` has you covered.
+
+```mermaid
+graph TD
+  subgraph Host C
+    Processor("LoggerHttp Processor")
+    style Processor stroke:#222,stroke-width:4px,stroke-dasharray:5 5
+  end
+  subgraph Host A
+    OpA(Op A) --> statsA{{"stats A"}};
+    OpB(Op B) --> statsA;
+    statsA --> CollectorA{{"Collector A"}};
+    CollectorA --> LoggerA{{"LoggerHttp A"}} --> Processor;
+  end
+  subgraph Host B
+    OpC(Op C) --> statsB{{"stats B"}};
+    OpD(Op D) --> statsB;
+    statsB --> CollectorB{{"Collector B"}};
+    CollectorB --> LoggerB{{"LoggerHttp B"}} --> Processor;    
+  end
+```
+
+```
+import { StatsLoggerHttp } from '@shumai/shumai'
+
+stats.addCollector(new StatsLoggerHttp({ url: 'http://localhost:4242' }))
+```
+
+For more custom needs you can supply your own logger:
+
+```
+import { StatsLoggerData } from '@shumai/shumai'
+
+class CustomLogger {
+  async process(data: StatsLoggerData): Promise<void> {
+    const summary = data.collector.getStatsSummary()
+    console.log('Collector stats:', summary)
+  }
+}
+
+stats.addCollector({ logger: new CustomLogger(), interval: 5_000 })
+```
+
+By default stack tracing is disabled as it adds 50%+ overhead, but can be enabled via `stats.collectStacks = true`.
+
+
 ## Contributing
 
 If you'd like to make changes to the core bindings or ffi, first [build from source](#installing-from-source).

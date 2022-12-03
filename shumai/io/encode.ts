@@ -3,7 +3,7 @@ import * as sm from '../tensor'
 export function encodeBinary(tensor: sm.Tensor): ArrayBuffer {
   const shape = tensor.shape64
   const provenance = tensor.provenance ? BigInt('0x' + tensor.provenance) : BigInt(0xffffffff)
-  const flags = (Number(tensor.requires_grad) & 0x1) | ((Number(tensor.requires_stats) & 0x1) << 1)
+  const flags = Number(tensor.requires_grad) & 0x1
   // meta_data: ndim, provenance, flags
   const meta_data = new BigInt64Array([BigInt(shape.length), provenance, BigInt(flags)])
   const meta_data_buf = new Uint8Array(meta_data.buffer)
@@ -27,7 +27,6 @@ export function decodeBinary(buf: ArrayBuffer) {
   const provenance = meta_data[1].toString(16)
   const flags = Number(meta_data[2])
   const requires_grad = flags & 0x1
-  const requires_stats = !!(flags & 0x2)
   if (shape_len > buf.byteLength) {
     throw `buffer cannot be decoded, invalid shape length: ${shape_len}`
   }
@@ -36,7 +35,6 @@ export function decodeBinary(buf: ArrayBuffer) {
   t.op = 'network'
   t.provenance = provenance ? provenance : null
   t.requires_grad = !!requires_grad
-  t.requires_stats = !!requires_stats
   return t
 }
 
