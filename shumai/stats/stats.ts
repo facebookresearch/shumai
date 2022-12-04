@@ -173,16 +173,16 @@ export class Stats {
   }
 }
 
-export const stats = new Stats()
-
 /** @private */
-export let scoped_stats: Stats = void 0
+export const globalStats: Stats = new Stats()
+
+export let stats = globalStats
 
 export function collectStats(
   fn: (...args: any[]) => any,
   optsOrLogger?: StatsCollectorOptions | StatsLogger
 ): Stats {
-  const prev = scoped_stats
+  const prev = stats
 
   let options: StatsCollectorOptions = (optsOrLogger as StatsCollectorOptions) || {}
   if (options && 'process' in options) {
@@ -191,12 +191,12 @@ export function collectStats(
   options.interval ||= 0 // disable interval logging unless explicitly set
   options.logger ||= null // disable logger unless explicitly set
 
-  const new_stats = (scoped_stats = new Stats())
-  scoped_stats.addCollector(options)
+  const new_stats = (stats = new Stats())
+  stats.addCollector(options)
   try {
     fn()
   } finally {
-    scoped_stats = prev // restore previous scope
+    stats = prev || globalStats // restore previous scope
   }
 
   return new_stats

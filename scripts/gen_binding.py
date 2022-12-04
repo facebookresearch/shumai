@@ -505,13 +505,12 @@ for op, args, ret in op_list:
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
   {js_impl_full}
 
-  const s = scoped_stats || stats
-  const trace = s.enabled && s.startTrace('{op}')
+  const trace = stats.enabled && stats.startTrace('{op}')
 
   {js_ptr_result}
   if(!_ptr) throw new Error('Tensor returned from `{valid_js(op)}` is null; native code likely threw an error...')
 
-  trace && s.stopTrace(trace)
+  trace && stats.stopTrace(trace)
 
   const requires_grad = {js_requires_grad_args}
   {js_deps}
@@ -519,7 +518,7 @@ for op, args, ret in op_list:
   t.provenance = {js_provenance_args}
   t.requires_grad = requires_grad
 
-  trace && s.logTrace(trace, [{','.join(js_tensor_args)}], t)
+  trace && stats.logTrace(trace, [{','.join(js_tensor_args)}], t)
 
   t.op = "{op}";
   return t;
@@ -582,7 +581,7 @@ if sys.argv[1] in ["js", "js_methods"]:
 /* GENERATED CODE (gen_binding.py) */
 import {{ arrayArg }} from '../ffi/ffi_bind_utils'
 import {{ fl }} from '../ffi/ffi_flashlight'
-import {{ stats, scoped_stats }} from '../stats'
+import {{ stats }} from '../stats'
 import type {{ Tensor }} from './tensor'
 
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {{
@@ -596,7 +595,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
 /* GENERATED CODE (gen_binding.py) */
 import {{ arrayArg }} from "../ffi/ffi_bind_utils"
 import {{ fl }} from "../ffi/ffi_flashlight"
-import {{ stats, scoped_stats }} from '../stats'
+import {{ stats }} from '../stats'
 import {{ Tensor }} from "./tensor"
 
 {full_js}"""
