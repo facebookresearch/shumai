@@ -400,7 +400,7 @@ import { StatsLoggerData } from '@shumai/shumai'
 
 class CustomLogger {
   async process(data: StatsLoggerData): Promise<void> {
-    const summary = data.collector.getStatsSummary()
+    const summary = data.collector.getSummary()
     console.log('Collector stats:', summary)
   }
 }
@@ -409,6 +409,19 @@ stats.addCollector({ logger: new CustomLogger(), interval: 5_000 })
 ```
 
 By default stack tracing is disabled as it adds 50%+ overhead, but can be enabled via `stats.collectStacks = true`.
+
+### Scoped Statistics
+
+If you wish to isolate stats profiling you can do this as well:
+
+```
+import { collectStats } from '@shumai/shumai'
+
+const scopedStats = collectStats(() => {
+  // perform ops...
+}/*, StatsCollectorOptions | StatsLogger */)
+console.log(scopedStats.getSummary())
+```
 
 
 ## Contributing

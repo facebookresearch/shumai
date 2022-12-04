@@ -168,9 +168,36 @@ export class Stats {
     return this.#collectors?.[0].statsByOp
   }
 
-  getStatsSummary(): StatsSummary {
-    return this.#collectors?.[0].getStatsSummary()
+  getSummary(): StatsSummary {
+    return this.#collectors?.[0].getSummary()
   }
 }
 
 export const stats = new Stats()
+
+/** @private */
+export let scoped_stats: Stats = void 0
+
+export function collectStats(
+  fn: (...args: any[]) => any,
+  optsOrLogger?: StatsCollectorOptions | StatsLogger
+): Stats {
+  const prev = scoped_stats
+
+  let options: StatsCollectorOptions = (optsOrLogger as StatsCollectorOptions) || {}
+  if (options && 'process' in options) {
+    options = { logger: options as StatsLogger }
+  }
+  options.interval ||= 0 // disable interval logging unless explicitly set
+  options.logger ||= null // disable logger unless explicitly set
+
+  const new_stats = (scoped_stats = new Stats())
+  scoped_stats.addCollector(options)
+  try {
+    fn()
+  } finally {
+    scoped_stats = prev // restore previous scope
+  }
+
+  return new_stats
+}

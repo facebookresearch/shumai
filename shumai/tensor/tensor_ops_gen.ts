@@ -1,7 +1,7 @@
 /* GENERATED CODE (gen_binding.py) */
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
-import { stats } from '../stats'
+import { scoped_stats, stats } from '../stats'
 import { Tensor } from './tensor'
 
 /**
@@ -23,20 +23,21 @@ import { Tensor } from './tensor'
  */ export function rand(shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape)
 
-  const trace = stats.enabled && stats.startTrace('rand')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('rand')
 
   const _ptr = fl._rand.native(shape_ptr, shape_len)
   if (!_ptr)
     throw new Error('Tensor returned from `rand` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = false
   const deps = requires_grad ? [shape] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [], t)
+  trace && s.logTrace(trace, [], t)
 
   t.op = 'rand'
   return t
@@ -61,20 +62,21 @@ import { Tensor } from './tensor'
  */ export function randn(shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape)
 
-  const trace = stats.enabled && stats.startTrace('randn')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('randn')
 
   const _ptr = fl._randn.native(shape_ptr, shape_len)
   if (!_ptr)
     throw new Error('Tensor returned from `randn` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = false
   const deps = requires_grad ? [shape] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [], t)
+  trace && s.logTrace(trace, [], t)
 
   t.op = 'randn'
   return t
@@ -97,20 +99,21 @@ import { Tensor } from './tensor'
  */ export function full(shape: BigInt64Array | number[], val: number) {
   const [shape_ptr, shape_len] = arrayArg(shape)
 
-  const trace = stats.enabled && stats.startTrace('full')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('full')
 
   const _ptr = fl._full.native(shape_ptr, shape_len, Math.fround(val))
   if (!_ptr)
     throw new Error('Tensor returned from `full` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = false
   const deps = requires_grad ? [shape, Math.fround(val)] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [], t)
+  trace && s.logTrace(trace, [], t)
 
   t.op = 'full'
   return t
@@ -133,20 +136,21 @@ import { Tensor } from './tensor'
  *
  *   @returns A new identity {@link Tensor}.
  */ export function identity(dim: number) {
-  const trace = stats.enabled && stats.startTrace('identity')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('identity')
 
   const _ptr = fl._identity.native(dim.constructor === BigInt ? dim : BigInt(dim || 0))
   if (!_ptr)
     throw new Error('Tensor returned from `identity` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = false
   const deps = requires_grad ? [dim.constructor === BigInt ? dim : BigInt(dim || 0)] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [], t)
+  trace && s.logTrace(trace, [], t)
 
   t.op = 'identity'
   return t
@@ -176,20 +180,21 @@ export function eye(dim: number) {
  *
  *   @returns A new 1D {@link Tensor} containing the user defined interval.
  */ export function arange(start: number, end: number, step = 1) {
-  const trace = stats.enabled && stats.startTrace('arange')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('arange')
 
   const _ptr = fl._arange.native(Math.fround(start), Math.fround(end), Math.fround(step))
   if (!_ptr)
     throw new Error('Tensor returned from `arange` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = false
   const deps = requires_grad ? [Math.fround(start), Math.fround(end), Math.fround(step)] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [], t)
+  trace && s.logTrace(trace, [], t)
 
   t.op = 'arange'
   return t
@@ -213,20 +218,21 @@ export function eye(dim: number) {
   const [dims_ptr, dims_len] = arrayArg(dims)
   const [tileDims_ptr, tileDims_len] = arrayArg(tileDims)
 
-  const trace = stats.enabled && stats.startTrace('iota')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('iota')
 
   const _ptr = fl._iota.native(dims_ptr, dims_len, tileDims_ptr, tileDims_len)
   if (!_ptr)
     throw new Error('Tensor returned from `iota` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = false
   const deps = requires_grad ? [dims, tileDims] : []
   const t = new Tensor({ _ptr: _ptr, _deps: deps })
   t.provenance = t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [], t)
+  trace && s.logTrace(trace, [], t)
 
   t.op = 'iota'
   return t
@@ -255,13 +261,14 @@ export function eye(dim: number) {
  */ export function reshape(tensor: Tensor, shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape)
 
-  const trace = stats.enabled && stats.startTrace('reshape')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('reshape')
 
   const _ptr = fl._reshape.native(tensor.ptr, shape_ptr, shape_len)
   if (!_ptr)
     throw new Error('Tensor returned from `reshape` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, shape] : []
@@ -269,7 +276,7 @@ export function eye(dim: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'reshape'
   return t
@@ -299,7 +306,8 @@ export function eye(dim: number) {
  */ export function transpose(tensor: Tensor, axes: BigInt64Array | number[]) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('transpose')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('transpose')
 
   const _ptr = fl._transpose.native(tensor.ptr, axes_ptr, axes_len)
   if (!_ptr)
@@ -307,7 +315,7 @@ export function eye(dim: number) {
       'Tensor returned from `transpose` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes] : []
@@ -315,7 +323,7 @@ export function eye(dim: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'transpose'
   return t
@@ -346,13 +354,14 @@ export function eye(dim: number) {
  */ export function tile(tensor: Tensor, shape: BigInt64Array | number[]) {
   const [shape_ptr, shape_len] = arrayArg(shape)
 
-  const trace = stats.enabled && stats.startTrace('tile')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('tile')
 
   const _ptr = fl._tile.native(tensor.ptr, shape_ptr, shape_len)
   if (!_ptr)
     throw new Error('Tensor returned from `tile` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, shape] : []
@@ -360,7 +369,7 @@ export function eye(dim: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'tile'
   return t
@@ -376,7 +385,8 @@ export function concatenate(tensors: Array<Tensor>, axis: number) {
   }
   const [tensors_ptr, tensors_len] = arrayArg(tensors)
 
-  const trace = stats.enabled && stats.startTrace('concatenate')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('concatenate')
 
   const _ptr = fl._concatenate.native(tensors_ptr, tensors_len, axis | 0)
   if (!_ptr)
@@ -384,7 +394,7 @@ export function concatenate(tensors: Array<Tensor>, axis: number) {
       'Tensor returned from `concatenate` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensors.reduce((r, c) => r || c.requires_grad, false)
   const deps = requires_grad ? [...tensors, axis | 0] : []
@@ -392,7 +402,7 @@ export function concatenate(tensors: Array<Tensor>, axis: number) {
   t.provenance = tensors.reduce((r, c) => r || c.provenance, 0)
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [], t)
+  trace && s.logTrace(trace, [], t)
 
   t.op = 'concatenate'
   return t
@@ -423,13 +433,14 @@ export function concat(tensors: Array<Tensor>, axis: number) {
  *   @param tensor - {@link Tensor} whose values will be used to find indices
  *   @returns - A new {@link Tensor} composed of the flattened indices of the non-zero elements in the input
  */ export function nonzero(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('nonzero')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('nonzero')
 
   const _ptr = fl._nonzero.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `nonzero` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -437,7 +448,7 @@ export function concat(tensors: Array<Tensor>, axis: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'nonzero'
   return t
@@ -462,13 +473,14 @@ export function concat(tensors: Array<Tensor>, axis: number) {
  *   @param tensor - {@link Tensor} whose values will be negated
  *   @returns - A new {@link Tensor}
  */ export function negative(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('negative')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('negative')
 
   const _ptr = fl._negative.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `negative` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -476,7 +488,7 @@ export function concat(tensors: Array<Tensor>, axis: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'negative'
   return t
@@ -505,7 +517,8 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will be logically inverted
  *   @returns - A new {@link Tensor}
  */ export function logicalNot(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('logicalNot')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('logicalNot')
 
   const _ptr = fl._logicalNot.native(tensor.ptr)
   if (!_ptr)
@@ -513,7 +526,7 @@ export function negate(tensor: Tensor) {
       'Tensor returned from `logicalNot` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -521,7 +534,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'logicalNot'
   return t
@@ -546,13 +559,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will be exponentiated
  *   @returns - A new {@link Tensor}
  */ export function exp(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('exp')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('exp')
 
   const _ptr = fl._exp.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `exp` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -560,7 +574,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'exp'
   return t
@@ -585,13 +599,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their natural logarithm calculated
  *   @returns - A new {@link Tensor}
  */ export function log(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('log')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('log')
 
   const _ptr = fl._log.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `log` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -599,7 +614,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'log'
   return t
@@ -624,13 +639,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have one added before their natural logarithm is calculated
  *   @returns - A new {@link Tensor}
  */ export function log1p(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('log1p')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('log1p')
 
   const _ptr = fl._log1p.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `log1p` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -638,7 +654,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'log1p'
   return t
@@ -663,13 +679,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their sine calculated
  *   @returns - A new {@link Tensor}
  */ export function sin(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('sin')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('sin')
 
   const _ptr = fl._sin.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `sin` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -677,7 +694,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'sin'
   return t
@@ -702,13 +719,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their cosine calculated
  *   @returns - A new {@link Tensor}
  */ export function cos(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('cos')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('cos')
 
   const _ptr = fl._cos.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `cos` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -716,7 +734,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'cos'
   return t
@@ -741,13 +759,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their square root calculated
  *   @returns - A new {@link Tensor}
  */ export function sqrt(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('sqrt')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('sqrt')
 
   const _ptr = fl._sqrt.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `sqrt` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -755,7 +774,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'sqrt'
   return t
@@ -780,13 +799,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their hyperbolic tangent calculated
  *   @returns - A new {@link Tensor}
  */ export function tanh(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('tanh')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('tanh')
 
   const _ptr = fl._tanh.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `tanh` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -794,7 +814,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'tanh'
   return t
@@ -819,13 +839,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their mathematical floor calculated
  *   @returns - A new {@link Tensor}
  */ export function floor(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('floor')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('floor')
 
   const _ptr = fl._floor.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `floor` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -833,7 +854,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'floor'
   return t
@@ -858,13 +879,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their mathematical ceiling calculated
  *   @returns - A new {@link Tensor}
  */ export function ceil(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('ceil')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('ceil')
 
   const _ptr = fl._ceil.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `ceil` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -872,7 +894,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'ceil'
   return t
@@ -904,13 +926,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will be rounded to the nearest integer
  *   @returns - A new {@link Tensor}
  */ export function rint(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('rint')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('rint')
 
   const _ptr = fl._rint.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `rint` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -918,7 +941,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'rint'
   return t
@@ -943,13 +966,14 @@ export function negate(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their absolute value calculated
  *   @returns - A new {@link Tensor}
  */ export function absolute(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('absolute')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('absolute')
 
   const _ptr = fl._absolute.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `absolute` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -957,7 +981,7 @@ export function negate(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'absolute'
   return t
@@ -986,13 +1010,14 @@ export function abs(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their sigmoid calculated
  *   @returns - A new {@link Tensor}
  */ export function sigmoid(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('sigmoid')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('sigmoid')
 
   const _ptr = fl._sigmoid.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `sigmoid` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -1000,7 +1025,7 @@ export function abs(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'sigmoid'
   return t
@@ -1025,13 +1050,14 @@ export function abs(tensor: Tensor) {
  *   @param tensor - {@link Tensor} whose values will have their error function calculated
  *   @returns - A new {@link Tensor}
  */ export function erf(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('erf')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('erf')
 
   const _ptr = fl._erf.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `erf` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -1039,14 +1065,15 @@ export function abs(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'erf'
   return t
 }
 
 export function flip(tensor: Tensor, dim: number) {
-  const trace = stats.enabled && stats.startTrace('flip')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('flip')
 
   const _ptr = fl._flip.native(
     tensor.ptr,
@@ -1055,7 +1082,7 @@ export function flip(tensor: Tensor, dim: number) {
   if (!_ptr)
     throw new Error('Tensor returned from `flip` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad
@@ -1065,20 +1092,21 @@ export function flip(tensor: Tensor, dim: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'flip'
   return t
 }
 
 export function clip(tensor: Tensor, low: Tensor, high: Tensor) {
-  const trace = stats.enabled && stats.startTrace('clip')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('clip')
 
   const _ptr = fl._clip.native(tensor.ptr, low.ptr, high.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `clip` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || low.requires_grad || high.requires_grad
   const deps = requires_grad ? [tensor, low, high] : []
@@ -1086,20 +1114,21 @@ export function clip(tensor: Tensor, low: Tensor, high: Tensor) {
   t.provenance = tensor.provenance || low.provenance || high.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, low, high], t)
+  trace && s.logTrace(trace, [tensor, low, high], t)
 
   t.op = 'clip'
   return t
 }
 
 export function roll(tensor: Tensor, shift: number, axis: number) {
-  const trace = stats.enabled && stats.startTrace('roll')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('roll')
 
   const _ptr = fl._roll.native(tensor.ptr, shift | 0, axis | 0)
   if (!_ptr)
     throw new Error('Tensor returned from `roll` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, shift | 0, axis | 0] : []
@@ -1107,20 +1136,21 @@ export function roll(tensor: Tensor, shift: number, axis: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'roll'
   return t
 }
 
 export function isnan(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('isnan')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('isnan')
 
   const _ptr = fl._isnan.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `isnan` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -1128,20 +1158,21 @@ export function isnan(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'isnan'
   return t
 }
 
 export function isinf(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('isinf')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('isinf')
 
   const _ptr = fl._isinf.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `isinf` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -1149,20 +1180,21 @@ export function isinf(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'isinf'
   return t
 }
 
 export function sign(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('sign')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('sign')
 
   const _ptr = fl._sign.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `sign` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -1170,20 +1202,21 @@ export function sign(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'sign'
   return t
 }
 
 export function tril(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('tril')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('tril')
 
   const _ptr = fl._tril.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `tril` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -1191,20 +1224,21 @@ export function tril(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'tril'
   return t
 }
 
 export function triu(tensor: Tensor) {
-  const trace = stats.enabled && stats.startTrace('triu')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('triu')
 
   const _ptr = fl._triu.native(tensor.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `triu` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor] : []
@@ -1212,20 +1246,21 @@ export function triu(tensor: Tensor) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'triu'
   return t
 }
 
 export function where(cond: Tensor, x: Tensor, y: Tensor) {
-  const trace = stats.enabled && stats.startTrace('where')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('where')
 
   const _ptr = fl._where.native(cond.ptr, x.ptr, y.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `where` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = cond.requires_grad || x.requires_grad || y.requires_grad
   const deps = requires_grad ? [cond, x, y] : []
@@ -1233,14 +1268,15 @@ export function where(cond: Tensor, x: Tensor, y: Tensor) {
   t.provenance = cond.provenance || x.provenance || y.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [cond, x, y], t)
+  trace && s.logTrace(trace, [cond, x, y], t)
 
   t.op = 'where'
   return t
 }
 
 export function sort(tensor: Tensor, dim: number) {
-  const trace = stats.enabled && stats.startTrace('sort')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('sort')
 
   const _ptr = fl._sort.native(
     tensor.ptr,
@@ -1249,7 +1285,7 @@ export function sort(tensor: Tensor, dim: number) {
   if (!_ptr)
     throw new Error('Tensor returned from `sort` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad
@@ -1259,20 +1295,21 @@ export function sort(tensor: Tensor, dim: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'sort'
   return t
 }
 
 export function add(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('add')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('add')
 
   const _ptr = fl._add.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `add` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1280,20 +1317,21 @@ export function add(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'add'
   return t
 }
 
 export function sub(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('sub')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('sub')
 
   const _ptr = fl._sub.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `sub` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1301,20 +1339,21 @@ export function sub(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'sub'
   return t
 }
 
 export function mul(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('mul')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('mul')
 
   const _ptr = fl._mul.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `mul` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1322,20 +1361,21 @@ export function mul(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'mul'
   return t
 }
 
 export function div(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('div')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('div')
 
   const _ptr = fl._div.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `div` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1343,20 +1383,21 @@ export function div(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'div'
   return t
 }
 
 export function eq(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('eq')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('eq')
 
   const _ptr = fl._eq.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `eq` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1364,20 +1405,21 @@ export function eq(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'eq'
   return t
 }
 
 export function neq(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('neq')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('neq')
 
   const _ptr = fl._neq.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `neq` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1385,20 +1427,21 @@ export function neq(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'neq'
   return t
 }
 
 export function lessThan(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('lessThan')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('lessThan')
 
   const _ptr = fl._lessThan.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `lessThan` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1406,7 +1449,7 @@ export function lessThan(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'lessThan'
   return t
@@ -1417,7 +1460,8 @@ export function lt(tensor: Tensor, other: Tensor) {
 }
 
 export function lessThanEqual(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('lessThanEqual')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('lessThanEqual')
 
   const _ptr = fl._lessThanEqual.native(tensor.ptr, other.ptr)
   if (!_ptr)
@@ -1425,7 +1469,7 @@ export function lessThanEqual(tensor: Tensor, other: Tensor) {
       'Tensor returned from `lessThanEqual` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1433,7 +1477,7 @@ export function lessThanEqual(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'lessThanEqual'
   return t
@@ -1444,7 +1488,8 @@ export function lte(tensor: Tensor, other: Tensor) {
 }
 
 export function greaterThan(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('greaterThan')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('greaterThan')
 
   const _ptr = fl._greaterThan.native(tensor.ptr, other.ptr)
   if (!_ptr)
@@ -1452,7 +1497,7 @@ export function greaterThan(tensor: Tensor, other: Tensor) {
       'Tensor returned from `greaterThan` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1460,7 +1505,7 @@ export function greaterThan(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'greaterThan'
   return t
@@ -1471,7 +1516,8 @@ export function gt(tensor: Tensor, other: Tensor) {
 }
 
 export function greaterThanEqual(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('greaterThanEqual')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('greaterThanEqual')
 
   const _ptr = fl._greaterThanEqual.native(tensor.ptr, other.ptr)
   if (!_ptr)
@@ -1479,7 +1525,7 @@ export function greaterThanEqual(tensor: Tensor, other: Tensor) {
       'Tensor returned from `greaterThanEqual` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1487,7 +1533,7 @@ export function greaterThanEqual(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'greaterThanEqual'
   return t
@@ -1498,7 +1544,8 @@ export function gte(tensor: Tensor, other: Tensor) {
 }
 
 export function logicalOr(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('logicalOr')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('logicalOr')
 
   const _ptr = fl._logicalOr.native(tensor.ptr, other.ptr)
   if (!_ptr)
@@ -1506,7 +1553,7 @@ export function logicalOr(tensor: Tensor, other: Tensor) {
       'Tensor returned from `logicalOr` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1514,14 +1561,15 @@ export function logicalOr(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'logicalOr'
   return t
 }
 
 export function logicalAnd(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('logicalAnd')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('logicalAnd')
 
   const _ptr = fl._logicalAnd.native(tensor.ptr, other.ptr)
   if (!_ptr)
@@ -1529,7 +1577,7 @@ export function logicalAnd(tensor: Tensor, other: Tensor) {
       'Tensor returned from `logicalAnd` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1537,20 +1585,21 @@ export function logicalAnd(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'logicalAnd'
   return t
 }
 
 export function mod(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('mod')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('mod')
 
   const _ptr = fl._mod.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `mod` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1558,14 +1607,15 @@ export function mod(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'mod'
   return t
 }
 
 export function bitwiseAnd(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('bitwiseAnd')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('bitwiseAnd')
 
   const _ptr = fl._bitwiseAnd.native(tensor.ptr, other.ptr)
   if (!_ptr)
@@ -1573,7 +1623,7 @@ export function bitwiseAnd(tensor: Tensor, other: Tensor) {
       'Tensor returned from `bitwiseAnd` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1581,14 +1631,15 @@ export function bitwiseAnd(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'bitwiseAnd'
   return t
 }
 
 export function bitwiseOr(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('bitwiseOr')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('bitwiseOr')
 
   const _ptr = fl._bitwiseOr.native(tensor.ptr, other.ptr)
   if (!_ptr)
@@ -1596,7 +1647,7 @@ export function bitwiseOr(tensor: Tensor, other: Tensor) {
       'Tensor returned from `bitwiseOr` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1604,14 +1655,15 @@ export function bitwiseOr(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'bitwiseOr'
   return t
 }
 
 export function bitwiseXor(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('bitwiseXor')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('bitwiseXor')
 
   const _ptr = fl._bitwiseXor.native(tensor.ptr, other.ptr)
   if (!_ptr)
@@ -1619,7 +1671,7 @@ export function bitwiseXor(tensor: Tensor, other: Tensor) {
       'Tensor returned from `bitwiseXor` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1627,20 +1679,21 @@ export function bitwiseXor(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'bitwiseXor'
   return t
 }
 
 export function lShift(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('lShift')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('lShift')
 
   const _ptr = fl._lShift.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `lShift` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1648,20 +1701,21 @@ export function lShift(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'lShift'
   return t
 }
 
 export function rShift(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('rShift')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('rShift')
 
   const _ptr = fl._rShift.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `rShift` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1669,20 +1723,21 @@ export function rShift(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'rShift'
   return t
 }
 
 export function minimum(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('minimum')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('minimum')
 
   const _ptr = fl._minimum.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `minimum` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1690,20 +1745,21 @@ export function minimum(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'minimum'
   return t
 }
 
 export function maximum(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('maximum')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('maximum')
 
   const _ptr = fl._maximum.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `maximum` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1711,20 +1767,21 @@ export function maximum(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'maximum'
   return t
 }
 
 export function power(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('power')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('power')
 
   const _ptr = fl._power.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `power` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1732,7 +1789,7 @@ export function power(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'power'
   return t
@@ -1743,13 +1800,14 @@ export function pow(tensor: Tensor, other: Tensor) {
 }
 
 export function matmul(tensor: Tensor, other: Tensor) {
-  const trace = stats.enabled && stats.startTrace('matmul')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('matmul')
 
   const _ptr = fl._matmul.native(tensor.ptr, other.ptr)
   if (!_ptr)
     throw new Error('Tensor returned from `matmul` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || other.requires_grad
   const deps = requires_grad ? [tensor, other] : []
@@ -1757,7 +1815,7 @@ export function matmul(tensor: Tensor, other: Tensor) {
   t.provenance = tensor.provenance || other.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, other], t)
+  trace && s.logTrace(trace, [tensor, other], t)
 
   t.op = 'matmul'
   return t
@@ -1778,7 +1836,8 @@ export function conv2d(
   dy = 1,
   groups = 1
 ) {
-  const trace = stats.enabled && stats.startTrace('conv2d')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('conv2d')
 
   const _ptr = fl._conv2d.native(
     tensor.ptr,
@@ -1794,7 +1853,7 @@ export function conv2d(
   if (!_ptr)
     throw new Error('Tensor returned from `conv2d` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad || weights.requires_grad
   const deps = requires_grad
@@ -1804,7 +1863,7 @@ export function conv2d(
   t.provenance = tensor.provenance || weights.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor, weights], t)
+  trace && s.logTrace(trace, [tensor, weights], t)
 
   t.op = 'conv2d'
   return t
@@ -1813,13 +1872,14 @@ export function conv2d(
 export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('amin')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('amin')
 
   const _ptr = fl._amin.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `amin` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -1827,7 +1887,7 @@ export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'amin'
   return t
@@ -1836,13 +1896,14 @@ export function amin(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
 export function amax(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('amax')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('amax')
 
   const _ptr = fl._amax.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `amax` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -1850,20 +1911,21 @@ export function amax(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'amax'
   return t
 }
 
 export function argmin(tensor: Tensor, axis: number, keep_dims = false) {
-  const trace = stats.enabled && stats.startTrace('argmin')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('argmin')
 
   const _ptr = fl._argmin.native(tensor.ptr, axis | 0, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `argmin` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axis | 0, !!keep_dims] : []
@@ -1871,20 +1933,21 @@ export function argmin(tensor: Tensor, axis: number, keep_dims = false) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'argmin'
   return t
 }
 
 export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
-  const trace = stats.enabled && stats.startTrace('argmax')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('argmax')
 
   const _ptr = fl._argmax.native(tensor.ptr, axis | 0, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `argmax` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axis | 0, !!keep_dims] : []
@@ -1892,7 +1955,7 @@ export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'argmax'
   return t
@@ -1901,13 +1964,14 @@ export function argmax(tensor: Tensor, axis: number, keep_dims = false) {
 export function sum(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('sum')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('sum')
 
   const _ptr = fl._sum.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `sum` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -1915,20 +1979,21 @@ export function sum(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'sum'
   return t
 }
 
 export function cumsum(tensor: Tensor, axis: number) {
-  const trace = stats.enabled && stats.startTrace('cumsum')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('cumsum')
 
   const _ptr = fl._cumsum.native(tensor.ptr, axis | 0)
   if (!_ptr)
     throw new Error('Tensor returned from `cumsum` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axis | 0] : []
@@ -1936,7 +2001,7 @@ export function cumsum(tensor: Tensor, axis: number) {
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'cumsum'
   return t
@@ -1945,13 +2010,14 @@ export function cumsum(tensor: Tensor, axis: number) {
 export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('mean')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('mean')
 
   const _ptr = fl._mean.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `mean` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -1959,7 +2025,7 @@ export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'mean'
   return t
@@ -1968,13 +2034,14 @@ export function mean(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_d
 export function median(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('median')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('median')
 
   const _ptr = fl._median.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `median` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -1982,7 +2049,7 @@ export function median(tensor: Tensor, axes: BigInt64Array | number[] = [], keep
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'median'
   return t
@@ -1996,13 +2063,14 @@ export function _var(
 ) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('var')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('var')
 
   const _ptr = fl._var.native(tensor.ptr, axes_ptr, axes_len, !!bias, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `_var` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!bias, !!keep_dims] : []
@@ -2010,7 +2078,7 @@ export function _var(
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'var'
   return t
@@ -2028,13 +2096,14 @@ export function variance(
 export function std(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('std')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('std')
 
   const _ptr = fl._std.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `std` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -2042,7 +2111,7 @@ export function std(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'std'
   return t
@@ -2056,7 +2125,8 @@ export function norm(
 ) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('norm')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('norm')
 
   const _ptr = fl._norm.native(
     tensor.ptr,
@@ -2068,7 +2138,7 @@ export function norm(
   if (!_ptr)
     throw new Error('Tensor returned from `norm` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad
@@ -2078,7 +2148,7 @@ export function norm(
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'norm'
   return t
@@ -2100,7 +2170,8 @@ export function countNonzero(
 ) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('countNonzero')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('countNonzero')
 
   const _ptr = fl._countNonzero.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
@@ -2108,7 +2179,7 @@ export function countNonzero(
       'Tensor returned from `countNonzero` is null; native code likely threw an error...'
     )
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -2116,7 +2187,7 @@ export function countNonzero(
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'countNonzero'
   return t
@@ -2125,13 +2196,14 @@ export function countNonzero(
 export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('any')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('any')
 
   const _ptr = fl._any.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `any` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -2139,7 +2211,7 @@ export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'any'
   return t
@@ -2148,13 +2220,14 @@ export function any(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
 export function all(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_dims = false) {
   const [axes_ptr, axes_len] = arrayArg(axes)
 
-  const trace = stats.enabled && stats.startTrace('all')
+  const s = scoped_stats || stats
+  const trace = s.enabled && s.startTrace('all')
 
   const _ptr = fl._all.native(tensor.ptr, axes_ptr, axes_len, !!keep_dims)
   if (!_ptr)
     throw new Error('Tensor returned from `all` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = tensor.requires_grad
   const deps = requires_grad ? [tensor, axes, !!keep_dims] : []
@@ -2162,7 +2235,7 @@ export function all(tensor: Tensor, axes: BigInt64Array | number[] = [], keep_di
   t.provenance = tensor.provenance
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [tensor], t)
+  trace && s.logTrace(trace, [tensor], t)
 
   t.op = 'all'
   return t

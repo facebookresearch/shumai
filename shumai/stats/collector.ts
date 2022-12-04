@@ -91,10 +91,10 @@ export class StatsCollector {
       opEntry.gflops += stat.gflops
     }
 
-    if (performance.now() - this.#startTime >= this.#options.interval) {
+    if (this.#options.interval && performance.now() - this.#startTime >= this.#options.interval) {
       try {
         // fire and forget, DO NOT BLOCK
-        this.#options.logger.process({
+        this.#options.logger?.process({
           collector: this,
           ops: this.#statsByOp,
           stacks: this.#statsByStack,
@@ -108,12 +108,12 @@ export class StatsCollector {
     }
   }
 
-  /** getStatsSummary
+  /** getSummary
    * @description get a summary of the stats collected
    *
    * @returns StatsSummary
    */
-  getStatsSummary(): StatsSummary {
+  getSummary(): StatsSummary {
     const entriesByStack: [string, StatsEntry][] = [...this.#statsByStack.entries()].map(
       ([stackId, entry]) => [this.#stackKeys.get(stackId), entry]
     )
