@@ -355,12 +355,6 @@ const c = matmul(a, b)
 
 // disabling stats removes all collectors
 stats.enabled = false
-
-// Aliases if you'll never have more than 1 collector:
-// stats.statsByStacks -> stats.collectors[0].statsByStacks
-// stats.statsByOps -> stats.collectors[0].statsByOps
-// stats.getSummary() -> stats.collectors[0].getSummary()
-// stats.reset() -> stats.collectors.map(c => c.reset())
 ```
 
 While the above examples may suffice for simple use cases, if you're
@@ -396,9 +390,9 @@ stats.addCollector(new StatsLoggerHttp({ url: 'http://localhost:4242' }))
 For more custom needs you can supply your own logger:
 
 ```
-import { StatsLoggerData } from '@shumai/shumai'
+import { StatsLogger, StatsLoggerData } from '@shumai/shumai'
 
-class CustomLogger {
+class CustomLogger implements StatsLogger {
   async process(data: StatsLoggerData): Promise<void> {
     const summary = data.collector.getSummary()
     console.log('Collector stats:', summary)
@@ -406,6 +400,12 @@ class CustomLogger {
 }
 
 stats.addCollector({ logger: new CustomLogger(), interval: 5_000 })
+
+// Aliases if you'll never have more than 1 collector:
+// stats.statsByStacks -> stats.collectors[0].statsByStacks
+// stats.statsByOps -> stats.collectors[0].statsByOps
+// stats.getSummary() -> stats.collectors[0].getSummary()
+// stats.reset() -> stats.collectors.map(c => c.reset())
 ```
 
 By default stack tracing is disabled as it adds 50%+ overhead, but can be enabled via `stats.collectStacks = true`.
