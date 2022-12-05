@@ -6,7 +6,6 @@ import type { OpStats } from '../network'
 import { _tidyTracker, cyrb53, Float16Array, gcAsNeeded } from '../util'
 import { GradContext } from './register_gradients'
 import { collectStats, getStack } from './stats'
-import { full } from './tensor_ops'
 import * as ops from './tensor_ops'
 import { TensorOpsInterface } from './tensor_ops_interface_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
@@ -91,7 +90,7 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
 function traverse_gradients(
   sorted_traversal: Tensor[],
   jacobian: Tensor
-): Record<number, [Tensor, Tensor]> {
+): Record<number, [Tensor, Tensor, number]> {
   const all_grads_dict: Record<number, [Tensor, Tensor, number]> = {}
   const base_t = sorted_traversal[0]
   let id = 0
@@ -133,7 +132,7 @@ function traverse_gradients(
 async function async_traverse_gradients(
   sorted_traversal: Tensor[],
   jacobian: Tensor
-): Promise<Record<number, [Tensor, Tensor]>> {
+): Promise<Record<number, [Tensor, Tensor, number]>> {
   const all_grads_dict: Record<number, [Tensor, Tensor, number]> = {}
   const base_t = sorted_traversal[0]
   let id = 0
@@ -186,7 +185,7 @@ export function backward(
     if (base_t.elements !== 1) {
       throw new Error(`Gradient can only be implicitly created for a scalar`)
     }
-    jacobian = full([], 1)
+    jacobian = ops.full([], 1)
     jacobian.requires_stats = base_t.requires_stats
   }
   let frontier: Tensor[] = [base_t]
@@ -234,9 +233,9 @@ export function backward(
   // NB: can't easily embed this in the traverse functions
   // (or else references are stale)
   const calc_grads = (
-    all_grads_dict: Record<number, [Tensor, Tensor]>
+    all_grads_dict: Record<number, [Tensor, Tensor, number]>
   ): Record<string, { grad: Tensor; tensor: Tensor }> => {
-    const all_grads: Record<string, { grad: Tensor; tensor: Tensor }> = {}
+    const all_grads: Record<string, { grad: Tensor; tensor: Tensor; id: number }> = {}
     // TODO: this is assuming the same path is traversed, it should be a compute hash
     // unique identifier
     for (const key in all_grads_dict) {
@@ -543,6 +542,10 @@ export class Tensor {
 
   copy() {
     return new Tensor(this)
+  }
+
+  scale(f: number) {
+    return ops.scale(f, this)
   }
 
   deepCopy() {

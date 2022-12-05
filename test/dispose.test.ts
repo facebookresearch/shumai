@@ -7,9 +7,9 @@ describe('dispose', () => {
     for (let i = 0; i < 1000; i++) {
       const a = sm.tensor(new Float32Array(new Array(100).fill(Math.random())))
       a.dispose()
-      expect(sm.bytesUsed()).toBe(start_bytes)
+      expect(sm.bytesUsed() <= start_bytes).toBe(true)
     }
-    expect(sm.bytesUsed()).toBe(start_bytes)
+    expect(sm.bytesUsed() <= start_bytes).toBe(true)
   })
   it('tidy - basic', () => {
     const N = 64
@@ -31,7 +31,7 @@ describe('dispose', () => {
     }
     const o = sm.util.tidy(mm_pw_op)
     expect(typeof o).toBe('number')
-    expect(sm.bytesUsed()).toBe(start_bytes)
+    expect(sm.bytesUsed() <= start_bytes).toBe(true)
     a.dispose()
     b.dispose()
     c.dispose()
@@ -57,7 +57,7 @@ describe('dispose', () => {
     const o = sm.util.tidy(mm_pw_op)
     expect(o instanceof sm.Tensor).toBe(true)
     o.dispose()
-    expect(sm.bytesUsed()).toBe(start_bytes)
+    expect(sm.bytesUsed() <= start_bytes).toBe(true)
     a.dispose()
     b.dispose()
     c.dispose()
@@ -91,7 +91,7 @@ describe('dispose', () => {
       expect(o[i] instanceof sm.Tensor).toBe(true)
       o[i].dispose()
     }
-    expect(sm.bytesUsed()).toBe(start_bytes)
+    expect(sm.bytesUsed() <= start_bytes).toBe(true)
     a.dispose()
     b.dispose()
     c.dispose()
@@ -125,7 +125,7 @@ describe('dispose', () => {
       expect(o[o_keys[i]] instanceof sm.Tensor).toBe(true)
       if (o[o_keys[i]] instanceof sm.Tensor) o[o_keys[i]].dispose()
     }
-    expect(sm.bytesUsed()).toBe(start_bytes)
+    expect(sm.bytesUsed() <= start_bytes).toBe(true)
     a.dispose()
     b.dispose()
     c.dispose()
@@ -165,7 +165,7 @@ describe('dispose', () => {
         if (o[i][keys[j]] instanceof sm.Tensor) o[i][keys[j]].dispose()
       }
     }
-    expect(sm.bytesUsed()).toBe(start_bytes)
+    expect(sm.bytesUsed() <= start_bytes).toBe(true)
     a.dispose()
     b.dispose()
     c.dispose()
@@ -216,7 +216,7 @@ describe('dispose', () => {
       expect(tensors[i] instanceof sm.Tensor).toBe(true)
       tensors[i].dispose()
     }
-    expect(sm.bytesUsed()).toBe(start_bytes)
+    expect(sm.bytesUsed() <= start_bytes).toBe(true)
     a.dispose()
     b.dispose()
     c.dispose()

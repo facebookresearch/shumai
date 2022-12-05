@@ -7,6 +7,11 @@ export function scalar(s: number): Tensor {
   return full([], s)
 }
 
+export function scale(f: number, tensor: Tensor): Tensor {
+  const scaleFactor = scalar(f)
+  return tensor.mul(scaleFactor)
+}
+
 export function softmax(tensor: Tensor, axis: number): Tensor {
   const exp = tensor.exp()
   return exp.div(exp.sum([axis], true))
