@@ -7,7 +7,6 @@ describe('scaler', () => {
     const test_a = sm.tensor(new Float32Array([0, 0, 0, 0, 1, 1, 1, 1])).reshape([4, 2])
     const scaler = new sm.util.StandardScaler()
     scaler.fit(test_a)
-    expectArraysClose(scaler.mean.valueOf(), [0.5, 0.5])
     let transformed = scaler.transform(test_a)
     expect(transformed.dtype).toBe(test_a.dtype)
     expectArraysClose(transformed.valueOf(), [-1, -1, -1, -1, 1, 1, 1, 1])
@@ -17,7 +16,7 @@ describe('scaler', () => {
     expect(transformed.dtype).toBe(test_b.dtype)
     expectArraysClose(transformed.valueOf(), [3, 3])
 
-    const test_c = sm.tensor(new Float64Array([8, 1, 6, 3, 5, 7, 4, 9, 2])).reshape([3, 3])
+    const test_c = sm.tensor(new Float32Array([8, 1, 6, 3, 5, 7, 4, 9, 2])).reshape([3, 3])
     scaler.fit(test_c)
     transformed = scaler.transform(test_c)
     expect(transformed.dtype).toBe(test_c.dtype)
