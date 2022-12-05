@@ -25,5 +25,14 @@ describe('scaler', () => {
       transformed.valueOf(),
       [1.1339, -1.0, 0.378, -0.7559, 0, 0.7559, -0.378, 1.0, -1.1339]
     )
+
+    const test_d = sm.tensor(new Float32Array([100, 1000, 2000, 3000]))
+    scaler.fit(test_d)
+    transformed = scaler.transform(test_d)
+    expect(transformed.dtype).toBe(test_d.dtype)
+    expectArraysClose(
+      transformed.valueOf(),
+      [-1.3135592937469482, -0.4839428961277008, 0.4378530979156494, 1.3596490621566772]
+    )
   })
 })

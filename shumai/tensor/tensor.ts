@@ -544,10 +544,6 @@ export class Tensor {
     return new Tensor(this)
   }
 
-  scale(f: number) {
-    return ops.scale(f, this)
-  }
-
   deepCopy() {
     return wrapFLTensor(fl._copy.native, this.ptr)
   }

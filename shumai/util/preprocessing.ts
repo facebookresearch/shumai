@@ -39,11 +39,12 @@ export class StandardScaler extends BaseScaler {
 
   public transform(x: Tensor): Tensor {
     const shape = x.shape
+    const dtype = x.dtype
     const xOut = x.deepCopy().asContiguousTensor().valueOf()
     const len = xOut.length
     for (let i = 0; i < len; i++) {
-      xOut[i] = (xOut[i] - this.mean.valueOf()) / this.var.valueOf()
+      xOut[i] = (xOut[i] - this.mean.astype(dtype).valueOf()) / this.var.astype(dtype).valueOf()
     }
-    return new Tensor(xOut).reshape(shape).astype(x.dtype)
+    return new Tensor(xOut).reshape(shape).astype(dtype)
   }
 }
