@@ -33,8 +33,6 @@ export class StandardScaler implements BaseScaler {
     const xOut = x.deepCopy().valueOf()
     const mean = Array.isArray(this.mean.valueOf()) ? this.mean.valueOf()[0] : this.mean.valueOf()
     const usedVar = this.var.valueOf()
-    console.log('mean', mean)
-    console.log('usedVar', usedVar)
     const len = xOut.length
     for (let i = 0; i < len; i++) {
       xOut[i] = (xOut[i] - mean) / usedVar
