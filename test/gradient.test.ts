@@ -74,4 +74,12 @@ describe('gradients', () => {
     const b = sm.randn([128])
     checkGrad(sm.minimum, [a, b], 0, sampleSphere(a.shape))
   })
+  it('abs', () => {
+    const a = sm.randn([128])
+    checkGrad(sm.abs, [a], 0, sampleSphere(a.shape))
+  })
+  it('log', () => {
+    const a = sm.randn([128]).add(sm.scalar(1))
+    checkGrad(sm.log, [a], 0, sampleSphere(a.shape))
+  })
 })
