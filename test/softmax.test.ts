@@ -212,4 +212,9 @@ describe('softmax', () => {
     const result0 = tensor.softmax(0)
     expectArraysClose(result0.index([':', 0]).toFloat32Array(), [NaN, NaN])
   })
+  it('numerically stable', () => {
+    const tensor = sm.tensor(new Float32Array([1000, 0, 0]))
+    const result = tensor.softmax(0)
+    expect(result.toFloat32Array().some(Number.isNaN)).toBe(false)
+  })
 })

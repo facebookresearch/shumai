@@ -57,6 +57,11 @@ const impls = {
   add: (ctx: GradContext) => {
     return possiblyReduce(ctx.backward_input, ctx)
   },
+  amax: (ctx: GradContext) => {
+    return ctx.backward_input
+      .mul(ctx.forward_inputs[0].eq(ctx.forward_output).astype(ctx.backward_input.dtype))
+      .sum(ctx.forward_inputs[1], ctx.forward_inputs[2])
+  },
   conv2d: (ctx: GradContext) => {
     const [x, w, sx, sy, px, py, dx, dy, g] = <
       [Tensor, Tensor, number, number, number, number, number, number, number]

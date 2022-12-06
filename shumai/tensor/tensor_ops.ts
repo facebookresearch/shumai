@@ -8,7 +8,7 @@ export function scalar(s: number): Tensor {
 }
 
 export function softmax(tensor: Tensor, axis: number): Tensor {
-  const exp = tensor.exp()
+  const exp = tensor.sub(tensor.amax([axis], true)).exp()
   return exp.div(exp.sum([axis], true))
 }
 

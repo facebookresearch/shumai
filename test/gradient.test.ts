@@ -30,6 +30,10 @@ function checkGrad(f, args, idx, jacobian, epsilon = 1e-3) {
 }
 
 describe('gradients', () => {
+  it('amax', () => {
+    const a = sm.randn([128])
+    checkGrad(sm.amax, [a, [0], true], 0, sampleSphere(a.shape))
+  })
   it('mul', () => {
     const a = sm.randn([128])
     const b = sm.randn([128])
