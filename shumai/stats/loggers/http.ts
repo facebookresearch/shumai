@@ -19,12 +19,12 @@ export class StatsLoggerHttp implements StatsLogger {
   process(data: StatsLoggerData): Promise<void> {
     const { url, ...otherOptions } = this.#options
 
-    const { deviceRate, hostRate, entriesByOp, entriesByStack } = data.collector.getSummary()
+    const { deviceRate, hostRate, entriesByOp, entriesByStack } = data.stats.getSummary()
 
-    const { hostId, processId, deviceId } = data.collector.stats
+    const { hostId, processId, deviceId } = data.stats
 
     const endTime = Date.now()
-    const startTime = endTime - data.collector.options.interval
+    const startTime = endTime - data.stats.interval
 
     const body = JSON.stringify(
       {

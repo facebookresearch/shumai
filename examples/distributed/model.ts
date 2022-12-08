@@ -4,9 +4,10 @@ const model_a = sm.network.remote_model('0.0.0.0:3001')
 const model_b = sm.network.remote_model('0.0.0.0:3002')
 
 const model = async (t: sm.Tensor) => {
-  t = await model_a(t)
-  t = await model_b(t)
-  return t
+  let res: sm.network.TFetchResult
+  res = await model_a(t)
+  res = await model_b(res.tensor)
+  return res.tensor
 }
 
 sm.network.serve_model(

@@ -3,7 +3,7 @@ import { StatsLogger, StatsLoggerData } from '../logger'
 
 export class StatsLoggerConsole implements StatsLogger {
   async process(data: StatsLoggerData): Promise<void> {
-    const { deviceRate, hostRate, entriesByOp } = data.collector.getStatsSummary()
+    const { deviceRate, hostRate, entriesByOp } = data.stats.getSummary()
     const topOps = entriesByOp
       .sort((a, b) => b[1].gflops - a[1].gflops)
       .map(([op, entry]) => `${op}=${entry.gflops.toFixed(1)}gflops/sec`)

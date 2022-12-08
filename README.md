@@ -331,12 +331,12 @@ will fully utilize your hardware can greatly improve performance.
 graph TD
   OpA(Op A) --> statsA{{"stats A"}};
   OpB(Op B) --> statsA;
-  statsA --> CollectorA{{"Collector A"}};
-  CollectorA --> LoggerA{{"LoggerConsole A"}} --> Stdout(("Stdout"));
+  statsA --> LoggerA{{"LoggerConsole A"}};
+  LoggerA --> Stdout(("Stdout"));
   OpC(Op C) --> statsA;
   OpD(Op D) --> statsA;
-  statsA --> CollectorB{{"Collector B"}};
-  CollectorB --> LoggerB("LoggerCustom B") --> Disk(("Disk"));
+  statsA --> LoggerB("LoggerCustom B");
+  LoggerB --> Disk(("Disk"));
 ```
 
 Basic usage of gathering statistics is as simple adding
@@ -345,16 +345,11 @@ a collector using the default `StatsLoggerConsole`.
 ```
 import { stats, StatsLoggerConsole, rand, matmul } from '@shumai/shumai'
 
-stats.enabled = true
-// ^ is same as `stats.addCollector(new StatsLoggerConsole())`
+stats.enabled = true // all ops following will capture stats
 
 // perform ops...
-const a = rand([10, 10])
-const b = rand([10, 10])
-const c = matmul(a, b)
 
-// disabling stats removes all collectors
-stats.enabled = false
+stats.enabled = false // all ops following will no longer capture stats
 ```
 
 While the above examples may suffice for simple use cases, if you're
@@ -370,21 +365,21 @@ graph TD
   subgraph Host A
     OpA(Op A) --> statsA{{"stats A"}};
     OpB(Op B) --> statsA;
-    statsA --> CollectorA{{"Collector A"}};
-    CollectorA --> LoggerA{{"LoggerHttp A"}} --> Processor;
+    statsA --> LoggerA{{"LoggerHttp A"}};
+    LoggerA --> Processor;
   end
   subgraph Host B
     OpC(Op C) --> statsB{{"stats B"}};
     OpD(Op D) --> statsB;
-    statsB --> CollectorB{{"Collector B"}};
-    CollectorB --> LoggerB{{"LoggerHttp B"}} --> Processor;    
+    statsB --> LoggerB{{"LoggerHttp B"}};
+    LoggerB --> Processor;
   end
 ```
 
 ```
 import { StatsLoggerHttp } from '@shumai/shumai'
 
-stats.addCollector(new StatsLoggerHttp({ url: 'http://localhost:4242' }))
+stats.logger = new StatsLoggerHttp({ url: 'http://localhost:4242' })
 ```
 
 For more custom needs you can supply your own logger:
@@ -399,13 +394,7 @@ class CustomLogger implements StatsLogger {
   }
 }
 
-stats.addCollector({ logger: new CustomLogger(), interval: 5_000 })
-
-// Aliases if you'll never have more than 1 collector:
-// stats.statsByStacks -> stats.collectors[0].statsByStacks
-// stats.statsByOps -> stats.collectors[0].statsByOps
-// stats.getSummary() -> stats.collectors[0].getSummary()
-// stats.reset() -> stats.collectors.map(c => c.reset())
+stats.logger = new CustomLogger()
 ```
 
 By default stack tracing is disabled as it adds 50%+ overhead, but can be enabled via `stats.collectStacks = true`.

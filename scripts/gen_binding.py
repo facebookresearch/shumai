@@ -505,20 +505,24 @@ for op, args, ret in op_list:
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
   {js_impl_full}
 
-  const trace = stats.enabled && stats.startTrace('{op}')
+  const i = [{','.join(js_tensor_args)}]
+  const ts = i.reduce((s, t) => s || t.stats, void 0)
+  const s = ts || stats
+  const trace = s.enabled && s.startTrace('{op}')
 
   {js_ptr_result}
   if(!_ptr) throw new Error('Tensor returned from `{valid_js(op)}` is null; native code likely threw an error...')
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
   const requires_grad = {js_requires_grad_args}
   {js_deps}
   {js_tensor_construct}
+  t.stats = ts
   t.provenance = {js_provenance_args}
   t.requires_grad = requires_grad
 
-  trace && stats.logTrace(trace, [{','.join(js_tensor_args)}], t)
+  trace && s.logTrace(trace, i, t)
 
   t.op = "{op}";
   return t;

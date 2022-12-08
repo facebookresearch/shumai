@@ -8,7 +8,7 @@ const val = sm.scalar(1).requireGrad()
 for (const _i of sm.util.range(300)) {
   const input = sm.randn([1])
   const out_ref = input.mul(sm.scalar(2))
-  const out = await model(input.mul(val))
+  const { tensor: out } = await model(input.mul(val))
 
   // ensure we can differentiate through it
   const l = sm.loss.mse(out, out_ref)

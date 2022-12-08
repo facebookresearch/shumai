@@ -2,7 +2,7 @@ import { ptr, toArrayBuffer } from 'bun:ffi'
 import { existsSync } from 'fs'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
-import { stats } from '../stats'
+import { Stats, stats } from '../stats'
 import { _tidyTracker, cyrb53, Float16Array, gcAsNeeded } from '../util'
 import { GradContext } from './register_gradients'
 import { full } from './tensor_ops'
@@ -32,7 +32,7 @@ export enum dtype {
 export const gradient_functions: { [key: string]: CallableFunction } = {}
 
 /** @private */
-export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Tensor {
+export function wrapFLTensor(op: string, closure: CallableFunction, ...args: unknown[]): Tensor {
   const ptr_args = args.map((x) => {
     if (x instanceof Tensor) {
       return x.ptr
@@ -40,15 +40,17 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
     return x
   })
 
-  const tensors = stats.enabled && (args.filter((x) => x instanceof Tensor) as Tensor[])
-  const trace = stats.enabled && stats.startTrace('constant')
+  const tensorArgs = args.filter((x) => x instanceof Tensor) as Tensor[]
+  const asyncStats: Stats = tensorArgs.reduce((a, t) => a || t.stats, void 0 as Stats)
+  const s = asyncStats || stats
+  const trace = s.enabled && s.startTrace(op)
 
   const _ptr = closure(...ptr_args)
 
-  trace && stats.stopTrace(trace)
+  trace && s.stopTrace(trace)
 
-  const requires_grad = args.some((x) => (x as Tensor).requires_grad)
-  const deps: Tensor[] = requires_grad ? <Tensor[]>args.filter((x) => x instanceof Tensor) : []
+  const requires_grad = tensorArgs.some((x) => x.requires_grad)
+  const deps: Tensor[] = requires_grad ? tensorArgs : []
   if (!_ptr)
     throw new Error(`Tensor returned from closure is null; native code likely threw an error...`)
   const t = new Tensor({
@@ -56,13 +58,14 @@ export function wrapFLTensor(closure: CallableFunction, ...args: unknown[]): Ten
     _deps: deps
   })
   t.requires_grad = requires_grad
+  t.stats = asyncStats
 
   t.provenance = args.reduce(
     (a, b) => (a ? (a as Tensor).provenance : null) || (b ? (b as Tensor).provenance : null),
     null
   )
 
-  trace && stats.logTrace(trace, tensors, t)
+  trace && s.logTrace(trace, tensorArgs, t)
 
   return t
 }
@@ -249,6 +252,7 @@ export class Tensor {
   requires_grad = false
   provenance = null
   grad: Tensor = null
+  stats: Stats = null
   op = 'constant'
 
   grad_callback_async?: (grad?: GradContext) => Promise<void | Tensor>
@@ -426,7 +430,7 @@ export class Tensor {
   }
 
   astype(dtype: dtype) {
-    return wrapFLTensor(fl._astype.native, this.ptr, dtype)
+    return wrapFLTensor('astype', fl._astype.native, this.ptr, dtype)
   }
 
   eval() {
@@ -512,7 +516,7 @@ export class Tensor {
   }
 
   asContiguousTensor() {
-    return wrapFLTensor(fl._asContiguousTensor.native, this.ptr)
+    return wrapFLTensor('asContiguousTensor', fl._asContiguousTensor.native, this.ptr)
   }
 
   copy() {
@@ -520,7 +524,7 @@ export class Tensor {
   }
 
   deepCopy() {
-    return wrapFLTensor(fl._copy.native, this.ptr)
+    return wrapFLTensor('copy', fl._copy.native, this.ptr)
   }
 
   pad(paddings: Array<Array<number>>) {
@@ -531,6 +535,7 @@ export class Tensor {
       return BigInt(x[1])
     })
     return wrapFLTensor(
+      'pad',
       fl._pad.native,
       this.ptr,
       ...arrayArg(new BigInt64Array(before_)),
@@ -718,6 +723,7 @@ export class Tensor {
   index(args) {
     const [start, end, stride] = this._index_args(args)
     return wrapFLTensor(
+      'index',
       fl._index.native,
       this,
       ...arrayArg(start),
@@ -729,6 +735,7 @@ export class Tensor {
   indexedAssign(t, args) {
     const [start, end, stride] = this._index_args(args)
     return wrapFLTensor(
+      'indexedAssign',
       fl._indexedAssign.native,
       this,
       t,
@@ -784,7 +791,7 @@ export function bytesUsed(): bigint {
 }
 
 export const conv2dBackwardData = (...args) => {
-  return wrapFLTensor(fl._conv2dBackwardData.native, ...args)
+  return wrapFLTensor('conv2dBackwardData', fl._conv2dBackwardData.native, ...args)
 }
 
 export const layout = {

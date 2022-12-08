@@ -1,8 +1,7 @@
-import { StatsCollector } from './collector'
-import { StatsEntry } from './stats'
+import { Stats, StatsEntry } from './stats'
 
 export type StatsLoggerData = {
-  collector: StatsCollector
+  stats: Stats
   ops: Map<string, StatsEntry>
   stacks: Map<number, StatsEntry>
   stackKeys: Map<number, string>
