@@ -247,7 +247,7 @@ export class Stats {
   }
 
   addRemoteStats(stats: Stats): Stats {
-    const existing = this.#remoteStats.get(stats.id)
+    const existing = stats.id === this.id ? this : this.#remoteStats.get(stats.id)
     if (!existing) {
       // new remote stats, add only
       this.#remoteStats.set(stats.id, stats)
@@ -356,7 +356,7 @@ export class Stats {
    * @param includeRemotes Include stats from remote devices
    * @returns StatsSummary
    */
-  getSummary(options: StatsJSONOptions): StatsSummary {
+  getSummary(options: StatsJSONOptions = { includeRemotes: true, computeRates: true }): StatsSummary {
     return this.toJSON({ ...options, computeRates: true })
   }
 

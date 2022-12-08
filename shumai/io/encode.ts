@@ -1,14 +1,16 @@
 import { Buffer } from 'buffer'
 import * as sm from '../tensor'
 
-function jsonStringifyHandler(key: string, value: any) {
+/** @private */
+export function jsonStringifyHandler(key: string, value: any) {
   if (typeof value === 'bigint') {
     return ['bigint', value.toString()] // tuple helps avoid waste
   }
   return value
 }
 
-function jsonParseHandler(key: string, value: any) {
+/** @private */
+export function jsonParseHandler(key: string, value: any) {
   if (Array.isArray(value) && value[0] === 'bigint') {
     return BigInt(value[1])
   }

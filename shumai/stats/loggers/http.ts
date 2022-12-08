@@ -1,6 +1,6 @@
 import assert from 'assert'
-import * as console from 'console'
 import { StatsLogger, StatsLoggerData } from '../logger'
+import { jsonStringifyHandler } from '../../io/encode'
 
 export type StatsLoggerHttpOptions = {
   url: string
@@ -19,33 +19,9 @@ export class StatsLoggerHttp implements StatsLogger {
   process(data: StatsLoggerData): Promise<void> {
     const { url, ...otherOptions } = this.#options
 
-    const { deviceRate, hostRate, entriesByOp, entriesByStack } = data.stats.getSummary()
+    const statsRaw = data.stats.toJSON({ computeRates: false, includeRemotes: true })
 
-    const { hostId, processId, deviceId } = data.stats
-
-    const endTime = Date.now()
-    const startTime = endTime - data.stats.interval
-
-    const body = JSON.stringify(
-      {
-        startTime,
-        endTime,
-        hostId,
-        processId,
-        deviceId,
-        deviceRate,
-        hostRate,
-        ops: entriesByOp,
-        stacks: entriesByStack
-      },
-      (key, value) => {
-        if (typeof value === 'bigint') {
-          return Number(value)
-        }
-        return value
-      },
-      2
-    )
+    const body = JSON.stringify(statsRaw, jsonStringifyHandler)
 
     return fetch(url, {
       method: 'POST',

@@ -161,7 +161,7 @@ export function serve(request_dict: Record<string, ServeRequest>, options: Netwo
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore-next-line
       if (props?.collectStats === true) {
-        s = t.stats = new Stats() // isolate stats for transfer to requesting host
+        s = t.stats = new Stats({ enabled: true }) // isolate stats for transfer to requesting host
         // copy identifiers in case global stats has overrides
         s.hostId = stats.hostId
         s.processId = stats.processId
