@@ -30,6 +30,10 @@ function checkGrad(f, args, idx, jacobian, epsilon = 1e-3) {
 }
 
 describe('gradients', () => {
+  it('amax', () => {
+    const a = sm.randn([128])
+    checkGrad(sm.amax, [a, [0], true], 0, sampleSphere(a.shape))
+  })
   it('mul', () => {
     const a = sm.randn([128])
     const b = sm.randn([128])
@@ -73,5 +77,13 @@ describe('gradients', () => {
     const a = sm.randn([128])
     const b = sm.randn([128])
     checkGrad(sm.minimum, [a, b], 0, sampleSphere(a.shape))
+  })
+  it('abs', () => {
+    const a = sm.randn([128])
+    checkGrad(sm.abs, [a], 0, sampleSphere(a.shape))
+  })
+  it('log', () => {
+    const a = sm.rand([128]).add(sm.scalar(2))
+    checkGrad(sm.log, [a], 0, sampleSphere(a.shape))
   })
 })

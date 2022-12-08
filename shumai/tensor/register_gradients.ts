@@ -45,8 +45,22 @@ function possiblyReduce(grad_out: Tensor, ctx: GradContext) {
 }
 
 const impls = {
+  absolute: (ctx: GradContext) => {
+    return ctx.backward_input.mul(
+      sm.where(
+        ctx.forward_inputs[0].greaterThan(sm.scalar(0)),
+        sm.full(ctx.forward_inputs[0].shape, 1),
+        sm.full(ctx.forward_inputs[0].shape, -1)
+      )
+    )
+  },
   add: (ctx: GradContext) => {
     return possiblyReduce(ctx.backward_input, ctx)
+  },
+  amax: (ctx: GradContext) => {
+    return ctx.backward_input
+      .mul(ctx.forward_inputs[0].eq(ctx.forward_output).astype(ctx.backward_input.dtype))
+      .sum(ctx.forward_inputs[1], ctx.forward_inputs[2])
   },
   conv2d: (ctx: GradContext) => {
     const [x, w, sx, sy, px, py, dx, dy, g] = <
@@ -128,6 +142,9 @@ const impls = {
   },
   exp: (ctx: GradContext) => {
     return sm.exp(ctx.forward_inputs[0]).mul(ctx.backward_input)
+  },
+  log: (ctx: GradContext) => {
+    return ctx.backward_input.mul(sm.scalar(1).div(ctx.forward_inputs[0]))
   },
   matmul: (ctx: GradContext) => {
     if (ctx.backward_output_index === 0) {
