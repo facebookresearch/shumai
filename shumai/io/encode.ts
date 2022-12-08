@@ -1,12 +1,26 @@
 import { Buffer } from 'buffer'
 import * as sm from '../tensor'
 
+function jsonStringifyHandler(key: string, value: any) {
+  if (typeof value === 'bigint') {
+    return ['bigint', value.toString()] // tuple helps avoid waste
+  }
+  return value
+}
+
+function jsonParseHandler(key: string, value: any) {
+  if (Array.isArray(value) && value[0] === 'bigint') {
+    return BigInt(value[1])
+  }
+  return value
+}
+
 export function encodeBinary(tensor: sm.Tensor, props?: object): ArrayBuffer {
   const shape = tensor.shape64
   const provenance = tensor.provenance ? BigInt('0x' + tensor.provenance) : BigInt(0xffffffff)
   const flags = Number(tensor.requires_grad) & 0x1
   // meta_data: ndim, provenance, flags, props_len
-  const props_buf = props && Buffer.from(JSON.stringify(props))
+  const props_buf = props && Buffer.from(JSON.stringify(props, jsonStringifyHandler))
   const props_len = props_buf ? props_buf.byteLength : 0
   const tensor_buf = new Uint8Array(tensor.toFloat32Array().buffer)
   const tensor_len = tensor_buf.byteLength
@@ -55,7 +69,7 @@ export function decodeBinary(buf: ArrayBuffer): { tensor: sm.Tensor; props?: obj
   byteOffset += 8 * shape_len
   const t = sm.tensor(new Float32Array(buf, byteOffset, tensor_len / 4)).reshape(shape)
   byteOffset += tensor_len
-  const props = props_len ? JSON.parse(Buffer.from(buf, byteOffset, props_len).toString()) : void 0
+  const props = props_len ? JSON.parse(Buffer.from(buf, byteOffset, props_len).toString(), jsonParseHandler) : void 0
   t.op = 'network'
   t.provenance = provenance ? provenance : null
   t.requires_grad = !!requires_grad

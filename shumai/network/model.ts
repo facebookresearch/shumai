@@ -67,7 +67,7 @@ export function remote_model(
 
     if (result.stats) {
       // merge stats from backward to global
-      stats.addRemoteStats(Stats.fromJSON(result.stats))
+      stats.addRemoteStats(result.stats)
     }
 
     return result.tensor
@@ -83,7 +83,7 @@ export function remote_model(
 
     if (result.stats) {
       // merge stats from forward to global
-      stats.addRemoteStats(Stats.fromJSON(result.stats))
+      stats.addRemoteStats(result.stats)
     }
 
     return result

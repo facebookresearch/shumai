@@ -53,12 +53,13 @@ describe('encode/decode Binary', () => {
   })
   it('With props', () => {
     const a = sm.tensor(new Float32Array([1, 0, 3, 2]))
-    const a_props = { a: Math.random() }
+    const a_props = { a: Math.random(), b: 155n }
     const a_buf = sm.io.encodeBinary(a, a_props)
     const { tensor: b, props: b_props } = sm.io.decodeBinary(a_buf)
     expect(areSameShape(a, b)).toBe(true)
     expectArraysClose(a.toFloat32Array(), b.toFloat32Array())
     expect(a_props.a).toBe(b_props.a)
+    expect(a_props.b).toBe(b_props.b)
   })
 })
 

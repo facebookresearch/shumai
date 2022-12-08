@@ -32,7 +32,7 @@ export type StatsSummary = {
   hostId: string
   processId: string
   deviceId: string
-  bytesUsed: number
+  bytesUsed: bigint
   utilization: number
   startTime: number
   endTime: number
@@ -86,7 +86,7 @@ export class Stats {
   #collectStacks: boolean
   #loggers: StatsLogger[] = []
 
-  #bytesUsed = Number(fl.bytesUsed.native()) // could track history in future for mean, max, etc
+  #bytesUsed = fl.bytesUsed.native() // could track history in future for mean, max, etc
   #stackIds: Map<string, number> = new Map()
   #stackKeys: Map<number, string> = new Map()
   #startTime = 0
@@ -109,7 +109,11 @@ export class Stats {
   }
 
   set enabled(enabled: boolean) {
+    if (this.#enabled === enabled) return // no change
+
     this.#enabled = enabled
+
+    enabled && this.reset() // clean state on re-enable otherwise history will skew results
   }
 
   addLogger(logger: StatsLogger) {
@@ -187,7 +191,7 @@ export class Stats {
   logTrace(trace: StatTrace, inputs: Tensor[], output: Tensor) {
     const gflops = opToFlops(trace.op, inputs, output) / 1e9
 
-    this.#bytesUsed = Number(trace.bytes + trace.startBytes)
+    this.#bytesUsed = trace.bytes + trace.startBytes
 
     const entry: StatsEntry = {
       count: 1n,
@@ -227,7 +231,7 @@ export class Stats {
     return this.#loggers
   }
 
-  get bytesUsed(): number {
+  get bytesUsed(): bigint {
     return this.#bytesUsed
   }
 
@@ -253,7 +257,7 @@ export class Stats {
     // merge stats with existing
     existing.#startTime = Math.min(existing.#startTime, stats.#startTime)
     existing.#endTime = Math.max(existing.#endTime, stats.#endTime)
-    existing.#bytesUsed = Math.max(existing.#bytesUsed, stats.#bytesUsed)
+    existing.#bytesUsed = existing.#bytesUsed < stats.#bytesUsed ? stats.#bytesUsed : existing.#bytesUsed
     stats.#statsByOp.forEach((entry, op) => {
       const existingEntry = existing.#statsByOp.get(op)
       if (!existingEntry) {
@@ -386,7 +390,7 @@ export class Stats {
       entriesByStack,
       entriesByOp,
       utilization: 0,
-      bytesUsed: Number(fl.bytesUsed.native()),
+      bytesUsed: fl.bytesUsed.native(),
       remoteStats: includeRemotes
         ? [...this.#remoteStats.values()].map((s) => s.toJSON(options))
         : []
@@ -458,7 +462,10 @@ export class Stats {
     stats.#startTime = o.startTime
     stats.#endTime = o.endTime
 
-    stats.#remoteStats = new Map(o.remoteStats.map((s) => [s.id, Stats.fromJSON(s)]))
+    stats.#remoteStats = new Map(o.remoteStats.map((rawStats) => {
+      const s = Stats.fromJSON(rawStats)
+      return [s.id, s]
+    }))
 
     return stats
   }
