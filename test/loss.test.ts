@@ -17,6 +17,23 @@ describe('mse', () => {
   })
 })
 
+describe('mae', () => {
+  it('should be near zero', () => {
+    const a = sm.tensor(new Float32Array([1, 2, 3]))
+    const b = sm.tensor(new Float32Array([1, 2, 3]))
+    const loss = sm.loss.mae()
+    const mae = loss(a, b)
+    expectArraysClose(mae.toFloat32Array(), [0])
+  })
+  it('nonzero loss', () => {
+    const a = sm.tensor(new Float32Array([1, 2, 3]))
+    const b = sm.tensor(new Float32Array([-1, -2, -3]))
+    const loss = sm.loss.mae()
+    const mae = loss(a, b)
+    expectArraysClose(mae.toFloat32Array(), [4])
+  })
+})
+
 describe('crossEntropy', () => {
   it('zero loss', () => {
     const a = tableToTensor([
@@ -30,7 +47,6 @@ describe('crossEntropy', () => {
     const loss = sm.loss.crossEntropy()
     expectArraysClose(loss(a, b).toFloat32Array(), [0])
   })
-
   it('nonzero loss', () => {
     const a = tableToTensor([
       [0, 1, 0],
@@ -52,7 +68,6 @@ describe('binaryCrossEntropy', () => {
     const loss = sm.loss.binaryCrossEntropy()
     expectArraysClose(loss(a, b).toFloat32Array(), [0])
   })
-
   it('nonzero loss', () => {
     const a = sm.tensor(new Float32Array([0, 1, 0, 1]))
     const b = sm.tensor(new Float32Array([0.2, 0.9, 0.5, 0.4]))

@@ -4,6 +4,16 @@ export * from './mse'
 export type LossFn = (a: sm.Tensor, b: sm.Tensor) => sm.Tensor
 
 /**
+ * Mean absolute error for regression
+ * Also known as L1-loss
+ *
+ * $$\frac{1}{n}\sum_{i=1}^{n}|y_{i}-\hat{y}_{i}|$$
+ */
+export function mae(): LossFn {
+  return (y, p) => sm.mean(sm.abs(sm.sub(y, p)))
+}
+
+/**
  * Cross-entropy loss for multi-class classification
  * Use with softmax on the final activation layer
  *
