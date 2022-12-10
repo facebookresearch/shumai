@@ -95,7 +95,7 @@ export class StandardScaler implements BaseScaler {
       }
     }
     const outShape = isShapeCoerced ? [xRows] : [xRows, xCols]
-    return new Tensor(xOut).reshape(outShape)
+    return new Tensor(xOut).reshape(outShape).astype(x.dtype)
   }
 }
 
