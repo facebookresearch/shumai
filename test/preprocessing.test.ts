@@ -3,7 +3,7 @@ import { describe, expect, it } from 'bun:test'
 import { Float16Array } from '../shumai/util'
 import { expectArraysClose } from './utils'
 
-describe('scaler', () => {
+describe('StandardScaler', () => {
   it('fit, transform, & fitTransform work', () => {
     const test_a = sm.tensor(new Float16Array([0, 0, 0, 0, 1, 1, 1, 1])).reshape([4, 2])
     const scaler = new sm.util.StandardScaler()

@@ -3,7 +3,10 @@ import { Float16Array } from './types'
 
 interface BaseScaler {
   fit: (x: Tensor) => void
+  partialFit: (x: Tensor) => void
   transform: (x: Tensor) => Tensor
+  fitTransform: (x: Tensor) => Tensor
+  inverseTransform: (x: Tensor) => Tensor
 }
 
 export class StandardScaler implements BaseScaler {
@@ -30,7 +33,7 @@ export class StandardScaler implements BaseScaler {
     this.reset()
     let usedX = x
     if (x.shape.length === 1) {
-      usedX = x.deepCopy().reshape([x.shape[0], 1]).astype(x.dtype)
+      usedX = x.deepCopy().reshape([x.shape[0], 1])
     }
     return this.partialFit(usedX)
   }
@@ -63,8 +66,7 @@ export class StandardScaler implements BaseScaler {
       }
       tmp_scale[i] = Math.sqrt(tmp_scale[i])
     }
-    console.log(tmp_scale)
-    this.scale = new Tensor(tmp_scale)
+    this.scale = new Tensor(tmp_scale).astype(dtype)
   }
 
   // transform - scales the data
