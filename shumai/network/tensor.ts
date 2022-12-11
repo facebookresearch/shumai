@@ -41,11 +41,6 @@ export type TFetchOptions = {
   collectStats?: boolean
 }
 
-export type TFetchResult = {
-  tensor: sm.Tensor
-  stats?: Stats
-}
-
 /**
  * Similar to the Web standard {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch | fetch} API, this function enables asynchronous transfer of remote tensors.
  *
@@ -86,7 +81,7 @@ export async function tfetch(
   url: string,
   tensor?: sm.Tensor,
   options?: TFetchOptions
-): Promise<TFetchResult> {
+): Promise<sm.Tensor> {
   const id = options?.id || _unique_id
   const response = await (() => {
     if (tensor) {
@@ -104,23 +99,21 @@ export async function tfetch(
   })()
   const buff = await response.arrayBuffer()
   if (buff.byteLength) {
-    let result: TFetchResult
+    let decoded: { tensor: sm.Tensor; props?: object }
     try {
-      const { tensor, props } = decodeBinary(buff)
-      result = {
-        tensor,
-        stats: props?.stats ? Stats.fromJSON(props.stats) : undefined
+      decoded = decodeBinary(buff)
+      if (decoded.props?.stats) {
+        decoded.tensor.stats = Stats.fromJSON(decoded.props.stats)
       }
     } catch (err) {
       throw `tfetched result invalid: ${err}`
     }
     if (options?.grad_fn) {
-      result.tensor.requires_grad = true
+      decoded.tensor.requires_grad = true
       tensor.requires_grad = true
-      result.tensor.setDeps([tensor])
-      result.tensor.grad_callback_async = options.grad_fn
+      decoded.tensor.setDeps([tensor])
+      decoded.tensor.grad_callback_async = options.grad_fn
     }
-    return result
+    return decoded.tensor
   }
-  return { tensor: void 0 }
 }

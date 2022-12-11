@@ -1,6 +1,6 @@
 import assert from 'assert'
-import { StatsLogger, StatsLoggerData } from '../logger'
 import { jsonStringifyHandler } from '../../io/encode'
+import { StatsLogger, StatsLoggerData } from '../logger'
 
 export type StatsLoggerHttpOptions = {
   url: string

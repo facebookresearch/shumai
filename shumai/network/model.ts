@@ -4,7 +4,7 @@ import { Module } from '../module'
 import { OptimizerFn } from '../optim'
 import { Stats, stats } from '../stats'
 import * as sm from '../tensor'
-import { backoff, tfetch, TFetchResult } from './tensor'
+import { backoff, tfetch } from './tensor'
 
 export type RemoteModelOptions = {
   backwardUrl?: string
@@ -51,7 +51,7 @@ export type RemoteModelForwardOptions = {
 export function remote_model(
   url: string,
   { backwardUrl, errorHandler }: RemoteModelOptions = {}
-): (t: sm.Tensor) => Promise<TFetchResult> {
+): (t: sm.Tensor) => Promise<sm.Tensor> {
   let forwardUrl = `${url}/forward`
   if (!backwardUrl) {
     backwardUrl = `${url}/optimize`
@@ -60,33 +60,33 @@ export function remote_model(
   }
   const backward = async (ctx): Promise<sm.Tensor> => {
     const collectStats = stats.enabled
-    const result = await backoff(
-      () => tfetch(backwardUrl, ctx.backward_input, { collectStats }).then(({ tensor }) => tensor),
+    const t: sm.Tensor = await backoff(
+      () => tfetch(backwardUrl, ctx.backward_input, { collectStats }),
       errorHandler
     )
 
-    if (result.stats) {
+    if (t.stats) {
       // merge stats from backward to global
-      stats.addRemoteStats(result.stats)
+      stats.addRemoteStats(t.stats)
     }
 
-    return result.tensor
+    return t
   }
   return async function forward(
-    t: sm.Tensor,
+    tensor: sm.Tensor,
     { collectStats = stats.enabled }: RemoteModelForwardOptions = {}
-  ): Promise<TFetchResult> {
-    const result = await backoff(
-      () => tfetch(forwardUrl, t, { collectStats, grad_fn: backward }),
+  ): Promise<sm.Tensor> {
+    const t: sm.Tensor = await backoff(
+      () => tfetch(forwardUrl, tensor, { collectStats, grad_fn: backward }),
       errorHandler
     )
 
-    if (result.stats) {
+    if (t.stats) {
       // merge stats from forward to global
-      stats.addRemoteStats(result.stats)
+      stats.addRemoteStats(t.stats)
     }
 
-    return result
+    return t
   }
 }
 
@@ -133,8 +133,8 @@ export type ServeRequest = (...args: unknown[]) => Promise<unknown> | unknown | 
  *
  * The above functions are accessible from a different process with {@link network.tfetch | `network.tfetch`}:
  * ```javascript
- * const { tensor: t0 } = await sm.network.tfetch(`${host}:3000/genRandTensor`)
- * const { tensor: t1 } = await sm.network.tfetch(`${host}:3000/remoteCall`)
+ * const t0 = await sm.network.tfetch(`${host}:3000/genRandTensor`)
+ * const t1 = await sm.network.tfetch(`${host}:3000/remoteCall`)
  * ```
  *
  * @param request_dict - A map of endpoint names to the underlying (possibly async) function calls.

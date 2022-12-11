@@ -71,7 +71,9 @@ export function decodeBinary(buf: ArrayBuffer): { tensor: sm.Tensor; props?: obj
   byteOffset += 8 * shape_len
   const t = sm.tensor(new Float32Array(buf, byteOffset, tensor_len / 4)).reshape(shape)
   byteOffset += tensor_len
-  const props = props_len ? JSON.parse(Buffer.from(buf, byteOffset, props_len).toString(), jsonParseHandler) : void 0
+  const props = props_len
+    ? JSON.parse(Buffer.from(buf, byteOffset, props_len).toString(), jsonParseHandler)
+    : void 0
   t.op = 'network'
   t.provenance = provenance ? provenance : null
   t.requires_grad = !!requires_grad

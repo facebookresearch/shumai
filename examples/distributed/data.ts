@@ -21,7 +21,7 @@ for (const _ of sm.util.viter(10000, loss_print)) {
   input.requires_stats = true
   const out_ref = model_ref(input)
 
-  const { tensor: out } = await model(input)
+  const out = await model(input)
 
   loss = sm.loss.mse(out_ref, out)
   await loss.backward()

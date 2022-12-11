@@ -257,7 +257,8 @@ export class Stats {
     // merge stats with existing
     existing.#startTime = Math.min(existing.#startTime, stats.#startTime)
     existing.#endTime = Math.max(existing.#endTime, stats.#endTime)
-    existing.#bytesUsed = existing.#bytesUsed < stats.#bytesUsed ? stats.#bytesUsed : existing.#bytesUsed
+    existing.#bytesUsed =
+      existing.#bytesUsed < stats.#bytesUsed ? stats.#bytesUsed : existing.#bytesUsed
     stats.#statsByOp.forEach((entry, op) => {
       const existingEntry = existing.#statsByOp.get(op)
       if (!existingEntry) {
@@ -356,7 +357,9 @@ export class Stats {
    * @param includeRemotes Include stats from remote devices
    * @returns StatsSummary
    */
-  getSummary(options: StatsJSONOptions = { includeRemotes: true, computeRates: true }): StatsSummary {
+  getSummary(
+    options: StatsJSONOptions = { includeRemotes: true, computeRates: true }
+  ): StatsSummary {
     return this.toJSON({ ...options, computeRates: true })
   }
 
@@ -462,10 +465,12 @@ export class Stats {
     stats.#startTime = o.startTime
     stats.#endTime = o.endTime
 
-    stats.#remoteStats = new Map(o.remoteStats.map((rawStats) => {
-      const s = Stats.fromJSON(rawStats)
-      return [s.id, s]
-    }))
+    stats.#remoteStats = new Map(
+      o.remoteStats.map((rawStats) => {
+        const s = Stats.fromJSON(rawStats)
+        return [s.id, s]
+      })
+    )
 
     return stats
   }
