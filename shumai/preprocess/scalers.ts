@@ -1,5 +1,4 @@
 import { scalar, Tensor } from '../tensor'
-import { Float16Array } from './types'
 
 interface BaseScaler {
   fit: (x: Tensor) => void
@@ -33,7 +32,7 @@ export class StandardScaler implements BaseScaler {
     this.reset()
     let usedX = x
     if (x.shape.length === 1) {
-      usedX = x.deepCopy().reshape([x.shape[0], 1])
+      usedX = x.copy().reshape([x.shape[0], 1])
     }
     return this.partialFit(usedX)
   }
@@ -44,9 +43,9 @@ export class StandardScaler implements BaseScaler {
       dtype = x.dtype
     if (nSamples == 0) throw new Error('cannot calc fit for StandardScaler with `x.shape[0] == 0`')
     if (this.nSamplesSeen == 0) {
-      this.var = new Tensor(new Float16Array(nFeatures).fill(0)).astype(dtype)
-      this.mean = new Tensor(new Float16Array(nFeatures).fill(0)).astype(dtype)
-      this.scale = new Tensor(new Float16Array(nFeatures).fill(0)).astype(dtype)
+      this.var = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype)
+      this.mean = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype)
+      this.scale = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype)
     }
 
     const { updatedMean, updatedVariance, updatedSampleCount } = incrementalMeanVar(
@@ -60,13 +59,18 @@ export class StandardScaler implements BaseScaler {
     this.nSamplesSeen = updatedSampleCount
     const tmp_scale = this.var.valueOf(),
       len = tmp_scale.length
-    for (let i = 0; i < len; i++) {
-      if (tmp_scale[i] == 0) {
-        tmp_scale[i] = 1
+    if (typeof tmp_scale === 'number') {
+      const outVal = tmp_scale == 0 ? Math.sqrt(1) : Math.sqrt(tmp_scale)
+      this.scale = scalar(outVal).astype(dtype)
+    } else {
+      for (let i = 0; i < len; i++) {
+        if (tmp_scale[i] == 0) {
+          tmp_scale[i] = 1
+        }
+        tmp_scale[i] = Math.sqrt(tmp_scale[i])
       }
-      tmp_scale[i] = Math.sqrt(tmp_scale[i])
+      this.scale = new Tensor(tmp_scale).astype(dtype)
     }
-    this.scale = new Tensor(tmp_scale).astype(dtype)
   }
 
   // transform - scales the data
@@ -76,10 +80,10 @@ export class StandardScaler implements BaseScaler {
       usedX = x
     if (x.shape.length === 1) {
       isShapeCoerced = true
-      usedX = x.deepCopy().reshape([x.shape[0], 1])
+      usedX = x.copy().reshape([x.shape[0], 1])
     }
     const [xRows, xCols] = usedX.shape,
-      xOut = new Tensor(new Float16Array(usedX.elements).fill(0)).astype(dtype).valueOf()
+      xOut = new Tensor(new Float32Array(usedX.elements).fill(0)).astype(dtype).valueOf()
     const tmp_contig = usedX.valueOf()
     const tmp_mean = this.mean.copy().valueOf(),
       tmp_scale = this.scale.valueOf()
@@ -113,10 +117,10 @@ export class StandardScaler implements BaseScaler {
       usedX = x
     if (x.shape.length === 1) {
       isShapeCoerced = true
-      usedX = x.deepCopy().reshape([x.shape[0], 1])
+      usedX = x.copy().reshape([x.shape[0], 1])
     }
     const [xRows, xCols] = usedX.shape,
-      xOut = new Tensor(new Float16Array(usedX.elements).fill(0)).astype(dtype).valueOf()
+      xOut = new Tensor(new Float32Array(usedX.elements).fill(0)).astype(dtype).valueOf()
     const tmp_contig = usedX.valueOf()
     const tmp_mean = this.mean.valueOf(),
       tmp_scale = this.scale.valueOf()
@@ -156,7 +160,7 @@ function incrementalMeanVar(
   const lastSum = lastMean.copy().mul(scalar(lastSampleCount).astype(dtype))
 
   // new sum
-  let newSum = new Tensor(new Float16Array(nFeatures).fill(0)).astype(dtype)
+  let newSum = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype)
   for (let i = 0; i < newSampleCount; i++) {
     const slice = x.index([i, ':']).astype(dtype)
     newSum = newSum.add(slice)
@@ -169,7 +173,7 @@ function incrementalMeanVar(
   const updatedMean = lastSum.add(newSum).div(updatedCountTensor)
 
   // newUnnormalizedVariance = X.var(axis=0) * newSampleCount
-  let newUnnormalizedVariance = new Tensor(new Float16Array(nFeatures).fill(0)).astype(dtype),
+  let newUnnormalizedVariance = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype),
     updatedUnnormalizedVariance: Tensor
 
   const newMean = newSum.div(scalar(newSampleCount).astype(dtype))
