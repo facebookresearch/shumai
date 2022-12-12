@@ -325,6 +325,94 @@ for every allocated tensor, ignoring `delayBetweenGCs`. Supplying a value that
 will fully utilize your hardware can greatly improve performance.
 
 
+## Statistics
+
+```mermaid
+graph TD
+  OpA(Op A) --> statsA{{"stats A"}};
+  OpB(Op B) --> statsA;
+  statsA --> LoggerA{{"LoggerConsole A"}};
+  LoggerA --> Stdout(("Stdout"));
+  OpC(Op C) --> statsA;
+  OpD(Op D) --> statsA;
+  statsA --> LoggerB("LoggerCustom B");
+  LoggerB --> Disk(("Disk"));
+```
+
+Basic usage of gathering statistics is as simple adding
+a collector using the default `StatsLoggerConsole`.
+
+```
+import { stats, StatsLoggerConsole, rand, matmul } from '@shumai/shumai'
+
+stats.enabled = true // all ops following will capture stats
+
+// perform ops...
+
+stats.enabled = false // all ops following will no longer capture stats
+```
+
+While the above examples may suffice for simple use cases, if you're
+looking to capture stats across multiple threads, processes, and/or hosts,
+`StatsLoggerHttp` has you covered.
+
+```mermaid
+graph TD
+  subgraph Host C
+    Processor("LoggerHttp Processor")
+    style Processor stroke:#222,stroke-width:4px,stroke-dasharray:5 5
+  end
+  subgraph Host A
+    OpA(Op A) --> statsA{{"stats A"}};
+    OpB(Op B) --> statsA;
+    statsA --> LoggerA{{"LoggerHttp A"}};
+    LoggerA --> Processor;
+  end
+  subgraph Host B
+    OpC(Op C) --> statsB{{"stats B"}};
+    OpD(Op D) --> statsB;
+    statsB --> LoggerB{{"LoggerHttp B"}};
+    LoggerB --> Processor;
+  end
+```
+
+```
+import { StatsLoggerHttp } from '@shumai/shumai'
+
+stats.logger = new StatsLoggerHttp({ url: 'http://localhost:4242' })
+```
+
+For more custom needs you can supply your own logger:
+
+```
+import { StatsLogger, StatsLoggerData } from '@shumai/shumai'
+
+class CustomLogger implements StatsLogger {
+  async process(data: StatsLoggerData): Promise<void> {
+    const summary = data.collector.getSummary()
+    console.log('Collector stats:', summary)
+  }
+}
+
+stats.logger = new CustomLogger()
+```
+
+By default stack tracing is disabled as it adds 50%+ overhead, but can be enabled via `stats.collectStacks = true`.
+
+### Scoped Statistics
+
+If you wish to isolate stats profiling you can do this as well:
+
+```
+import { collectStats } from '@shumai/shumai'
+
+const scopedStats = collectStats(() => {
+  // perform ops...
+}/*, StatsCollectorOptions | StatsLogger */)
+console.log(scopedStats.getSummary())
+```
+
+
 ## Contributing
 
 If you'd like to make changes to the core bindings or ffi, first [build from source](#installing-from-source).

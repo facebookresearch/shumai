@@ -2,8 +2,18 @@ import type { Errorlike, Server } from 'bun'
 import { decodeBinary, encodeBinary } from '../io'
 import { Module } from '../module'
 import { OptimizerFn } from '../optim'
+import { Stats, stats } from '../stats'
 import * as sm from '../tensor'
 import { backoff, tfetch } from './tensor'
+
+export type RemoteModelOptions = {
+  backwardUrl?: string
+  errorHandler?: (err: Errorlike) => Promise<void>
+}
+
+export type RemoteModelForwardOptions = {
+  collectStats?: boolean
+}
 
 /**
  * Connect to a remote model as if it were a local differentiable function.
@@ -38,38 +48,46 @@ import { backoff, tfetch } from './tensor'
  * @param url - The location of the remote model (must be running {@link network.serve_model | `network.serve_model`}).
  * @returns An asynchronous function that can be invoked with an input tensor.
  */
-export function remote_model(url: string, backward_url?: string, error_handler?) {
-  let forward_url = `${url}/forward`
-  if (!backward_url) {
-    backward_url = `${url}/optimize`
+export function remote_model(
+  url: string,
+  { backwardUrl, errorHandler }: RemoteModelOptions = {}
+): (t: sm.Tensor) => Promise<sm.Tensor> {
+  let forwardUrl = `${url}/forward`
+  if (!backwardUrl) {
+    backwardUrl = `${url}/optimize`
   } else {
-    forward_url = `${url}`
+    forwardUrl = `${url}`
   }
-  const backward = async (ctx) => {
-    const jacobian = await backoff(async () => {
-      return await tfetch(backward_url, ctx.backward_input)
-    }, error_handler)
-    return jacobian
+  const backward = async (ctx): Promise<sm.Tensor> => {
+    const collectStats = stats.enabled
+    const t: sm.Tensor = await backoff(
+      () => tfetch(backwardUrl, ctx.backward_input, { collectStats }),
+      errorHandler
+    )
+
+    if (t.stats) {
+      // merge stats from backward to global
+      stats.addRemoteStats(t.stats)
+    }
+
+    return t
   }
-  async function forward(t: sm.Tensor) {
-    return await backoff(async () => {
-      return await tfetch(forward_url, t, { grad_fn: backward })
-    }, error_handler)
+  return async function forward(
+    tensor: sm.Tensor,
+    { collectStats = stats.enabled }: RemoteModelForwardOptions = {}
+  ): Promise<sm.Tensor> {
+    const t: sm.Tensor = await backoff(
+      () => tfetch(forwardUrl, tensor, { collectStats, grad_fn: backward }),
+      errorHandler
+    )
+
+    if (t.stats) {
+      // merge stats from forward to global
+      stats.addRemoteStats(t.stats)
+    }
+
+    return t
   }
-  return forward
-}
-
-export type OpStats = {
-  bytes: bigint
-  time: number
-}
-
-export type TensorOpStats = Record<string, OpStats>
-
-export type RouteStats = {
-  hits: number
-  seconds: number
-  op_stats?: OpStats
 }
 
 export type NetworkServeOpts = {
@@ -83,6 +101,9 @@ export type NetworkServeOpts = {
     request: Errorlike
   ) => Response | Promise<Response> | undefined | Promise<undefined>
 }
+
+// TODO: pending further type refinement (requires a fn; same comments above)
+export type ServeRequest = (...args: unknown[]) => Promise<unknown> | unknown | void
 
 /**
  * Spawn an HTTP server to handle tensor input and output requests.
@@ -119,22 +140,8 @@ export type NetworkServeOpts = {
  * @param request_dict - A map of endpoint names to the underlying (possibly async) function calls.
  * @param options - A set of options passed to the underlying Bun.serve call.
  */
-export function serve(
-  request_dict: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>,
-  options: NetworkServeOpts
-) {
+export function serve(request_dict: Record<string, ServeRequest>, options: NetworkServeOpts) {
   const user_data = {}
-  const statistics: Record<string, RouteStats> = {}
-  const op_stats: TensorOpStats = {}
-
-  const sub_stat_fn = request_dict.statistics ? request_dict.statistics.bind({}) : null
-  request_dict.statistics = async (u) => {
-    if (sub_stat_fn) {
-      const s = await sub_stat_fn(u)
-      return { ...s, statistics, bytes_used: sm.bytesUsed() }
-    }
-    return { statistics, bytes_used: sm.bytesUsed() }
-  }
 
   const get_user_data = (t) => {
     const user_id = t.provenance
@@ -145,14 +152,21 @@ export function serve(
   }
 
   /* TODO: specify a better type than any as its a function */
-  const serve_request = async (
-    req: Request,
-    fn: (...args: unknown[]) => Promise<unknown> | unknown | void
-  ) => {
+  const serve_request = async (req: Request, fn: ServeRequest) => {
     const buf = await req.arrayBuffer()
     let ret = null
+    let s: Stats
     if (buf.byteLength) {
-      const t = await decodeBinary(buf)
+      const { tensor: t, props } = decodeBinary(buf)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore-next-line
+      if (props?.collectStats === true) {
+        s = t.stats = new Stats({ enabled: true }) // isolate stats for transfer to requesting host
+        // copy identifiers in case global stats has overrides
+        s.hostId = stats.hostId
+        s.processId = stats.processId
+        s.deviceId = stats.deviceId
+      }
       ret = await fn(get_user_data(t), t)
       if (ret) {
         ret.provenance = t.provenance
@@ -162,13 +176,9 @@ export function serve(
     }
 
     if (ret && ret instanceof sm.Tensor) {
-      if (ret.stats !== null) {
-        const segments = req.url.split('/')
-        const last_seg = segments[segments.length - 1]
-        const route = last_seg in request_dict ? last_seg : 'default'
-        op_stats[route] = ret.stats
-      }
-      return new Response(encodeBinary(ret))
+      // even if empty always forward stats if `collectStats` is true
+      const props: object = s ? { stats: s.toJSON() } : void 0
+      return new Response(encodeBinary(ret, props))
     } else if (ret && ret.constructor === Object) {
       const headers = new Headers([['Content-Type', 'application/json']])
       headers.set('Access-Control-Allow-Origin', '*')
@@ -185,25 +195,12 @@ export function serve(
     return new Response(ret)
   }
   const fetch_handler = {
-    async fetch(req: Request) {
+    fetch(req: Request): Promise<unknown> {
       const segments = req.url.split('/')
       const last_seg = segments[segments.length - 1]
       const route = last_seg in request_dict ? last_seg : 'default'
-      if (route in request_dict) {
-        const t0 = performance.now()
-        const res = await serve_request(req, request_dict[route])
-        const t1 = performance.now()
-        if (!(route in statistics)) {
-          statistics[route] = {
-            hits: 0,
-            seconds: 0
-          }
-        }
-        statistics[route].op_stats = op_stats[route]
-        statistics[route].hits += 1
-        statistics[route].seconds += (t1 - t0) / 1e3
-        return res
-      }
+      const handler = request_dict[route]
+      return handler && serve_request(req, handler)
     }
   }
   Bun.serve({
@@ -257,8 +254,7 @@ export function serve_model(
   fn: ((t: sm.Tensor) => sm.Tensor | Promise<sm.Tensor>) | Module,
   grad_update?: OptimizerFn,
   options?: NetworkServeOpts,
-  // TODO: pending further type refinement (requires a fn; same comments above)
-  req_map?: Record<string, (...args: unknown[]) => Promise<unknown> | unknown | void>
+  req_map?: Record<string, ServeRequest>
 ) {
   const base_req_map = {
     /* TODO: Refine type of param `u` */
