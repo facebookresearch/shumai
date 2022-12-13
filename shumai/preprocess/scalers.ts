@@ -43,9 +43,9 @@ export class StandardScaler implements BaseScaler {
       dtype = x.dtype
     if (nSamples == 0) throw new Error('cannot calc fit for StandardScaler with `x.shape[0] == 0`')
     if (this.nSamplesSeen == 0) {
-      this.var = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype)
-      this.mean = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype)
-      this.scale = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype)
+      this.var = new Tensor(new Float64Array(nFeatures).fill(0)).astype(dtype)
+      this.mean = new Tensor(new Float64Array(nFeatures).fill(0)).astype(dtype)
+      this.scale = new Tensor(new Float64Array(nFeatures).fill(0)).astype(dtype)
     }
 
     const { updatedMean, updatedVariance, updatedSampleCount } = incrementalMeanVar(
@@ -83,7 +83,7 @@ export class StandardScaler implements BaseScaler {
       usedX = x.copy().reshape([x.shape[0], 1])
     }
     const [xRows, xCols] = usedX.shape,
-      xOut = new Tensor(new Float32Array(usedX.elements).fill(0)).astype(dtype).valueOf()
+      xOut = new Tensor(new Float64Array(usedX.elements).fill(0)).astype(dtype).valueOf()
     const tmp_contig = usedX.valueOf()
     const tmp_mean = this.mean.copy().valueOf(),
       tmp_scale = this.scale.valueOf()
@@ -101,7 +101,7 @@ export class StandardScaler implements BaseScaler {
       }
     }
     const outShape = isShapeCoerced ? [xRows] : [xRows, xCols]
-    return new Tensor(xOut).reshape(outShape)
+    return new Tensor(xOut).reshape(outShape).astype(dtype)
   }
 
   // fitTransform - fit to data, then transform it
@@ -120,7 +120,7 @@ export class StandardScaler implements BaseScaler {
       usedX = x.copy().reshape([x.shape[0], 1])
     }
     const [xRows, xCols] = usedX.shape,
-      xOut = new Tensor(new Float32Array(usedX.elements).fill(0)).astype(dtype).valueOf()
+      xOut = new Tensor(new Float64Array(usedX.elements).fill(0)).astype(dtype).valueOf()
     const tmp_contig = usedX.valueOf()
     const tmp_mean = this.mean.valueOf(),
       tmp_scale = this.scale.valueOf()
@@ -138,7 +138,7 @@ export class StandardScaler implements BaseScaler {
       }
     }
     const outShape = isShapeCoerced ? [xRows] : [xRows, xCols]
-    return new Tensor(xOut).reshape(outShape)
+    return new Tensor(xOut).reshape(outShape).astype(dtype)
   }
 }
 
@@ -160,7 +160,7 @@ function incrementalMeanVar(
   const lastSum = lastMean.copy().mul(scalar(lastSampleCount).astype(dtype))
 
   // new sum
-  let newSum = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype)
+  let newSum = new Tensor(new Float64Array(nFeatures).fill(0)).astype(dtype)
   for (let i = 0; i < newSampleCount; i++) {
     const slice = x.index([i, ':']).astype(dtype)
     newSum = newSum.add(slice)
@@ -173,7 +173,7 @@ function incrementalMeanVar(
   const updatedMean = lastSum.add(newSum).div(updatedCountTensor)
 
   // newUnnormalizedVariance = X.var(axis=0) * newSampleCount
-  let newUnnormalizedVariance = new Tensor(new Float32Array(nFeatures).fill(0)).astype(dtype),
+  let newUnnormalizedVariance = new Tensor(new Float64Array(nFeatures).fill(0)).astype(dtype),
     updatedUnnormalizedVariance: Tensor
 
   const newMean = newSum.div(scalar(newSampleCount).astype(dtype))
