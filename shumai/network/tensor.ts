@@ -1,5 +1,6 @@
 import * as crypto from 'crypto'
 import { decodeBinary, encodeBinary } from '../io'
+import { Stats } from '../stats'
 import * as sm from '../tensor'
 import { sleep } from '../util'
 
@@ -32,6 +33,14 @@ export async function backoff(callback, error_handler?) {
     throw `Error found after 10 attempts: ${err}`
   }
 }
+
+export type TFetchOptions = {
+  id?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  grad_fn?: (grad?: any) => Promise<void | sm.Tensor>
+  collectStats?: boolean
+}
+
 /**
  * Similar to the Web standard {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch | fetch} API, this function enables asynchronous transfer of remote tensors.
  *
@@ -71,13 +80,9 @@ export async function backoff(callback, error_handler?) {
 export async function tfetch(
   url: string,
   tensor?: sm.Tensor,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: { id?: string; grad_fn?: (grad?: any) => Promise<void | sm.Tensor> }
+  options?: TFetchOptions
 ): Promise<sm.Tensor> {
-  let id = _unique_id
-  if (options && options.id) {
-    id = options.id
-  }
+  const id = options?.id || _unique_id
   const response = await (() => {
     if (tensor) {
       if (!tensor.provenance) {
@@ -86,7 +91,7 @@ export async function tfetch(
       return fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/octet-stream' },
-        body: encodeBinary(tensor)
+        body: encodeBinary(tensor, { collectStats: options?.collectStats === true })
       })
     } else {
       return fetch(url)
@@ -94,19 +99,21 @@ export async function tfetch(
   })()
   const buff = await response.arrayBuffer()
   if (buff.byteLength) {
-    let t = null
+    let decoded: { tensor: sm.Tensor; props?: object }
     try {
-      t = decodeBinary(buff)
+      decoded = decodeBinary(buff)
+      if (decoded.props?.stats) {
+        decoded.tensor.stats = Stats.fromJSON(decoded.props.stats)
+      }
     } catch (err) {
       throw `tfetched result invalid: ${err}`
     }
-    if (options && options.grad_fn) {
-      t.requires_grad = true
+    if (options?.grad_fn) {
+      decoded.tensor.requires_grad = true
       tensor.requires_grad = true
-      t.setDeps([tensor])
-      t.grad_callback_async = options.grad_fn
+      decoded.tensor.setDeps([tensor])
+      decoded.tensor.grad_callback_async = options.grad_fn
     }
-    return t
+    return decoded.tensor
   }
-  return null
 }

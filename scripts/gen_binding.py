@@ -497,8 +497,6 @@ for op, args, ret in op_list:
     js_provenance_args = '||'.join([f"{t}.provenance" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.provenance, 0)" for tv in js_tensor_vector_args])
     js_requires_grad_args = '||'.join([f"{t}.requires_grad" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.requires_grad, false)" for tv in js_tensor_vector_args])
     js_requires_grad_args = 'false' if len(js_requires_grad_args) == 0 else js_requires_grad_args
-    js_requires_stats = '||'.join([f"{t}.requires_stats" for t in js_tensor_args] + [f"{tv}.reduce((r, c) => r || c.requires_stats, false)" for tv in js_tensor_vector_args])
-    js_requires_stats = 'false' if len(js_requires_stats) == 0 else js_requires_stats
     js_grad_args = (['this'] if methods_only else []) + [f"...{n}" if t == "TensorVector" else f"{n}" for n, t in zip(js_grad_args, js_grad_arg_types)]
     js_deps = f"const deps = requires_grad ? [{', '.join(js_grad_args)}] : []"
     js_tensor_call = '_Tensor' if methods_only else 'Tensor'
@@ -506,47 +504,26 @@ for op, args, ret in op_list:
     js = f"""\
 {'export function ' if not methods_only else ''}{valid_js(op)}({', '.join(js_sig)}) {{
   {js_impl_full}
-  const requires_stats = {js_requires_stats}
 
-  let stats = null
-  let stat_entry = null
-  let recorded_stat = null
-  if (requires_stats) {{
-    stats = collectStats([{','.join(js_tensor_args)}])
-  }}
-  if (requires_stats) {{
-    recorded_stat = [performance.now(), fl.bytesUsed.native()]
-  }}
+  const i = [{','.join(js_tensor_args)}]
+  const ts = i.reduce((s, t) => s || t.stats, void 0)
+  const s = ts || stats
+  const trace = s.enabled && s.startTrace('{op}')
 
   {js_ptr_result}
   if(!_ptr) throw new Error('Tensor returned from `{valid_js(op)}` is null; native code likely threw an error...')
 
-  if (requires_stats) {{
-    const [t0, b0] = recorded_stat
-    const dt = performance.now() - t0
-    const db = fl.bytesUsed.native() - b0
-    const s = getStack()
-    stat_entry = stats[s]
-    if (stat_entry) {{
-      stat_entry.time += dt
-      stat_entry.bytes += db
-      stat_entry.count += 1n
-    }} else {{
-      stat_entry = stats[s] = {{ time: dt, bytes: db, gflops: 0, count: 1n }}
-    }}
-  }}
+  trace && s.stopTrace(trace)
 
   const requires_grad = {js_requires_grad_args}
   {js_deps}
   {js_tensor_construct}
+  t.stats = ts
   t.provenance = {js_provenance_args}
   t.requires_grad = requires_grad
-  if (requires_stats) {{
-    t.requires_stats = true
-    t.stats = stats
-    const gflops = opToFlops('{op}', [{','.join(js_tensor_args)}], t) / 1e9
-		stat_entry.gflops += gflops
-  }}
+
+  trace && s.logTrace(trace, i, t)
+
   t.op = "{op}";
   return t;
 }}{',' if methods_only else ''}"""
@@ -608,8 +585,7 @@ if sys.argv[1] in ["js", "js_methods"]:
 /* GENERATED CODE (gen_binding.py) */
 import {{ arrayArg }} from '../ffi/ffi_bind_utils'
 import {{ fl }} from '../ffi/ffi_flashlight'
-import {{ getStack, collectStats }} from './stats'
-import {{ opToFlops }} from "./op_to_flops"
+import {{ stats }} from '../stats'
 import type {{ Tensor }} from './tensor'
 
 export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) => {{
@@ -623,8 +599,7 @@ export const gen_tensor_op_shim = (_Tensor: new (...args: unknown[]) => Tensor) 
 /* GENERATED CODE (gen_binding.py) */
 import {{ arrayArg }} from "../ffi/ffi_bind_utils"
 import {{ fl }} from "../ffi/ffi_flashlight"
-import {{ getStack, collectStats }} from './stats'
-import {{ opToFlops }} from "./op_to_flops"
+import {{ stats }} from '../stats'
 import {{ Tensor }} from "./tensor"
 
 {full_js}"""

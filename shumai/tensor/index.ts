@@ -1,6 +1,5 @@
+export * from '../stats/op_to_flops'
 export * from './dtype'
-export * from './op_to_flops'
-export * from './stats'
 export * from './tensor'
 export * from './tensor_ops'
 import './register_gradients'

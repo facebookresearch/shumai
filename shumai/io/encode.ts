@@ -1,43 +1,83 @@
+import { Buffer } from 'buffer'
 import * as sm from '../tensor'
 
-export function encodeBinary(tensor: sm.Tensor): ArrayBuffer {
+/** @private */
+export function jsonStringifyHandler(key: string, value: any) {
+  if (typeof value === 'bigint') {
+    return ['bigint', value.toString()] // tuple helps avoid waste
+  }
+  return value
+}
+
+/** @private */
+export function jsonParseHandler(key: string, value: any) {
+  if (Array.isArray(value) && value[0] === 'bigint') {
+    return BigInt(value[1])
+  }
+  return value
+}
+
+export function encodeBinary(tensor: sm.Tensor, props?: object): ArrayBuffer {
   const shape = tensor.shape64
   const provenance = tensor.provenance ? BigInt('0x' + tensor.provenance) : BigInt(0xffffffff)
-  const flags = (Number(tensor.requires_grad) & 0x1) | ((Number(tensor.requires_stats) & 0x1) << 1)
-  // meta_data: ndim, provenance, flags
-  const meta_data = new BigInt64Array([BigInt(shape.length), provenance, BigInt(flags)])
+  const flags = Number(tensor.requires_grad) & 0x1
+  // meta_data: ndim, provenance, flags, props_len
+  const props_buf = props && Buffer.from(JSON.stringify(props, jsonStringifyHandler))
+  const props_len = props_buf ? props_buf.byteLength : 0
+  const tensor_buf = new Uint8Array(tensor.toFloat32Array().buffer)
+  const tensor_len = tensor_buf.byteLength
+  const meta_data = new BigInt64Array([
+    BigInt(shape.length),
+    provenance,
+    BigInt(flags),
+    BigInt(tensor_len),
+    BigInt(props_len)
+  ])
   const meta_data_buf = new Uint8Array(meta_data.buffer)
   const shape_buf = new Uint8Array(new BigInt64Array(shape).buffer)
-  const tensor_buf = new Uint8Array(tensor.toFloat32Array().buffer)
-  const buf = new Uint8Array(meta_data_buf.length + shape_buf.length + tensor_buf.length)
-  buf.set(meta_data_buf)
-  buf.set(shape_buf, meta_data_buf.length)
-  buf.set(tensor_buf, meta_data_buf.length + shape_buf.length)
+  const buf = new Uint8Array(
+    meta_data_buf.length + shape_buf.length + tensor_buf.length + props_len
+  )
+  let byteOffset = 0
+  buf.set(meta_data_buf, byteOffset)
+  byteOffset += meta_data_buf.byteLength
+  buf.set(shape_buf, byteOffset)
+  byteOffset += shape_buf.byteLength
+  buf.set(tensor_buf, byteOffset)
+  byteOffset += tensor_buf.byteLength
+  if (props_buf) buf.set(props_buf, byteOffset)
   return buf.buffer
 }
 
-export function decodeBinary(buf: ArrayBuffer) {
+export function decodeBinary(buf: ArrayBuffer): { tensor: sm.Tensor; props?: object } {
   if (buf.byteLength < 16) {
     throw 'buffer cannot be decoded, too short to parse'
   }
   // meta_data: ndim, provenance, flags
-  const meta_data_len = 3
+  const meta_data_len = 5
   const meta_data = new BigInt64Array(buf, 0, meta_data_len)
+  let byteOffset = 8 * meta_data_len
   const shape_len = Number(meta_data[0])
   const provenance = meta_data[1].toString(16)
   const flags = Number(meta_data[2])
+  const tensor_len = Number(meta_data[3])
+  const props_len = Number(meta_data[4])
   const requires_grad = flags & 0x1
-  const requires_stats = !!(flags & 0x2)
-  if (shape_len > buf.byteLength) {
-    throw `buffer cannot be decoded, invalid shape length: ${shape_len}`
+  const actual_tensor_len = buf.byteLength - 8 * meta_data_len - 8 * shape_len - props_len
+  if (tensor_len != actual_tensor_len) {
+    throw `buffer cannot be decoded, tensor expected ${tensor_len}B but received ${actual_tensor_len}B`
   }
-  const shape = new BigInt64Array(buf, 8 * meta_data_len, shape_len)
-  const t = sm.tensor(new Float32Array(buf, 8 * meta_data_len + 8 * shape_len)).reshape(shape)
+  const shape = new BigInt64Array(buf, byteOffset, shape_len)
+  byteOffset += 8 * shape_len
+  const t = sm.tensor(new Float32Array(buf, byteOffset, tensor_len / 4)).reshape(shape)
+  byteOffset += tensor_len
+  const props = props_len
+    ? JSON.parse(Buffer.from(buf, byteOffset, props_len).toString(), jsonParseHandler)
+    : void 0
   t.op = 'network'
   t.provenance = provenance ? provenance : null
   t.requires_grad = !!requires_grad
-  t.requires_stats = !!requires_stats
-  return t
+  return { tensor: t, props }
 }
 
 /** @private */
