@@ -39,6 +39,7 @@ jobs:
             -G Ninja \
             -DBUILD_SHARED_LIBS=OFF \
             -DDNNL_LIBRARY_TYPE=STATIC \
+            -DDNNL_CPU_RUNTIME=THREADPOOL \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=$HOME/usr \
             -DDNNL_BLAS_VENDOR=ACCELERATE \
@@ -165,7 +166,7 @@ jobs:
   linux_cpu:
     name: linux_cpu
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       matrix:
         include:
@@ -187,7 +188,22 @@ jobs:
         # TODO: remove this from-source build and pull in (1) headers and (2) a lib from HEAD
         # or just bite the pullet and get a dpkg port going already
         run: |
+          rm -rf oneDNN/
           rm -rf flashlight/
+          git clone -b v2.5.2 https://github.com/oneapi-src/oneDNN.git
+          cd oneDNN
+          cmake . \
+            -G Ninja \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DDNNL_LIBRARY_TYPE=STATIC \
+            -DDNNL_CPU_RUNTIME=SEQ \
+            -DCMAKE_INSTALL_PREFIX=$HOME/usr \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DDNNL_BUILD_TESTS=OFF \
+            -DDNNL_BUILD_EXAMPLES=OFF
+          ninja -j1
+          ninja install
+          cd ..
           git clone https://github.com/flashlight/flashlight
           cd flashlight
           cmake . \
@@ -196,14 +212,15 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=$HOME/usr \
             -DFL_USE_ARRAYFIRE=ON \
             -DFL_ARRAYFIRE_USE_CPU=ON \
-            -DFL_USE_ONEDNN=OFF \
+            -DDNNL_DIR=$HOME/usr/lib/cmake/dnnl/ \
+            -DFL_USE_ONEDNN=ON \
             -DFL_BUILD_DISTRIBUTED=OFF \
             -DFL_BUILD_TESTS=OFF \
             -DFL_BUILD_EXAMPLES=OFF
           make -j1 install
       - name: "Build Shumai bindings"
         run: |
-          cmake -S . -B . -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake
+          cmake -S . -B . -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake -DDNNL_DIR=$HOME/usr/lib/cmake/dnnl/
           cmake --build . --parallel
       - name: "Colocate package assets"
         run: |
@@ -225,7 +242,7 @@ jobs:
   publish:
     name: "Publish npm packages"
     runs-on: ubuntu-20.04
-    timeout-minutes: 30
+    timeout-minutes: 60
     needs:
       - linux
       - linux_cpu # TODO: remove me when we have better Flashlight multibackend

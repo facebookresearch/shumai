@@ -38,6 +38,8 @@ commands:
     parameters:
       arrayfire_backend:
         type: string
+      extra_flags:
+        type: string
     steps:
       - run:
           name: "Build Flashlight"
@@ -55,6 +57,28 @@ commands:
               -DFL_USE_ONEDNN=OFF \
               -DFL_BUILD_DISTRIBUTED=OFF \
               -DFL_BUILD_TESTS=OFF \
+              -DFL_BUILD_EXAMPLES=OFF << parameters.extra_flags >>
+            cmake --build build --parallel
+            cmake --install build
+  install_flashlight_darwin:
+    steps:
+      - run:
+          name: "Build Flashlight for Darwin (Bram's fork)"
+          command: |
+            cd /tmp
+            git clone -b accelerate https://github.com/bwasti/flashlight
+            cd flashlight
+            mkdir -p build
+            cmake -S . -B build \
+              -DBUILD_SHARED_LIBS=ON \
+              -DCMAKE_BUILD_TYPE=Debug \
+              -DCMAKE_INSTALL_PREFIX=$HOME/usr \
+              -DDNNL_DIR=$HOME/usr/lib/cmake/dnnl/ \
+              -DFL_USE_ONEDNN=ON \
+              -DFL_USE_ARRAYFIRE=ON \
+              -DFL_ARRAYFIRE_USE_CPU=ON \
+              -DFL_BUILD_DISTRIBUTED=OFF \
+              -DFL_BUILD_TESTS=OFF \
               -DFL_BUILD_EXAMPLES=OFF
             cmake --build build --parallel
             cmake --install build
@@ -65,7 +89,8 @@ commands:
           command: |
             mkdir -p build
             cmake -S . -B build \
-              -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake
+              -Dflashlight_DIR=$HOME/usr/share/flashlight/cmake \
+              -DDNNL_DIR=$HOME/usr/lib/cmake/dnnl/
             cmake --build build --parallel
   install_bun:
     steps:
@@ -99,13 +124,51 @@ jobs:
             equal: [macos, << parameters.os >>]
           steps:
             - run:
+                name: "Build and install OneDNN"
+                command: |
+                  brew install cmake ninja
+                  cd /tmp
+                  git clone -b release https://github.com/bwasti/oneDNN.git
+                  cd oneDNN
+                  curl https://jott.live/raw/apple_cblas.h > cblas.h
+                  export CPATH="$(pwd):${CPATH}"
+                  cmake . \
+                    -G Ninja \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/usr \
+                    -DBUILD_SHARED_LIBS=OFF \
+                    -DDNNL_LIBRARY_TYPE=STATIC \
+                    -DDNNL_CPU_RUNTIME=THREADPOOL \
+                    -DCMAKE_BUILD_TYPE=Release \
+                    -DDNNL_BLAS_VENDOR=ACCELERATE \
+                    -DDNNL_BUILD_TESTS=OFF \
+                    -DDNNL_BUILD_EXAMPLES=OFF
+                  ninja install
+            - run:
                 name: "Install ArrayFire and CMake"
                 command: |
                   brew install arrayfire cmake
+            - install_flashlight_darwin
       - when:
           condition:
             equal: [linux, << parameters.os >>]
           steps:
+            - run:
+                name: "Build and install OneDNN"
+                command: |
+                  sudo apt install ninja-build cmake
+                  cd /tmp
+                  git clone -b v2.5.2 https://github.com/oneapi-src/oneDNN.git
+                  cd oneDNN
+                  cmake . \
+                    -G Ninja \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/usr \
+                    -DBUILD_SHARED_LIBS=OFF \
+                    -DDNNL_LIBRARY_TYPE=STATIC \
+                    -DDNNL_CPU_RUNTIME=SEQ \
+                    -DCMAKE_BUILD_TYPE=Release \
+                    -DDNNL_BUILD_TESTS=OFF \
+                    -DDNNL_BUILD_EXAMPLES=OFF
+                  ninja install
             - setup_arrayfire_apt
             - run:
                 name: "Install ArrayFire CPU backend with OpenBLAS runtime"
@@ -117,8 +180,9 @@ jobs:
             #       # TODO: remove me when we have robust multibackend in Flashlight
             #       sed -i "s/linux_x64_shumai_flashlight/linux_x64_shumai_flashlight_cpu/g" package.json
             #       sed -i "s/_shumai_flashlight/_shumai_flashlight_cpu/g" shumai/ffi/ffi_flashlight.ts
-      - install_flashlight:
-          arrayfire_backend: "CPU"
+            - install_flashlight:
+                arrayfire_backend: "CPU"
+                extra_flags: "-DDNNL_DIR=$HOME/usr/lib/cmake/dnnl/ -DFL_USE_ONEDNN=ON"
       - build_flashlight_bindings
       - node/install:
           node-version: "16.9.0"
@@ -168,6 +232,7 @@ jobs:
             sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
       - install_flashlight:
           arrayfire_backend: "CUDA"
+          extra_flags: ""
       - checkout
       - build_flashlight_bindings
       - node/install:
