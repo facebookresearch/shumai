@@ -164,7 +164,7 @@ export class Stats {
   }
 
   startTrace(op: string): StatTrace {
-    const now = performance.now()
+    const now = performance.timeOrigin + performance.now()
     if (!this.#startTime) {
       this.#startTime = this.#endTime = now
     }
@@ -182,7 +182,7 @@ export class Stats {
   }
 
   stopTrace(trace: StatTrace) {
-    const endTime = (this.#endTime = performance.now())
+    const endTime = (this.#endTime = performance.timeOrigin + performance.now())
 
     trace.time = endTime - trace.startTime
     trace.bytes = fl.bytesUsed.native() - trace.startBytes
@@ -331,7 +331,7 @@ export class Stats {
     if (
       this.#interval &&
       this.#loggers.length &&
-      performance.now() - this.#startTime >= this.#interval
+      (performance.timeOrigin + performance.now()) - this.#startTime >= this.#interval
     ) {
       try {
         // fire and forget, DO NOT BLOCK
