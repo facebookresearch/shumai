@@ -155,7 +155,7 @@ jobs:
             wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb
             sudo dpkg -i cuda-keyring_1.0-1_all.deb
             sudo apt update
-            sudo apt install cuda-toolkit-10-2
+            sudo apt install cuda-toolkit-10-2 libcudnn8-dev
             sudo rm /usr/local/cuda # may point to other non-10.2 CUDA libs
             sudo ln -s /usr/local/cuda-10.2 /usr/local/cuda
             echo 'export PATH="/usr/local/cuda/bin:$PATH"' >> $BASH_ENV
