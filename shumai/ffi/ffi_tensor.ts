@@ -109,17 +109,32 @@ const ffi_tensor = {
   },
   _conv2dBackwardData: {
     args: [
-      FFIType.ptr,
-      FFIType.ptr,
-      FFIType.ptr,
-      FFIType.ptr,
-      FFIType.int,
-      FFIType.int,
-      FFIType.int,
-      FFIType.int,
-      FFIType.int,
-      FFIType.int,
-      FFIType.int
+      FFIType.ptr, // grad
+      FFIType.ptr, // x
+      FFIType.ptr, // w
+      FFIType.int, // sx
+      FFIType.int, // sy
+      FFIType.int, // px
+      FFIType.int, // py
+      FFIType.int, // dx
+      FFIType.int, // dy
+      FFIType.int, // g
+      FFIType.int // weird hack to make this work
+    ],
+    returns: FFIType.ptr
+  },
+  _conv2dBackwardFilter: {
+    args: [
+      FFIType.ptr, // grad
+      FFIType.ptr, // x
+      FFIType.ptr, // w
+      FFIType.int, // sx
+      FFIType.int, // sy
+      FFIType.int, // px
+      FFIType.int, // py
+      FFIType.int, // dx
+      FFIType.int, // dy
+      FFIType.int // g
     ],
     returns: FFIType.ptr
   },

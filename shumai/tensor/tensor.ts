@@ -791,7 +791,11 @@ export function bytesUsed(): bigint {
 }
 
 export const conv2dBackwardData = (...args) => {
-  return wrapFLTensor('conv2dBackwardData', fl._conv2dBackwardData.native, ...args)
+  return wrapFLTensor('conv2dBackwardData', fl._conv2dBackwardData, ...args)
+}
+
+export const conv2dBackwardFilter = (...args) => {
+  return wrapFLTensor('conv2dBackwardFilter', fl._conv2dBackwardFilter, ...args)
 }
 
 export const layout = {

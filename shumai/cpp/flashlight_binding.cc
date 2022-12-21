@@ -793,7 +793,6 @@ void* _pad(void* t,
 void* _conv2dBackwardData(void* grad_in,
                           void* in,
                           void* wt,
-                          void* bs,
                           int sx,
                           int sy,
                           int px,
@@ -804,7 +803,6 @@ void* _conv2dBackwardData(void* grad_in,
   try {
     LOCK_GUARD
     auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
-    auto* used_bs = reinterpret_cast<fl::Tensor*>(bs);
     auto* used_in = reinterpret_cast<fl::Tensor*>(in);
     auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
 
@@ -813,6 +811,41 @@ void* _conv2dBackwardData(void* grad_in,
     auto result = fl::detail::conv2dBackwardData(
         *used_grad_in, *used_in, *used_wt, sx, sy, px, py, dx, dy, groups,
         dataBench, payload);
+
+    g_bytes_used += result.bytes();
+    return new fl::Tensor(result);
+  } catch (std::exception const& e) {
+    HANDLE_EXCEPTION(e.what());
+  } catch (...) {
+    HANDLE_EXCEPTION("[unknown]");
+  }
+}
+
+// `grad_in` is Shumai equivalent to Flashlight `gradOutput`
+void* _conv2dBackwardFilter(void* grad_in,
+                            void* in,
+                            void* wt,
+                            int sx,
+                            int sy,
+                            int px,
+                            int py,
+                            int dx,
+                            int dy,
+                            int groups) {
+  try {
+    LOCK_GUARD
+    auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
+    auto* used_in = reinterpret_cast<fl::Tensor*>(in);
+    auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
+
+    auto payload = std::make_shared<fl::detail::AutogradPayload>();
+    std::shared_ptr<fl::DynamicBenchmark> biasBench;
+    std::shared_ptr<fl::DynamicBenchmark> filterBench;
+
+    fl::Tensor bs;
+    auto result = std::get<0>(fl::detail::conv2dBackwardFilterBias(
+        *used_grad_in, *used_in, *used_wt, bs, sx, sy, px, py, dx, dy, groups,
+        biasBench, filterBench, payload));
 
     g_bytes_used += result.bytes();
     return new fl::Tensor(result);

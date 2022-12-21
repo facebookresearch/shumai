@@ -331,7 +331,7 @@ export class Stats {
     if (
       this.#interval &&
       this.#loggers.length &&
-      (performance.timeOrigin + performance.now()) - this.#startTime >= this.#interval
+      performance.timeOrigin + performance.now() - this.#startTime >= this.#interval
     ) {
       try {
         // fire and forget, DO NOT BLOCK
