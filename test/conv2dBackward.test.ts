@@ -20,6 +20,23 @@ describe('conv2dBackwardData', () => {
 
     expectArraysClose(res.toFloat32Array(), expected_output.toFloat32Array())
   })
+  it('with autograd', () => {
+    const grad_in = sm.full([1, 1, 2, 2], 1) // y.sum().backward()
+    const x = sm.full([1, 1, 4, 4], 1).requireGrad() // x
+    const w = sm.full([1, 1, 3, 3], 1) // w
+    const [sx, sy] = [1, 1]
+    const [px, py] = [0, 0]
+    const [dx, dy] = [1, 1]
+    const groups = 1
+
+    const expected_output = sm
+      .tensor(new Float32Array([1, 2, 2, 1, 2, 4, 4, 2, 2, 4, 4, 2, 1, 2, 2, 1]))
+      .reshape([1, 1, 4, 4])
+
+    const y = sm.conv2d(x, w, sx, sy, px, py, dx, dy, groups)
+    y.backward(grad_in)
+    expectArraysClose(x.grad.toFloat32Array(), expected_output.toFloat32Array())
+  })
 })
 
 describe('conv2dBackwardFilter', () => {
@@ -39,5 +56,22 @@ describe('conv2dBackwardFilter', () => {
     const res = sm.conv2dBackwardFilter(grad_in, x, w, sx, sy, px, py, dx, dy, groups)
 
     expectArraysClose(res.toFloat32Array(), expected_output.toFloat32Array())
+  })
+  it('with autograd', () => {
+    const grad_in = sm.full([1, 1, 2, 2], 1) // y.sum().backward()
+    const x = sm.full([1, 1, 4, 4], 1) // x
+    const w = sm.full([1, 1, 3, 3], 1).requireGrad() // w
+    const [sx, sy] = [1, 1]
+    const [px, py] = [0, 0]
+    const [dx, dy] = [1, 1]
+    const groups = 1
+
+    const expected_output = sm
+      .tensor(new Float32Array([4, 4, 4, 4, 4, 4, 4, 4, 4]))
+      .reshape([1, 1, 3, 3])
+
+    const y = sm.conv2d(x, w, sx, sy, px, py, dx, dy, groups)
+    y.backward(grad_in)
+    expectArraysClose(w.grad.toFloat32Array(), expected_output.toFloat32Array())
   })
 })

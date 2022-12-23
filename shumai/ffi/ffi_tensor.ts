@@ -134,7 +134,8 @@ const ffi_tensor = {
       FFIType.int, // py
       FFIType.int, // dx
       FFIType.int, // dy
-      FFIType.int // g
+      FFIType.int, // g
+      FFIType.int // weird hack to make this work
     ],
     returns: FFIType.ptr
   },

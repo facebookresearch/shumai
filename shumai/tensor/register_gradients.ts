@@ -66,6 +66,15 @@ const impls = {
     const [x, w, sx, sy, px, py, dx, dy, g] = <
       [Tensor, Tensor, number, number, number, number, number, number, number]
     >ctx.forward_inputs
+    try {
+      if (ctx.backward_output_index == 0) {
+        return sm.conv2dBackwardData(ctx.backward_input, x, w, sx, sy, px, py, dx, dy, g)
+      } else if (ctx.backward_output_index == 1) {
+        return sm.conv2dBackwardFilter(ctx.backward_input, x, w, sx, sy, px, py, dx, dy, g)
+      }
+    } catch (e) {
+      console.warn("Couldn't use native conv2d backward, falling back...")
+    }
     if (dx !== 1 || dy !== 1) {
       throw new Error(
         `cannot differentiate convolution with dilation (${dx}, ${dy}), please file an issue.`
