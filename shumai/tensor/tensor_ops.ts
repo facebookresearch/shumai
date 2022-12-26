@@ -1,5 +1,5 @@
 import type { Tensor } from './tensor'
-import { _var, full, sigmoid } from './tensor_ops_gen'
+import { _var, conv2d, full, scalar, sigmoid } from './tensor_ops_gen'
 
 export * from './tensor_ops_gen'
 
@@ -57,4 +57,9 @@ export function gelu(tensor: Tensor): Tensor {
       .add(tensor.mul(scalar(geluConst)))
       .erf()
   )
+}
+
+export function avgPool2d(tensor: Tensor, kx: number, ky: number, sx = 1, sy = 1): Tensor {
+  const w = full([1, 1, kx, ky], 1)
+  return conv2d(tensor, w, sx, sy).div(scalar(kx * ky))
 }

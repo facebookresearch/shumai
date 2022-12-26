@@ -97,7 +97,7 @@ describe('gradients', () => {
     checkBackward(sm.sum, [a], 0, 1e-2)
   })
   it('softmax', () => {
-    const a = sm.randn([1, 8])
+    const a = sm.randn([8, 128])
     checkBackward(sm.softmax, [a, 1], 0)
   })
 })

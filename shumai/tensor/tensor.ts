@@ -768,6 +768,10 @@ export class Tensor {
   leakyRelu(negative_slope: number): Tensor {
     return ops.leakyRelu(this, negative_slope)
   }
+
+  avgPool2d(kx: number, ky: number, sx = 1, sy = 1): Tensor {
+    return ops.avgPool2d(this, kx, ky, sx, sy)
+  }
 }
 
 // Interface extension trick to extend the type definition of Tensor
