@@ -62,3 +62,12 @@ describe('avgPool', () => {
     expectArraysClose(y.toFloat32Array(), sm.full([2, 2], 3).toFloat32Array())
   })
 })
+
+describe('conv2d module', () => {
+  it('basic', () => {
+    const x = sm.randn([1, 8, 64, 64])
+    const l = sm.module.conv2d(8, 12, 3, { stride: 2 })
+    const y = l(x)
+    expect(isShape(y, [1, 12, 31, 31])).toBe(true)
+  })
+})

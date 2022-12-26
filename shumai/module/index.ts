@@ -1,3 +1,4 @@
+export * from './conv'
 export * from './linear'
 export * from './lstm'
 export * from './module'
