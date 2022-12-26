@@ -51,6 +51,11 @@ describe('avgPool', () => {
     const y = x.avgPool2d(3, 3)
     expectArraysClose(y.toFloat32Array(), sm.full([2, 2], 3).toFloat32Array())
   })
+  it('channels', () => {
+    const x = sm.full([3, 2, 4, 4], 3)
+    const y = x.avgPool2d(3, 3)
+    expectArraysClose(y.toFloat32Array(), sm.full([3, 2, 2, 2], 3).toFloat32Array())
+  })
   it('strided', () => {
     const x = sm.full([1, 1, 5, 5], 3)
     const y = x.avgPool2d(2, 2, 2, 2)

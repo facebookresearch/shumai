@@ -112,14 +112,7 @@ const ffi_tensor = {
       FFIType.ptr, // grad
       FFIType.ptr, // x
       FFIType.ptr, // w
-      FFIType.int, // sx
-      FFIType.int, // sy
-      FFIType.int, // px
-      FFIType.int, // py
-      FFIType.int, // dx
-      FFIType.int, // dy
-      FFIType.int, // g
-      FFIType.int // weird hack to make this work
+      FFIType.ptr // params
     ],
     returns: FFIType.ptr
   },
@@ -128,14 +121,7 @@ const ffi_tensor = {
       FFIType.ptr, // grad
       FFIType.ptr, // x
       FFIType.ptr, // w
-      FFIType.int, // sx
-      FFIType.int, // sy
-      FFIType.int, // px
-      FFIType.int, // py
-      FFIType.int, // dx
-      FFIType.int, // dy
-      FFIType.int, // g
-      FFIType.int // weird hack to make this work
+      FFIType.ptr // params
     ],
     returns: FFIType.ptr
   },

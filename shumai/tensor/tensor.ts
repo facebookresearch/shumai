@@ -802,12 +802,36 @@ export function bytesUsed(): bigint {
   return fl.bytesUsed.native()
 }
 
-export const conv2dBackwardData = (...args) => {
-  return wrapFLTensor('conv2dBackwardData', fl._conv2dBackwardData, ...args)
+export const conv2dBackwardData = (
+  bw: Tensor,
+  x: Tensor,
+  w: Tensor,
+  sx: number,
+  sy: number,
+  px: number,
+  py: number,
+  dx: number,
+  dy: number,
+  g: number
+) => {
+  const params = new Int32Array([sx, sy, px, py, dx, dy, g])
+  return wrapFLTensor('conv2dBackwardData', fl._conv2dBackwardData, bw, x, w, params)
 }
 
-export const conv2dBackwardFilter = (...args) => {
-  return wrapFLTensor('conv2dBackwardFilter', fl._conv2dBackwardFilter, ...args)
+export const conv2dBackwardFilter = (
+  bw: Tensor,
+  x: Tensor,
+  w: Tensor,
+  sx: number,
+  sy: number,
+  px: number,
+  py: number,
+  dx: number,
+  dy: number,
+  g: number
+) => {
+  const params = new Int32Array([sx, sy, px, py, dx, dy, g])
+  return wrapFLTensor('conv2dBackwardFilter', fl._conv2dBackwardFilter, bw, x, w, params)
 }
 
 export const layout = {

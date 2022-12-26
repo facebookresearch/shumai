@@ -60,8 +60,11 @@ export function gelu(tensor: Tensor): Tensor {
 }
 
 export function avgPool2d(tensor: Tensor, kx: number, ky: number, sx = 1, sy = 1): Tensor {
-  const w = full([1, 1, kx, ky], 1)
-  return conv2d(tensor, w, sx, sy).div(scalar(kx * ky))
+  if (tensor.shape.length !== 4) {
+    throw `avgPool2d requires an input of rank 4, received one of rank ${tensor.shape.length}.  To possibly fix this, you can use unsqueeze/squeeze`
+  }
+  const w = full([tensor.shape[1], 1, kx, ky], 1)
+  return conv2d(tensor, w, sx, sy, 0, 0, 1, 1, tensor.shape[1]).div(scalar(kx * ky))
 }
 
 export function unsqueeze(tensor: Tensor, axis: number): Tensor {

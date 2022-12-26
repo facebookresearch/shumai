@@ -790,24 +790,23 @@ void* _pad(void* t,
 }
 
 // `grad_in` is Shumai equivalent to Flashlight `gradOutput`
-void* _conv2dBackwardData(void* grad_in,
-                          void* in,
-                          void* wt,
-                          int sx,
-                          int sy,
-                          int px,
-                          int py,
-                          int dx,
-                          int dy,
-                          int groups) {
+void* _conv2dBackwardData(void* grad_in, void* in, void* wt, int* params) {
   try {
     LOCK_GUARD
+    int sx = params[0];
+    int sy = params[1];
+    int px = params[2];
+    int py = params[3];
+    int dx = params[4];
+    int dy = params[5];
+    int groups = params[6];
     auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
     auto* used_in = reinterpret_cast<fl::Tensor*>(in);
     auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
 
     auto payload = std::make_shared<fl::detail::AutogradPayload>();
     std::shared_ptr<fl::DynamicBenchmark> dataBench;
+
     auto result = fl::detail::conv2dBackwardData(
         *used_grad_in, *used_in, *used_wt, sx, sy, px, py, dx, dy, groups,
         dataBench, payload);
@@ -822,18 +821,16 @@ void* _conv2dBackwardData(void* grad_in,
 }
 
 // `grad_in` is Shumai equivalent to Flashlight `gradOutput`
-void* _conv2dBackwardFilter(void* grad_in,
-                            void* in,
-                            void* wt,
-                            int sx,
-                            int sy,
-                            int px,
-                            int py,
-                            int dx,
-                            int dy,
-                            int groups) {
+void* _conv2dBackwardFilter(void* grad_in, void* in, void* wt, int* params) {
   try {
     LOCK_GUARD
+    int sx = params[0];
+    int sy = params[1];
+    int px = params[2];
+    int py = params[3];
+    int dx = params[4];
+    int dy = params[5];
+    int groups = params[6];
     auto* used_grad_in = reinterpret_cast<fl::Tensor*>(grad_in);
     auto* used_in = reinterpret_cast<fl::Tensor*>(in);
     auto* used_wt = reinterpret_cast<fl::Tensor*>(wt);
