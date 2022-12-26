@@ -247,6 +247,7 @@ export class Tensor {
   private _underlying: ArrayBuffer
   private _ptr: number
   private _deps: Array<Tensor> = []
+  private _update_count = 0
   private _checkpoint_file: string
   private _checkpoint_callback: () => boolean
   requires_grad = false
@@ -393,8 +394,9 @@ export class Tensor {
     this._ptr = ptr(tensor._underlying)
     this._deps = tensor.deps
     this.eval()
+    this._update_count += 1
     if (this._checkpoint_file) {
-      if (this._checkpoint_callback()) {
+      if (this._checkpoint_callback(this._update_count)) {
         this.save(this._checkpoint_file)
       }
     }
