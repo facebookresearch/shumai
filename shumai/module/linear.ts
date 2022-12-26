@@ -9,8 +9,9 @@ export class Linear extends Module {
   bias: Tensor
   constructor(inp_dim: number, out_dim: number) {
     super()
-    this.weight = sm.randn([inp_dim, out_dim])
-    this.bias = sm.randn([out_dim])
+    const fan_in = Math.sqrt(2 / inp_dim)
+    this.weight = sm.randn([inp_dim, out_dim]).mul(sm.scalar(fan_in))
+    this.bias = sm.full([out_dim], 0)
     this.weight.requires_grad = true
     this.bias.requires_grad = true
   }

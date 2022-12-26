@@ -26,10 +26,13 @@ export class Conv2d extends Module {
     this.padding = padding
     this.dilation = dilation
     this.groups = groups
-    this.weight = sm.randn([out_channel, inp_channel, kernel_size, kernel_size])
+    const fan_in = Math.sqrt(2 / inp_channel)
+    this.weight = sm
+      .randn([out_channel, inp_channel, kernel_size, kernel_size])
+      .mul(sm.scalar(fan_in))
     this.weight.requires_grad = true
     if (bias) {
-      this.bias = sm.randn([out_channel, 1, 1])
+      this.bias = sm.full([out_channel, 1, 1], 0)
       this.bias.requires_grad = true
     }
   }

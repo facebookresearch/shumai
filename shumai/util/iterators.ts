@@ -25,6 +25,13 @@ export function tuiLoad(str: string) {
   console.log(`\u001b[2K${chars[t % chars.length]}${str}\u001b[A`)
 }
 
+function formatSeconds(seconds) {
+  const hours = String(Math.floor(seconds / 3600)).padStart(2, '0')
+  const minutes = String(Math.floor((seconds - hours * 3600) / 60)).padStart(2, '0')
+  seconds = String(Math.floor(seconds - hours * 3600 - minutes * 60)).padStart(2, '0')
+  return `${hours}:${minutes}:${seconds}`
+}
+
 export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number) => string) {
   let len: number,
     is_num = false
@@ -37,11 +44,33 @@ export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number
   if (!len) {
     throw `Cannot yet viter over unbounded iterables. Please file an issue!`
   }
+  let last_run = performance.now()
+  let total_run = 0
+  let run_per_sec = 0
+  const formatter = Intl.NumberFormat('en', {
+    notation: 'compact',
+    minimumSignificantDigits: 3,
+    maximumSignificantDigits: 3
+  })
+  const rtf = new Intl.RelativeTimeFormat('en', {
+    localeMatcher: 'best fit',
+    numeric: 'always',
+    style: 'long'
+  })
+  const eta = (i, run_per_sec) => {
+    const eta_tot = (len - i) / (run_per_sec + 1e-3)
+    return `@ ${formatter.format(run_per_sec)} iter/sec, done ${rtf.format(eta_tot, 'seconds')}`
+  }
   for (let i = 0; i < len; ++i) {
+    const new_run = performance.now()
+    total_run += new_run - last_run
+    last_run = new_run
+    run_per_sec = (1e3 * total_run) / i
+
     tuiLoad(
       `${Math.floor((100 * i) / len)
         .toString()
-        .padStart(2)}% (${i + 1}/${len})${callback ? ' ' + callback(i) : ''}`
+        .padStart(2)}% (${i + 1}/${len} ${eta(i, run_per_sec)})${callback ? ' ' + callback(i) : ''}`
     )
     yield is_num ? i : arrayLike[i]
   }
