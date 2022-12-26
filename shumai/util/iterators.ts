@@ -44,9 +44,6 @@ export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number
   if (!len) {
     throw `Cannot yet viter over unbounded iterables. Please file an issue!`
   }
-  let last_run = performance.now()
-  let total_run = 0
-  let run_per_sec = 0
   const formatter = Intl.NumberFormat('en', {
     notation: 'compact',
     minimumSignificantDigits: 3,
@@ -61,11 +58,13 @@ export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number
     const eta_tot = (len - i) / (run_per_sec + 1e-3)
     return `@ ${formatter.format(run_per_sec)} iter/sec, done ${rtf.format(eta_tot, 'seconds')}`
   }
+  let last_run = performance.now()
+  let total_run = 0
   for (let i = 0; i < len; ++i) {
     const new_run = performance.now()
-    total_run += new_run - last_run
+    total_run += (new_run - last_run)
     last_run = new_run
-    run_per_sec = (1e3 * total_run) / i
+    const run_per_sec = 1e3 * i / total_run
 
     tuiLoad(
       `${Math.floor((100 * i) / len)
