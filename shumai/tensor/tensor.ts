@@ -772,6 +772,14 @@ export class Tensor {
   avgPool2d(kx: number, ky: number, sx = 1, sy = 1): Tensor {
     return ops.avgPool2d(this, kx, ky, sx, sy)
   }
+
+  unsqueeze(axis: number): Tensor {
+    return ops.unsqueeze(this, axis)
+  }
+
+  squeeze(axis?: number): Tensor {
+    return ops.squeeze(this, axis)
+  }
 }
 
 // Interface extension trick to extend the type definition of Tensor

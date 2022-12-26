@@ -63,3 +63,36 @@ export function avgPool2d(tensor: Tensor, kx: number, ky: number, sx = 1, sy = 1
   const w = full([1, 1, kx, ky], 1)
   return conv2d(tensor, w, sx, sy).div(scalar(kx * ky))
 }
+
+export function unsqueeze(tensor: Tensor, axis: number): Tensor {
+  if (axis < 0) {
+    axis += tensor.shape.length + 1
+  }
+  const new_shape = []
+  for (let i = 0; i < tensor.shape.length; ++i) {
+    if (i === axis) {
+      new_shape.push(1)
+    }
+    new_shape.push(tensor.shape[i])
+  }
+  if (axis === tensor.shape.length) {
+    new_shape.push(1)
+  }
+  return tensor.reshape(new_shape)
+}
+
+export function squeeze(tensor: Tensor, axis?: number): Tensor {
+  if (axis !== undefined && axis < 0) {
+    axis += tensor.shape.length
+  }
+  const new_shape = []
+  for (let i = 0; i < tensor.shape.length; ++i) {
+    const d = tensor.shape[i]
+    if (d !== 1) {
+      new_shape.push(d)
+    } else if (axis !== undefined && axis !== i) {
+      new_shape.push(d)
+    }
+  }
+  return tensor.reshape(new_shape)
+}
