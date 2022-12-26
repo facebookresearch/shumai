@@ -8,9 +8,11 @@ function sampleSphere(args) {
   return u.div(d)
 }
 
-function checkGrad(f, args, idx, jacobian, epsilon = 1e-3) {
+function checkBackward(f, args, idx, epsilon = 1e-3) {
+  args[idx].requires_grad = true
   const eps = sm.scalar(epsilon)
   const ref = f(...args)
+  const jacobian = sampleSphere(ref.shape)
   const grad = sm.gradient_functions[ref.op]
   const args_a = [...args]
   const args_b = [...args]
@@ -18,72 +20,84 @@ function checkGrad(f, args, idx, jacobian, epsilon = 1e-3) {
   args_b[idx] = args_b[idx].sub(eps.mul(jacobian))
   const a = f(...args_a)
   const b = f(...args_b)
-  const finite_diff = a.sub(b).div(eps.mul(sm.scalar(2)))
-  const ctx = <sm.GradContext>{
-    backward_output_index: idx,
-    forward_inputs: args,
-    forward_output: ref,
-    backward_input: jacobian
-  }
-  const grad_diff = grad(ctx)
+  const finite_diff = a
+    .sub(b)
+    .div(eps.mul(sm.scalar(2)))
+    .sum()
+  ref.backward(jacobian)
+  const grad_diff = args[idx].grad.sum()
   expectArraysClose(finite_diff.toFloat32Array(), grad_diff.toFloat32Array(), epsilon)
 }
 
 describe('gradients', () => {
   it('amax', () => {
-    const a = sm.randn([128])
-    checkGrad(sm.amax, [a, [0], true], 0, sampleSphere(a.shape))
+    {
+      const a = sm.randn([128])
+      checkBackward(sm.amax, [a, [0], true], 0)
+    }
+    {
+      const a = sm.randn([8, 128])
+      checkBackward(sm.amax, [a, [1], true], 0)
+    }
   })
   it('mul', () => {
     const a = sm.randn([128])
     const b = sm.randn([128])
-    checkGrad(sm.mul, [a, b], 0, sampleSphere([1]))
-    checkGrad(sm.mul, [a, b], 1, sampleSphere([1]))
+    checkBackward(sm.mul, [a, b], 0)
+    checkBackward(sm.mul, [a, b], 1)
   })
   it('add', () => {
     const a = sm.randn([128])
     const b = sm.randn([128])
-    checkGrad(sm.add, [a, b], 0, sampleSphere(a.shape))
-    checkGrad(sm.add, [a, b], 1, sampleSphere(b.shape))
+    checkBackward(sm.add, [a, b], 0)
+    checkBackward(sm.add, [a, b], 1)
   })
   it('sub', () => {
     const a = sm.randn([128])
     const b = sm.randn([128])
-    checkGrad(sm.sub, [a, b], 0, sampleSphere(a.shape))
-    checkGrad(sm.sub, [a, b], 1, sampleSphere(b.shape))
+    checkBackward(sm.sub, [a, b], 0)
+    checkBackward(sm.sub, [a, b], 1)
   })
   it('exp', () => {
     const a = sm.randn([128])
-    checkGrad(sm.exp, [a], 0, sampleSphere(a.shape), 1e-2)
+    checkBackward(sm.exp, [a], 0, 1e-2)
   })
   it('tanh', () => {
     const a = sm.randn([128])
-    checkGrad(sm.tanh, [a], 0, sampleSphere(a.shape))
+    checkBackward(sm.tanh, [a], 0)
   })
   it('erf', () => {
     const a = sm.randn([128])
-    checkGrad(sm.erf, [a], 0, sampleSphere(a.shape))
+    checkBackward(sm.erf, [a], 0)
   })
   it('sigmoid', () => {
     const a = sm.randn([128])
-    checkGrad(sm.sigmoid, [a], 0, sampleSphere(a.shape))
+    checkBackward(sm.sigmoid, [a], 0)
   })
   it('maximum', () => {
     const a = sm.randn([128])
     const b = sm.randn([128])
-    checkGrad(sm.maximum, [a, b], 0, sampleSphere(a.shape))
+    checkBackward(sm.maximum, [a, b], 0)
   })
   it('minimum', () => {
     const a = sm.randn([128])
     const b = sm.randn([128])
-    checkGrad(sm.minimum, [a, b], 0, sampleSphere(a.shape))
+    checkBackward(sm.minimum, [a, b], 0)
   })
   it('abs', () => {
     const a = sm.randn([128])
-    checkGrad(sm.abs, [a], 0, sampleSphere(a.shape))
+    checkBackward(sm.abs, [a], 0)
   })
   it('log', () => {
     const a = sm.rand([128]).add(sm.scalar(2))
-    checkGrad(sm.log, [a], 0, sampleSphere(a.shape))
+    checkBackward(sm.log, [a], 0)
+  })
+  it('sum', () => {
+    const a = sm.rand([128]).add(sm.scalar(2))
+    checkBackward(sm.sum, [a], 0, 1e-2)
+  })
+  it('softmax', () => {
+    const a = sm.randn([1, 8])
+    checkBackward(sm.softmax, [a, 1], 0)
   })
 })

@@ -58,9 +58,14 @@ const impls = {
     return possiblyReduce(ctx.backward_input, ctx)
   },
   amax: (ctx: GradContext) => {
-    return ctx.backward_input
-      .mul(ctx.forward_inputs[0].eq(ctx.forward_output).astype(ctx.backward_input.dtype))
-      .sum(ctx.forward_inputs[1], ctx.forward_inputs[2])
+    const inShape = (<Tensor>ctx.forward_inputs[0]).shape
+    let axes = <number[]>ctx.forward_inputs[1]
+    if (axes === undefined || axes.length === 0) {
+      axes = inShape.map((x, i) => i) // All axes
+    }
+    return ctx.backward_input.mul(
+      ctx.forward_inputs[0].eq(ctx.forward_output).astype(ctx.backward_input.dtype)
+    )
   },
   conv2d: (ctx: GradContext) => {
     const [x, w, sx, sy, px, py, dx, dy, g] = <
