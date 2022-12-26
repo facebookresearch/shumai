@@ -26,10 +26,18 @@ export function tuiLoad(str: string) {
 }
 
 function formatSeconds(seconds) {
-  const hours = String(Math.floor(seconds / 3600)).padStart(2, '0')
-  const minutes = String(Math.floor((seconds - hours * 3600) / 60)).padStart(2, '0')
-  seconds = String(Math.floor(seconds - hours * 3600 - minutes * 60)).padStart(2, '0')
-  return `${hours}:${minutes}:${seconds}`
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds - hours * 3600) / 60)
+  seconds = Math.floor(seconds - hours * 3600 - minutes * 60)
+
+  let out = `${seconds} second${seconds > 1 ? 's' : ''}`
+  if (minutes) {
+    out = `${minutes} minute${minutes > 1 ? 's' : ''} and ${out}`
+  }
+  if (hours) {
+    out = `${hours} hour${hours > 1 ? 's' : ''}, ${out}`
+  }
+  return out
 }
 
 export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number) => string) {
@@ -49,23 +57,17 @@ export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number
     minimumSignificantDigits: 3,
     maximumSignificantDigits: 3
   })
-  const rtf = new Intl.RelativeTimeFormat('en', {
-    localeMatcher: 'best fit',
-    numeric: 'always',
-    style: 'long'
-  })
   const eta = (i, run_per_sec) => {
     const eta_tot = (len - i) / (run_per_sec + 1e-3)
-    return `@ ${formatter.format(run_per_sec)} iter/sec, done ${rtf.format(eta_tot, 'seconds')}`
+    return `@ ${formatter.format(run_per_sec)} iter/sec, done in ~${formatSeconds(eta_tot)}`
   }
   let last_run = performance.now()
   let total_run = 0
   for (let i = 0; i < len; ++i) {
     const new_run = performance.now()
-    total_run += (new_run - last_run)
+    total_run += new_run - last_run
     last_run = new_run
-    const run_per_sec = 1e3 * i / total_run
-
+    const run_per_sec = (1e3 * i) / total_run
     tuiLoad(
       `${Math.floor((100 * i) / len)
         .toString()
