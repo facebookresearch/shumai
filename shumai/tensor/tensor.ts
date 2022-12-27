@@ -436,7 +436,8 @@ export class Tensor {
   }
 
   eval() {
-    return fl._eval.native(this.ptr)
+    fl._eval.native(this.ptr)
+    return this
   }
 
   dispose() {
@@ -522,6 +523,7 @@ export class Tensor {
   }
 
   copy() {
+    this.eval()
     return new Tensor(this)
   }
 

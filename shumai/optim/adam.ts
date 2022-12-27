@@ -27,20 +27,20 @@ export class Adam extends Optimizer {
       const b2_p = this.b2.power(sm.scalar(this.t))
       // sqrt(1 - b2^t) / sqrt(1 - b1^t)
       const decay = sm.sqrt(one.sub(b2_p)).div(sm.sqrt(one.sub(b1_p)))
-      const a = this.lr.mul(decay)
+      const a = this.lr.mul(decay).eval()
       for (const [, v] of Object.entries(grads)) {
         const { tensor: t, grad: g_, id: id } = v
         const g = g_.detach()
         if (this.m[id] === undefined) {
-          this.m[id] = sm.full(t.shape, 0).untidy()
-          this.v[id] = sm.full(t.shape, 0).untidy()
+          this.m[id] = sm.full(t.shape, 0).untidy().eval()
+          this.v[id] = sm.full(t.shape, 0).untidy().eval()
         }
-        this.m[id] = this.b1.mul(this.m[id]).add(one.sub(this.b1).mul(g)).untidy()
+        this.m[id] = this.b1.mul(this.m[id]).add(one.sub(this.b1).mul(g)).untidy().eval()
         this.v[id] = this.b2
           .mul(this.v[id])
-          .add(one.sub(this.b2).mul(g.mul(g)))
-          .untidy()
-        const delta = a.mul(this.m[id].div(this.v[id].sqrt()).add(this.eps))
+          .add(one.sub(this.b2).mul(g.mul(g))).eval()
+          .untidy().eval()
+        const delta = a.mul(this.m[id].div(this.v[id].sqrt().add(this.eps))).eval()
         t.update(t.detach().sub(delta)).untidy()
         t.grad = null
       }
