@@ -10,7 +10,7 @@ export class Linear extends Module {
   constructor(inp_dim: number, out_dim: number) {
     super()
     const fan_in = Math.sqrt(2 / inp_dim)
-    this.weight = sm.randn([inp_dim, out_dim]).mul(sm.scalar(fan_in))
+    this.weight = sm.xavier_uniform([inp_dim, out_dim], inp_dim, out_dim, Math.sqrt(2))
     this.bias = sm.full([out_dim], 0)
     this.weight.requires_grad = true
     this.bias.requires_grad = true

@@ -1,10 +1,32 @@
 import type { Tensor } from './tensor'
-import { _var, conv2d, full, scalar, sigmoid } from './tensor_ops_gen'
+import { _var, conv2d, full, rand, randn, scalar, sigmoid } from './tensor_ops_gen'
 
 export * from './tensor_ops_gen'
 
 export function scalar(s: number): Tensor {
   return full([], s)
+}
+
+export function xavier_uniform(
+  shape: number[],
+  fan_in: number,
+  fan_out: number,
+  gain = 1.0
+): Tensor {
+  const a = gain * Math.sqrt(6 / (fan_in + fan_out))
+  return rand(shape)
+    .sub(scalar(0.5))
+    .mul(scalar(a * 2))
+}
+
+export function xavier_normal(
+  shape: number[],
+  fan_in: number,
+  fan_out: number,
+  gain = 1.0
+): Tensor {
+  const a = gain * Math.sqrt(2 / (fan_in + fan_out))
+  return randn(shape).mul(scalar(a))
 }
 
 export function softmax(tensor: Tensor, axis: number): Tensor {
