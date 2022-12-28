@@ -30,12 +30,12 @@ function formatSeconds(seconds) {
   const minutes = Math.floor((seconds - hours * 3600) / 60)
   seconds = Math.floor(seconds - hours * 3600 - minutes * 60)
 
-  let out = `${seconds} second${seconds > 1 ? 's' : ''}`
+  let out = `${seconds} second${seconds !== 1 ? 's' : ''}`
   if (minutes) {
-    out = `${minutes} minute${minutes > 1 ? 's' : ''} and ${out}`
+    out = `${minutes} minute${minutes !== 1 ? 's' : ''} and ${out}`
   }
   if (hours) {
-    out = `${hours} hour${hours > 1 ? 's' : ''}, ${out}`
+    out = `${hours} hour${hours !== 1 ? 's' : ''}, ${out}`
   }
   return out
 }
@@ -75,7 +75,12 @@ export function* viter(arrayLike: util.ArrayLike | number, callback?: (_: number
     )
     yield is_num ? i : arrayLike[i]
   }
-  console.log(`\u001b[2K100% ${len}/${len}${callback ? ' ' + callback(len) : ''}\u001b[A\n`)
+  const run_per_sec = (1e3 * len) / total_run
+  console.log(
+    `\u001b[2K100% (${len}/${len} @ ${formatter.format(run_per_sec)} iter/sec)${
+      callback ? ' ' + callback(len) : ''
+    }\u001b[A\n`
+  )
 }
 
 export function shuffle<T>(array: T[]): T[] {

@@ -176,28 +176,11 @@ const ffi_tensor = {
     returns: FFIType.ptr
   },
   _index: {
-    args: [
-      FFIType.ptr,
-      FFIType.ptr,
-      FFIType.i64,
-      FFIType.ptr,
-      FFIType.i64,
-      FFIType.ptr,
-      FFIType.i64
-    ],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   _indexedAssign: {
-    args: [
-      FFIType.ptr,
-      FFIType.ptr,
-      FFIType.ptr,
-      FFIType.i64,
-      FFIType.ptr,
-      FFIType.i64,
-      FFIType.ptr,
-      FFIType.i64
-    ],
+    args: [FFIType.ptr, FFIType.ptr, FFIType.ptr, FFIType.i64],
     returns: FFIType.ptr
   },
   _flatten: {

@@ -20,7 +20,7 @@ export function checkpoint(model, dir, callback = () => true) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir)
   }
-  traverse(model, dir)
+  traverse(model, dir, callback)
 }
 
 export class Module extends Function {

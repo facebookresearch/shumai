@@ -419,7 +419,11 @@ export class Tensor {
       this._checkpoint_callback = () => true
     }
     if (existsSync(this._checkpoint_file)) {
-      this.update(new Tensor(this._checkpoint_file))
+      const t = new Tensor(this._checkpoint_file)
+      if (t.elements != this.elements) {
+        throw `Cannot load this tensor, mismatched dimensions ${t.shape} (expected ${this.shape})`
+      }
+      this.update(t)
     } else {
       this.save(this._checkpoint_file)
     }
@@ -714,38 +718,37 @@ export class Tensor {
         }
         start.push(start_idx)
         end.push(end_idx)
+        stride.push(1)
       } else if (typeof arg === 'number') {
         start.push(arg)
         end.push(arg + 1)
+        stride.push(1)
       } else {
         throw `${arg} not yet supported.  Please file a bug with desired behavior!`
       }
     }
-    return [start, end, stride]
+    const processed_args = []
+    for (let i = 0; i < start.length; ++i) {
+      processed_args.push(start[i])
+      processed_args.push(end[i])
+      processed_args.push(stride[i])
+    }
+    return processed_args
   }
 
   index(args) {
-    const [start, end, stride] = this._index_args(args)
-    return wrapFLTensor(
-      'index',
-      fl._index.native,
-      this,
-      ...arrayArg(start),
-      ...arrayArg(end),
-      ...arrayArg(stride)
-    )
+    const processed_args = this._index_args(args)
+    return wrapFLTensor('index', fl._index.native, this, ...arrayArg(processed_args))
   }
 
   indexedAssign(t, args) {
-    const [start, end, stride] = this._index_args(args)
+    const processed_args = this._index_args(args)
     return wrapFLTensor(
       'indexedAssign',
       fl._indexedAssign.native,
       this,
       t,
-      ...arrayArg(start),
-      ...arrayArg(end),
-      ...arrayArg(stride)
+      ...arrayArg(processed_args)
     )
   }
 

@@ -38,8 +38,10 @@ export class Adam extends Optimizer {
         this.m[id] = this.b1.mul(this.m[id]).add(one.sub(this.b1).mul(g)).untidy().eval()
         this.v[id] = this.b2
           .mul(this.v[id])
-          .add(one.sub(this.b2).mul(g.mul(g))).eval()
-          .untidy().eval()
+          .add(one.sub(this.b2).mul(g.mul(g)))
+          .eval()
+          .untidy()
+          .eval()
         const delta = a.mul(this.m[id].div(this.v[id].sqrt().add(this.eps))).eval()
         t.update(t.detach().sub(delta)).untidy()
         t.grad = null

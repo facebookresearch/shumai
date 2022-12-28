@@ -638,18 +638,28 @@ uint64_t _uint64Scalar(void* t) {
   return tensor->asScalar<uint64_t>();
 }
 
-void* _index(void* t,
-             void* starts,
-             int64_t starts_len,
-             void* ends,
-             int64_t ends_len,
-             void* strides,
-             int64_t strides_len) {
+void* _index(void* t, void* args_ptr, int64_t args_len) {
   try {
     LOCK_GUARD
-    auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
-    auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
-    auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
+    auto args = arrayArg<int64_t>(args_ptr, args_len, false, false);
+    std::vector<int64_t> start;
+    std::vector<int64_t> end;
+    std::vector<int64_t> stride;
+    if (args.size() % 3 != 0) {
+      throw std::exception();
+    }
+    for (auto i = 0; i < (args.size() - 2); i += 3) {
+      if (g_row_major) {
+        start.emplace(start.begin(), args[i + 0]);
+        end.emplace(end.begin(), args[i + 1]);
+        stride.emplace(stride.begin(), args[i + 2]);
+      } else {
+        start.emplace_back(args[i + 0]);
+        end.emplace_back(args[i + 1]);
+        stride.emplace_back(args[i + 2]);
+      }
+    }
+
     std::vector<fl::Index> indices;
     indices.reserve(start.size());
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);
@@ -668,7 +678,7 @@ void* _index(void* t,
           indices.emplace_back(start[i]);
         } else {
           indices.emplace_back(
-              fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+              fl::range(start[i], end[i], stride.size() ? stride[i] : 1));
         }
       }
     }
@@ -682,19 +692,28 @@ void* _index(void* t,
   }
 }
 
-void* _indexedAssign(void* t,
-                     void* other,
-                     void* starts,
-                     int64_t starts_len,
-                     void* ends,
-                     int64_t ends_len,
-                     void* strides,
-                     int64_t strides_len) {
+void* _indexedAssign(void* t, void* other, void* args_ptr, int64_t args_len) {
   try {
     LOCK_GUARD
-    auto start = arrayArg<int64_t>(starts, starts_len, g_row_major, false);
-    auto end = arrayArg<int64_t>(ends, ends_len, g_row_major, false);
-    auto stride = arrayArg<int64_t>(strides, strides_len, g_row_major, false);
+    auto args = arrayArg<int64_t>(args_ptr, args_len, false, false);
+    std::vector<int64_t> start;
+    std::vector<int64_t> end;
+    std::vector<int64_t> stride;
+    if (args.size() % 3 != 0) {
+      throw std::exception();
+    }
+    for (auto i = 0; i < (args.size() - 2); i += 3) {
+      if (g_row_major) {
+        start.emplace(start.begin(), args[i + 0]);
+        end.emplace(end.begin(), args[i + 1]);
+        stride.emplace(stride.begin(), args[i + 2]);
+      } else {
+        start.emplace_back(args[i + 0]);
+        end.emplace_back(args[i + 1]);
+        stride.emplace_back(args[i + 2]);
+      }
+    }
+
     std::vector<fl::Index> indices;
     indices.reserve(start.size());
     for (auto i = 0; i < start.size(); ++i) {
@@ -704,7 +723,7 @@ void* _indexedAssign(void* t,
         indices.emplace_back(start[i]);
       } else {
         indices.emplace_back(
-            fl::range(start[i], end[i], strides_len ? stride[i] : 1));
+            fl::range(start[i], end[i], stride.size() ? stride[i] : 1));
       }
     }
     auto* tensor = reinterpret_cast<fl::Tensor*>(t);

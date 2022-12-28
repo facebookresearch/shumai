@@ -29,7 +29,7 @@ function possiblyReduce(grad_out: Tensor, ctx: GradContext) {
   const new_shape = input.shape
   if (ctx.backward_input.shape.length != input.shape.length) {
     for (let i = 0; i < ctx.backward_input.shape.length - input.shape.length; ++i) {
-      new_shape.push(1)
+      new_shape.unshift(1)
     }
   }
   const reduction_axes = []
@@ -39,9 +39,9 @@ function possiblyReduce(grad_out: Tensor, ctx: GradContext) {
     }
   }
   if (reduction_axes.length) {
-    return grad_out.sum(reduction_axes, true)
+    return grad_out.sum(reduction_axes, true).reshape(input.shape)
   }
-  return grad_out
+  return grad_out.reshape(input.shape)
 }
 
 const impls = {
