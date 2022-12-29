@@ -63,6 +63,20 @@ describe('avgPool', () => {
   })
 })
 
+describe('module.avgPool2d', () => {
+  it('basic', () => {
+    const x = sm.full([1, 1, 4, 4], 3)
+    const f = sm.module.avgPool2d(2)
+    expectArraysClose(f(x).toFloat32Array(), sm.full([2, 2], 3).toFloat32Array())
+  })
+  it('channels', () => {
+    const x = sm.full([3, 2, 4, 4], 3)
+    const f = sm.module.avgPool2d(3, { stride: 1 })
+    const y = f(x)
+    expectArraysClose(y.toFloat32Array(), sm.full([3, 2, 2, 2], 3).toFloat32Array())
+  })
+})
+
 describe('conv2d module', () => {
   it('basic', () => {
     const x = sm.randn([1, 8, 64, 64])
