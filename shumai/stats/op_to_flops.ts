@@ -30,5 +30,5 @@ function opToFlopsConv2d(inputs: any[], out: Tensor): number {
   const [Co, Ci, Kw, Kh] = w.shape
   const [, , Wo, Ho] = out.shape
 
-  return Kw * Kh * Ci * Wo * Ho * Co
+  return Kw * Kh * Ci * Wo * Ho * Co * 2
 }
