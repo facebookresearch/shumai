@@ -117,7 +117,7 @@ describe('op_to_flops', () => {
         [{} as sm.Tensor, { shape: [Co, Ci, Kw, Kh] } as sm.Tensor],
         { shape: [, , Wo, Ho] } as sm.Tensor
       )
-      expect(flops).toBe(Kw * Kh * Ci * Wo * Ho * Co)
+      expect(flops).toBe(Kw * Kh * Ci * Wo * Ho * Co * 2)
     })
   })
 })
