@@ -1,6 +1,6 @@
 {
   "name": "@shumai/shumai",
-  "version": "0.0.13",
+  "version": "0.0.13-2",
   "module": "shumai/index.ts",
   "type": "module",
   "scripts": {
@@ -45,5 +45,11 @@
     "@shumai/linux_arm64_shumai_flashlight_cpu": "latest",
     "@shumai/linux_x64_shumai_flashlight": "latest",
     "@shumai/linux_x64_shumai_flashlight_cpu": "latest"
-  }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/facebookresearch/shumai.git"
+  },
+  "homepage": "https://facebookresearch.github.io/shumai/"
 }
