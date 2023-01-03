@@ -103,4 +103,21 @@ describe('op_to_flops', () => {
       expect(flops).toBe(300)
     })
   })
+
+  describe('conv2d', () => {
+    it('4d', () => {
+      const Co = 10
+      const Ci = 5
+      const Kw = 3
+      const Kh = 3
+      const Wo = 200
+      const Ho = 200
+      const flops = sm.opToFlops(
+        'conv2d',
+        [{} as sm.Tensor, { shape: [Co, Ci, Kw, Kh] } as sm.Tensor],
+        { shape: [, , Wo, Ho] } as sm.Tensor
+      )
+      expect(flops).toBe(Kw * Kh * Ci * Wo * Ho * Co * 2)
+    })
+  })
 })
