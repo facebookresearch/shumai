@@ -289,6 +289,17 @@ export class Stats {
     return existing
   }
 
+  async flush(): Promise<void> {
+    await Promise.all(this.#loggers.map(l => l.process({
+      stats: this,
+      ops: this.#statsByOp,
+      stacks: this.#statsByStack,
+      stackKeys: this.#stackKeys
+    })));
+
+    this.reset()
+  }
+
   private async log(info: StatInfo, stat: StatsEntry): Promise<void> {
     const { op, stack } = info
 
@@ -333,21 +344,7 @@ export class Stats {
       this.#loggers.length &&
       performance.timeOrigin + performance.now() - this.#startTime >= this.#interval
     ) {
-      try {
-        // fire and forget, DO NOT BLOCK
-        this.#loggers.forEach((l) =>
-          l.process({
-            stats: this,
-            ops: this.#statsByOp,
-            stacks: this.#statsByStack,
-            stackKeys: this.#stackKeys
-          })
-        )
-      } catch (e) {
-        console.error(e)
-      }
-
-      this.reset()
+      await this.flush();
     }
   }
 
