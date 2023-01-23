@@ -2,6 +2,7 @@
 #include <atomic>
 #include <cstdlib>
 #include <iostream>
+#include "dltensor.h"
 #include "flashlight/fl/autograd/Functions.h"
 #include "flashlight/fl/autograd/tensor/AutogradExtension.h"
 #include "flashlight/fl/autograd/tensor/AutogradOps.h"
@@ -107,6 +108,94 @@ void* createTensor(void* shape_ptr, int64_t shape_len) {
   } catch (...) {
     HANDLE_EXCEPTION("[unknown]");
   }
+}
+
+void* fromDLTensor(void* ptr) {
+  auto* dltensor = (DLTensor*)ptr;
+  auto shape =
+      arrayArg<long long>(dltensor->shape, dltensor->ndim, g_row_major, false);
+  auto dtype = dltensor->dtype;
+  // TODO utilize the device ID
+  auto location = (dltensor->device.device_type == kDLCPU)
+                      ? fl::MemoryLocation::Host
+                      : fl::MemoryLocation::Device;
+  bool error = false;
+  auto tensor = [&]() {
+    switch (dtype.code) {
+      case kDLInt:
+        if (dtype.bits == 32) {
+          return fl::Tensor::fromBuffer(fl::Shape(shape),
+                                        (int32_t*)dltensor->data, location);
+        } else if (dtype.bits == 16) {
+          return fl::Tensor::fromBuffer(fl::Shape(shape),
+                                        (int16_t*)dltensor->data, location);
+        } else if (dtype.bits == 64) {
+          return fl::Tensor::fromBuffer(fl::Shape(shape),
+                                        (int64_t*)dltensor->data, location);
+        }
+      case kDLUInt:
+        if (dtype.bits == 32) {
+          return fl::Tensor::fromBuffer(fl::Shape(shape),
+                                        (uint32_t*)dltensor->data, location);
+        } else if (dtype.bits == 16) {
+          return fl::Tensor::fromBuffer(fl::Shape(shape),
+                                        (uint16_t*)dltensor->data, location);
+        } else if (dtype.bits == 64) {
+          return fl::Tensor::fromBuffer(fl::Shape(shape),
+                                        (uint64_t*)dltensor->data, location);
+        }
+      case kDLFloat:
+        if (dtype.bits == 32) {
+          return fl::Tensor::fromBuffer(fl::Shape(shape),
+                                        (float*)dltensor->data, location);
+        } else if (dtype.bits == 64) {
+          return fl::Tensor::fromBuffer(fl::Shape(shape),
+                                        (double*)dltensor->data, location);
+        }
+      case kDLBool:
+      default:
+        error = true;
+        return fl::Tensor(fl::Shape({}));
+    }
+  }();
+  if (error) {
+    HANDLE_EXCEPTION("Unsupported datatype in DLTensor");
+  }
+  auto* t = new fl::Tensor(tensor);
+  g_bytes_used += t->bytes();
+  return t;
+}
+
+void* toDLTensor(void* ptr) {
+  LOCK_GUARD
+  DLTensor* dltensor = new DLTensor();
+  auto* tensor = reinterpret_cast<fl::Tensor*>(ptr);
+#define X(fl_prefix, dl_type, real_type, bits)  \
+  case fl::dtype::fl_prefix##bits: {            \
+    dltensor->data = tensor->host<real_type>(); \
+    dltensor->dtype = {kDL##dl_type, bits, 1};  \
+    break;                                      \
+  }
+  switch (tensor->type()) {
+    X(f, Float, float, 32)
+    X(f, Float, double, 64)
+    X(f, Float, float, 16)
+    X(s, Int, int32_t, 32)
+    X(s, Int, int16_t, 16)
+    X(s, Int, int64_t, 64)
+    X(u, UInt, uint32_t, 32)
+    X(u, UInt, uint16_t, 16)
+    X(u, UInt, uint64_t, 64)
+    default:
+      HANDLE_EXCEPTION("Unsupported datatype for DLTensor creation");
+  }
+  const auto ndim = tensor->ndim();
+  dltensor->shape = new int64_t[ndim];
+  dltensor->ndim = ndim;
+  for (auto i = 0; i < ndim; ++i) {
+    dltensor->shape[i] = tensor->shape()[i];
+  }
+  return dltensor;
 }
 
 void* tensorFromFloat16Buffer(int64_t numel, void* ptr) {
