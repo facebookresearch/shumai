@@ -787,6 +787,10 @@ export class Tensor {
   squeeze(axis?: number): Tensor {
     return ops.squeeze(this, axis)
   }
+
+  toDLTensor(): number {
+    return fl.toDLTensor(this._ptr)
+  }
 }
 
 // Interface extension trick to extend the type definition of Tensor
@@ -859,3 +863,12 @@ export const layout = {
     return !fl.isRowMajor.native()
   }
 }
+
+export function fromDLTensor(ptr) {
+  const _ptr = fl.fromDLTensor(ptr)
+  return new Tensor({
+    _ptr: _ptr,
+    _deps: []
+  })
+}
+
