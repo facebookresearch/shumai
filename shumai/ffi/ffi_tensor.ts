@@ -107,6 +107,14 @@ const ffi_tensor = {
     args: [FFIType.ptr, FFIType.int],
     returns: FFIType.ptr
   },
+  toDLTensor: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
+  fromDLTensor: {
+    args: [FFIType.ptr],
+    returns: FFIType.ptr
+  },
   _conv2dBackwardData: {
     args: [
       FFIType.ptr, // grad
