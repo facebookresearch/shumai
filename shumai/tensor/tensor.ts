@@ -10,8 +10,24 @@ import * as ops from './tensor_ops'
 import { TensorOpsInterface } from './tensor_ops_interface_gen'
 import { gen_tensor_op_shim } from './tensor_ops_shim_gen'
 export { NATIVE_FILE } from '../ffi/ffi_flashlight'
+import { inspect } from 'util'
 
 fl.init.native()
+const _console_log = console.log
+function toConsole(obj) {
+  if (obj.constructor === Tensor) {
+    return obj.toConsole()
+  }
+  for (const property in obj) {
+    if (obj.hasOwnProperty(property)) {
+      if (typeof obj[property] == 'object') {
+        obj[property] = toConsole(obj[property])
+      }
+    }
+  }
+  return obj
+}
+console.log = (...args) => _console_log(...toConsole(args))
 
 export enum dtype {
   Float16 = Number(fl.dtypeFloat16.native()),
@@ -491,6 +507,42 @@ export class Tensor {
 
   toString() {
     return `Tensor[id=${this.ptr}]`
+  }
+
+  toConsoleList(data, offset, dim, max_len) {
+    let str = '['
+    let off = 0
+    for (let i = 0; i < this.shape[dim]; ++i) {
+      if (dim === this.ndim - 1) {
+        str += `${Math.round(data[offset + i] * 100) / 100}`
+        off += 1
+      } else {
+        const [new_str, new_off] = this.toConsoleList(
+          data,
+          offset + off,
+          dim + 1,
+          max_len - str.length
+        )
+        str += new_str
+        off += new_off
+      }
+      if (i != this.shape[dim] - 1) {
+        str += ', '
+      }
+      if (max_len < str.length && i < this.shape[dim] - 1) {
+        str += '...'
+        if (dim === this.ndim - 1) {
+          off += this.shape[dim] - i
+        }
+        break
+      }
+    }
+    return [str + ']', off]
+  }
+
+  toConsole() {
+    const [data_str, _] = this.toConsoleList(this.toFloat32Array(), 0, 0, 30)
+    return `Tensor(shape=[${this.shape.join(', ')}], dtype=${dtype[this.dtype]}) = ${data_str}`
   }
 
   valueOf() {
