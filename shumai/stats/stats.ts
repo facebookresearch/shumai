@@ -290,12 +290,16 @@ export class Stats {
   }
 
   async flush(): Promise<void> {
-    await Promise.all(this.#loggers.map(l => l.process({
-      stats: this,
-      ops: this.#statsByOp,
-      stacks: this.#statsByStack,
-      stackKeys: this.#stackKeys
-    })));
+    await Promise.all(
+      this.#loggers.map((l) =>
+        l.process({
+          stats: this,
+          ops: this.#statsByOp,
+          stacks: this.#statsByStack,
+          stackKeys: this.#stackKeys
+        })
+      )
+    )
 
     this.reset()
   }
@@ -344,7 +348,7 @@ export class Stats {
       this.#loggers.length &&
       performance.timeOrigin + performance.now() - this.#startTime >= this.#interval
     ) {
-      await this.flush();
+      await this.flush()
     }
   }
 

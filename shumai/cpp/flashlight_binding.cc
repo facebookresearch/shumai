@@ -110,47 +110,50 @@ void* createTensor(void* shape_ptr, int64_t shape_len) {
   }
 }
 
+// TODO use DLM destructor
 void* fromDLTensor(void* ptr) {
-  auto* dltensor = (DLTensor*)ptr;
+  auto* dlmtensor = (DLManagedTensor*)ptr;
+  auto& dltensor = dlmtensor->dl_tensor;
   auto shape =
-      arrayArg<long long>(dltensor->shape, dltensor->ndim, g_row_major, false);
-  auto dtype = dltensor->dtype;
+      arrayArg<long long>(dltensor.shape, dltensor.ndim, g_row_major, false);
+  auto dtype = dltensor.dtype;
   // TODO utilize the device ID
-  auto location = (dltensor->device.device_type == kDLCPU)
+  auto location = (dltensor.device.device_type == kDLCPU)
                       ? fl::MemoryLocation::Host
                       : fl::MemoryLocation::Device;
   bool error = false;
+  void* data = dltensor.data;
   auto tensor = [&]() {
     switch (dtype.code) {
       case kDLInt:
         if (dtype.bits == 32) {
-          return fl::Tensor::fromBuffer(fl::Shape(shape),
-                                        (int32_t*)dltensor->data, location);
+          return fl::Tensor::fromBuffer(fl::Shape(shape), (int32_t*)data,
+                                        location);
         } else if (dtype.bits == 16) {
-          return fl::Tensor::fromBuffer(fl::Shape(shape),
-                                        (int16_t*)dltensor->data, location);
+          return fl::Tensor::fromBuffer(fl::Shape(shape), (int16_t*)data,
+                                        location);
         } else if (dtype.bits == 64) {
-          return fl::Tensor::fromBuffer(fl::Shape(shape),
-                                        (int64_t*)dltensor->data, location);
+          return fl::Tensor::fromBuffer(fl::Shape(shape), (int64_t*)data,
+                                        location);
         }
       case kDLUInt:
         if (dtype.bits == 32) {
-          return fl::Tensor::fromBuffer(fl::Shape(shape),
-                                        (uint32_t*)dltensor->data, location);
+          return fl::Tensor::fromBuffer(fl::Shape(shape), (uint32_t*)data,
+                                        location);
         } else if (dtype.bits == 16) {
-          return fl::Tensor::fromBuffer(fl::Shape(shape),
-                                        (uint16_t*)dltensor->data, location);
+          return fl::Tensor::fromBuffer(fl::Shape(shape), (uint16_t*)data,
+                                        location);
         } else if (dtype.bits == 64) {
-          return fl::Tensor::fromBuffer(fl::Shape(shape),
-                                        (uint64_t*)dltensor->data, location);
+          return fl::Tensor::fromBuffer(fl::Shape(shape), (uint64_t*)data,
+                                        location);
         }
       case kDLFloat:
         if (dtype.bits == 32) {
-          return fl::Tensor::fromBuffer(fl::Shape(shape),
-                                        (float*)dltensor->data, location);
+          return fl::Tensor::fromBuffer(fl::Shape(shape), (float*)data,
+                                        location);
         } else if (dtype.bits == 64) {
-          return fl::Tensor::fromBuffer(fl::Shape(shape),
-                                        (double*)dltensor->data, location);
+          return fl::Tensor::fromBuffer(fl::Shape(shape), (double*)data,
+                                        location);
         }
       case kDLBool:
       default:
@@ -166,15 +169,26 @@ void* fromDLTensor(void* ptr) {
   return t;
 }
 
+void deleteDLTensor(struct DLManagedTensor* self) {
+  auto* tensor = reinterpret_cast<fl::Tensor*>(self->manager_ctx);
+  g_bytes_used -= tensor->bytes();
+  tensor->unlock();
+  delete tensor;
+  delete self->dl_tensor.shape;
+  delete self;
+}
+
 void* toDLTensor(void* ptr) {
   LOCK_GUARD
-  DLTensor* dltensor = new DLTensor();
-  auto* tensor = reinterpret_cast<fl::Tensor*>(ptr);
-#define X(fl_prefix, dl_type, real_type, bits)  \
-  case fl::dtype::fl_prefix##bits: {            \
-    dltensor->data = tensor->host<real_type>(); \
-    dltensor->dtype = {kDL##dl_type, bits, 1};  \
-    break;                                      \
+  DLManagedTensor* dlmtensor = new DLManagedTensor();
+  DLTensor& dltensor = dlmtensor->dl_tensor;
+  const auto* tensor =
+      new fl::Tensor(reinterpret_cast<fl::Tensor*>(ptr)->copy());
+#define X(fl_prefix, dl_type, real_type, bits)   \
+  case fl::dtype::fl_prefix##bits: {             \
+    dltensor.data = tensor->device<real_type>(); \
+    dltensor.dtype = {kDL##dl_type, bits, 1};    \
+    break;                                       \
   }
   switch (tensor->type()) {
     X(f, Float, float, 32)
@@ -190,17 +204,20 @@ void* toDLTensor(void* ptr) {
       HANDLE_EXCEPTION("Unsupported datatype for DLTensor creation");
   }
   const auto ndim = tensor->ndim();
-  dltensor->shape = new int64_t[ndim];
-  dltensor->ndim = ndim;
+  dltensor.shape = new int64_t[ndim];
+  dltensor.ndim = ndim;
   if (tensor->location() == fl::MemoryLocation::Host) {
-    dltensor->device.device_type = kDLCPU;
+    dltensor.device.device_type = kDLCPU;
   } else if (tensor->location() == fl::MemoryLocation::Device) {
-    dltensor->device.device_type = kDLCUDA;
+    dltensor.device.device_type = kDLCUDA;
   }
   for (auto i = 0; i < ndim; ++i) {
-    dltensor->shape[i] = tensor->shape()[i];
+    const auto fl_i = g_row_major ? ndim - 1 - i : i;
+    dltensor.shape[i] = tensor->shape()[fl_i];
   }
-  return dltensor;
+  dlmtensor->manager_ctx = (void*)tensor;
+  dlmtensor->deleter = deleteDLTensor;
+  return dlmtensor;
 }
 
 void* tensorFromFloat16Buffer(int64_t numel, void* ptr) {
