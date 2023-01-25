@@ -192,6 +192,11 @@ void* toDLTensor(void* ptr) {
   const auto ndim = tensor->ndim();
   dltensor->shape = new int64_t[ndim];
   dltensor->ndim = ndim;
+  if (tensor->location() == fl::MemoryLocation::Host) {
+    dltensor->device.device_type = kDLCPU;
+  } else if (tensor->location() == fl::MemoryLocation::Device) {
+    dltensor->device.device_type = kDLCUDA;
+  }
   for (auto i = 0; i < ndim; ++i) {
     dltensor->shape[i] = tensor->shape()[i];
   }
