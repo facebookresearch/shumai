@@ -290,18 +290,21 @@ export class Stats {
   }
 
   async flush(): Promise<void> {
-    await Promise.all(
-      this.#loggers.map((l) =>
-        l.process({
+    const promises = this.#loggers.map((l) =>
+      l
+        .process({
           stats: this,
           ops: this.#statsByOp,
           stacks: this.#statsByStack,
           stackKeys: this.#stackKeys
         })
-      )
+        .catch((err) => void console.warn(err.message))
     )
 
+    // do not wait before resetting to avoid race condition
     this.reset()
+
+    await Promise.all(promises)
   }
 
   private async log(info: StatInfo, stat: StatsEntry): Promise<void> {
@@ -348,7 +351,7 @@ export class Stats {
       this.#loggers.length &&
       performance.timeOrigin + performance.now() - this.#startTime >= this.#interval
     ) {
-      await this.flush()
+      this.flush()
     }
   }
 
