@@ -15,6 +15,10 @@ interface Conv2dParameters {
 export class Conv2d extends Module {
   weight: Tensor
   bias?: Tensor
+  stride: number
+  padding: number
+  dilation: number
+  groups: number
   constructor(
     inp_channel: number,
     out_channel: number,
@@ -58,7 +62,7 @@ export class Conv2d extends Module {
   }
 }
 
-export function conv2d(...args) {
+export function conv2d(...args : ConstructorParameters<typeof Conv2d>) {
   return new Conv2d(...args)
 }
 
@@ -95,6 +99,6 @@ export class AvgPool2d extends Module {
   }
 }
 
-export function avgPool2d(...args) {
+export function avgPool2d(...args : ConstructorParameters<typeof AvgPool2d>) {
   return new AvgPool2d(...args)
 }
