@@ -115,7 +115,7 @@ jobs:
           sudo dpkg -i cuda-keyring_1.0-1_all.deb
           sudo apt update
           sudo apt install -y cuda-toolkit-11-6
-          echo "/usr/local/cuda/bin" >> $GITHUB_PATH
+          echo "/usr/local/cuda-11.6/bin" >> $GITHUB_PATH
       - name: "Install CMake and Ninja"
         run: sudo apt install cmake ninja-build
       - name: "Build and install Flashlight with the Arrayfire CUDA Backend"
