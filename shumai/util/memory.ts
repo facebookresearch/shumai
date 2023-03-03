@@ -4,10 +4,11 @@ import { Tensor } from '../tensor/tensor'
 export let _tidyTracker: Map<number, Tensor> = null
 
 export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
-  // by tracking ownership nested tidy's can play nice
-  // TODO: would be wise to support nested/scoped tracker's to avoid waiting for top-most tracker before releasing memory
-  const ownsTracker = !_tidyTracker
-  _tidyTracker ||= new Map()
+  // by tracking prior scope nested tidy's can play nice
+  const previousTracker = _tidyTracker
+
+  _tidyTracker = new Map()
+
   if (!Array.isArray(args)) args = [args]
   const result = fn(...args)
 
@@ -62,14 +63,25 @@ export function tidy<T>(fn: (...args: any[]) => T, args: any | any[] = []): T {
 
   parseTidyRet(result)
 
-  if (ownsTracker) {
-    for (const [, tensor] of _tidyTracker) {
-      tensor.dispose()
-    }
-    _tidyTracker = null
+  for (const [, tensor] of _tidyTracker) {
+    tensor.dispose()
   }
 
+  // restore tracker to prior scope
+  _tidyTracker = previousTracker
+
   return result
+}
+
+export function tidyExclude(fn: () => void) {
+  const previousTracker = _tidyTracker
+
+  // tensors created in this scope will be excluded from tracking
+  _tidyTracker = null
+  fn();
+
+  // restore tracker to prior scope
+  _tidyTracker = previousTracker
 }
 
 export type MemoryOptions = {
