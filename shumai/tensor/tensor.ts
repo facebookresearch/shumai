@@ -266,6 +266,7 @@ export class Tensor {
   private _update_count = 0
   private _checkpoint_file: string
   private _checkpoint_callback: () => boolean
+  private _is_disposed = false
   requires_grad = false
   provenance = null
   grad: Tensor = null
@@ -461,7 +462,13 @@ export class Tensor {
   }
 
   dispose() {
+    if (this._is_disposed) return
+    this._is_disposed = true
     fl.dispose.native(this.ptr)
+  }
+
+  get isDisposed() {
+    return this._is_disposed
   }
 
   get ptr() {

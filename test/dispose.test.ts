@@ -11,6 +11,13 @@ describe('dispose', () => {
     }
     expect(sm.bytesUsed()).toBe(start_bytes)
   })
+  it('safe dispose', () => {
+    const t = sm.tensor(new Float32Array(new Array(100).fill(Math.random())))
+    expect(t.isDisposed).toBe(false)
+    t.dispose()
+    expect(t.isDisposed).toBe(true)
+    t.dispose() // will segfault if safe dispose not working
+  })
   it('tidy - basic', () => {
     const N = 64
     const a = sm.randn([N, 64])
@@ -220,5 +227,59 @@ describe('dispose', () => {
     a.dispose()
     b.dispose()
     c.dispose()
+  })
+  it('tidy nested scopes', () => {
+    const N = 64
+    const outerScope = sm.randn([N])
+    const outerScopeBytes = sm.bytesUsed()
+    sm.util.tidy(() => {
+      const level1Scope = sm.randn([N])
+      const level1ScopeBytes = sm.bytesUsed()
+      expect(level1ScopeBytes).toBe(outerScopeBytes * 2n)
+      const [level2Returned] = sm.util.tidy(() => {
+        const level2Scope = sm.randn([N])
+        expect(sm.bytesUsed()).toBe(outerScopeBytes * 3n)
+        const level2Returned = sm.randn([N])
+        expect(sm.bytesUsed()).toBe(outerScopeBytes * 4n)
+        return [level2Returned]
+      })
+      expect(sm.bytesUsed()).toBe(outerScopeBytes * 3n) // only level2Scope is disposed
+      level2Returned.dispose()
+      expect(sm.bytesUsed()).toBe(outerScopeBytes * 2n)
+    })
+    expect(sm.bytesUsed()).toBe(outerScopeBytes) // only outerScope remains
+    outerScope.dispose()
+    expect(sm.bytesUsed()).toBe(0n)
+  })
+  it('tidy nested scopes with exclusion scopes', () => {
+    const N = 64
+    const outerScope = sm.randn([N])
+    const outerScopeBytes = sm.bytesUsed()
+    let excludeScope: sm.Tensor;
+    sm.util.tidy(() => {
+      const level1Scope = sm.randn([N])
+      const level1ScopeBytes = sm.bytesUsed()
+      expect(level1ScopeBytes).toBe(outerScopeBytes * 2n)
+      const [level2Returned] = sm.util.tidy(() => {
+        const level2Scope = sm.randn([N])
+        expect(sm.bytesUsed()).toBe(outerScopeBytes * 3n)
+        const level2Returned = sm.randn([N])
+        expect(sm.bytesUsed()).toBe(outerScopeBytes * 4n)
+
+        sm.util.tidyExclude(() => {
+          excludeScope = sm.randn([N])
+          expect(sm.bytesUsed()).toBe(outerScopeBytes * 5n)
+        })
+
+        return [level2Returned]
+      })
+      expect(sm.bytesUsed()).toBe(outerScopeBytes * 4n) // only level2Scope is disposed
+      level2Returned.dispose()
+      expect(sm.bytesUsed()).toBe(outerScopeBytes * 3n)
+    })
+    expect(sm.bytesUsed()).toBe(outerScopeBytes * 2n) // only outerScope & excludeScope remains
+    outerScope.dispose()
+    excludeScope.dispose()
+    expect(sm.bytesUsed()).toBe(0n)
   })
 })
