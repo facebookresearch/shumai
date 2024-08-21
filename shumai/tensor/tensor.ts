@@ -2,7 +2,7 @@ import { ptr, toArrayBuffer } from 'bun:ffi'
 import { existsSync } from 'fs'
 import { arrayArg } from '../ffi/ffi_bind_utils'
 import { fl } from '../ffi/ffi_flashlight'
-import { Stats, stats } from '../stats'
+import { getStack, Stats, stats } from '../stats'
 import { _tidyTracker, cyrb53, Float16Array, gcAsNeeded } from '../util'
 import { GradContext } from './register_gradients'
 import { full } from './tensor_ops'
@@ -89,7 +89,7 @@ export function wrapFLTensor(op: string, closure: CallableFunction, ...args: unk
 function traverse_gradients(
   sorted_traversal: Tensor[],
   jacobian: Tensor
-): Record<number, [Tensor, Tensor]> {
+): Record<number, [Tensor, Tensor, number]> {
   const all_grads_dict: Record<number, [Tensor, Tensor, number]> = {}
   const base_t = sorted_traversal[0]
   let id = 0
@@ -131,7 +131,7 @@ function traverse_gradients(
 async function async_traverse_gradients(
   sorted_traversal: Tensor[],
   jacobian: Tensor
-): Promise<Record<number, [Tensor, Tensor]>> {
+): Promise<Record<number, [Tensor, Tensor, number]>> {
   const all_grads_dict: Record<number, [Tensor, Tensor, number]> = {}
   const base_t = sorted_traversal[0]
   let id = 0
@@ -231,9 +231,9 @@ export function backward(
   // NB: can't easily embed this in the traverse functions
   // (or else references are stale)
   const calc_grads = (
-    all_grads_dict: Record<number, [Tensor, Tensor]>
+    all_grads_dict: Record<number, [Tensor, Tensor, number]>
   ): Record<string, { grad: Tensor; tensor: Tensor }> => {
-    const all_grads: Record<string, { grad: Tensor; tensor: Tensor }> = {}
+    const all_grads: Record<string, { grad: Tensor; tensor: Tensor; id: number }> = {}
     // TODO: this is assuming the same path is traversed, it should be a compute hash
     // unique identifier
     for (const key in all_grads_dict) {
